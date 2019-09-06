@@ -37,7 +37,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeri
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
@@ -185,18 +184,18 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         UttakPeriode gyldigUtsettelsePeriode = uttakPerioder.get(1);
         assertThat(gyldigUtsettelsePeriode.getTom()).isEqualTo(sluttGyldigUtsattPeriode);
         assertThat(gyldigUtsettelsePeriode.getFom()).isEqualTo(fødselsdato);
-        assertThat(gyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(gyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(gyldigUtsettelsePeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(gyldigUtsettelsePeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MANGLENDE_SØKT_PERIODE);
+        assertThat(gyldigUtsettelsePeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
 
 
         UttakPeriode ugyldigUtsettelsePeriode = uttakPerioder.get(2);
         assertThat(ugyldigUtsettelsePeriode.getFom()).isEqualTo(sluttGyldigUtsattPeriode.plusDays(1));
         assertThat(ugyldigUtsettelsePeriode.getTom()).isEqualTo(sluttUgyldigPeriode);
         assertThat(ugyldigUtsettelsePeriode.getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
-        assertThat(ugyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(ugyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(ugyldigUtsettelsePeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(ugyldigUtsettelsePeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MANGLENDE_SØKT_PERIODE);
+        assertThat(ugyldigUtsettelsePeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
 
         /* Splittes ved knekkpunkt ved 6 uker pga regelflyt */
         UttakPeriode uttakPeriode1 = uttakPerioder.get(3);
@@ -258,16 +257,16 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
 
         // Første del av opphold-perioden blir manuell behandling
         UttakPeriode ugyldigUtsattPeriode = uttakPerioder.get(1);
-        assertThat(ugyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(ugyldigUtsattPeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MANGLENDE_SØKT_PERIODE);
+        assertThat(ugyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(ugyldigUtsattPeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(ugyldigUtsattPeriode.getFom()).isEqualTo(fødselsdato);
         assertThat(ugyldigUtsattPeriode.getTom()).isEqualTo(fødselsdato.plusDays(4));
         assertThat(ugyldigUtsattPeriode.getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
         assertThat(ugyldigUtsattPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
 
         UttakPeriode gyldigUtsattPeriode = uttakPerioder.get(2);
-        assertThat(gyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(gyldigUtsattPeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MANGLENDE_SØKT_PERIODE);
+        assertThat(gyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(gyldigUtsattPeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(gyldigUtsattPeriode.getFom()).isEqualTo(gyldigUtsettelseStart);
         assertThat(gyldigUtsattPeriode.getTom()).isEqualTo(gyldigUtsettelseSlutt);
         assertThat(gyldigUtsattPeriode.getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
@@ -416,13 +415,6 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         assertThat(resultat.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusYears(4));
         assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isZero();
-    }
-
-    private Konto konto(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Konto.Builder()
-                .medType(stønadskontotype)
-                .medTrekkdager(trekkdager)
-                .build();
     }
 
     @Test

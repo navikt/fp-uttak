@@ -253,5 +253,4 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(12).minusDays(1));
     }
-
 }
