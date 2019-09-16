@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadskontoVedUtsettelseUtil.finnTilgjengeligStønadsKontotype;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ValgAvStønadskontoTjeneste.velgStønadskonto;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -148,20 +148,18 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     }
 
     private void trekkSaldo(UttakPeriode uttakPeriode) {
-        if (uttakPeriode instanceof UtsettelsePeriode) {
-            utledeKontoForUtsettelsePeriode((UtsettelsePeriode) uttakPeriode);
+        if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
+            utledeKonto(uttakPeriode);
         }
         trekkdagertilstand.reduserSaldo(uttakPeriode);
     }
 
-    private void utledeKontoForUtsettelsePeriode(UtsettelsePeriode periode) {
-        if (Stønadskontotype.UKJENT.equals(periode.getStønadskontotype())) {
-            Optional<Stønadskontotype> stønadskontotypeOpt = finnTilgjengeligStønadsKontotype(periode, regelGrunnlag, trekkdagertilstand, konfigurasjon);
-            if (stønadskontotypeOpt.isPresent()) {
-                periode.setStønadskontotype(stønadskontotypeOpt.get());
-            } else {
-                periode.overstyrSluttpunktOmSluttpunktSkalTrekkedager();
-            }
+    private void utledeKonto(UttakPeriode periode) {
+        Optional<Stønadskontotype> stønadskontotypeOpt = velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand, konfigurasjon);
+        if (stønadskontotypeOpt.isPresent()) {
+            periode.setStønadskontotype(stønadskontotypeOpt.get());
+        } else {
+            periode.overstyrSluttpunktOmSluttpunktSkalTrekkedager();
         }
     }
 }

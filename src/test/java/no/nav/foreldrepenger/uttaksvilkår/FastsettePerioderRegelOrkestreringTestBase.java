@@ -8,6 +8,8 @@ import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuild
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
@@ -146,6 +148,20 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                         .medMorHarRett(true)
                         .medSamtykke(true)
                         .build());
+    }
+
+    Map<AktivitetIdentifikator, Kontoer> kontoer(Konto... kontoer) {
+        HashMap<AktivitetIdentifikator, Kontoer> resultat = new HashMap<>();
+        Kontoer.Builder builder = new Kontoer.Builder();
+        for (Konto konto : kontoer) {
+            builder.leggTilKonto(konto);
+        }
+        resultat.put(ARBEIDSFORHOLD, builder.build());
+        return resultat;
+    }
+
+    Konto konto(Stønadskontotype stønadskontotype, int antallDager) {
+        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(antallDager).build();
     }
 
 

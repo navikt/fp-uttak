@@ -26,7 +26,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
@@ -228,10 +227,6 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
                 .leggTilKonto(konto(FEDREKVOTE, 50))
                 .leggTilKonto(konto(FELLESPERIODE, 130))
                 .build());
-    }
-
-    private Konto konto(Stønadskontotype type, int trekkdager) {
-        return new Konto.Builder().medType(type).medTrekkdager(trekkdager).build();
     }
 
     private UttakPeriode utsettelsePeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, Utsettelseårsaktype årsak) {

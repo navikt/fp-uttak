@@ -11,20 +11,49 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 /**
- * Brukes ved når det skal trekkes dager fra utsettelse. Bruker velger ikke hvilken konto i søknad, derfor utleder vi dette
+ * Brukes ved når det skal trekkes dager fra periode uten stønadskontotype
  */
-final class StønadskontoVedUtsettelseUtil {
+final class ValgAvStønadskontoTjeneste {
 
-    private StønadskontoVedUtsettelseUtil() {
+    private ValgAvStønadskontoTjeneste() {
     }
 
-    static Optional<Stønadskontotype> finnTilgjengeligStønadsKontotype(UtsettelsePeriode periode,
-                                                                       RegelGrunnlag regelGrunnlag,
-                                                                       Trekkdagertilstand trekkdagertilstand,
-                                                                       Konfigurasjon konfigurasjon) {
+    static Optional<Stønadskontotype> velgStønadskonto(UttakPeriode periode,
+                                                       RegelGrunnlag regelGrunnlag,
+                                                       Trekkdagertilstand trekkdagertilstand,
+                                                       Konfigurasjon konfigurasjon) {
+        if (!Stønadskontotype.UKJENT.equals(periode.getStønadskontotype())) {
+            throw new IllegalArgumentException("Forventet periode uten stønadskontotype");
+        }
+        if (erUtsettelse(periode)) {
+            return velgStønadskontoForUtsettelse((UtsettelsePeriode) periode, regelGrunnlag, trekkdagertilstand, konfigurasjon);
+        }
+        return velgStønadskontoVanligPeriode(periode, regelGrunnlag, trekkdagertilstand);
+    }
+
+    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(UttakPeriode periode,
+                                                                            RegelGrunnlag regelGrunnlag,
+                                                                            Trekkdagertilstand trekkdagertilstand) {
+        return velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand);
+    }
+
+    private static boolean erUtsettelse(UttakPeriode periode) {
+        return periode instanceof UtsettelsePeriode;
+    }
+
+    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(UtsettelsePeriode periode,
+                                                                            RegelGrunnlag regelGrunnlag,
+                                                                            Trekkdagertilstand trekkdagertilstand,
+                                                                            Konfigurasjon konfigurasjon) {
         if (periodeErPleiepenger(periode, regelGrunnlag, konfigurasjon)) {
             return stønadskontoVedPleiepenger(regelGrunnlag);
         }
+        return velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand);
+    }
+
+    private static Optional<Stønadskontotype> velgStønadskonto(UttakPeriode periode,
+                                                               RegelGrunnlag regelGrunnlag,
+                                                               Trekkdagertilstand trekkdagertilstand) {
         for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
             if (!erTomForKonto(periode, stønadskontotype, regelGrunnlag, trekkdagertilstand)) {
                 return Optional.of(stønadskontotype);

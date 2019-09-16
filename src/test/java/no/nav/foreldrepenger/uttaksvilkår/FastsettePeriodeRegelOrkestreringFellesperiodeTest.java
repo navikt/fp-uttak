@@ -62,17 +62,6 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
                 .build();
     }
 
-    private Kontoer konto(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medType(stønadskontotype)
-                        .medTrekkdager(trekkdager)
-                        .build())
-                .build();
-    }
-
-
-
     @Test
     public void fellesperiode_far_etter_uke_7_etter_fødsel_blir_manuell_behandling_pga_aktivitetskravet() {
         basicGrunnlagFar()
@@ -142,7 +131,7 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
         verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(3), Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
                 IkkeOppfyltÅrsak.MOR_TAR_IKKE_ALLE_UKENE);
         assertThat(resultater.get(1).getUttakPeriode()).isInstanceOf(OppholdPeriode.class);
-        verifiserManuellBehandlingPeriode(resultater.get(1).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(3).minusDays(3), MØDREKVOTE, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.MANGLENDE_SØKT_PERIODE);
+        verifiserAvslåttPeriode(resultater.get(1).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(3).minusDays(3), MØDREKVOTE, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         verifiserManuellBehandlingPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1), FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         verifiserPeriode(resultater.get(3).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), Perioderesultattype.INNVILGET, FELLESPERIODE);
     }
@@ -171,7 +160,7 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
         verifiserManuellBehandlingPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         verifiserManuellBehandlingPeriode(resultater.get(3).getUttakPeriode(), fødselsdato, fødselsdato, FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         assertThat(resultater.get(4).getUttakPeriode()).isInstanceOf(OppholdPeriode.class);
-        verifiserManuellBehandlingPeriode(resultater.get(4).getUttakPeriode(), fødselsdato.plusDays(1), fødselsdato.plusWeeks(6).minusDays(3), MØDREKVOTE, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.MANGLENDE_SØKT_PERIODE);
+        verifiserAvslåttPeriode(resultater.get(4).getUttakPeriode(), fødselsdato.plusDays(1), fødselsdato.plusWeeks(6).minusDays(3), MØDREKVOTE, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor() {

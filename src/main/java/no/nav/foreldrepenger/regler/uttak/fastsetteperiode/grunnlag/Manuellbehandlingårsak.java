@@ -5,7 +5,6 @@ public enum Manuellbehandlingårsak {
     UGYLDIG_STØNADSKONTO(5002, "Ugyldig stønadskonto"),
     BEGRUNNELSE_IKKE_GYLDIG(5003, "Begrunnelse ikke gyldig"),
     AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT(5004, "Aktivitetskravet må sjekkes manuelt"),
-    MANGLENDE_SØKT_PERIODE(5005, "Manglende søkt periode"),
     AVKLAR_ARBEID(5006, "Avklar arbeid"),
     SØKER_HAR_IKKE_OMSORG(5009, "Søker har ikke omsorg for barnet"),
     SØKNADSFRIST(5010, "Uttak ikke gyldig pga søknadsfrist"),
