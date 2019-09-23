@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
+import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -7,7 +9,6 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -70,7 +71,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                         .medFarHarRett(true)
                         .medMorHarRett(true)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.MØDREKVOTE)
                                 .medTrekkdager(15 * 5)
@@ -91,7 +92,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     public void når_søknadstype_er_fødsel_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 2
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
                                 .medTrekkdager(50)
@@ -136,7 +137,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     public void når_søknadstype_er_fødsel_og_søker_er_far_og_kun_far_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 4
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
                                 .medTrekkdager(50)
@@ -181,7 +182,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     public void når_søknadstype_er_adopsjon_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 6
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
                                 .medTrekkdager(50)
@@ -226,7 +227,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     public void når_søknadstype_er_adopsjon_og_søker_er_far_og_kun_en_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 8
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
                                 .medTrekkdager(50)

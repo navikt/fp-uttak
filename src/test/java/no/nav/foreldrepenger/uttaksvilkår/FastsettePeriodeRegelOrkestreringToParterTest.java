@@ -9,11 +9,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
@@ -54,7 +58,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                 .leggTilKonto(kvote(FEDREKVOTE, UKER_FK))
                 .leggTilKonto(kvote(FELLESPERIODE, UKER_FP))
                 .build();
-        return builder.leggTilKontoer(FAR_ARBEIDSFORHOLD, kontoer);
+        return builder.medKontoer(Map.of(FAR_ARBEIDSFORHOLD, kontoer))
+                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(FAR_ARBEIDSFORHOLD, new ArbeidTidslinje.Builder().build())).build());
     }
 
     private Konto kvote(Stønadskontotype foreldrepengerFørFødsel, int ukerFpff) {
@@ -94,8 +99,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(UKER_FPFF), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP, tomMorsFPsøknad))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(5);
@@ -154,8 +158,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(UKER_FPFF), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP, tomMorsFPsøknad))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(5);
@@ -217,8 +220,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(UKER_FPFF), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP, tomMorsFPsøknad))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(5);
@@ -276,8 +278,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP1, tomMorsFP1))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP2, tomMorsFP2))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(8);
@@ -326,8 +327,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP1, tomMorsFP1))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP2, tomMorsFP2))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(5);
@@ -372,8 +372,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP1, tomMorsFP1))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP2, tomMorsFP2))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(6);
@@ -417,8 +416,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(UKER_FPFF), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP1, tomMorsFP1))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(4);
@@ -462,8 +460,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .leggTilSøknadsperiode(uttakPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(UKER_FPFF), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(UKER_MK).minusDays(1)))
                         .leggTilSøknadsperiode(uttakPeriode(FELLESPERIODE, fomMorsFP1, tomMorsFP1))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         assertThat(resultat).hasSize(4);

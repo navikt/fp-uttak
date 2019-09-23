@@ -147,7 +147,19 @@ public class RegelGrunnlag {
             if (kladd.getDatoer() != null) {
                 validerDatoerOppMotSøknad();
             }
-            return kladd;
+            sjekkAtAlleArbeidsforholdHarKontoer();
+            //Hindre gjenbruk
+            RegelGrunnlag regelGrunnlag = this.kladd;
+            kladd = null;
+            return regelGrunnlag;
+        }
+
+        private void sjekkAtAlleArbeidsforholdHarKontoer() {
+            Set<AktivitetIdentifikator> arbeidsforhold = new HashSet<>(kladd.getArbeid().getAktiviteter());
+            Set<AktivitetIdentifikator> arbeidsforholdMedKontoer = kladd.getKontoer().keySet();
+            if (!arbeidsforhold.equals(arbeidsforholdMedKontoer)) {
+                throw new IllegalArgumentException("Alle arbeidsforhold må ha kontoer");
+            }
         }
 
         private void validerDatoerOppMotSøknad() {

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -38,6 +39,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfylt�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
@@ -188,7 +190,18 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                         .leggTilSøknadsperiode(ugradertSøknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .leggTilSøknadsperiode(gradertMedSamtidigUttak)
                         .build())
-                .build();
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15))
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 130))
+                        .build())
+                .leggTilKontoer(ARBEIDSFORHOLD_2, new Kontoer.Builder()
+                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15))
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 130))
+                        .build());
 
         RegelGrunnlag fastsettePeriodeGrunnlag = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag, new FeatureTogglesForTester());
@@ -201,7 +214,6 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
     public void utbetalingsgrad_og_trekkdager_skal_ta_utgangspunkt_samtidig_uttaksprosent_for_aktiviteter_uten_gradering_hvis_det_finnes_gradering() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.normal();
-        leggPåKvoter(grunnlag);
         BigDecimal arbeidstidsprosent = BigDecimal.TEN;
         BigDecimal samtidigUttaksprosent = BigDecimal.valueOf(50);
         //10 virkedager
@@ -226,7 +238,18 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                         .leggTilSøknadsperiode(ugradertSøknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .leggTilSøknadsperiode(gradertMedSamtidigUttak)
                         .build())
-                .build();
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15))
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 130))
+                        .build())
+                .leggTilKontoer(ARBEIDSFORHOLD_2, new Kontoer.Builder()
+                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15))
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 50))
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 130))
+                        .build());
 
         RegelGrunnlag fastsettePeriodeGrunnlag = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag, new FeatureTogglesForTester());
@@ -443,8 +466,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                         .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                         .leggTilKonto(konto(MØDREKVOTE, 50))
                         .build())
-                .medInngangsvilkår(oppfyltInngangsvilkår())
-                .build();
+                .medInngangsvilkår(oppfyltInngangsvilkår());
 
         RegelGrunnlag fastsettePeriodeGrunnlag = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag, new FeatureTogglesForTester());

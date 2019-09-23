@@ -225,7 +225,7 @@ public class RevurderingTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new Kontoer.Builder()
+                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.MØDREKVOTE)
                                 .medTrekkdager(50)

@@ -53,7 +53,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -68,7 +68,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -115,7 +115,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100))))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -131,7 +131,7 @@ public class FedrekvoteDelregelTest {
         søknadsperiode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
             .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
-            .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteOgFlerbarnsdagerKonto(1000, 85))
+            .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteOgFlerbarnsdagerKonto(1000, 85))
             .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -156,7 +156,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE).build());
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -181,7 +181,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE).build());
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -206,7 +206,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE).build());
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -231,7 +231,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE).build());
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -256,7 +256,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE).build());
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -277,7 +277,7 @@ public class FedrekvoteDelregelTest {
         søknadsperiode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(1000))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -292,7 +292,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(1000))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -307,7 +307,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(1000))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -322,7 +322,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6).plusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(1000))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -337,7 +337,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), fedrekvoteKonto(1000))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -359,7 +359,7 @@ public class FedrekvoteDelregelTest {
                         .medType(Søknadstype.FØDSEL)
                         .medSøknadsperioder(Collections.singletonList(periode))
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(periode, grunnlag);
@@ -381,7 +381,7 @@ public class FedrekvoteDelregelTest {
                         .medType(Søknadstype.FØDSEL)
                         .medSøknadsperioder(Collections.singletonList(periode))
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), kontoer.build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer.build())
                 .build();
 
         Regelresultat regelresultat = kjørRegel(periode, grunnlag);

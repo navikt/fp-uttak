@@ -48,8 +48,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 fødselsdato.minusWeeks(1).minusDays(1), null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.minusWeeks(1),
                                 fødselsdato.plusWeeks(6).minusDays(1), null, false))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -97,8 +96,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                                 .build())
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -142,8 +140,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 fødselsdato.plusWeeks(10).minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1), null, false))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -175,8 +172,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 fødselsdato.plusWeeks(10).minusDays(1), null, PeriodeVurderingType.UAVKLART_PERIODE, null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1), null, false))
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -226,8 +222,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                                 .build())
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 

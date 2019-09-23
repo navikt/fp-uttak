@@ -10,7 +10,6 @@ import java.util.Collections;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -48,7 +47,7 @@ public class FellesperiodeMedGraderingTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5))
                         .build())
                 .build();
@@ -69,7 +68,7 @@ public class FellesperiodeMedGraderingTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5))
                         .build())
                 .build();
