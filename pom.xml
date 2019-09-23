@@ -1,71 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>no.nav.foreldrepenger</groupId>
     <artifactId>uttak-regler</artifactId>
     <version>${revision}${sha1}${changelist}</version>
     <packaging>jar</packaging>
+    <name>FPSAK Uttaksregler ::</name>
+    <description>Uttaksregler for foreldrepenger.</description>
+    <url>https://github.com/navikt/fp-uttak</url>
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:navikt/fp-uttak.git</developerConnection>
+        <connection>scm:git:git@github.com:navikt/fp-uttak.git</connection>
+        <url>https://github.com/navikt/fp-uttak</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <organization>
+        <name>no.nav</name>
+        <url>https://github.com/navikt</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration
+            </organization>
+            <organizationUrl>https://www.nav.no</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <revision>1.2</revision>
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
-			<java.version>11</java.version>
-			<maven.compiler.source>${java.version}</maven.compiler.source>
-			<maven.compiler.target>${java.version}</maven.compiler.target>
-			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-			<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-			<fpsak.nare.version>1.4.5</fpsak.nare.version>
-            <fpsak.tidsserie.version>1.7</fpsak.tidsserie.version>
-			<junit.version>4.12</junit.version>
-			<assertj.version>3.8.0</assertj.version>
-			<jackson.version>2.9.3</jackson.version>
-		    </properties>
-
-
-		    <dependencies>
-			<dependency>
-			    <groupId>no.nav.fpsak.nare</groupId>
-			    <artifactId>fpsak-nare-core</artifactId>
-			    <version>${fpsak.nare.version}</version>
-			</dependency>
-                <dependency>
-                    <groupId>no.nav.fpsak.tidsserie</groupId>
-                    <artifactId>fpsak-tidsserie</artifactId>
-                    <version>${fpsak.tidsserie.version}</version>
-                </dependency>
-			<dependency>
-			    <groupId>com.fasterxml.jackson.datatype</groupId>
-			    <artifactId>jackson-datatype-jsr310</artifactId>
-			    <version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>com.fasterxml.jackson.core</groupId>
-			    <artifactId>jackson-databind</artifactId>
-			    <version>${jackson.version}</version>
-			</dependency>
+        <fpsak.nare.version>2.0_20190920161214_4bd908d</fpsak.nare.version>
+        <fpsak.tidsserie.version>2.0_20190920104957_9cddd73</fpsak.tidsserie.version>
+        <junit.version>4.12</junit.version>
+        <assertj.version>3.8.0</assertj.version>
+        <jackson.version>2.9.7</jackson.version>
+    </properties>
 
 
-                <!-- Test avhengigheter -->
-			<dependency>
-			    <groupId>junit</groupId>
-			    <artifactId>junit</artifactId>
-			    <version>${junit.version}</version>
-			    <scope>test</scope>
-			</dependency>
-			<dependency>
-			    <groupId>org.assertj</groupId>
-			    <artifactId>assertj-core</artifactId>
-			    <version>${assertj.version}</version>
-			    <scope>test</scope>
-			</dependency>
-		    </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>no.nav.fpsak.nare</groupId>
+            <artifactId>fpsak-nare-core</artifactId>
+            <version>${fpsak.nare.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.fpsak.tidsserie</groupId>
+            <artifactId>fpsak-tidsserie</artifactId>
+            <version>${fpsak.tidsserie.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
-		    <build>
-			<pluginManagement>
-			    <plugins>
+
+        <!-- Test avhengigheter -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
@@ -90,7 +121,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
@@ -154,7 +185,7 @@
                 <artifactId>flatten-maven-plugin</artifactId>
                 <configuration>
                     <flattenMode>bom</flattenMode>
-					<flattenedPomFilename>.flattened</flattenedPomFilename>
+                    <flattenedPomFilename>.flattened</flattenedPomFilename>
                 </configuration>
                 <executions>
                     <execution>
@@ -221,11 +252,31 @@
                     </rules>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <!-- By default, this is the phase deploy goal will bind to -->
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
-       <profile>
+        <profile>
             <id>runSonar</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -234,7 +285,7 @@
                 <!-- maven.root bør overstyres fra cmdline -->
                 <maven.root>${project.basedir}</maven.root>
 
-                <sonar.language />
+                <sonar.language/>
                 <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
                 <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
                 <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
@@ -285,7 +336,8 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <argLine>${jacoco.agent.argLine} -Xms384M -Dfile.encoding=UTF-8 -Dlog.level.no.nav=WARN</argLine>
+                            <argLine>${jacoco.agent.argLine} -Xms384M -Dfile.encoding=UTF-8 -Dlog.level.no.nav=WARN
+                            </argLine>
                         </configuration>
                     </plugin>
 
@@ -316,46 +368,88 @@
                             </argLine>
                         </configuration>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>
         <profile>
-            <id>iapp</id>
+            <id>release</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>release</name>
+                </property>
             </activation>
-            <distributionManagement>
-                <repository>
-                    <id>iapp-releases</id>
-                    <name>NAV internal Nexus</name>
-                    <url>https://repo.adeo.no/repository/maven-releases</url>
-                </repository>
-                <snapshotRepository>
-                    <id>iapp-snapshots</id>
-                    <name>NAV Snapshot Repository</name>
-                    <url>https://repo.adeo.no/repository/maven-snapshots</url>
-                    <uniqueVersion>false</uniqueVersion>
-                </snapshotRepository>
-            </distributionManagement>
+            <build>
+                <plugins>
+                    <!--create source jar-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!--create empty javadoc jar-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>empty-javadoc-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>javadoc</classifier>
+                                    <classesDirectory>${basedir}/src/main/javadoc</classesDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!--sign jars with pgp-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
-    <scm>
-        <connection>scm:git:ssh://git@stash.devillo.no:7999/vedfp/vl-foreldrepenger-uttak.git</connection>
-        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/vedfp/vl-foreldrepenger-uttak.git</developerConnection>
-        <url>http://stash.devillo.no/projects/VEDFP/repos/vl-foreldrepenger-uttak</url>
-    </scm>
 
-	<distributionManagement>
-		<repository>
-			<id>repo.adeo.no-releases</id>
-			<url>https://repo.adeo.no/repository/maven-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>repo.adeo.no-snapshots</id>
-			<url>https://repo.adeo.no/repository/maven-snapshots</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-</distributionManagement>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
 </project>
