@@ -52,7 +52,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -66,7 +66,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(3), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -79,7 +79,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -92,7 +92,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(10), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -105,7 +105,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(10), fødselsdato.minusWeeks(5), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(10 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -125,7 +125,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14))))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -138,7 +138,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10))))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -151,7 +151,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -164,7 +164,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(13 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(13 * 5))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -177,7 +177,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -190,7 +190,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -203,7 +203,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -216,7 +216,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -229,7 +229,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.PERIODE_OK, null, true);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
             .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
-            .leggTilKontoer(AktivitetIdentifikator.forFrilans(), fellesperiodeOgFlerbarnsdagerKonto(100, 85))
+            .leggTilKontoer(ARBEIDSFORHOLD_1, fellesperiodeOgFlerbarnsdagerKonto(100, 85))
             .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -242,7 +242,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -258,7 +258,7 @@ public class FellesperiodeDelregelTest {
                 Oppholdårsaktype.KVOTE_FELLESPERIODE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -277,7 +277,7 @@ public class FellesperiodeDelregelTest {
                 Oppholdårsaktype.KVOTE_FELLESPERIODE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 0))
                         .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100))
                         .build())
@@ -297,7 +297,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+            .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
             .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -308,10 +308,9 @@ public class FellesperiodeDelregelTest {
     @Test
     public void UT1270_far_etterUke7_omsorg_disponibleStønadsdager_gradering_flerbarnsdager() {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, true);
-        AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         RegelGrunnlag grunnlag = basicGrunnlagFar()
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(aktivitetIdentifikator, fellesperiodeOgFlerbarnsdagerKonto(100, 85))
+            .leggTilKontoer(ARBEIDSFORHOLD_1, fellesperiodeOgFlerbarnsdagerKonto(100, 85))
             .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -324,7 +323,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, false);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enFellesperiodeKonto(100))
+            .leggTilKontoer(ARBEIDSFORHOLD_1, enFellesperiodeKonto(100))
             .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -337,7 +336,7 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, true);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(AktivitetIdentifikator.forFrilans(), fellesperiodeOgFlerbarnsdagerKonto(100, 85))
+            .leggTilKontoer(ARBEIDSFORHOLD_1, fellesperiodeOgFlerbarnsdagerKonto(100, 85))
             .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);

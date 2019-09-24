@@ -58,8 +58,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
                 .medArbeid(new ArbeidGrunnlag.Builder()
                         .medArbeidsprosenter(new Arbeidsprosenter().leggTil(ARBEIDSFORHOLD, arbeidTidslinje))
                         .build())
-                .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote))
-                .build();
+                .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -103,8 +102,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
                         .leggTilSøknadsperiode(utsettelseFellesperiode)
                         .leggTilSøknadsperiode(fellesperiode)
                         .medType(Søknadstype.FØDSEL)
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -139,7 +137,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), BigDecimal.valueOf(20));
         List<AktivitetIdentifikator> aktiviteter = Collections.singletonList(ARBEIDSFORHOLD_1);
-        leggPåKvoter(grunnlag);
+        leggPåKvoter(grunnlag, aktiviteter);
         UttakPeriode fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         UttakPeriode mødrekvote = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         StønadsPeriode gradertFellesperiode = StønadsPeriode.medGradering(FELLESPERIODE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
@@ -187,7 +185,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
         List<AktivitetIdentifikator> aktivititeter = Arrays.asList(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2);
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiodeMedFlereAktiviteter(fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), new BigDecimal("17.55"), aktivititeter);
-        leggPåKvoter(grunnlag);
+        leggPåKvoter(grunnlag, aktivititeter);
         UttakPeriode fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         UttakPeriode mødrekvote = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         UttakPeriode gradertFellesperiode = StønadsPeriode.medGradering(FELLESPERIODE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(6),
@@ -210,8 +208,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true)
-                        .build())
-                .build();
+                        .build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -220,13 +217,16 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
         assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(new BigDecimal("82.45"));
     }
 
-    private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {
-        return builder.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
-                .leggTilKonto(konto(MØDREKVOTE, 50))
-                .leggTilKonto(konto(FEDREKVOTE, 50))
-                .leggTilKonto(konto(FELLESPERIODE, 130))
-                .build());
+    private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder, List<AktivitetIdentifikator> aktivitetIdentifikatorer) {
+        for (AktivitetIdentifikator aktivitetIdentifikator : aktivitetIdentifikatorer) {
+            builder.leggTilKontoer(aktivitetIdentifikator, new Kontoer.Builder()
+                    .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+                    .leggTilKonto(konto(MØDREKVOTE, 50))
+                    .leggTilKonto(konto(FEDREKVOTE, 50))
+                    .leggTilKonto(konto(FELLESPERIODE, 130))
+                    .build());
+        }
+        return builder;
     }
 
     private UttakPeriode utsettelsePeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, Utsettelseårsaktype årsak) {

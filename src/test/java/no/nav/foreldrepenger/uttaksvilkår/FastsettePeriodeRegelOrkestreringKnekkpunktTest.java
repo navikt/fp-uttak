@@ -233,9 +233,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                                 null, false))
                         .build())
                 .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(200).build())
-                        .build())
-                .build();
+                        .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(200).build()).build());
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 

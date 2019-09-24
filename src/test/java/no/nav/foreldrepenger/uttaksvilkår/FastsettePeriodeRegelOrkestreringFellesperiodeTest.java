@@ -95,14 +95,13 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(16*5).build())
                 .build();
 
-        basicGrunnlagMor()
+        var grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(
-                    Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FELLESPERIODE, fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(1).minusDays(1)),
-                        søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1)),
-                        søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
+                        Søknadstype.FØDSEL, søknadsperiode(FELLESPERIODE, fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(1).minusDays(1)),
+                        søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1)),
+                        søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
                 ))
-                .leggTilKontoer(ARBEIDSFORHOLD, kontoer)
-                .build();
+                .leggTilKontoer(ARBEIDSFORHOLD, kontoer);
 
         List<FastsettePeriodeResultat> resultater = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 

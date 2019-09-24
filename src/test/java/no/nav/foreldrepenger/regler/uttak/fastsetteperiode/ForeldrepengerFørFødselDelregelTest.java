@@ -46,7 +46,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8), familiehendelseDato.plusWeeks(9));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -60,7 +60,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -74,7 +74,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         UttakPeriode uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -90,7 +90,7 @@ public class ForeldrepengerFørFødselDelregelTest {
                 familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -108,7 +108,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato)
                 .medBehandling(søkerErFarBehandling())
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new Kontoer.Builder()
+                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                         //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
                         .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))

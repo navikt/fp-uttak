@@ -175,7 +175,7 @@ public class KnekkpunktIdentifisererTest {
     public void skal_finne_knekkpunkter_ved_endring_i_arbeidsprosent() {
         LocalDate fødselsdato = LocalDate.of(2018, 2, 22);
         LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
-        AktivitetIdentifikator arbeidsforhold1 = AktivitetIdentifikator.forArbeid("000000000", null);
+        AktivitetIdentifikator arbeidsforhold1 = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
         LocalDate tirsdagUke18 = LocalDate.of(2018, 5, 1);
         LocalDate fredagUke18 = LocalDate.of(2018, 5, 4);
         LocalDate mandagUke19 = LocalDate.of(2018, 5, 7);
@@ -463,7 +463,6 @@ public class KnekkpunktIdentifisererTest {
         LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         LocalDate tom = LocalDate.of(2019, 5, 25);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new ArbeidGrunnlag.Builder().build())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(new UtsettelsePeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, tom,

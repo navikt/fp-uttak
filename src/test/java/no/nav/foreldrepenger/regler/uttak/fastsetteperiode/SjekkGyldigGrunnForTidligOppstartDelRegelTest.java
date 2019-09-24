@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perio
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -13,7 +14,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -50,7 +50,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -74,7 +74,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enKonto(FELLESPERIODE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FELLESPERIODE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -93,7 +93,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.forFrilans(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -124,12 +124,12 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.annenAktivitet(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.annenAktivitet(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -154,7 +154,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.annenAktivitet(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -178,7 +178,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.annenAktivitet(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -210,7 +210,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .leggTilSøknadsperiode(uttakPeriode2)
                         .leggTilSøknadsperiode(uttakPeriode3)
                         .build())
-                .leggTilKontoer(AktivitetIdentifikator.annenAktivitet(), enKonto(FEDREKVOTE, 10 * 5))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());

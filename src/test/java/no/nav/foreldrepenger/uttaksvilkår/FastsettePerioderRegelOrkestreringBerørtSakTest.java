@@ -15,9 +15,6 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -62,9 +59,6 @@ public class FastsettePerioderRegelOrkestreringBerørtSakTest {
          */
         PeriodeUtenOmsorg periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(FAR_ARBEIDSFORHOLD, new ArbeidTidslinje.Builder().build()))
-                        .build())
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeDato)
@@ -90,23 +84,18 @@ public class FastsettePerioderRegelOrkestreringBerørtSakTest {
                                 .build())
                         .build());
 
-        leggPåKvoter(grunnlag);
-
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
         UttakPeriode resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(resultatPeriode.getUtbetalingsgrad(FAR_ARBEIDSFORHOLD)).isZero();
-        assertThat(resultatPeriode.getTrekkdager(FAR_ARBEIDSFORHOLD).decimalValue()).isZero();
+        assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isZero();
+        assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isZero();
     }
 
     @Test
     public void skal_ikke_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_avslått_samme_tidsrom() {
         PeriodeUtenOmsorg periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(FAR_ARBEIDSFORHOLD, new ArbeidTidslinje.Builder().build()))
-                        .build())
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeDato)
@@ -132,14 +121,12 @@ public class FastsettePerioderRegelOrkestreringBerørtSakTest {
                                 .build())
                         .build());
 
-        leggPåKvoter(grunnlag);
-
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
         UttakPeriode resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(resultatPeriode.getUtbetalingsgrad(FAR_ARBEIDSFORHOLD)).isZero();
-        assertThat(resultatPeriode.getTrekkdager(FAR_ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isZero();
+        assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isNotZero();
     }
 
     private UttakPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
