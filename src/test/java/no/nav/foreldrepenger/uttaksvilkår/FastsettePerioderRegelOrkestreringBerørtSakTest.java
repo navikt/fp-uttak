@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
@@ -133,12 +133,12 @@ public class FastsettePerioderRegelOrkestreringBerørtSakTest {
         return new StønadsPeriode(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, null, false);
     }
 
-    private FastsattPeriodeAnnenPart annenpartsPeriode(Stønadskontotype stønadskontotype,
-                                                       LocalDate fom,
-                                                       LocalDate tom,
-                                                       AktivitetIdentifikator aktivitet,
-                                                       boolean innvilget) {
-        return new FastsattPeriodeAnnenPart.Builder(fom, tom)
+    private AnnenpartUttaksperiode annenpartsPeriode(Stønadskontotype stønadskontotype,
+                                                     LocalDate fom,
+                                                     LocalDate tom,
+                                                     AktivitetIdentifikator aktivitet,
+                                                     boolean innvilget) {
+        return new AnnenpartUttaksperiode.Builder(fom, tom)
                 .medSamtidigUttak(true)
                 .medInnvilgetUtsettelse(false)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitet, stønadskontotype,

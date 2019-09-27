@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeRegel
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
@@ -174,7 +174,7 @@ public class FastsettePerioderRegelOrkestrering {
         Arbeidsprosenter arbeidsprosenter = regelGrunnlag.getArbeid().getArbeidsprosenter();
         switch (utfallType) {
             case AVSLÅTT:
-                List<FastsattPeriodeAnnenPart> annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
+                List<AnnenpartUttaksperiode> annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
                 regelResultatBehandlerResultat = behandler.avslåAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getAvklaringÅrsak(),
                         arbeidsprosenter, regelresultat.skalUtbetale(), overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
                 break;
@@ -193,11 +193,11 @@ public class FastsettePerioderRegelOrkestrering {
         return regelResultatBehandlerResultat;
     }
 
-    private List<FastsattPeriodeAnnenPart> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
+    private List<AnnenpartUttaksperiode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
         return regelGrunnlag.getAnnenPart() == null ? Collections.emptyList() : regelGrunnlag.getAnnenPart().getUttaksperioder();
     }
 
-    private boolean overlapperMedInnvilgetAnnenpartsPeriode(UttakPeriode aktuellPeriode, List<FastsattPeriodeAnnenPart> annenPartUttaksperioder) {
+    private boolean overlapperMedInnvilgetAnnenpartsPeriode(UttakPeriode aktuellPeriode, List<AnnenpartUttaksperiode> annenPartUttaksperioder) {
         return annenPartUttaksperioder.stream().anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget());
     }
 

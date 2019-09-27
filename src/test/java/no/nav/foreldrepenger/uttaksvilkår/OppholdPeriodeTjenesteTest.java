@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
@@ -284,7 +284,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, hullDato.minusDays(1), null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
                         .build())
                 .build();
 
@@ -307,7 +307,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, hullDato.minusDays(1), null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
                         .build())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringssøknadMottattdato(LocalDate.of(2018, 8,8))
@@ -333,8 +333,8 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(10), null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(fødselsdato.plusWeeks(7).plusDays(1), fødselsdato.plusWeeks(8)).build())
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(fødselsdato.plusWeeks(9).plusDays(1), fødselsdato.plusWeeks(11)).build())
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(7).plusDays(1), fødselsdato.plusWeeks(8)).build())
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(9).plusDays(1), fødselsdato.plusWeeks(11)).build())
                         .build())
                 .build();
 
@@ -356,7 +356,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, mødrekvoteSlutt, null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(annenPartStart, annenPartStart.plusWeeks(10)).build())
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(annenPartStart, annenPartStart.plusWeeks(10)).build())
                         .build())
                 .build();
 
@@ -378,7 +378,7 @@ public class OppholdPeriodeTjenesteTest {
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
                         // Annen part starter mandagen etter
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
                                 .medSamtidigUttak(true)
                                 .build())
                         .build())
@@ -598,6 +598,112 @@ public class OppholdPeriodeTjenesteTest {
     }
 
     @Test
+    public void skalIkkeLageManglendeSøktFrOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartHarUttakITidsrommet() {
+        LocalDate omsorgsovertakelse = LocalDate.of(2018, 12, 4);
+
+        var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
+        RegelGrunnlag grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, førsteUttaksdato,
+                                førsteUttaksdato.plusWeeks(2), null, false))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(false)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(omsorgsovertakelse)
+                        .build())
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(null)
+                        .build())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(omsorgsovertakelse, førsteUttaksdato.minusDays(1)).build())
+                        .build())
+                .build();
+
+        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(hull).isEmpty();
+    }
+
+    @Test
+    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartIkkeHarTattHelePeriodenFramTilSøkersFørsteUttaksdato() {
+        LocalDate omsorgsovertakelse = LocalDate.of(2018, 12, 4);
+
+        var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
+        RegelGrunnlag grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, førsteUttaksdato,
+                                førsteUttaksdato.plusWeeks(2), null, false))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(omsorgsovertakelse)
+                        .build())
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(null)
+                        .build())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(omsorgsovertakelse, førsteUttaksdato.minusWeeks(1)).build())
+                        .build())
+                .build();
+
+        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(hull).hasSize(1);
+        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
+        assertThat(hull.get(0).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
+    }
+
+    @Test
+    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagAnnenpartHvisAnnenpartHarUttakMidtMellomOmsorgsovertakelseOgSøkersFørsteUttaksdag() {
+        LocalDate omsorgsovertakelse = LocalDate.of(2018, 12, 4);
+
+        var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
+        RegelGrunnlag grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, førsteUttaksdato,
+                                førsteUttaksdato.plusWeeks(2), null, false))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(omsorgsovertakelse)
+                        .build())
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(null)
+                        .build())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(omsorgsovertakelse.plusWeeks(1), førsteUttaksdato.minusWeeks(1)).build())
+                        .build())
+                .build();
+
+        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(hull).hasSize(2);
+        assertThat(hull.get(0).getFom()).isEqualTo(omsorgsovertakelse);
+        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getFom().minusDays(1));
+        assertThat(hull.get(1).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
+        assertThat(hull.get(1).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
+    }
+
+    @Test
     public void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjonPlussVanligeHullMellomPerioder() {
         LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
 
@@ -651,7 +757,7 @@ public class OppholdPeriodeTjenesteTest {
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
                         // Annen part starter mandagen etter
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
                                 .medSamtidigUttak(true)
                                 .build())
                         .build())
@@ -729,7 +835,7 @@ public class OppholdPeriodeTjenesteTest {
                         .medSkjæringstidspunkt(fødselsdato.plusWeeks(7))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8)).build())
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8)).build())
                         .build())
                 .build();
 
