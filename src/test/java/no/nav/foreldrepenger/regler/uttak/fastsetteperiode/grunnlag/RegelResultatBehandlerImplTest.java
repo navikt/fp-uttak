@@ -33,6 +33,7 @@ public class RegelResultatBehandlerImplTest {
         TomKontoKnekkpunkt knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         UttakPeriode uttakPeriode = new StønadsPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD,
                 fom, tom, null, false);
+        uttakPeriode.setSluttpunktTrekkerDager(true);
         RegelResultatBehandlerResultat resultat = behandler.avslåAktuellPeriode(uttakPeriode, Optional.of(knekkpunkt), null,
                 arbeidsprosenter, true, false);
 

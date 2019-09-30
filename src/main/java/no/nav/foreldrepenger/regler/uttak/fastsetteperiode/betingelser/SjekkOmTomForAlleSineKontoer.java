@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
@@ -17,6 +17,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.5.1";
+    public static final String BESKRIVELSE = "Er søker tom for alle sine kontoer?";
 
     public SjekkOmTomForAlleSineKontoer() {
         super(ID);
@@ -37,11 +38,11 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
 
     }
 
-    List<Stønadskontotype> hentSøkerSineKonto(FastsettePeriodeGrunnlag grunnlag) {
+    static List<Stønadskontotype> hentSøkerSineKonto(FastsettePeriodeGrunnlag grunnlag) {
         return hentSøkerSineKontoer(grunnlag);
     }
 
-    private List<Stønadskontotype> hentSøkerSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
+    private static List<Stønadskontotype> hentSøkerSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         if (!søkerOgAnnenForelderSineKontoer(grunnlag).contains(Stønadskontotype.FORELDREPENGER)) {
             if (grunnlag.isSøkerMor()) {
@@ -55,7 +56,7 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
         return søkerSineKonto;
     }
 
-    private List<Stønadskontotype> søkerOgAnnenForelderSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getGyldigeStønadskontotyper().stream().collect(Collectors.toList());
+    private static List<Stønadskontotype> søkerOgAnnenForelderSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
+        return new ArrayList<>(grunnlag.getGyldigeStønadskontotyper());
     }
 }
