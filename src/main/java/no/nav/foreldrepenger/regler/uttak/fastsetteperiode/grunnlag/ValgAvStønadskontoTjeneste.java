@@ -13,28 +13,27 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 /**
  * Brukes ved når det skal trekkes dager fra periode uten stønadskontotype
  */
-final class ValgAvStønadskontoTjeneste {
+public final class ValgAvStønadskontoTjeneste {
 
     private ValgAvStønadskontoTjeneste() {
     }
 
-    static Optional<Stønadskontotype> velgStønadskonto(UttakPeriode periode,
-                                                       RegelGrunnlag regelGrunnlag,
-                                                       Trekkdagertilstand trekkdagertilstand,
-                                                       Konfigurasjon konfigurasjon) {
+    public static Optional<Stønadskontotype> velgStønadskonto(UttakPeriode periode,
+                                                              RegelGrunnlag regelGrunnlag,
+                                                              Trekkdagertilstand trekkdagertilstand,
+                                                              Konfigurasjon konfigurasjon) {
         if (!Stønadskontotype.UKJENT.equals(periode.getStønadskontotype())) {
             throw new IllegalArgumentException("Forventet periode uten stønadskontotype");
         }
         if (erUtsettelse(periode)) {
             return velgStønadskontoForUtsettelse((UtsettelsePeriode) periode, regelGrunnlag, trekkdagertilstand, konfigurasjon);
         }
-        return velgStønadskontoVanligPeriode(periode, regelGrunnlag, trekkdagertilstand);
+        return velgStønadskontoVanligPeriode(regelGrunnlag, trekkdagertilstand);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(UttakPeriode periode,
-                                                                            RegelGrunnlag regelGrunnlag,
+    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(RegelGrunnlag regelGrunnlag,
                                                                             Trekkdagertilstand trekkdagertilstand) {
-        return velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand);
+        return velgStønadskonto(regelGrunnlag, trekkdagertilstand);
     }
 
     private static boolean erUtsettelse(UttakPeriode periode) {
@@ -48,14 +47,13 @@ final class ValgAvStønadskontoTjeneste {
         if (periodeErPleiepenger(periode, regelGrunnlag, konfigurasjon)) {
             return stønadskontoVedPleiepenger(regelGrunnlag);
         }
-        return velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand);
+        return velgStønadskonto(regelGrunnlag, trekkdagertilstand);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskonto(UttakPeriode periode,
-                                                               RegelGrunnlag regelGrunnlag,
+    private static Optional<Stønadskontotype> velgStønadskonto(RegelGrunnlag regelGrunnlag,
                                                                Trekkdagertilstand trekkdagertilstand) {
         for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
-            if (!erTomForKonto(periode, stønadskontotype, regelGrunnlag, trekkdagertilstand)) {
+            if (!erTomForKonto(stønadskontotype, regelGrunnlag, trekkdagertilstand)) {
                 return Optional.of(stønadskontotype);
             }
         }
@@ -96,11 +94,11 @@ final class ValgAvStønadskontoTjeneste {
         return søkerSineKonto;
     }
 
-    private static boolean erTomForKonto(UttakPeriode periode, Stønadskontotype stønadskontotype, RegelGrunnlag regelGrunnlag, Trekkdagertilstand trekkdagertilstand) {
+    private static boolean erTomForKonto(Stønadskontotype stønadskontotype, RegelGrunnlag regelGrunnlag, Trekkdagertilstand trekkdagertilstand) {
         boolean tomForKonto = false;
         for (AktivitetIdentifikator aktivitet : regelGrunnlag.getKontoer().keySet()) {
-            Trekkdager saldo = trekkdagertilstand.saldo(aktivitet, stønadskontotype).subtract(periode.getTrekkdager(aktivitet));
-            if (saldo.mindreEnn0()) {
+            Trekkdager saldo = trekkdagertilstand.saldo(aktivitet, stønadskontotype);
+            if (!saldo.merEnn0()) {
                 tomForKonto = true;
                 break;
             }

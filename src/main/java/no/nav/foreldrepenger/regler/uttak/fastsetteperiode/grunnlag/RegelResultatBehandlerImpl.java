@@ -148,10 +148,12 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     }
 
     private void trekkSaldo(UttakPeriode uttakPeriode) {
-        if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
-            utledeKonto(uttakPeriode);
+        if (uttakPeriode.getSluttpunktTrekkerDager()) {
+            if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
+                utledeKonto(uttakPeriode);
+            }
+            trekkdagertilstand.reduserSaldo(uttakPeriode);
         }
-        trekkdagertilstand.reduserSaldo(uttakPeriode);
     }
 
     private void utledeKonto(UttakPeriode periode) {
@@ -159,7 +161,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
         if (stønadskontotypeOpt.isPresent()) {
             periode.setStønadskontotype(stønadskontotypeOpt.get());
         } else {
-            periode.overstyrSluttpunktOmSluttpunktSkalTrekkedager();
+            throw new IllegalStateException("Prøver å trekke dager fra ukjent konto");
         }
     }
 }

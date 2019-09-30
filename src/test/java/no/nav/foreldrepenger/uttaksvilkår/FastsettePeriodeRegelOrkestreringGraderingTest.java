@@ -771,7 +771,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FEDREKVOTE, LocalDate.of(2019, 5, 3),
                                 LocalDate.of(2019, 7, 5), BigDecimal.valueOf(60)))
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(Stønadskontotype.UKJENT, PeriodeKilde.SØKNAD, LocalDate.of(2019, 7, 8),
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2019, 7, 8),
                                 LocalDate.of(2019, 7, 26), Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT, null,
                                 false))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FEDREKVOTE, LocalDate.of(2019, 7, 29),

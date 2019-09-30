@@ -791,7 +791,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 7, 30), LocalDate.of(2018, 8, 19)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, LocalDate.of(2018, 8, 20), LocalDate.of(2018, 12, 2)))
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31),
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31),
                                 Utsettelseårsaktype.INNLAGT_HELSEINSTITUSJON, PeriodeVurderingType.PERIODE_OK, null, false))
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderMedInnleggelse(new PeriodeMedInnleggelse(LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31)))

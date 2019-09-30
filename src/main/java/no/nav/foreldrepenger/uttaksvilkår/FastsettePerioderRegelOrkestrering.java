@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.uttaksvilkår;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -21,15 +22,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeri
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OrkestreringTillegg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelResultatBehandler;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelResultatBehandlerImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelResultatBehandlerResultat;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ValgAvStønadskontoTjeneste;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
@@ -68,15 +70,14 @@ public class FastsettePerioderRegelOrkestrering {
 
         List<FastsettePeriodeResultat> resultatPerioder = new ArrayList<>();
         for (UttakPeriode aktuellPeriode : allePerioderSomSkalFastsettes) {
-            FastsettePeriodeResultat resultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, trekkdagerTilstand, aktuellPeriode);
-            resultatPerioder.add(resultat);
-            if (resultat.harFørtTilKnekk()) {
-                FastsettePeriodeResultat etterKnekkResultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, trekkdagerTilstand, resultat.getPeriodeEtterKnekk());
-                if (etterKnekkResultat.harFørtTilKnekk()) {
-                    throw new IllegalStateException("Forventet ikke at periode har ført til knekk. Den opprinnelige perioder har allerede blitt knekt en gang");
+            FastsettePeriodeResultat resultat;
+            do {
+                resultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, trekkdagerTilstand, aktuellPeriode);
+                resultatPerioder.add(resultat);
+                if (resultat.harFørtTilKnekk()) {
+                    aktuellPeriode = resultat.getPeriodeEtterKnekk();
                 }
-                resultatPerioder.add(etterKnekkResultat);
-            }
+            } while (resultat.harFørtTilKnekk());
         }
 
         //Bare for å sikre rekkefølge
@@ -98,7 +99,8 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private FastsettePeriodeResultat fastsettPeriode(FastsettePeriodeRegel fastsettePeriodeRegel,
-                                                     Konfigurasjon konfigurasjon, RegelGrunnlag grunnlag,
+                                                     Konfigurasjon konfigurasjon,
+                                                     RegelGrunnlag grunnlag,
                                                      Trekkdagertilstand trekkdagertilstand,
                                                      UttakPeriode aktuellPeriode) {
         FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag = new FastsettePeriodeGrunnlagImpl(grunnlag, trekkdagertilstand, aktuellPeriode);
@@ -108,8 +110,8 @@ public class FastsettePerioderRegelOrkestrering {
         Evaluation evaluering = fastsettePeriodeRegel.evaluer(fastsettePeriodeGrunnlag);
         String inputJson = toJson(fastsettePeriodeGrunnlag);
         String regelJson = EvaluationSerializer.asJson(evaluering);
-        RegelResultatBehandlerResultat regelResultatBehandlerResultat = behandleRegelresultat(evaluering, aktuellPeriode, regelResultatBehandler,
-                fastsettePeriodeGrunnlag.getArbeidsprosenter(), fastsettePeriodeGrunnlag);
+        RegelResultatBehandlerResultat regelResultatBehandlerResultat = behandleRegelresultat(evaluering, aktuellPeriode,
+                regelResultatBehandler, grunnlag, konfigurasjon, trekkdagertilstand);
 
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson, regelResultatBehandlerResultat.getEtterKnekkPeriode());
     }
@@ -156,8 +158,9 @@ public class FastsettePerioderRegelOrkestrering {
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,
                                                                  UttakPeriode aktuellPeriode,
                                                                  RegelResultatBehandler behandler,
-                                                                 Arbeidsprosenter arbeidsprosenter,
-                                                                 FastsettePeriodeGrunnlag grunnlag) {
+                                                                 RegelGrunnlag regelGrunnlag,
+                                                                 Konfigurasjon konfig,
+                                                                 Trekkdagertilstand trekkdagertilstand) {
         final RegelResultatBehandlerResultat regelResultatBehandlerResultat;
         Regelresultat regelresultat = new Regelresultat(evaluering);
         aktuellPeriode.setSluttpunktTrekkerDager(regelresultat.trekkDagerFraSaldo());
@@ -166,13 +169,14 @@ public class FastsettePerioderRegelOrkestrering {
         UtfallType graderingUtfall = regelresultat.getGradering();
         boolean avslåGradering = UtfallType.AVSLÅTT.equals(graderingUtfall);
         GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak = regelresultat.getGraderingIkkeInnvilgetÅrsak();
-        Optional<TomKontoKnekkpunkt> knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, grunnlag);
+        Optional<TomKontoKnekkpunkt> knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, trekkdagertilstand);
 
-
+        Arbeidsprosenter arbeidsprosenter = regelGrunnlag.getArbeid().getArbeidsprosenter();
         switch (utfallType) {
             case AVSLÅTT:
+                List<FastsattPeriodeAnnenPart> annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
                 regelResultatBehandlerResultat = behandler.avslåAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getAvklaringÅrsak(),
-                        arbeidsprosenter, regelresultat.skalUtbetale(), overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, grunnlag.getAnnenPartUttaksperioder()));
+                        arbeidsprosenter, regelresultat.skalUtbetale(), overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
                 break;
             case INNVILGET:
                 regelResultatBehandlerResultat = behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getInnvilgetÅrsak(), avslåGradering,
@@ -189,16 +193,31 @@ public class FastsettePerioderRegelOrkestrering {
         return regelResultatBehandlerResultat;
     }
 
+    private List<FastsattPeriodeAnnenPart> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
+        return regelGrunnlag.getAnnenPart() == null ? Collections.emptyList() : regelGrunnlag.getAnnenPart().getUttaksperioder();
+    }
+
     private boolean overlapperMedInnvilgetAnnenpartsPeriode(UttakPeriode aktuellPeriode, List<FastsattPeriodeAnnenPart> annenPartUttaksperioder) {
         return annenPartUttaksperioder.stream().anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget());
     }
 
-    private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(UttakPeriode aktuellPeriode, FastsettePeriodeGrunnlag grunnlag) {
+    private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(UttakPeriode aktuellPeriode,
+                                                        RegelGrunnlag regelGrunnlag,
+                                                        Konfigurasjon konfig,
+                                                        Trekkdagertilstand trekkdagertilstand) {
         if (aktuellPeriode instanceof UtsettelsePeriode || erFPFF(aktuellPeriode)) {
             return Optional.empty();
         }
-        return TomKontoIdentifiserer.identifiser(grunnlag.getAktuellPeriode(), grunnlag.getAktiviteter(),
-                grunnlag.getTrekkdagertilstand(), grunnlag.getStønadskontotype());
+        var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, trekkdagertilstand, konfig);
+        return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(regelGrunnlag.getKontoer().keySet()),
+                trekkdagertilstand, stønadskontotype);
+    }
+
+    private Stønadskontotype utledKonto(UttakPeriode aktuellPeriode, RegelGrunnlag regelGrunnlag, Trekkdagertilstand trekkdagertilstand, Konfigurasjon konfig) {
+        if (Stønadskontotype.UKJENT.equals(aktuellPeriode.getStønadskontotype())) {
+            return ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, trekkdagertilstand, konfig).orElse(Stønadskontotype.UKJENT);
+        }
+        return aktuellPeriode.getStønadskontotype();
     }
 
     private boolean erFPFF(UttakPeriode aktuellPeriode) {

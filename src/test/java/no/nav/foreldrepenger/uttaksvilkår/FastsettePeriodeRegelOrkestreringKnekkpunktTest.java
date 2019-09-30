@@ -242,5 +242,4 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
-
 }

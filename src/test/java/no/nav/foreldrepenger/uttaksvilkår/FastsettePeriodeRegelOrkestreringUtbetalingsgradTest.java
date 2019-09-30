@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.UKJENT;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +40,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
@@ -90,7 +90,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
                 .build();
         UttakPeriode fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         UttakPeriode mødrekvote = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
-        UttakPeriode utsettelseFellesperiode = utsettelsePeriode(FELLESPERIODE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE);
+        UttakPeriode utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE);
         UttakPeriode fellesperiode = søknadsperiode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1));
         basicGrunnlag(fødselsdato)
                 .medArbeid(new ArbeidGrunnlag.Builder()
@@ -122,7 +122,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
 
         UttakPeriode up3 = perioder.get(3).getUttakPeriode();
         assertThat(up3).isInstanceOf(UtsettelsePeriode.class);
-        verifiserPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), INNVILGET, FELLESPERIODE);
+        verifiserPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), INNVILGET, UKJENT);
         assertThat(up3.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
         assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
 
@@ -229,7 +229,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
         return builder;
     }
 
-    private UttakPeriode utsettelsePeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, Utsettelseårsaktype årsak) {
-        return new UtsettelsePeriode(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, årsak, PeriodeVurderingType.PERIODE_OK, null, false);
+    private UttakPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, Utsettelseårsaktype årsak) {
+        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, årsak, PeriodeVurderingType.PERIODE_OK, null, false);
     }
 }

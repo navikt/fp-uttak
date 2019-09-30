@@ -8,9 +8,14 @@ public class UtsettelsePeriode extends UttakPeriode {
 
     private Utsettelseårsaktype utsettelseårsaktype;
 
-    public UtsettelsePeriode(Stønadskontotype stønadskontotype,PeriodeKilde periodeKilde, LocalDate fom, LocalDate tom,
-                             Utsettelseårsaktype utsettelseårsaktype, PeriodeVurderingType vurderingType, SamtidigUttak samtidigUttak, boolean flerbarnsdager) {
-        super(stønadskontotype, Periodetype.UTSETTELSE, periodeKilde,fom, tom, samtidigUttak, flerbarnsdager);
+    public UtsettelsePeriode(PeriodeKilde periodeKilde,
+                             LocalDate fom,
+                             LocalDate tom,
+                             Utsettelseårsaktype utsettelseårsaktype,
+                             PeriodeVurderingType vurderingType,
+                             SamtidigUttak samtidigUttak,
+                             boolean flerbarnsdager) {
+        super(Stønadskontotype.UKJENT, Periodetype.UTSETTELSE, periodeKilde,fom, tom, samtidigUttak, flerbarnsdager);
         this.utsettelseårsaktype = utsettelseårsaktype;
         setPeriodeVurderingType(vurderingType);
     }

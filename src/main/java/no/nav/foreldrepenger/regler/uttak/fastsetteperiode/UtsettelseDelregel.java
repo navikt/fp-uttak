@@ -57,7 +57,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> delRegelForFerie() {
         Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, BARE_FAR_RETT)
             .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1106", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
-            .ellers(Oppfylt.opprett("UT1108", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE, false));
+            .ellers(Oppfylt.opprett("UT1108", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE, false,false));
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmFeriePåBevegeligHelligdag = rs.hvisRegel(SjekkOmFeriePåBevegeligHelligdag.ID, "Er det ferie på bevegelig helligdag?")
             .hvis(new SjekkOmFeriePåBevegeligHelligdag(), Manuellbehandling.opprett("UT1104", IkkeOppfyltÅrsak.UTSETTELSE_FERIE_PÅ_BEVEGELIG_HELLIGDAG, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, true))
