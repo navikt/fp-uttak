@@ -400,7 +400,7 @@ public class KnekkpunktIdentifisererTest {
                         .medEndringssøknadMottattdato(mottattdato)
                         .build())
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
                                 mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .build())
                 .medBehandling(new Behandling.Builder()
@@ -425,7 +425,7 @@ public class KnekkpunktIdentifisererTest {
                         .medEndringssøknadMottattdato(mottattdato)
                         .build())
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, mottattdato,
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato,
                         mottattdato.plusWeeks(2), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK, null, false))
                         .build())
                 .build();
@@ -447,7 +447,7 @@ public class KnekkpunktIdentifisererTest {
                         .medEndringssøknadMottattdato(mottattdato)
                         .build())
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, mottattdato.plusWeeks(1),
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.plusWeeks(1),
                         mottattdato.plusWeeks(2), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .build())
                 .build();
@@ -465,7 +465,7 @@ public class KnekkpunktIdentifisererTest {
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, tom,
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, fødselsdato, tom,
                                 Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT, null, false))
                         .build())
                 .medDatoer(datoer(fødselsdato, førsteLovligeSøknadsperiode))

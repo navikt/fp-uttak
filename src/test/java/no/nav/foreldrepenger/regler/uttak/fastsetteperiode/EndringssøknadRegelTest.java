@@ -156,7 +156,7 @@ public class EndringssøknadRegelTest {
     }
 
     private UttakPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, Utsettelseårsaktype utsettelseårsaktype) {
-        return new UtsettelsePeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype,
+        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype,
                 PeriodeVurderingType.PERIODE_OK, null, false);
     }
 
