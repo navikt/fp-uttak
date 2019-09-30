@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.perioder.PerioderUtenHelgUtil;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -20,7 +20,7 @@ public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse extends LeafSpecifica
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        for (FastsattPeriodeAnnenPart periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
+        for (AnnenpartUttaksperiode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
             if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
                 if (periodeAnnenPart.isInnvilgetUtsettelse()) {
                     return ja();

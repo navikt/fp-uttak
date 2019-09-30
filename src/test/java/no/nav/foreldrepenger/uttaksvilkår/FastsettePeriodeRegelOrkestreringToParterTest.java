@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprose
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -199,7 +199,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .medFørsteLovligeUttaksdag(førsteLovligeDato)
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new FastsattPeriodeAnnenPart.Builder(fomFarsFP, tomFarsFP)
+                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fomFarsFP, tomFarsFP)
                                 .medSamtidigUttak(true)
                                 .medInnvilgetUtsettelse(false)
                                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(FAR_ARBEIDSFORHOLD, FELLESPERIODE,
@@ -472,12 +472,12 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
         assertThat(resultat.get(3).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
-    private FastsattPeriodeAnnenPart lagPeriodeForFar(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
+    private AnnenpartUttaksperiode lagPeriodeForFar(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
         return lagPeriode(stønadskontotype, fom, tom, FAR_ARBEIDSFORHOLD, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)));
     }
 
-    private FastsattPeriodeAnnenPart lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, AktivitetIdentifikator aktivitet, Trekkdager trekkdager) {
-        return new FastsattPeriodeAnnenPart.Builder(fom, tom)
+    private AnnenpartUttaksperiode lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, AktivitetIdentifikator aktivitet, Trekkdager trekkdager) {
+        return new AnnenpartUttaksperiode.Builder(fom, tom)
                 .medSamtidigUttak(true)
                 .medInnvilgetUtsettelse(false)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitet, stønadskontotype, trekkdager, BigDecimal.TEN))

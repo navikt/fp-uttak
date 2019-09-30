@@ -27,11 +27,11 @@ public class Trekkdagertilstand {
     private final Map<Part, List<AktivitetIdentifikator>> aktiviteter = new EnumMap<>(Part.class);
     private boolean samtykke;
     private final Map<Part, Forbruk> forbrukteDager = new EnumMap<>(Part.class);
-    private List<FastsattPeriodeAnnenPart> annenPartsPerioderSomSkalTrekkes;
+    private List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes;
     private Trekkdagertilstand(Map<AktivitetIdentifikator, Kontoer> kontoerForAktiviteter,
                               List<AktivitetIdentifikator> søkersAktiviteter,
                               List<AktivitetIdentifikator> annenPartAktiviteter,
-                              List<FastsattPeriodeAnnenPart> annenPartsPerioderSomSkalTrekkes,
+                              List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes,
                               boolean samtykke) {
         this.annenPartsPerioderSomSkalTrekkes = annenPartsPerioderSomSkalTrekkes;
         this.samtykke = samtykke;
@@ -42,7 +42,7 @@ public class Trekkdagertilstand {
         forbrukteDager.put(Part.ANNEN_PART, Forbruk.zero(annenPartAktiviteter));
     }
 
-    private Trekkdagertilstand(RegelGrunnlag grunnlag, List<FastsattPeriodeAnnenPart> annenPartsPerioderSomSkalTrekkes) {
+    private Trekkdagertilstand(RegelGrunnlag grunnlag, List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes) {
         this(grunnlag.getKontoer(),
                 grunnlag.getKontoer() == null ? Collections.emptyList() : new ArrayList<>(grunnlag.getKontoer().keySet()),
                 grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getAktiviteter(),
@@ -52,14 +52,14 @@ public class Trekkdagertilstand {
 
     public static Trekkdagertilstand forBerørtSak(RegelGrunnlag grunnlag) {
         Trekkdagertilstand trekkdagertilstand = new Trekkdagertilstand(grunnlag, Collections.emptyList());
-        for (FastsattPeriodeAnnenPart fastsattPeriodeAnnenPart : grunnlag.getAnnenPart().getUttaksperioder()) {
-            trekkdagertilstand.registrerForbrukAnnenPart(fastsattPeriodeAnnenPart);
+        for (AnnenpartUttaksperiode annenpartUttaksperiode : grunnlag.getAnnenPart().getUttaksperioder()) {
+            trekkdagertilstand.registrerForbrukAnnenPart(annenpartUttaksperiode);
         }
         return trekkdagertilstand;
     }
 
     public static Trekkdagertilstand ny(RegelGrunnlag grunnlag, List<UttakPeriode> uttakPerioderSøker) {
-        List<FastsattPeriodeAnnenPart> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker,
+        List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker,
                 grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getUttaksperioder());
         return new Trekkdagertilstand(grunnlag, annenPartsPerioderSomSkalTrekkes);
     }
@@ -74,7 +74,7 @@ public class Trekkdagertilstand {
         }
     }
 
-    private void registrerForbrukAnnenPart(FastsattPeriodeAnnenPart periode) {
+    private void registrerForbrukAnnenPart(AnnenpartUttaksperiode periode) {
         Forbruk forbruk = forbrukteDager.get(Part.ANNEN_PART);
         for (UttakPeriodeAktivitet uttakPeriodeAktivitet : periode.getUttakPeriodeAktiviteter()) {
             if (uttakPeriodeAktivitet.getTrekkdager().merEnn0()) {
@@ -104,8 +104,8 @@ public class Trekkdagertilstand {
     }
 
     public void trekkSaldoForAnnenPartsPerioder(UttakPeriode periodeUnderBehandling) {
-        List<FastsattPeriodeAnnenPart> førFjern = new ArrayList<>(annenPartsPerioderSomSkalTrekkes);
-        for (FastsattPeriodeAnnenPart periodeAnnenPart : annenPartsPerioderSomSkalTrekkes) {
+        List<AnnenpartUttaksperiode> førFjern = new ArrayList<>(annenPartsPerioderSomSkalTrekkes);
+        for (AnnenpartUttaksperiode periodeAnnenPart : annenPartsPerioderSomSkalTrekkes) {
             if (periodeAnnenPart.getTom().isBefore(periodeUnderBehandling.getFom())) {
                 registrerForbrukAnnenPart(periodeAnnenPart);
                 førFjern.remove(periodeAnnenPart);
@@ -119,11 +119,11 @@ public class Trekkdagertilstand {
         annenPartsPerioderSomSkalTrekkes = førFjern;
     }
 
-    private boolean erSamtidigUttak(UttakPeriode periodeUnderBehandling, FastsattPeriodeAnnenPart periodeAnnenPart) {
+    private boolean erSamtidigUttak(UttakPeriode periodeUnderBehandling, AnnenpartUttaksperiode periodeAnnenPart) {
         return periodeAnnenPart.isSamtidigUttak() || periodeUnderBehandling.isSamtidigUttak();
     }
 
-    private boolean erLikPeriode(UttakPeriode periodeUnderBehandling, FastsattPeriodeAnnenPart periodeAnnenPart) {
+    private boolean erLikPeriode(UttakPeriode periodeUnderBehandling, AnnenpartUttaksperiode periodeAnnenPart) {
         return erLik(periodeAnnenPart.getFom(), periodeAnnenPart.getTom(), periodeUnderBehandling.getFom(), periodeUnderBehandling.getTom());
     }
 
@@ -131,15 +131,15 @@ public class Trekkdagertilstand {
         return fom1.isEqual(fom2) && tom1.isEqual(tom2);
     }
 
-    private static List<FastsattPeriodeAnnenPart> knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(List<UttakPeriode> uttakPerioderSøker,
-                                                                                                        List<FastsattPeriodeAnnenPart> uttakPerioderAnnenPart) {
+    private static List<AnnenpartUttaksperiode> knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(List<UttakPeriode> uttakPerioderSøker,
+                                                                                                      List<AnnenpartUttaksperiode> uttakPerioderAnnenPart) {
         Set<LocalDate> knekkpunkter = new TreeSet<>();
         for (UttakPeriode periode : uttakPerioderSøker) {
             knekkpunkter.add(periode.getFom());
             knekkpunkter.add(periode.getTom().plusDays(1));
         }
 
-        List<FastsattPeriodeAnnenPart> annenPartPerioder = new ArrayList<>(uttakPerioderAnnenPart);
+        List<AnnenpartUttaksperiode> annenPartPerioder = new ArrayList<>(uttakPerioderAnnenPart);
         for (LocalDate knekkpunkt : knekkpunkter) {
             annenPartPerioder = knekk(annenPartPerioder, knekkpunkt);
         }
@@ -150,9 +150,9 @@ public class Trekkdagertilstand {
                 .collect(Collectors.toList());
     }
 
-    private static List<FastsattPeriodeAnnenPart> knekk(List<FastsattPeriodeAnnenPart> førKnekk, LocalDate knekkpunkt) {
-        List<FastsattPeriodeAnnenPart> etterKnekk = new ArrayList<>();
-        for (FastsattPeriodeAnnenPart periode : førKnekk) {
+    private static List<AnnenpartUttaksperiode> knekk(List<AnnenpartUttaksperiode> førKnekk, LocalDate knekkpunkt) {
+        List<AnnenpartUttaksperiode> etterKnekk = new ArrayList<>();
+        for (AnnenpartUttaksperiode periode : førKnekk) {
             if (periode.overlapper(knekkpunkt) && !periode.getFom().equals(knekkpunkt)) {
                 //Må fordele trekkdager på aktivitetene for annenpart før og etter knekkpunkt så vi kopierer aktivitetene og endret trekkdager
                 List<UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt = aktiviteterForPeriodeFørKnekkpunkt(periode, knekkpunkt.minusDays(1));
@@ -168,7 +168,7 @@ public class Trekkdagertilstand {
         return etterKnekk;
     }
 
-    private static List<UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(FastsattPeriodeAnnenPart periode, LocalDate knekkTom) {
+    private static List<UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(AnnenpartUttaksperiode periode, LocalDate knekkTom) {
         int virkedagerInnenfor = Virkedager.beregnAntallVirkedager(periode.getFom(), knekkTom);
         int virkedagerHele = periode.virkedager();
 

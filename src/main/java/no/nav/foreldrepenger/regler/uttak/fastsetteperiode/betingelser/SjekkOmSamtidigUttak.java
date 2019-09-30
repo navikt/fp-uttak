@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import java.util.List;
 
 import no.nav.foreldrepenger.perioder.PerioderUtenHelgUtil;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -28,8 +28,8 @@ public class SjekkOmSamtidigUttak extends LeafSpecification<FastsettePeriodeGrun
         return nei();
     }
 
-    private boolean harAnnenForelderHuketAvForSamtidigUttak(UttakPeriode uttakPeriode, List<FastsattPeriodeAnnenPart> perioderAnnenPart) {
-        for (FastsattPeriodeAnnenPart periodeAnnenPart : perioderAnnenPart) {
+    private boolean harAnnenForelderHuketAvForSamtidigUttak(UttakPeriode uttakPeriode, List<AnnenpartUttaksperiode> perioderAnnenPart) {
+        for (AnnenpartUttaksperiode periodeAnnenPart : perioderAnnenPart) {
             if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
                 if (periodeAnnenPart.isSamtidigUttak()) {
                     return true;

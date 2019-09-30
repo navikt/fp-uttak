@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattPeriodeAnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -185,7 +185,7 @@ public class RevurderingTest {
                 .build();
     }
 
-    private AnnenPart annenPart(FastsattPeriodeAnnenPart periode) {
+    private AnnenPart annenPart(AnnenpartUttaksperiode periode) {
         return new AnnenPart.Builder()
                 .leggTilUttaksperiode(periode)
                 .build();
@@ -205,9 +205,9 @@ public class RevurderingTest {
         return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.forBerørtSak(grunnlag), uttakPeriode)));
     }
 
-    private FastsattPeriodeAnnenPart lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom,
-                                                BigDecimal utbetalingsgrad, boolean innvilgetUtsettelse, boolean samtidigUttak) {
-        return new FastsattPeriodeAnnenPart.Builder(fom, tom)
+    private AnnenpartUttaksperiode lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom,
+                                              BigDecimal utbetalingsgrad, boolean innvilgetUtsettelse, boolean samtidigUttak) {
+        return new AnnenpartUttaksperiode.Builder(fom, tom)
                 .medSamtidigUttak(samtidigUttak)
                 .medInnvilgetUtsettelse(innvilgetUtsettelse)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forArbeid("000000003", null),

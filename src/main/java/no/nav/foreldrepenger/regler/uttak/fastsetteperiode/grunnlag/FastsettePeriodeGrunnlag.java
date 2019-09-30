@@ -180,7 +180,7 @@ public interface FastsettePeriodeGrunnlag {
      * Finnes alle uttaks perioder av annenpart
      * @return list av annenpart sin uttaksperioder
      */
-    List<FastsattPeriodeAnnenPart> getAnnenPartUttaksperioder();
+    List<AnnenpartUttaksperiode> getAnnenPartUttaksperioder();
 
     boolean harAleneomsorg();
 

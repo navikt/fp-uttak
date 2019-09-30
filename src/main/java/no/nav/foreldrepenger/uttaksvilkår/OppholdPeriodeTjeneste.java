@@ -95,13 +95,32 @@ class OppholdPeriodeTjeneste {
 
     private static Optional<OppholdPeriode> utledOppholdVedAdopsjon(RegelGrunnlag grunnlag) {
         LocalDate senesteLovligeStartdatoVedAdopsjon = utledSenesteLovligeStartdatoVedAdopsjon(grunnlag);
-        List<LukketPeriode> sortertePerioder = grunnlag.getSøknad().getUttaksperioder().stream()
-            .sorted(Comparator.comparing(LukketPeriode::getFom)).collect(Collectors.toList());
 
-        if (sortertePerioder.get(0).getFom().isAfter(senesteLovligeStartdatoVedAdopsjon)) {
-            return Optional.of(lagOppholdPeriode(senesteLovligeStartdatoVedAdopsjon, grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1)));
+        var førsteUttaksdatoSøknad = førsteUttaksdatoSøknad(grunnlag);
+        Optional<LocalDate> førsteUttaksdatoAnnenpart = førsteUttaksdatoAnnenpart(grunnlag);
+        if (førsteUttaksdatoSøknad.isAfter(senesteLovligeStartdatoVedAdopsjon)
+                && (førsteUttaksdatoAnnenpart.isEmpty() || førsteUttaksdatoAnnenpart.get().isAfter(senesteLovligeStartdatoVedAdopsjon))) {
+            LocalDate tom;
+            if (førsteUttaksdatoAnnenpart.isEmpty() || førsteUttaksdatoSøknad.isBefore(førsteUttaksdatoAnnenpart.get())) {
+                tom = førsteUttaksdatoSøknad.minusDays(1);
+            } else {
+                tom = førsteUttaksdatoAnnenpart.get().minusDays(1);
+            }
+            return Optional.of(lagOppholdPeriode(senesteLovligeStartdatoVedAdopsjon, tom));
         }
         return Optional.empty();
+    }
+
+    private static Optional<LocalDate> førsteUttaksdatoAnnenpart(RegelGrunnlag grunnlag) {
+        return grunnlag.getAnnenPart() == null ? Optional.empty() : Optional.of(førsteFom(grunnlag.getAnnenPart().getUttaksperioder()));
+    }
+
+    private static LocalDate førsteUttaksdatoSøknad(RegelGrunnlag grunnlag) {
+        return førsteFom(grunnlag.getSøknad().getUttaksperioder());
+    }
+
+    private static LocalDate førsteFom(List<? extends LukketPeriode> perioder) {
+        return perioder.stream().min(Comparator.comparing(LukketPeriode::getFom)).orElseThrow().getFom();
     }
 
     private static LocalDate utledSenesteLovligeStartdatoVedAdopsjon(RegelGrunnlag grunnlag) {

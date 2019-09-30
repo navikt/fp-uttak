@@ -7,7 +7,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
-public class FastsattPeriodeAnnenPart extends LukketPeriode {
+public class AnnenpartUttaksperiode extends LukketPeriode {
 
     private List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter = new ArrayList<>();
 
@@ -16,7 +16,7 @@ public class FastsattPeriodeAnnenPart extends LukketPeriode {
     private boolean innvilgetUtsettelse;
     private boolean innvilget;
 
-    private FastsattPeriodeAnnenPart(LocalDate fom, LocalDate tom) {
+    private AnnenpartUttaksperiode(LocalDate fom, LocalDate tom) {
         super(fom, tom);
     }
 
@@ -40,8 +40,8 @@ public class FastsattPeriodeAnnenPart extends LukketPeriode {
         return innvilget;
     }
 
-    public FastsattPeriodeAnnenPart kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
-        return new FastsattPeriodeAnnenPart.Builder(fom, tom)
+    public AnnenpartUttaksperiode kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
+        return new AnnenpartUttaksperiode.Builder(fom, tom)
                 .medSamtidigUttak(this.samtidigUttak)
                 .medFlerbarnsdager(this.flerbarnsdager)
                 .medInnvilgetUtsettelse(this.innvilgetUtsettelse)
@@ -49,10 +49,10 @@ public class FastsattPeriodeAnnenPart extends LukketPeriode {
     }
 
     public static class Builder {
-        private FastsattPeriodeAnnenPart kladd;
+        private AnnenpartUttaksperiode kladd;
 
         public Builder(LocalDate fom, LocalDate tom) {
-            kladd = new FastsattPeriodeAnnenPart(fom, tom);
+            kladd = new AnnenpartUttaksperiode(fom, tom);
             kladd.innvilget = true;
         }
 
@@ -86,7 +86,7 @@ public class FastsattPeriodeAnnenPart extends LukketPeriode {
             return this;
         }
 
-        public FastsattPeriodeAnnenPart build() {
+        public AnnenpartUttaksperiode build() {
             return kladd;
         }
 

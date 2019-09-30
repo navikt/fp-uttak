@@ -171,7 +171,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public List<FastsattPeriodeAnnenPart> getAnnenPartUttaksperioder() {
+    public List<AnnenpartUttaksperiode> getAnnenPartUttaksperioder() {
         return regelGrunnlag.getAnnenPart() != null ? regelGrunnlag.getAnnenPart().getUttaksperioder() : Collections.emptyList();
     }
 

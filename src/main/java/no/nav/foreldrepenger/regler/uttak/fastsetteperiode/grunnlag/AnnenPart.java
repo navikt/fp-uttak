@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 public final class AnnenPart {
 
-    private List<FastsattPeriodeAnnenPart> uttaksperioder = new ArrayList<>();
+    private List<AnnenpartUttaksperiode> uttaksperioder = new ArrayList<>();
 
     private AnnenPart() {
     }
 
-    public List<FastsattPeriodeAnnenPart> getUttaksperioder() {
+    public List<AnnenpartUttaksperiode> getUttaksperioder() {
         return uttaksperioder;
     }
 
@@ -26,12 +26,12 @@ public final class AnnenPart {
 
         private final AnnenPart kladd = new AnnenPart();
 
-        public Builder leggTilUttaksperiode(FastsattPeriodeAnnenPart uttaksperiode) {
+        public Builder leggTilUttaksperiode(AnnenpartUttaksperiode uttaksperiode) {
             kladd.uttaksperioder.add(uttaksperiode);
             return this;
         }
 
-        public Builder medUttaksperioder(List<FastsattPeriodeAnnenPart> uttaksperioder) {
+        public Builder medUttaksperioder(List<AnnenpartUttaksperiode> uttaksperioder) {
             kladd.uttaksperioder = uttaksperioder;
             return this;
         }
