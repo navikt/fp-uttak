@@ -10,6 +10,8 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
@@ -64,6 +66,10 @@ public class TomKontoIdentifisererTest {
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(idag, idag.plusDays(søktOmDag - 1), arbeidsprosent)
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(uttakPeriode)
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
+                        .medSøkerErMor(true)
                         .build())
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()

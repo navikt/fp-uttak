@@ -217,7 +217,7 @@ public class KnekkpunktIdentifisererTest {
         LocalDate knekkdato = uttakStartdato.plusDays(1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(uttakStartdato, uttakStartdato.plusDays(10)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(uttakStartdato, uttakStartdato.plusDays(10)).build())
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, knekkdato, uttakStartdato.plusDays(10),
@@ -242,7 +242,7 @@ public class KnekkpunktIdentifisererTest {
         LocalDate knekkdato = uttakStartdato.plusDays(1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(uttakStartdato.plusDays(1), uttakStartdato.plusDays(10)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(uttakStartdato.plusDays(1), uttakStartdato.plusDays(10)).build())
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, uttakStartdato, knekkdato,
@@ -266,7 +266,7 @@ public class KnekkpunktIdentifisererTest {
         LocalDate førsteLovligeSøknadsperiode = fødselsdato.minusWeeks(12);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(uttakStartdato.plusDays(1), uttakStartdato.plusDays(5)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(uttakStartdato.plusDays(1), uttakStartdato.plusDays(5)).build())
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, uttakStartdato, uttakStartdato.plusDays(6),
@@ -295,7 +295,7 @@ public class KnekkpunktIdentifisererTest {
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(annenPartPeriodeFom, annenPartPeriodeTom).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(annenPartPeriodeFom, annenPartPeriodeTom).build())
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, stønadsperiodeFom, stønadsperiodeTom,

@@ -284,7 +284,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, hullDato.minusDays(1), null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
                         .build())
                 .build();
 
@@ -307,7 +307,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, hullDato.minusDays(1), null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
                         .build())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringssøknadMottattdato(LocalDate.of(2018, 8,8))
@@ -333,8 +333,8 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(10), null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(7).plusDays(1), fødselsdato.plusWeeks(8)).build())
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(9).plusDays(1), fødselsdato.plusWeeks(11)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(7).plusDays(1), fødselsdato.plusWeeks(8)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(9).plusDays(1), fødselsdato.plusWeeks(11)).build())
                         .build())
                 .build();
 
@@ -356,7 +356,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, mødrekvoteSlutt, null, false))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(annenPartStart, annenPartStart.plusWeeks(10)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(annenPartStart, annenPartStart.plusWeeks(10)).build())
                         .build())
                 .build();
 
@@ -378,7 +378,7 @@ public class OppholdPeriodeTjenesteTest {
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
                         // Annen part starter mandagen etter
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
                                 .medSamtidigUttak(true)
                                 .build())
                         .build())
@@ -622,7 +622,7 @@ public class OppholdPeriodeTjenesteTest {
                         .medAnkomstNorge(null)
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(omsorgsovertakelse, førsteUttaksdato.minusDays(1)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(omsorgsovertakelse, førsteUttaksdato.minusDays(1)).build())
                         .build())
                 .build();
 
@@ -656,7 +656,7 @@ public class OppholdPeriodeTjenesteTest {
                         .medAnkomstNorge(null)
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(omsorgsovertakelse, førsteUttaksdato.minusWeeks(1)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(omsorgsovertakelse, førsteUttaksdato.minusWeeks(1)).build())
                         .build())
                 .build();
 
@@ -691,7 +691,7 @@ public class OppholdPeriodeTjenesteTest {
                         .medAnkomstNorge(null)
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(omsorgsovertakelse.plusWeeks(1), førsteUttaksdato.minusWeeks(1)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(omsorgsovertakelse.plusWeeks(1), førsteUttaksdato.minusWeeks(1)).build())
                         .build())
                 .build();
 
@@ -757,7 +757,7 @@ public class OppholdPeriodeTjenesteTest {
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
                         // Annen part starter mandagen etter
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2018, 8, 20), LocalDate.of(2018, 9, 8))
                                 .medSamtidigUttak(true)
                                 .build())
                         .build())
@@ -835,7 +835,7 @@ public class OppholdPeriodeTjenesteTest {
                         .medSkjæringstidspunkt(fødselsdato.plusWeeks(7))
                         .build())
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8)).build())
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8)).build())
                         .build())
                 .build();
 

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
@@ -36,5 +37,9 @@ class Forbruk {
                 .map(s -> s.getForbruk(stønadskontotype))
                 .min(Trekkdager::compareTo)
                 .orElse(Trekkdager.ZERO);
+    }
+
+    public Set<AktivitetIdentifikator> getAktiviteter() {
+        return saldoer.keySet();
     }
 }

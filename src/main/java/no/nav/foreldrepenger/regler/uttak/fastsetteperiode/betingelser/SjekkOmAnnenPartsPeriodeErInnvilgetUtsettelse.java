@@ -22,7 +22,7 @@ public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse extends LeafSpecifica
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
         for (AnnenpartUttaksperiode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
             if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
-                if (periodeAnnenPart.isInnvilgetUtsettelse()) {
+                if (periodeAnnenPart.isUtsettelse() && periodeAnnenPart.isInnvilget()) {
                     return ja();
                 }
             }

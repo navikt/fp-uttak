@@ -134,31 +134,16 @@ public class FastsettePerioderRegelOrkestreringBerørtSakTest {
     }
 
     private AnnenpartUttaksperiode annenpartsPeriode(Stønadskontotype stønadskontotype,
-                                                     LocalDate fom,
-                                                     LocalDate tom,
-                                                     AktivitetIdentifikator aktivitet,
-                                                     boolean innvilget) {
-        return new AnnenpartUttaksperiode.Builder(fom, tom)
+                                                       LocalDate fom,
+                                                       LocalDate tom,
+                                                       AktivitetIdentifikator aktivitet,
+                                                       boolean innvilget) {
+        return AnnenpartUttaksperiode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(true)
-                .medInnvilgetUtsettelse(false)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitet, stønadskontotype,
                         new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), BigDecimal.TEN))
                 .medInnvilget(innvilget)
                 .build();
-    }
-
-    private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {
-        Kontoer kontoer = new Kontoer.Builder()
-                .leggTilKonto(kvote(FORELDREPENGER_FØR_FØDSEL, UKER_FPFF))
-                .leggTilKonto(kvote(MØDREKVOTE, UKER_MK))
-                .leggTilKonto(kvote(FEDREKVOTE, UKER_FK))
-                .leggTilKonto(kvote(FELLESPERIODE, UKER_FP))
-                .build();
-        return builder.leggTilKontoer(FAR_ARBEIDSFORHOLD, kontoer);
-    }
-
-    private Konto kvote(Stønadskontotype foreldrepengerFørFødsel, int ukerFpff) {
-        return new Konto.Builder().medType(foreldrepengerFørFødsel).medTrekkdager(ukerFpff * 5).build();
     }
 
 }
