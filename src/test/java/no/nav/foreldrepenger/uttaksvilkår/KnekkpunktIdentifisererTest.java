@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
@@ -328,7 +327,6 @@ public class KnekkpunktIdentifisererTest {
                         .medEndringssøknadMottattdato(mottattdato)
                         .build())
                 .medBehandling(new Behandling.Builder()
-                        .medType(Behandlingtype.REVURDERING)
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(gradertStønadsperiode)
@@ -403,9 +401,7 @@ public class KnekkpunktIdentifisererTest {
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
                                 mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .build())
-                .medBehandling(new Behandling.Builder()
-                        .medType(Behandlingtype.REVURDERING)
-                        .build())
+                .medBehandling(new Behandling.Builder().build())
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);

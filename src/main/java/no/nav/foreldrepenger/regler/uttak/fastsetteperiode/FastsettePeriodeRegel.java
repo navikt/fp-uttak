@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmRevurderingAvBerørtSak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTapendeBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSamtidigUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadsperiode;
@@ -187,13 +187,13 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {
         return rs.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
-                .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmRevurderingAvBerørtSak())
+                .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmTapendeBehandling())
                 .ellers(IkkeOppfylt.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmRevurderingAvBerørtSak() {
-        return rs.hvisRegel(SjekkOmRevurderingAvBerørtSak.ID, "Er behandlingen en revurdering av berørt sak?")
-                .hvis(new SjekkOmRevurderingAvBerørtSak(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmTapendeBehandling() {
+        return rs.hvisRegel(SjekkOmTapendeBehandling.ID, SjekkOmTapendeBehandling.BESKRIVELSE)
+                .hvis(new SjekkOmTapendeBehandling(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
                 .ellers(sjekkOmGradertEtterEndringssøknadMottattdato());
     }
 

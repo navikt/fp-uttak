@@ -84,7 +84,7 @@ public final class ValgAvStønadskontoTjeneste {
     private static List<Stønadskontotype> hentSøkerSineKontoer(RegelGrunnlag regelGrunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         Set<Stønadskontotype> gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
-        if (regelGrunnlag.getBehandling().getSøkerErMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
+        if (regelGrunnlag.getBehandling().isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
             søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
         } else if (gyldige.contains(Stønadskontotype.FEDREKVOTE)) {
             søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);

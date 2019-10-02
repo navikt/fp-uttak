@@ -107,18 +107,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public Behandlingtype getBehandlingtype() {
-        return regelGrunnlag.getBehandling().getType();
-    }
-
-    @Override
     public LocalDate getFamiliehendelse() {
         return regelGrunnlag.getDatoer().getFamiliehendelse();
     }
 
     @Override
     public boolean isSøkerMor() {
-        return regelGrunnlag.getBehandling().getSøkerErMor();
+        return regelGrunnlag.getBehandling().isSøkerMor();
     }
 
     @Override
@@ -223,5 +218,10 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public LocalDate getTermindato() {
         return regelGrunnlag.getDatoer().getTermin();
+    }
+
+    @Override
+    public boolean isTapendeBehandling() {
+        return regelGrunnlag.getBehandling().isTapende();
     }
 }

@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
@@ -66,65 +65,65 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurderingsøknadAvBerørtSakHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
+    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(AnnenpartUttaksperiode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12)).medInnvilget(true).build()))
-                .medBehandling(revurderingBerørtSakBehandling())
+                .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerBerørtSaken(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE);
     }
 
     @Test
-    public void revurderingsøknadAvBerørtSakHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
+    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false)))
-                .medBehandling(revurderingBerørtSakBehandling())
+                .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerBerørtSaken(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK);
     }
 
     @Test
-    public void revurderingsøknadAvBerørtSakHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
+    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false)))
-                .medBehandling(revurderingBerørtSakBehandling())
+                .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerBerørtSaken(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK);
     }
 
     @Test
-    public void revurderingsøknadAvBerørtSakHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
+    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, true)))
-                .medBehandling(revurderingBerørtSakBehandling())
+                .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerBerørtSaken(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
     }
@@ -179,9 +178,9 @@ public class RevurderingTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
     }
 
-    private Behandling revurderingBerørtSakBehandling() {
+    private Behandling tapendeBehandling() {
         return new Behandling.Builder()
-                .medType(Behandlingtype.REVURDERING_BERØRT_SAK)
+                .medErTapende(true)
                 .build();
     }
 
@@ -201,8 +200,8 @@ public class RevurderingTest {
         return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
     }
 
-    private Regelresultat evaluerBerørtSaken(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.forBerørtSak(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
+    private Regelresultat evaluerTapendeBehandling(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
+        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.forTapendeBehandling(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
     }
 
     private AnnenpartUttaksperiode lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom,
@@ -218,7 +217,6 @@ public class RevurderingTest {
         return RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
-                        .medType(Behandlingtype.REVURDERING)
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)

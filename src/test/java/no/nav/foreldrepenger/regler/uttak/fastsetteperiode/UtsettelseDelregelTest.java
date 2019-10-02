@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -60,7 +59,6 @@ public class UtsettelseDelregelTest {
                         .leggTilSøknadsperiode(periode)
                         .build())
                 .medBehandling(new Behandling.Builder()
-                        .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
                         .medSøkerErMor(true)
                         .build())
                 .medRettOgOmsorg(beggeRett())
@@ -103,7 +101,7 @@ public class UtsettelseDelregelTest {
                                 .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))
                                 .build())
                         .build())
-                .medBehandling(revurderingMor())
+                .medBehandling(behandlingMor())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(fom)
                         .build())
@@ -144,7 +142,7 @@ public class UtsettelseDelregelTest {
                                 .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom.plusWeeks(10), fom.plusWeeks(10)))
                                 .build())
                         .build())
-                .medBehandling(revurderingMor())
+                .medBehandling(behandlingMor())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(fom)
                         .build())
@@ -185,7 +183,7 @@ public class UtsettelseDelregelTest {
                                 .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))
                                 .build())
                         .build())
-                .medBehandling(revurderingMor())
+                .medBehandling(behandlingMor())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(fom)
                         .build())
@@ -212,9 +210,8 @@ public class UtsettelseDelregelTest {
                 .build();
     }
 
-    private Behandling revurderingMor() {
+    private Behandling behandlingMor() {
         return new Behandling.Builder()
-                .medType(Behandlingtype.REVURDERING)
                 .medSøkerErMor(true)
                 .build();
     }

@@ -13,7 +13,6 @@ import java.util.Map;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -43,7 +42,6 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                     .medType(Søknadstype.FØDSEL)
                     .build())
             .medBehandling(new Behandling.Builder()
-                    .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
                     .medSøkerErMor(true)
                     .build())
             .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
@@ -64,7 +62,6 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
             .medType(Søknadstype.ADOPSJON)
             .build())
         .medBehandling(new Behandling.Builder()
-            .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
             .medSøkerErMor(true)
             .build())
         .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()

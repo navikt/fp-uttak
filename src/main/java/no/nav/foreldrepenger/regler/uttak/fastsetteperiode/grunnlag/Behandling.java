@@ -1,25 +1,19 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype.REVURDERING_TYPER;
-
 public final class Behandling {
 
-    private Behandlingtype type;
     private boolean søkerErMor;
+    private boolean tapende;
 
     private Behandling() {
     }
 
-    public Behandlingtype getType() {
-        return type;
-    }
-
-    public boolean getSøkerErMor() {
+    public boolean isSøkerMor() {
         return søkerErMor;
     }
 
-    boolean erRevurdering() {
-        return REVURDERING_TYPER.contains(type);
+    public boolean isTapende() {
+        return tapende;
     }
 
     public static class Builder {
@@ -32,8 +26,8 @@ public final class Behandling {
             return this;
         }
 
-        public Builder medType(Behandlingtype type) {
-            kladd.type = type;
+        public Builder medErTapende(boolean erTapende) {
+            kladd.tapende = erTapende;
             return this;
         }
 

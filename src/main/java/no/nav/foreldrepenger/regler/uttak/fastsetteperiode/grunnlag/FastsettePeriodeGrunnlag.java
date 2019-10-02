@@ -51,13 +51,6 @@ public interface FastsettePeriodeGrunnlag {
     Søknadstype getSøknadstype();
 
     /**
-     * Finn behandlingType.
-     *
-     * @return behandlingType.
-     */
-    Behandlingtype getBehandlingtype();
-
-    /**
      * Finner dato for familiehendelsen som søknaden gjelder. Kan være dato for termin, fødsel eller omsorgsovertakelse.
      *
      * @return dato for familiehendelse.
@@ -228,4 +221,6 @@ public interface FastsettePeriodeGrunnlag {
      * Termindato
      */
     LocalDate getTermindato();
+
+    boolean isTapendeBehandling();
 }

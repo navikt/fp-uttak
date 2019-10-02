@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,9 +15,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeRegel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
@@ -60,8 +58,8 @@ public class FastsettePerioderRegelOrkestrering {
         List<UttakPeriode> allePerioderSomSkalFastsettes = filtrereBortHelger(samletUttaksperioder(grunnlag, orkestreringTillegg));
 
         Trekkdagertilstand trekkdagerTilstand;
-        if (Objects.equals(grunnlag.getBehandling().getType(), Behandlingtype.REVURDERING_BERØRT_SAK)) {
-            trekkdagerTilstand = Trekkdagertilstand.forBerørtSak(grunnlag, allePerioderSomSkalFastsettes);
+        if (grunnlag.getBehandling().isTapende()) {
+            trekkdagerTilstand = Trekkdagertilstand.forTapendeBehandling(grunnlag, allePerioderSomSkalFastsettes);
         } else {
             trekkdagerTilstand = Trekkdagertilstand.ny(grunnlag, allePerioderSomSkalFastsettes);
         }

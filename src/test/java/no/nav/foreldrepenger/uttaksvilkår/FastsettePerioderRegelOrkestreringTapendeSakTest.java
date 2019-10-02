@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class FastsettePerioderRegelOrkestreringBerørtSakTest {
+public class FastsettePerioderRegelOrkestreringTapendeSakTest {
 
     protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
     private static final int UKER_FPFF = 3;

@@ -70,7 +70,7 @@ class OppholdPeriodeTjeneste {
     }
 
     private static List<OppholdPeriode> finnOppholdIUkerForbeholdtMor(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        if (grunnlag.getBehandling().getSøkerErMor() && Søknadstype.FØDSEL.equals(grunnlag.getSøknad().getType())) {
+        if (grunnlag.getBehandling().isSøkerMor() && Søknadstype.FØDSEL.equals(grunnlag.getSøknad().getType())) {
             return utledOppholdForMorFraOppgittePerioder(grunnlag, konfigurasjon);
         }
         if (farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) && !grunnlag.getRettOgOmsorg().getAleneomsorg()) {
@@ -83,7 +83,7 @@ class OppholdPeriodeTjeneste {
     }
 
     private static List<OppholdPeriode> finnIkkeSøktePerioderTilFarMedAleneomsorg(RegelGrunnlag grunnlag) {
-        if (!grunnlag.getBehandling().getSøkerErMor() && grunnlag.getRettOgOmsorg().getAleneomsorg()) {
+        if (!grunnlag.getBehandling().isSøkerMor() && grunnlag.getRettOgOmsorg().getAleneomsorg()) {
             UttakPeriode førstePeriode = grunnlag.getSøknad().getUttaksperioder().get(0);
             if (grunnlag.getDatoer().getFamiliehendelse().isBefore(førstePeriode.getFom())) {
                 OppholdPeriode nyPeriode = lagOppholdPeriode(grunnlag.getDatoer().getFamiliehendelse(), førstePeriode.getFom().minusDays(1), Stønadskontotype.FORELDREPENGER);
@@ -144,7 +144,7 @@ class OppholdPeriodeTjeneste {
     }
 
     private static boolean farSøkerFødselEllerTermin(RegelGrunnlag grunnlag) {
-        return !grunnlag.getBehandling().getSøkerErMor() && erFødselEllerTermin(grunnlag);
+        return !grunnlag.getBehandling().isSøkerMor() && erFødselEllerTermin(grunnlag);
     }
 
     private static boolean erFødselEllerTermin(RegelGrunnlag grunnlag) {
@@ -179,7 +179,7 @@ class OppholdPeriodeTjeneste {
     private static Optional<OppholdPeriode> fjernPerioderFørSkjæringstidspunktOpptjening(OppholdPeriode oppholdsperiode, RegelGrunnlag grunnlag) {
         LocalDate skjæringstidspunkt = grunnlag.getOpptjening().getSkjæringstidspunkt();
         // Skal ikke fjerne periode før skjæringstidspunkt for far med aleneomsorg eller enerett (fødsel eller adopsjon)
-        if ((farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) || (!grunnlag.getBehandling().getSøkerErMor() && (grunnlag.getRettOgOmsorg().getAleneomsorg()))
+        if ((farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) || (!grunnlag.getBehandling().isSøkerMor() && (grunnlag.getRettOgOmsorg().getAleneomsorg()))
             && skjæringstidspunkt.isAfter(grunnlag.getDatoer().getFamiliehendelse()))) {
             return Optional.of(oppholdsperiode);
         }
