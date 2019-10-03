@@ -61,7 +61,7 @@ public class FastsettePerioderRegelOrkestrering {
 
         Trekkdagertilstand trekkdagerTilstand;
         if (Objects.equals(grunnlag.getBehandling().getType(), Behandlingtype.REVURDERING_BERØRT_SAK)) {
-            trekkdagerTilstand = Trekkdagertilstand.forBerørtSak(grunnlag);
+            trekkdagerTilstand = Trekkdagertilstand.forBerørtSak(grunnlag, allePerioderSomSkalFastsettes);
         } else {
             trekkdagerTilstand = Trekkdagertilstand.ny(grunnlag, allePerioderSomSkalFastsettes);
         }

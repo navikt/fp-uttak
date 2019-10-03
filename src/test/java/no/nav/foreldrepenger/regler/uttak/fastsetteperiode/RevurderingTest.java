@@ -11,10 +11,10 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -53,7 +53,7 @@ public class RevurderingTest {
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(false))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, true, false)))
+                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -71,8 +71,8 @@ public class RevurderingTest {
                 FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
-                .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, true, false)))
+                .medAnnenPart(annenPart(AnnenpartUttaksperiode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
+                        FAMILIEHENDELSE_DATO.plusWeeks(12)).medInnvilget(true).build()))
                 .medBehandling(revurderingBerørtSakBehandling())
                 .build();
 
@@ -88,7 +88,7 @@ public class RevurderingTest {
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false, false)))
+                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false)))
                 .medBehandling(revurderingBerørtSakBehandling())
                 .build();
 
@@ -104,7 +104,7 @@ public class RevurderingTest {
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false, false)))
+                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false)))
                 .medBehandling(revurderingBerørtSakBehandling())
                 .build();
 
@@ -120,7 +120,7 @@ public class RevurderingTest {
         RegelGrunnlag grunnlag = basicBuilder(uttakPeriode)
                 .medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false, true)))
+                        FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, true)))
                 .medBehandling(revurderingBerørtSakBehandling())
                 .build();
 
@@ -202,14 +202,13 @@ public class RevurderingTest {
     }
 
     private Regelresultat evaluerBerørtSaken(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.forBerørtSak(grunnlag), uttakPeriode)));
+        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.forBerørtSak(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
     }
 
     private AnnenpartUttaksperiode lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom,
-                                              BigDecimal utbetalingsgrad, boolean innvilgetUtsettelse, boolean samtidigUttak) {
-        return new AnnenpartUttaksperiode.Builder(fom, tom)
+                                              BigDecimal utbetalingsgrad, boolean samtidigUttak) {
+        return AnnenpartUttaksperiode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(samtidigUttak)
-                .medInnvilgetUtsettelse(innvilgetUtsettelse)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forArbeid("000000003", null),
                         stønadskontotype, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), utbetalingsgrad))
                 .build();

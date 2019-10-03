@@ -5,41 +5,36 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class Trekkdagertilstand {
 
-    public enum Part {
-        SØKER,
-        ANNEN_PART
-    }
     private final Map<AktivitetIdentifikator, Kontoer> kontoerForAktiviteter;
-
-    private final Map<Part, List<AktivitetIdentifikator>> aktiviteter = new EnumMap<>(Part.class);
-    private boolean samtykke;
-    private final Map<Part, Forbruk> forbrukteDager = new EnumMap<>(Part.class);
+    private final boolean samtykke;
+    private final boolean erMor;
+    private final Forbruk forbrukAnnenpart;
+    private final Forbruk forbrukSøker;
     private List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes;
+
     private Trekkdagertilstand(Map<AktivitetIdentifikator, Kontoer> kontoerForAktiviteter,
-                              List<AktivitetIdentifikator> søkersAktiviteter,
-                              List<AktivitetIdentifikator> annenPartAktiviteter,
-                              List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes,
-                              boolean samtykke) {
+                               List<AktivitetIdentifikator> søkersAktiviteter,
+                               List<AktivitetIdentifikator> annenPartAktiviteter,
+                               List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes,
+                               boolean samtykke,
+                               boolean erMor) {
         this.annenPartsPerioderSomSkalTrekkes = annenPartsPerioderSomSkalTrekkes;
         this.samtykke = samtykke;
         this.kontoerForAktiviteter = kontoerForAktiviteter;
-        aktiviteter.put(Part.SØKER, søkersAktiviteter);
-        aktiviteter.put(Part.ANNEN_PART, annenPartAktiviteter);
-        forbrukteDager.put(Part.SØKER, Forbruk.zero(søkersAktiviteter));
-        forbrukteDager.put(Part.ANNEN_PART, Forbruk.zero(annenPartAktiviteter));
+        this.erMor = erMor;
+        forbrukSøker = Forbruk.zero(søkersAktiviteter);
+        forbrukAnnenpart = Forbruk.zero(annenPartAktiviteter);
     }
 
     private Trekkdagertilstand(RegelGrunnlag grunnlag, List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes) {
@@ -47,13 +42,18 @@ public class Trekkdagertilstand {
                 grunnlag.getKontoer() == null ? Collections.emptyList() : new ArrayList<>(grunnlag.getKontoer().keySet()),
                 grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getAktiviteter(),
                 annenPartsPerioderSomSkalTrekkes,
-                grunnlag.getRettOgOmsorg() != null && grunnlag.getRettOgOmsorg().getSamtykke());
+                grunnlag.getRettOgOmsorg() != null && grunnlag.getRettOgOmsorg().getSamtykke(),
+                grunnlag.getBehandling().getSøkerErMor());
     }
 
-    public static Trekkdagertilstand forBerørtSak(RegelGrunnlag grunnlag) {
+    public static Trekkdagertilstand forBerørtSak(RegelGrunnlag grunnlag, List<UttakPeriode> uttakPerioderSøker) {
+        List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker,
+                grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getUttaksperioder());
         Trekkdagertilstand trekkdagertilstand = new Trekkdagertilstand(grunnlag, Collections.emptyList());
-        for (AnnenpartUttaksperiode annenpartUttaksperiode : grunnlag.getAnnenPart().getUttaksperioder()) {
-            trekkdagertilstand.registrerForbrukAnnenPart(annenpartUttaksperiode);
+        for (AnnenpartUttaksperiode annenpartPeriode : annenPartsPerioderSomSkalTrekkes) {
+            if (uttakPerioderSøker.stream().noneMatch(søkersPeriode -> søkersPeriode.overlapper(annenpartPeriode))) {
+                trekkdagertilstand.registrerForbrukAnnenPart(annenpartPeriode);
+            }
         }
         return trekkdagertilstand;
     }
@@ -64,9 +64,8 @@ public class Trekkdagertilstand {
         return new Trekkdagertilstand(grunnlag, annenPartsPerioderSomSkalTrekkes);
     }
 
-    private void registrerForbruk(Part part, UttakPeriode periode) {
-        Forbruk forbruk = forbrukteDager.get(part);
-        for (AktivitetIdentifikator aktivitet : aktiviteter.get(part)) {
+    private void registrerForbruk(Forbruk forbruk, UttakPeriode periode) {
+        for (AktivitetIdentifikator aktivitet : forbruk.getAktiviteter()) {
             forbruk.registrerForbruk(aktivitet, periode.getStønadskontotype(), periode.getTrekkdager(aktivitet));
             if (periode.isFlerbarnsdager()) {
                 forbruk.registrerForbruk(aktivitet, Stønadskontotype.FLERBARNSDAGER, periode.getTrekkdager(aktivitet));
@@ -75,14 +74,21 @@ public class Trekkdagertilstand {
     }
 
     private void registrerForbrukAnnenPart(AnnenpartUttaksperiode periode) {
-        Forbruk forbruk = forbrukteDager.get(Part.ANNEN_PART);
-        for (UttakPeriodeAktivitet uttakPeriodeAktivitet : periode.getUttakPeriodeAktiviteter()) {
-            if (uttakPeriodeAktivitet.getTrekkdager().merEnn0()) {
-                forbruk.registrerForbruk(uttakPeriodeAktivitet.getAktivitetIdentifikator(), uttakPeriodeAktivitet.getStønadskontotype(), uttakPeriodeAktivitet.getTrekkdager());
+        if (periode.isOppholdsperiode()) {
+            registrerForbrukAnnenpartOpphold(periode);
+        } else {
+            for (UttakPeriodeAktivitet uttakPeriodeAktivitet : periode.getUttakPeriodeAktiviteter()) {
+                forbrukAnnenpart.registrerForbruk(uttakPeriodeAktivitet.getAktivitetIdentifikator(), uttakPeriodeAktivitet.getStønadskontotype(), uttakPeriodeAktivitet.getTrekkdager());
                 if (periode.isFlerbarnsdager()) {
-                    forbruk.registrerForbruk(uttakPeriodeAktivitet.getAktivitetIdentifikator(), Stønadskontotype.FLERBARNSDAGER, uttakPeriodeAktivitet.getTrekkdager());
+                    forbrukAnnenpart.registrerForbruk(uttakPeriodeAktivitet.getAktivitetIdentifikator(), Stønadskontotype.FLERBARNSDAGER, uttakPeriodeAktivitet.getTrekkdager());
                 }
             }
+        }
+    }
+
+    private void registrerForbrukAnnenpartOpphold(AnnenpartUttaksperiode periode) {
+        for (AktivitetIdentifikator aktivitet : forbrukAnnenpart.getAktiviteter()) {
+            forbrukAnnenpart.registrerForbruk(aktivitet, Oppholdårsaktype.map(periode.getOppholdårsaktype(), !erMor), new Trekkdager(periode.virkedager()));
         }
     }
 
@@ -95,12 +101,11 @@ public class Trekkdagertilstand {
     }
 
     private Trekkdager getSamletForbruk(AktivitetIdentifikator aktivitetIdentifikator, Stønadskontotype stønadskontotype) {
-        return forbrukteDager.get(Part.SØKER).getForbruk(aktivitetIdentifikator, stønadskontotype)
-                .add(forbrukteDager.get(Part.ANNEN_PART).getMinsteForbruk(stønadskontotype));
+        return forbrukSøker.getForbruk(aktivitetIdentifikator, stønadskontotype).add(forbrukAnnenpart.getMinsteForbruk(stønadskontotype));
     }
 
     void reduserSaldo(UttakPeriode uttakPeriode) {
-        registrerForbruk(Trekkdagertilstand.Part.SØKER, uttakPeriode);
+        registrerForbruk(forbrukSøker, uttakPeriode);
     }
 
     public void trekkSaldoForAnnenPartsPerioder(UttakPeriode periodeUnderBehandling) {
@@ -133,6 +138,11 @@ public class Trekkdagertilstand {
 
     private static List<AnnenpartUttaksperiode> knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(List<UttakPeriode> uttakPerioderSøker,
                                                                                                       List<AnnenpartUttaksperiode> uttakPerioderAnnenPart) {
+        List<AnnenpartUttaksperiode> annenPartPerioder = knekkAnnenpartBasertPåSøker(uttakPerioderSøker, uttakPerioderAnnenPart);
+        return annenPartPerioder;
+    }
+
+    private static List<AnnenpartUttaksperiode> knekkAnnenpartBasertPåSøker(List<UttakPeriode> uttakPerioderSøker, List<AnnenpartUttaksperiode> uttakPerioderAnnenPart) {
         Set<LocalDate> knekkpunkter = new TreeSet<>();
         for (UttakPeriode periode : uttakPerioderSøker) {
             knekkpunkter.add(periode.getFom());
@@ -143,11 +153,7 @@ public class Trekkdagertilstand {
         for (LocalDate knekkpunkt : knekkpunkter) {
             annenPartPerioder = knekk(annenPartPerioder, knekkpunkt);
         }
-
-        //fjern alle som er etter siste uttaksperiode fra søker
-        return annenPartPerioder.stream()
-                .filter(annenPart -> annenPart.getTom().isBefore(uttakPerioderSøker.get(uttakPerioderSøker.size() - 1).getFom()))
-                .collect(Collectors.toList());
+        return annenPartPerioder;
     }
 
     private static List<AnnenpartUttaksperiode> knekk(List<AnnenpartUttaksperiode> førKnekk, LocalDate knekkpunkt) {
@@ -181,7 +187,7 @@ public class Trekkdagertilstand {
                         .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
                 uttakPeriodeAktivitetMedNyttTrekkDager
                         .add(new UttakPeriodeAktivitet(uttakPeriodeAktivitet.getAktivitetIdentifikator(),
-                        uttakPeriodeAktivitet.getStønadskontotype(),
+                                uttakPeriodeAktivitet.getStønadskontotype(),
                                 new Trekkdager(vektetTrekkdager),
                                 uttakPeriodeAktivitet.getUtbetalingsgrad(),
                                 uttakPeriodeAktivitet.getGradertArbeidsprosent()));
@@ -192,21 +198,21 @@ public class Trekkdagertilstand {
     }
 
     private static List<UttakPeriodeAktivitet> aktiviteterForPeriodeEtterKnekkpunkt(List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter,
-                                                                             List<UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt) {
+                                                                                    List<UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt) {
         List<UttakPeriodeAktivitet> uttakPeriodeAktivitetMedNyttTrekkDager = new ArrayList<>();
 
-        for(UttakPeriodeAktivitet uttakPeriodeAktivitet : uttakPeriodeAktiviteter){
-            for(UttakPeriodeAktivitet uttakPeriodeAktivitetFørKnekkpunkt: aktiviteterForPeriodeFørKnekkpunkt) {
-                if(uttakPeriodeAktivitet.getAktivitetIdentifikator().equals(uttakPeriodeAktivitetFørKnekkpunkt.getAktivitetIdentifikator())) {
+        for (UttakPeriodeAktivitet uttakPeriodeAktivitet : uttakPeriodeAktiviteter) {
+            for (UttakPeriodeAktivitet uttakPeriodeAktivitetFørKnekkpunkt : aktiviteterForPeriodeFørKnekkpunkt) {
+                if (uttakPeriodeAktivitet.getAktivitetIdentifikator().equals(uttakPeriodeAktivitetFørKnekkpunkt.getAktivitetIdentifikator())) {
                     Trekkdager opprinneligeTrekkdager = uttakPeriodeAktivitet.getTrekkdager();
                     Trekkdager trekkDagerFørKnekkpunkt = uttakPeriodeAktivitetFørKnekkpunkt.getTrekkdager();
                     Trekkdager trekkDagerEtterKnekkpunkt = opprinneligeTrekkdager.subtract(trekkDagerFørKnekkpunkt);
-                        uttakPeriodeAktivitetMedNyttTrekkDager
-                                .add(new UttakPeriodeAktivitet(uttakPeriodeAktivitet.getAktivitetIdentifikator(),
-                                        uttakPeriodeAktivitet.getStønadskontotype(),
-                                        trekkDagerEtterKnekkpunkt,
-                                        uttakPeriodeAktivitet.getUtbetalingsgrad(),
-                                        uttakPeriodeAktivitet.getGradertArbeidsprosent()));
+                    uttakPeriodeAktivitetMedNyttTrekkDager
+                            .add(new UttakPeriodeAktivitet(uttakPeriodeAktivitet.getAktivitetIdentifikator(),
+                                    uttakPeriodeAktivitet.getStønadskontotype(),
+                                    trekkDagerEtterKnekkpunkt,
+                                    uttakPeriodeAktivitet.getUtbetalingsgrad(),
+                                    uttakPeriodeAktivitet.getGradertArbeidsprosent()));
                 }
             }
 

@@ -685,13 +685,13 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
 
         LocalDate fødselsdato = LocalDate.of(2019, 3, 13);
         LocalDate tom = Virkedager.plusVirkedager(fødselsdato.plusWeeks(6), 5);
-        AnnenpartUttaksperiode annenPartPeriode1 = new AnnenpartUttaksperiode.Builder(fødselsdato.minusWeeks(3), fødselsdato.minusDays(1))
+        AnnenpartUttaksperiode annenPartPeriode1 = AnnenpartUttaksperiode.Builder.uttak(fødselsdato.minusWeeks(3), fødselsdato.minusDays(1))
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitetIdentifikator, Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, new Trekkdager(15), BigDecimal.TEN))
                 .build();
-        AnnenpartUttaksperiode annenPartPeriode2 = new AnnenpartUttaksperiode.Builder(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
+        AnnenpartUttaksperiode annenPartPeriode2 = AnnenpartUttaksperiode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitetIdentifikator, Stønadskontotype.MØDREKVOTE, new Trekkdager(30), BigDecimal.TEN))
                 .build();
-        AnnenpartUttaksperiode annenPartPeriode3 = new AnnenpartUttaksperiode.Builder(fødselsdato.plusWeeks(6), tom)
+        AnnenpartUttaksperiode annenPartPeriode3 = AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(6), tom)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitetIdentifikator, Stønadskontotype.FELLESPERIODE,
                         new Trekkdager(Virkedager.beregnAntallVirkedager(fødselsdato.plusWeeks(6), tom)), BigDecimal.TEN))
                 .build();
@@ -1123,15 +1123,15 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(LocalDate.of(2019, 3, 4)).build())
                 //far har fått overført mange dager av mor. Det er noen dager igjen til mor. Skal avslå alle mors perioder og ikke trekk dager
                 .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 6))
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 6))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(3), BigDecimal.valueOf(100)))
                                 .build())
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2019, 3, 7), LocalDate.of(2019, 3, 31))
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 3, 7), LocalDate.of(2019, 3, 31))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(17), BigDecimal.valueOf(100)))
                                 .build())
-                        .leggTilUttaksperiode(new AnnenpartUttaksperiode.Builder(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 3))
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 3))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(25), BigDecimal.valueOf(100)))
                                 .build())
