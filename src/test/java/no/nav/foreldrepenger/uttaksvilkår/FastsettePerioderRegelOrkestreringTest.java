@@ -9,6 +9,7 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.UKJENT;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -1189,6 +1190,51 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         assertThat(resultat.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(resultat.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(7).minusDays(1));
         assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    public void utsettelse_som_går_til_manuell_skal_trekke_dager_selv_om_tom_på_konto() {
+        LocalDate fødselsdato = LocalDate.of(2019, 1, 26);
+        RegelGrunnlag.Builder grunnlag = new RegelGrunnlag.Builder()
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 200)).build())
+                .medArbeid(new ArbeidGrunnlag.Builder()
+                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build()))
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(false)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medMorHarRett(false)
+                        .medFarHarRett(true)
+                        .medSamtykke(true)
+                        .build())
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2019, 12, 24), LocalDate.of(2019, 12, 31),
+                                Utsettelseårsaktype.ARBEID, PeriodeVurderingType.IKKE_VURDERT, null, false))
+                        .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 9, 22)))
+                        .build()
+                )
+                .medOpptjening(new Opptjening.Builder()
+                        .medSkjæringstidspunkt(fødselsdato)
+                        .build())
+                .medInngangsvilkår(new Inngangsvilkår.Builder()
+                        .medAdopsjonOppfylt(true)
+                        .medForeldreansvarnOppfylt(true)
+                        .medFødselOppfylt(true)
+                        .medOpptjeningOppfylt(true)
+                        .build());
+
+        RegelGrunnlag build = grunnlag.build();
+        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(build, new FeatureTogglesForTester());
+
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1).decimalValue()).isNotZero();
+        assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(UKJENT);
+        assertThat(resultat.get(2).getUttakPeriode().getManuellbehandlingårsak()).isNotNull();
     }
 
     @Test

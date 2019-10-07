@@ -160,7 +160,8 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
         Optional<Stønadskontotype> stønadskontotypeOpt = velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand, konfigurasjon);
         if (stønadskontotypeOpt.isPresent()) {
             periode.setStønadskontotype(stønadskontotypeOpt.get());
-        } else {
+            //Går til manuell så saksbehandler kan rydde opp
+        } else if (periode.getManuellbehandlingårsak() == null) {
             throw new IllegalStateException("Prøver å trekke dager fra ukjent konto");
         }
     }
