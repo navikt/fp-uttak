@@ -57,6 +57,7 @@ public class UtsettelseDelregelTest {
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(periode)
+                        .medMottattDato(fødselsdato.minusWeeks(1))
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)

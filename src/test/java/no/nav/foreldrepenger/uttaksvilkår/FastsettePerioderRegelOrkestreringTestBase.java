@@ -107,6 +107,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
 
     Søknad søknad(Søknadstype søknadstype, UttakPeriode... perioder) {
         Søknad.Builder builder = new Søknad.Builder()
+                .medMottattDato(perioder[0].getFom().minusWeeks(1))
                 .medType(søknadstype);
         for (UttakPeriode uttakPeriode : perioder) {
             builder.leggTilSøknadsperiode(uttakPeriode);

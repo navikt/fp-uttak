@@ -39,7 +39,6 @@ public enum IkkeOppfyltÅrsak implements Årsak {
     BARNETS_INNLEGGELSE_IKKE_OPPFYLT(4040, "Barnets innleggelse ikke oppfylt"),
     UTSETTELSE_FERIE_PÅ_BEVEGELIG_HELLIGDAG(4041, "Avslag utsettelse ferie på bevegelig helligdag"),
 
-    //Endringssøknad
     SØKT_GRADERING_ETTER_PERIODEN_HAR_BEGYNT(4080 , "Søker har søkt om gradert uttak etter at perioden med delvis arbeid er påbegynt"),
     SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT(4081, "Søker har søkt om utsettelse pga ferie etter ferien er begynt"),
     SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT(4082, "Søker har søkt om utsettelse pga arbeid etter ferien er begynt"),

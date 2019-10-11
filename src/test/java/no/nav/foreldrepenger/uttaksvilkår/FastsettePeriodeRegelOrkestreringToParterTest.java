@@ -460,7 +460,6 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
 
     @Test
     public void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_tapende_behandling() {
-        LocalDate endringssøknadMottattdato = fødselsdato.plusWeeks(UKER_MK);
         LocalDate fomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(6);
         LocalDate tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(22).minusDays(1);
         LocalDate fomMorsFP1 = fødselsdato.plusWeeks(UKER_MK);
@@ -480,7 +479,6 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .medErTapende(true)
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(endringssøknadMottattdato)
                         .build())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)

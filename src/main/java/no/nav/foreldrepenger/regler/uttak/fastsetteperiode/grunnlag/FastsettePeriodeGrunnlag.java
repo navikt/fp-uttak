@@ -157,15 +157,10 @@ public interface FastsettePeriodeGrunnlag {
     boolean isMorRett();
 
     /**
-     * Dato for mottatt endringssøknad
+     * Dato for mottatt siste søknad
      * @return dato
      */
-    LocalDate getEndringssøknadMottattdato();
-
-    /**
-     * Om dette er en endringssøknad eller ikke
-     */
-    boolean erEndringssøknad();
+    LocalDate getSøknadMottattdato();
 
     Trekkdagertilstand getTrekkdagertilstand();
 

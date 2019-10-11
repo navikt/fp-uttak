@@ -788,6 +788,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
+                        .medMottattDato(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 7, 30), LocalDate.of(2018, 8, 19)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, LocalDate.of(2018, 8, 20), LocalDate.of(2018, 12, 2)))
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31),
@@ -1212,6 +1213,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
+                        .medMottattDato(LocalDate.of(2019, 12, 20))
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2019, 12, 24), LocalDate.of(2019, 12, 31),
                                 Utsettelseårsaktype.ARBEID, PeriodeVurderingType.IKKE_VURDERT, null, false))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, LocalDate.of(2020, 1, 1), LocalDate.of(2020, 9, 22)))

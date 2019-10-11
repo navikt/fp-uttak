@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -36,19 +35,18 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
-public class EndringssøknadRegelTest {
+public class SøknadMottattDatoRegelTest {
 
     private static final LocalDate FØRSTE_LOVLIGE_UTTAKSDAG = LocalDate.of(2018, 5, 5);
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
     private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
 
     @Test
-    public void endringssøknadMottattdatoFørGradertPeriodeBlirSendtManuellBehandling() {
-        LocalDate endringssøknadMottattdato = LocalDate.of(2018, 10, 10);
-        UttakPeriode søknadsperiode = gradertSøknadsperiode(endringssøknadMottattdato.minusWeeks(1), endringssøknadMottattdato);
+    public void søknadMottattdatoFørGradertPeriodeBlirSendtManuellBehandling() {
+        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
+        UttakPeriode søknadsperiode = gradertSøknadsperiode(søknadMottattdato.minusWeeks(1), søknadMottattdato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode))
-                .medRevurdering(revurdering(endringssøknadMottattdato))
+                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -61,12 +59,11 @@ public class EndringssøknadRegelTest {
     }
 
     @Test
-    public void endringssøknadMottattdatoEtterGradertPeriodeBlirInnvilget() {
-        LocalDate endringssøknadMottattdato = LocalDate.of(2018, 10, 10);
-        UttakPeriode søknadsperiode = gradertSøknadsperiode(endringssøknadMottattdato.plusDays(1), endringssøknadMottattdato.plusWeeks(1));
+    public void søknadMottattdatoEtterGradertPeriodeBlirInnvilget() {
+        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
+        UttakPeriode søknadsperiode = gradertSøknadsperiode(søknadMottattdato.plusDays(1), søknadMottattdato.plusWeeks(1));
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode))
-                .medRevurdering(revurdering(endringssøknadMottattdato))
+                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -75,12 +72,11 @@ public class EndringssøknadRegelTest {
     }
 
     @Test
-    public void endringssøknadMottattdatoFørUtsettelseFeriePeriodeBlirAvslått() {
-        LocalDate endringssøknadMottattdato = LocalDate.of(2018, 10, 10);
-        UttakPeriode søknadsperiode = utsettelsePeriode(endringssøknadMottattdato.minusWeeks(1), endringssøknadMottattdato, Utsettelseårsaktype.FERIE);
+    public void søknadMottattdatoFørUtsettelseFeriePeriodeBlirAvslått() {
+        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
+        UttakPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.minusWeeks(1), søknadMottattdato, Utsettelseårsaktype.FERIE);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode))
-                .medRevurdering(revurdering(endringssøknadMottattdato))
+                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -92,12 +88,11 @@ public class EndringssøknadRegelTest {
     }
 
     @Test
-    public void endringssøknadMottattdatoEtterUtsettelseFeriePeriodeBlirInnvilget() {
-        LocalDate endringssøknadMottattdato = LocalDate.of(2018, 10, 10);
-        UttakPeriode søknadsperiode = utsettelsePeriode(endringssøknadMottattdato.plusDays(1), endringssøknadMottattdato.plusWeeks(1), Utsettelseårsaktype.FERIE);
+    public void søknadMottattdatoEtterUtsettelseFeriePeriodeBlirInnvilget() {
+        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
+        UttakPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.plusDays(1), søknadMottattdato.plusWeeks(1), Utsettelseårsaktype.FERIE);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode))
-                .medRevurdering(revurdering(endringssøknadMottattdato))
+                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -106,12 +101,11 @@ public class EndringssøknadRegelTest {
     }
 
     @Test
-    public void endringssøknadMottattdatoFørUtsettelseArbeidPeriodeBlirAvslått() {
-        LocalDate endringssøknadMottattdato = LocalDate.of(2018, 10, 10);
-        UttakPeriode søknadsperiode = utsettelsePeriode(endringssøknadMottattdato.minusWeeks(1), endringssøknadMottattdato, Utsettelseårsaktype.ARBEID);
+    public void søknadMottattdatoFørUtsettelseArbeidPeriodeBlirAvslått() {
+        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
+        UttakPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.minusWeeks(1), søknadMottattdato, Utsettelseårsaktype.ARBEID);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode))
-                .medRevurdering(revurdering(endringssøknadMottattdato))
+                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -123,12 +117,11 @@ public class EndringssøknadRegelTest {
     }
 
     @Test
-    public void endringssøknadMottattdatoEtterUtsettelseArbeidPeriodeBlirInnvilget() {
-        LocalDate endringssøknadMottattdato = LocalDate.of(2018, 10, 10);
-        UttakPeriode søknadsperiode = utsettelsePeriode(endringssøknadMottattdato.plusDays(1), endringssøknadMottattdato.plusWeeks(1), Utsettelseårsaktype.ARBEID);
+    public void søknadMottattdatoEtterUtsettelseArbeidPeriodeBlirInnvilget() {
+        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
+        UttakPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.plusDays(1), søknadMottattdato.plusWeeks(1), Utsettelseårsaktype.ARBEID);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode))
-                .medRevurdering(revurdering(endringssøknadMottattdato))
+                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -136,16 +129,11 @@ public class EndringssøknadRegelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
     }
 
-    private Revurdering revurdering(LocalDate endringssøknadMottattdato) {
-        return new Revurdering.Builder()
-                .medEndringssøknadMottattdato(endringssøknadMottattdato)
-                .build();
-    }
-
-    private Søknad søknad(UttakPeriode søknadsperiode) {
+    private Søknad søknad(UttakPeriode søknadsperiode, LocalDate søknadMottattdato) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
                 .leggTilSøknadsperiode(søknadsperiode)
+                .medMottattDato(søknadMottattdato)
                 .build();
     }
 

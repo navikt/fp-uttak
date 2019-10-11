@@ -308,7 +308,6 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build())
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(LocalDate.of(2018, 8,8))
                         .medEndringsdato(LocalDate.of(2019, 1, 1))
                         .build())
                 .medBehandling(new Behandling.Builder().build())
@@ -501,25 +500,25 @@ public class OppholdPeriodeTjenesteTest {
         LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
 
         RegelGrunnlag grunnlag = grunnlagMedKontoer()
-            .medSøknad(new Søknad.Builder()
-                .medType(Søknadstype.ADOPSJON)
-                .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(1),
-                    familiehendelse.plusWeeks(3), null, false))
-                .build())
-            .medBehandling(new Behandling.Builder()
-                .medSøkerErMor(true)
-                .build())
-            .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                .medFarHarRett(true)
-                .medMorHarRett(true)
-                .build())
-            .medDatoer(new Datoer.Builder()
-                .medOmsorgsovertakelse(familiehendelse)
-                .build())
-            .medAdopsjon(new Adopsjon.Builder()
-                .medAnkomstNorge(null)
-                .build())
-            .build();
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(1),
+                                familiehendelse.plusWeeks(3), null, false))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(familiehendelse)
+                        .build())
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(null)
+                        .build())
+                .build();
 
         List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
@@ -567,25 +566,25 @@ public class OppholdPeriodeTjenesteTest {
         LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
 
         RegelGrunnlag grunnlag = grunnlagMedKontoer()
-            .medSøknad(new Søknad.Builder()
-                .medType(Søknadstype.ADOPSJON)
-                .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(1),
-                    familiehendelse.plusWeeks(3), null, false))
-                .build())
-            .medBehandling(new Behandling.Builder()
-                .medSøkerErMor(true)
-                .build())
-            .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                .medFarHarRett(true)
-                .medMorHarRett(true)
-                .build())
-            .medDatoer(new Datoer.Builder()
-                .medOmsorgsovertakelse(familiehendelse)
-                .build())
-            .medAdopsjon(new Adopsjon.Builder()
-                .medAnkomstNorge(familiehendelse.plusDays(3))
-                .build())
-            .build();
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(1),
+                                familiehendelse.plusWeeks(3), null, false))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(familiehendelse)
+                        .build())
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(familiehendelse.plusDays(3))
+                        .build())
+                .build();
 
         List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
@@ -706,27 +705,27 @@ public class OppholdPeriodeTjenesteTest {
         LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
 
         RegelGrunnlag grunnlag = grunnlagMedKontoer()
-            .medSøknad(new Søknad.Builder()
-                .medType(Søknadstype.ADOPSJON)
-                .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(1),
-                    familiehendelse.plusWeeks(3), null, false))
-                .leggTilSøknadsperiode(new StønadsPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(5),
-                    familiehendelse.plusWeeks(7), null, false))
-                .build())
-            .medBehandling(new Behandling.Builder()
-                .medSøkerErMor(true)
-                .build())
-            .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                .medFarHarRett(true)
-                .medMorHarRett(true)
-                .build())
-            .medDatoer(new Datoer.Builder()
-                .medOmsorgsovertakelse(familiehendelse)
-                .build())
-            .medAdopsjon(new Adopsjon.Builder()
-                .medAnkomstNorge(familiehendelse.plusDays(3))
-                .build())
-            .build();
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(1),
+                                familiehendelse.plusWeeks(3), null, false))
+                        .leggTilSøknadsperiode(new StønadsPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(5),
+                                familiehendelse.plusWeeks(7), null, false))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .build())
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(familiehendelse)
+                        .build())
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(familiehendelse.plusDays(3))
+                        .build())
+                .build();
 
         List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
@@ -843,7 +842,7 @@ public class OppholdPeriodeTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_opprette_manglende_søkt_før_endringsdato_ved_endringssøknad() {
+    public void skal_ikke_opprette_manglende_søkt_før_endringsdato() {
         LocalDate fødselsdato = LocalDate.of(2018, 6, 13);
 
         RegelGrunnlag grunnlag = grunnlagMedKontoer()
@@ -852,6 +851,7 @@ public class OppholdPeriodeTjenesteTest {
                 .build())
             .medSøknad(new Søknad.Builder()
                 .leggTilSøknadsperiode(new StønadsPeriode(FORELDREPENGER, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22), null, false))
+                    .medMottattDato(fødselsdato.plusWeeks(17))
                 .build())
             .medOpptjening(new Opptjening.Builder()
                 .medSkjæringstidspunkt(fødselsdato.plusWeeks(7))
@@ -865,7 +865,6 @@ public class OppholdPeriodeTjenesteTest {
                 .build())
             .medRevurdering(new Revurdering.Builder()
                 .medEndringsdato(fødselsdato.plusWeeks(18))
-                .medEndringssøknadMottattdato(fødselsdato.plusWeeks(17))
                 .build()
             )
             .build();

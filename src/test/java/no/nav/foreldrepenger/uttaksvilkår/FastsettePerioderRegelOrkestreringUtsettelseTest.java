@@ -53,7 +53,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void periode_med_gyldig_utsettelse_pga_barn_innlagt_i_helseinstitusjon_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.INNLAGT_BARN, PeriodeVurderingType.PERIODE_OK))
@@ -81,7 +81,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void periode_med_gyldig_utsettelse_pga_søker_innlagt_i_helseinstitusjon_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.INNLAGT_HELSEINSTITUSJON, PeriodeVurderingType.PERIODE_OK))
@@ -109,7 +109,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void periode_med_gyldig_utsettelse_pga_søkers_sykdom_eller_skade_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.SYKDOM_SKADE, PeriodeVurderingType.PERIODE_OK))
@@ -144,7 +144,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                 .build();
         arbeidsprosenter.leggTil(ARBEIDSFORHOLD, arbeidTidslinje);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(utsettelseFom, utsettelseTom, Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK))
@@ -179,7 +179,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                 .build();
         arbeidsprosenter.leggTil(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, arbeidTidslinje);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(utsettelseFom, utsettelseTom, Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK))
@@ -208,7 +208,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void periode_med_utsettelse_pga_ferie_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
@@ -233,7 +233,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void skal_ikke_utlede_stønadskontotype_ved_innvilgelse_av_utsettelse() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
@@ -251,7 +251,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void periode_med_utsettelse_pga_ferie_skal_til_manuell_behandling_grunnet_bevegelige_helligdager() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 15);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
@@ -320,7 +320,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void flere_perioder_med_utsettelse_pga_ferie_skal_til_manuell_behandling_grunnet_bevegelige_helligdager() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 15);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
@@ -429,7 +429,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void periode_med_ugyldig_utsettelse_skal_til_manuell_behandling() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.INNLAGT_BARN, PeriodeVurderingType.PERIODE_OK))
@@ -454,7 +454,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void utsettelse_uten_stønadskonto_på_helligdag_skal_gi_ugyldig_opphold() {
         LocalDate fødselsdato = LocalDate.of(2018, 11, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, LocalDate.of(2018, 12, 24)))
                         .leggTilSøknadsperiode(utsettelsePeriode(LocalDate.of(2018, 12, 25),
@@ -479,7 +479,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     public void utsettelse_periode_med_ukjent_kontotype_må_settes_til_neste_tilgjengelig() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato)
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.SYKDOM_SKADE, PeriodeVurderingType.PERIODE_OK))
@@ -512,7 +512,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1))
                         .build())
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusWeeks(2).minusDays(1)))
                                 .build())
@@ -547,7 +547,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1))
                         .build())
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusWeeks(2).minusDays(1)))
                                 .build())
@@ -575,7 +575,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1))
                         .build())
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8), Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT))
                         .build());
@@ -598,7 +598,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1))
                         .build())
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8), Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT))
                         .build());
@@ -621,7 +621,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1))
                         .build())
-                .medSøknad(fødselSøknad()
+                .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8), Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT))
                         .build());
@@ -634,6 +634,28 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
         assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    public void utsettelse_før_søknad_mottatt_dato_skal_gå_til_manuell() {
+        //Søkt om ferieutsettelse innenfor seks uker etter fødsel. Utsettelsen skal avlås og det skal trekkes dager fra mødrekvote
+        LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
+        basicUtsettelseGrunnlag(fødselsdato)
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1))
+                        .build())
+                .medSøknad(fødselSøknad(fødselsdato.plusWeeks(8))
+                        .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
+                        .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT))
+                        .build());
+
+        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+
+        assertThat(resultat).hasSize(4);
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(2).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     private void assertDeTreFørstePeriodene(List<FastsettePeriodeResultat> resultat, LocalDate fødselsdato) {
@@ -709,8 +731,9 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .build());
     }
 
-    private Søknad.Builder fødselSøknad() {
+    private Søknad.Builder fødselSøknad(LocalDate mottattDato) {
         return new Søknad.Builder()
+                .medMottattDato(mottattDato)
                 .medType(Søknadstype.FØDSEL);
     }
 

@@ -557,6 +557,7 @@ public class MødrekvoteDelregelTest {
         return new Søknad.Builder()
                 .leggTilSøknadsperiode(uttakPeriode)
                 .medType(Søknadstype.FØDSEL)
+                .medMottattDato(uttakPeriode.getFom().minusWeeks(1))
                 .build();
     }
 
