@@ -58,7 +58,7 @@ public class RegelGrunnlag {
     }
 
     public boolean erRevurdering() {
-        return behandling.erRevurdering();
+        return revurdering != null;
     }
 
     public AnnenPart getAnnenPart() {

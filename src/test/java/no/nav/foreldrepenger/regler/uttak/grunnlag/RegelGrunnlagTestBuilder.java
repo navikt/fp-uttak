@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -42,7 +41,7 @@ public class RegelGrunnlagTestBuilder {
                 .build();
         return new RegelGrunnlag.Builder()
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN).build())
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medType(Behandlingtype.FØRSTEGANGSSØKNAD).build())
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).build())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true).build())
                 .medArbeid(arbeidGrunnlag)
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()

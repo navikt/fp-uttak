@@ -43,10 +43,10 @@ public class Trekkdagertilstand {
                 grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getAktiviteter(),
                 annenPartsPerioderSomSkalTrekkes,
                 grunnlag.getRettOgOmsorg() != null && grunnlag.getRettOgOmsorg().getSamtykke(),
-                grunnlag.getBehandling().getSøkerErMor());
+                grunnlag.getBehandling().isSøkerMor());
     }
 
-    public static Trekkdagertilstand forBerørtSak(RegelGrunnlag grunnlag, List<UttakPeriode> uttakPerioderSøker) {
+    public static Trekkdagertilstand forTapendeBehandling(RegelGrunnlag grunnlag, List<UttakPeriode> uttakPerioderSøker) {
         List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker,
                 grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getUttaksperioder());
         Trekkdagertilstand trekkdagertilstand = new Trekkdagertilstand(grunnlag, Collections.emptyList());

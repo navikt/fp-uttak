@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
@@ -460,7 +459,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
     }
 
     @Test
-    public void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_berørt_behandling() {
+    public void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_tapende_behandling() {
         LocalDate endringssøknadMottattdato = fødselsdato.plusWeeks(UKER_MK);
         LocalDate fomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(6);
         LocalDate tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(22).minusDays(1);
@@ -478,7 +477,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
-                        .medType(Behandlingtype.REVURDERING_BERØRT_SAK)
+                        .medErTapende(true)
                         .build())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringssøknadMottattdato(endringssøknadMottattdato)
@@ -527,7 +526,6 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false)
-                        .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -543,7 +541,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
     }
 
     @Test
-    public void skal_ikke_trekke_for_opphold_i_berørt_behandling_hvis_søker_har_søkt_i_perioden() {
+    public void skal_ikke_trekke_for_opphold_i_tapende_behandling_hvis_søker_har_søkt_i_perioden() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
@@ -563,7 +561,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
-                        .medType(Behandlingtype.REVURDERING_BERØRT_SAK)
+                        .medErTapende(true)
                         .build())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(fødselsdato.plusWeeks(10))
@@ -603,7 +601,6 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false)
-                        .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)

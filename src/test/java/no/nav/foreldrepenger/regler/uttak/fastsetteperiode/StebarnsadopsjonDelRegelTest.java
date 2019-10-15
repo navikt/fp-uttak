@@ -15,7 +15,6 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -167,7 +166,6 @@ public class StebarnsadopsjonDelRegelTest {
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
                 .build())
             .medBehandling(new Behandling.Builder()
-                .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
                 .medSøkerErMor(false)
                 .build())
             .medRettOgOmsorg(new RettOgOmsorg.Builder()

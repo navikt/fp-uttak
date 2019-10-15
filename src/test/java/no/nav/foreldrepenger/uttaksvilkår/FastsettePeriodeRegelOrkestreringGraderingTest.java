@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -33,13 +32,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
@@ -147,7 +144,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                 PeriodeVurderingType.PERIODE_OK, null, true);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.normal()
                 .medKontoer(kontoer)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(false).medType(Behandlingtype.FØRSTEGANGSSØKNAD).build())
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false).build())
                 .medDatoer(new Datoer.Builder().medFødsel(LocalDate.of(2019, 1, 23)).medFørsteLovligeUttaksdag(LocalDate.MIN).build())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(false).medFarHarRett(true).medAleneomsorg(true).build())
                 .medSøknad(new Søknad.Builder()
@@ -267,7 +264,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                 BigDecimal.valueOf(75));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.normal()
                 .medKontoer(kontoer)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medType(Behandlingtype.FØRSTEGANGSSØKNAD).build())
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).build())
                 .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(søknadsperiode.getFom()).medFørsteLovligeUttaksdag(LocalDate.MIN).build())
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(søknadsperiode.getFom()).build())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medAleneomsorg(true).build())

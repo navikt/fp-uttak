@@ -18,7 +18,6 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -259,7 +258,6 @@ public class OppholdPeriodeTjenesteTest {
                         .medFødsel(familiehendelsesDato)
                         .build())
                 .medBehandling(new Behandling.Builder()
-                        .medType(Behandlingtype.REVURDERING)
                         .build())
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2019, 6, 4))
@@ -313,7 +311,7 @@ public class OppholdPeriodeTjenesteTest {
                         .medEndringssøknadMottattdato(LocalDate.of(2018, 8,8))
                         .medEndringsdato(LocalDate.of(2019, 1, 1))
                         .build())
-                .medBehandling(new Behandling.Builder().medType(Behandlingtype.REVURDERING).build())
+                .medBehandling(new Behandling.Builder().build())
                 .build();
 
         List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
@@ -859,7 +857,6 @@ public class OppholdPeriodeTjenesteTest {
                 .medSkjæringstidspunkt(fødselsdato.plusWeeks(7))
                 .build())
             .medBehandling(new Behandling.Builder()
-                .medType(Behandlingtype.REVURDERING)
                 .medSøkerErMor(false)
                 .build())
             .medRettOgOmsorg(new RettOgOmsorg.Builder()

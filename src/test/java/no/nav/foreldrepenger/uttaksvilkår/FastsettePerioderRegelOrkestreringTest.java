@@ -32,7 +32,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandlingtype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
@@ -750,7 +749,6 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
-                        .medType(Behandlingtype.FØRSTEGANGSSØKNAD)
                         .build())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medAleneomsorg(true)
@@ -1114,7 +1112,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
-                        .medType(Behandlingtype.REVURDERING_BERØRT_SAK)
+                        .medErTapende(true)
                         .build())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
