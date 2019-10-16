@@ -411,6 +411,7 @@ public class FedrekvoteDelregelTest {
     private Søknad.Builder fødselssøknadMedEnPeriode(StønadsPeriode søknadsperiode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
+                .medMottattDato(søknadsperiode.getFom().minusWeeks(1))
                 .leggTilSøknadsperiode(søknadsperiode);
     }
 

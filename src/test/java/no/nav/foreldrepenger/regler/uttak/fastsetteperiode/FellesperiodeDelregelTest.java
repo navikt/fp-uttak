@@ -386,6 +386,7 @@ public class FellesperiodeDelregelTest {
     private Søknad søknad(UttakPeriode søknadsperiode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
+                .medMottattDato(søknadsperiode.getFom().minusWeeks(1))
                 .leggTilSøknadsperiode(søknadsperiode)
                 .build();
     }

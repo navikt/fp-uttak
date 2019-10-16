@@ -97,6 +97,7 @@ public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends Fastse
                         .medArbeidsprosenter(new Arbeidsprosenter().leggTil(ARBEIDSFORHOLD, arbeidTidslinje))
                         .build())
                 .medSøknad(new Søknad.Builder()
+                        .medMottattDato(fpff.getFom().minusWeeks(1))
                         .leggTilSøknadsperiode(fpff)
                         .leggTilSøknadsperiode(mødrekvote)
                         .leggTilSøknadsperiode(utsettelseFellesperiode)

@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørEndringssøknadMottattdato;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
@@ -194,12 +194,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTapendeBehandling() {
         return rs.hvisRegel(SjekkOmTapendeBehandling.ID, SjekkOmTapendeBehandling.BESKRIVELSE)
                 .hvis(new SjekkOmTapendeBehandling(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
-                .ellers(sjekkOmGradertEtterEndringssøknadMottattdato());
+                .ellers(sjekkOmGradertEtterSøknadMottattdato());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmGradertEtterEndringssøknadMottattdato() {
-        return rs.hvisRegel(SjekkOmErGradertFørEndringssøknadMottattdato.ID, "Er perioden gradert etter mottattdato?")
-                .hvis(new SjekkOmErGradertFørEndringssøknadMottattdato(), Manuellbehandling.opprett("UT1165",
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGradertEtterSøknadMottattdato() {
+        return rs.hvisRegel(SjekkOmErGradertFørSøknadMottattdato.ID, "Er perioden gradert etter mottattdato?")
+                .hvis(new SjekkOmErGradertFørSøknadMottattdato(), Manuellbehandling.opprett("UT1165",
                         null,
                         Manuellbehandlingårsak.SØKNADSFRIST,
                         true, false,

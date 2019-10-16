@@ -324,12 +324,38 @@ public class KnekkpunktIdentifisererTest {
                         .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(mottattdato)
+                        .medEndringsdato(LocalDate.of(2018, 5, 5))
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(gradertStønadsperiode)
+                        .medMottattDato(mottattdato)
+                        .build())
+                .build();
+
+        Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).contains(mottattdato);
+    }
+
+    @Test
+    public void finnerKnekkPåFørstegangssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
+        LocalDate mottattdato = LocalDate.of(2018, 10, 10);
+        AktivitetIdentifikator gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
+        StønadsPeriode gradertStønadsperiode = StønadsPeriode.medGradering(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, mottattdato.minusMonths(1),
+                mottattdato.minusWeeks(2), Collections.singletonList(gradertArbeidsforhold),
+                BigDecimal.valueOf(30), PeriodeVurderingType.PERIODE_OK, null, false);
+        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(LocalDate.of(2018, 5, 5))
+                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
+                        .build())
+                .medBehandling(new Behandling.Builder()
+                        .build())
+                .medSøknad(new Søknad.Builder()
+                        .leggTilSøknadsperiode(gradertStønadsperiode)
+                        .medMottattDato(mottattdato)
                         .build())
                 .build();
 
@@ -348,12 +374,13 @@ public class KnekkpunktIdentifisererTest {
                         .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(mottattdato)
+                        .medEndringsdato(LocalDate.of(2018, 5, 5))
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(StønadsPeriode.medGradering(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, mottattdato, mottattdato.plusWeeks(2),
                                 Collections.singletonList(gradertArbeidsforhold), BigDecimal.valueOf(30), PeriodeVurderingType.PERIODE_OK,
                                 new SamtidigUttak(BigDecimal.TEN), false))
+                        .medMottattDato(mottattdato)
                         .build())
                 .build();
 
@@ -372,12 +399,13 @@ public class KnekkpunktIdentifisererTest {
                         .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(mottattdato)
+                        .medEndringsdato(LocalDate.of(2018, 5, 5))
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(StønadsPeriode.medGradering(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, mottattdato.plusWeeks(1),
                                 mottattdato.plusWeeks(2), Collections.singletonList(gradertArbeidsforhold),
                                 BigDecimal.valueOf(30), PeriodeVurderingType.PERIODE_OK, null, false))
+                        .medMottattDato(mottattdato)
                         .build())
                 .build();
 
@@ -395,11 +423,33 @@ public class KnekkpunktIdentifisererTest {
                         .medFødsel(LocalDate.of(2018, 5, 5))
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(mottattdato)
+                        .medEndringsdato(LocalDate.of(2018, 5, 5))
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
                                 mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
+                        .medMottattDato(mottattdato)
+                        .build())
+                .medBehandling(new Behandling.Builder().build())
+                .build();
+
+        Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).contains(mottattdato);
+    }
+
+    @Test
+    public void finnerKnekkPåFørstegangssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
+        LocalDate mottattdato = LocalDate.of(2018, 10, 10);
+        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+                .medDatoer(new Datoer.Builder()
+                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
+                        .medFødsel(LocalDate.of(2018, 5, 5))
+                        .build())
+                .medSøknad(new Søknad.Builder()
+                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
+                                mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
+                        .medMottattDato(mottattdato)
                         .build())
                 .medBehandling(new Behandling.Builder().build())
                 .build();
@@ -418,11 +468,12 @@ public class KnekkpunktIdentifisererTest {
                         .medFødsel(LocalDate.of(2018, 5, 5))
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(mottattdato)
+                        .medEndringsdato(LocalDate.of(2018, 5, 5))
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato,
                         mottattdato.plusWeeks(2), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK, null, false))
+                        .medMottattDato(mottattdato)
                         .build())
                 .build();
 
@@ -440,11 +491,12 @@ public class KnekkpunktIdentifisererTest {
                         .medFødsel(LocalDate.of(2018, 5, 5))
                         .build())
                 .medRevurdering(new Revurdering.Builder()
-                        .medEndringssøknadMottattdato(mottattdato)
+                        .medEndringsdato(LocalDate.of(2018, 5, 5))
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.plusWeeks(1),
                         mottattdato.plusWeeks(2), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
+                        .medMottattDato(mottattdato)
                         .build())
                 .build();
 
@@ -461,6 +513,7 @@ public class KnekkpunktIdentifisererTest {
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
+                        .medMottattDato(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, fødselsdato, tom,
                                 Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT, null, false))
                         .build())

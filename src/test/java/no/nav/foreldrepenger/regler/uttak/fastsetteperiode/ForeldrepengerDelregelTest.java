@@ -750,6 +750,7 @@ public class ForeldrepengerDelregelTest {
     private Søknad søknad(StønadsPeriode uttakPeriode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
+                .medMottattDato(uttakPeriode.getFom().minusWeeks(1))
                 .leggTilSøknadsperiode(uttakPeriode)
                 .build();
     }

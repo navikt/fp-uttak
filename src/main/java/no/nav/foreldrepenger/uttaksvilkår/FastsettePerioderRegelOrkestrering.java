@@ -182,7 +182,7 @@ public class FastsettePerioderRegelOrkestrering {
                 break;
             case MANUELL_BEHANDLING:
                 regelResultatBehandlerResultat = behandler.manuellBehandling(aktuellPeriode, regelresultat.getManuellbehandlingårsak(), regelresultat.getAvklaringÅrsak(),
-                        arbeidsprosenter, regelresultat.skalUtbetale());
+                        arbeidsprosenter, regelresultat.skalUtbetale(), avslåGradering, graderingIkkeInnvilgetÅrsak);
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Ukjent utfalltype: %s", utfallType.name()));

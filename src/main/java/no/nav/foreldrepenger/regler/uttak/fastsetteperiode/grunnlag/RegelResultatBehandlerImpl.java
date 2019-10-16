@@ -100,11 +100,17 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
                                                             Manuellbehandlingårsak manuellbehandlingårsak,
                                                             Årsak ikkeOppfyltÅrsak,
                                                             Arbeidsprosenter arbeidsprosenter,
-                                                            boolean utbetal) {
+                                                            boolean utbetal,
+                                                            boolean avslåGradering,
+                                                            GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         UttakPeriode resultat = uttakPeriode.kopiMedNyPeriode(uttakPeriode.getFom(), uttakPeriode.getTom());
         resultat.setPerioderesultattype(Perioderesultattype.MANUELL_BEHANDLING);
         resultat.setManuellbehandlingårsak(manuellbehandlingårsak);
         resultat.setÅrsak(ikkeOppfyltÅrsak);
+
+        if (avslåGradering) {
+            resultat.opphevGradering(graderingIkkeInnvilgetÅrsak);
+        }
 
         oppdaterUtbetalingsgrad(resultat, arbeidsprosenter, utbetal);
         trekkSaldo(resultat);

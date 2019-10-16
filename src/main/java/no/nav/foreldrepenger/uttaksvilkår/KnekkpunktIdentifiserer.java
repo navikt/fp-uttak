@@ -67,9 +67,8 @@ class KnekkpunktIdentifiserer {
         if (grunnlag.getAnnenPart() != null) {
             knekkBasertPåAnnenPart(grunnlag, knekkpunkter);
         }
-        if (grunnlag.erRevurdering() && grunnlag.getRevurdering().getErEndringssøknad()) {
-            leggTilKnekkpunkterVedEndringssøknad(knekkpunkter, grunnlag);
-        }
+        leggTilKnekkpunkterPåMottattDato(knekkpunkter, grunnlag);
+
 
         return knekkpunkter.stream()
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
@@ -122,25 +121,25 @@ class KnekkpunktIdentifiserer {
         return SjekkOmPeriodenErEtterMaksgrenseForUttak.regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getDatoer().getFamiliehendelse(), konfigurasjon);
     }
 
-    private static void leggTilKnekkpunkterVedEndringssøknad(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
-        leggTilKnekkpunkterVedEndringssøknadGradering(knekkpunkter, grunnlag);
-        leggTilKnekkpunkterVedEndringssøknadUtsettelse(knekkpunkter, grunnlag);
+    private static void leggTilKnekkpunkterPåMottattDato(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
+        leggTilKnekkpunkterVedGradering(knekkpunkter, grunnlag);
+        leggTilKnekkpunkterVedUtsettelse(knekkpunkter, grunnlag);
     }
 
-    private static void leggTilKnekkpunkterVedEndringssøknadGradering(Set<LocalDate> knekkpunkter,
-                                                                      RegelGrunnlag grunnlag) {
+    private static void leggTilKnekkpunkterVedGradering(Set<LocalDate> knekkpunkter,
+                                                        RegelGrunnlag grunnlag) {
         for (UttakPeriode uttakPeriode : grunnlag.getSøknad().getUttaksperioder()) {
-            if (uttakPeriode.isGradering() && !uttakPeriode.getFom().isAfter(grunnlag.getRevurdering().getEndringssøknadMottattdato())) {
-                knekkpunkter.add(grunnlag.getRevurdering().getEndringssøknadMottattdato());
+            if (uttakPeriode.isGradering() && !uttakPeriode.getFom().isAfter(grunnlag.getSøknad().getMottattDato())) {
+                knekkpunkter.add(grunnlag.getSøknad().getMottattDato());
             }
         }
     }
 
-    private static void leggTilKnekkpunkterVedEndringssøknadUtsettelse(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
+    private static void leggTilKnekkpunkterVedUtsettelse(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
         for (UttakPeriode uttakPeriode : grunnlag.getSøknad().getUttaksperioder()) {
-            LocalDate endringssøknadMottattdato = grunnlag.getRevurdering().getEndringssøknadMottattdato();
-            if (uttakPeriode instanceof UtsettelsePeriode && !uttakPeriode.getFom().isAfter(endringssøknadMottattdato)) {
-                knekkpunkter.add(endringssøknadMottattdato);
+            LocalDate mottattDato = grunnlag.getSøknad().getMottattDato();
+            if (uttakPeriode instanceof UtsettelsePeriode && !uttakPeriode.getFom().isAfter(mottattDato)) {
+                knekkpunkter.add(mottattDato);
             }
         }
     }

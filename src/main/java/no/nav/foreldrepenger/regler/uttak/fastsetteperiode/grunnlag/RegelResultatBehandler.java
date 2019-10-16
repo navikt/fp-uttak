@@ -57,5 +57,7 @@ public interface RegelResultatBehandler {
                                                      Manuellbehandlingårsak manuellbehandlingårsak,
                                                      Årsak ikkeOppfyltÅrsak,
                                                      Arbeidsprosenter arbeidsprosenter,
-                                                     boolean utbetal);
+                                                     boolean utbetal,
+                                                     boolean avslåGradering,
+                                                     GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak);
 }

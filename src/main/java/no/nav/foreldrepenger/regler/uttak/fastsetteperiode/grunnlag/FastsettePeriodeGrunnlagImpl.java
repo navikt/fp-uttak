@@ -151,13 +151,8 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public boolean erEndringssøknad() {
-        return regelGrunnlag.erRevurdering() && regelGrunnlag.getRevurdering().getErEndringssøknad();
-    }
-
-    @Override
-    public LocalDate getEndringssøknadMottattdato() {
-        return regelGrunnlag.getRevurdering().getEndringssøknadMottattdato();
+    public LocalDate getSøknadMottattdato() {
+        return regelGrunnlag.getSøknad().getMottattDato();
     }
 
     @Override

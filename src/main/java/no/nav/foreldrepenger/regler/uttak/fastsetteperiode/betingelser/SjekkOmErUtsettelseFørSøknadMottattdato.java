@@ -7,20 +7,17 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkOmErUtsettelseFørEndringssøknadMottattdato.ID)
-public class SjekkOmErUtsettelseFørEndringssøknadMottattdato extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmErUtsettelseFørSøknadMottattdato.ID)
+public class SjekkOmErUtsettelseFørSøknadMottattdato extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 18.1.8";
 
-    public SjekkOmErUtsettelseFørEndringssøknadMottattdato() {
+    public SjekkOmErUtsettelseFørSøknadMottattdato() {
         super(ID);
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (!grunnlag.erEndringssøknad()) {
-            return nei();
-        }
         UttakPeriode periode = grunnlag.getAktuellPeriode();
         if (periode instanceof UtsettelsePeriode && førEllerLik(grunnlag, periode)) {
             return ja();
@@ -29,6 +26,6 @@ public class SjekkOmErUtsettelseFørEndringssøknadMottattdato extends LeafSpeci
     }
 
     private boolean førEllerLik(FastsettePeriodeGrunnlag grunnlag, UttakPeriode periode) {
-        return !periode.getTom().isAfter(grunnlag.getEndringssøknadMottattdato());
+        return !periode.getTom().isAfter(grunnlag.getSøknadMottattdato());
     }
 }

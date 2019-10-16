@@ -53,14 +53,14 @@ public class StebarnsadopsjonDelRegelTest {
         StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-            .medSøknad(new Søknad.Builder()
-                .medType(Søknadstype.ADOPSJON)
-                .leggTilSøknadsperiode(uttakPeriode)
-                .medDokumentasjon(new Dokumentasjon.Builder()
-                    .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))
-                    .build())
-                .build())
-            .build();
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilSøknadsperiode(uttakPeriode)
+                        .medDokumentasjon(new Dokumentasjon.Builder()
+                                .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))
+                                .build())
+                        .build())
+                .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -78,7 +78,7 @@ public class StebarnsadopsjonDelRegelTest {
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
 
-            .build();
+                .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
@@ -93,10 +93,10 @@ public class StebarnsadopsjonDelRegelTest {
     public void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         StønadsPeriode uttakPeriode = StønadsPeriode.medGradering(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2),
-            Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.TEN, PeriodeVurderingType.PERIODE_OK);
+                Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.TEN, PeriodeVurderingType.PERIODE_OK);
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-            .build();
+                .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
@@ -113,12 +113,12 @@ public class StebarnsadopsjonDelRegelTest {
         StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-            .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
-                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0).build())
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
-                .build())
-            .build();
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
+                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0).build())
+                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
+                        .build())
+                .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
@@ -135,12 +135,12 @@ public class StebarnsadopsjonDelRegelTest {
         StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-            .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
-                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0).build())
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
-                .build())
-            .build();
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
+                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0).build())
+                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
+                        .build())
+                .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
@@ -155,6 +155,7 @@ public class StebarnsadopsjonDelRegelTest {
             .medSøknad(new Søknad.Builder()
                 .medType(Søknadstype.ADOPSJON)
                 .leggTilSøknadsperiode(uttakPeriode)
+                    .medMottattDato(uttakPeriode.getFom().minusWeeks(1))
                 .build())
             .medDatoer(new Datoer.Builder()
                 .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))

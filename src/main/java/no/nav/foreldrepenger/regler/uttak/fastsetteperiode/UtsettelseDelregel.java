@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErUtsettelseFørEndringssøknadMottattdato;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErUtsettelseFørSøknadMottattdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFeriePåBevegeligHelligdag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFulltArbeidForUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselErFørUke33;
@@ -75,13 +75,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
             .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUtsettelseEtterUke6)
             .ellers(sjekkOmSøkerErArbeidstaker);
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterEndringssøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørEndringssøknadMottattdato.ID, "Er perioden utsettelse etter mottattdato?")
-                .hvis(new SjekkOmErUtsettelseFørEndringssøknadMottattdato(), Manuellbehandling.opprett("UT1126", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT, Manuellbehandlingårsak.SØKNADSFRIST, true, false))
+        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, "Er perioden utsettelse etter mottattdato?")
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(), Manuellbehandling.opprett("UT1126", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT, Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmSøknadGjelderFødsel);
 
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Er utsettelsesperioden før termin/fødsel eller omsorgsovertakelse?")
                 .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), Manuellbehandling.opprett("UT1100", IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
-                .ellers(sjekkOmUtsettelseEtterEndringssøknadMottattdato);
+                .ellers(sjekkOmUtsettelseEtterSøknadMottattdato);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaArbeid() {
@@ -108,13 +108,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
             .hvis(new SjekkOmFulltArbeidForUtsettelse(), sjekkOmSøknadGjelderFødsel)
             .ellers(Manuellbehandling.opprett("UT1110", IkkeOppfyltÅrsak.IKKE_HELTIDSARBEID, Manuellbehandlingårsak.IKKE_HELTIDSARBEID, true, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterEndringssøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørEndringssøknadMottattdato.ID, "Er perioden utsettelse etter mottattdato?")
-                .hvis(new SjekkOmErUtsettelseFørEndringssøknadMottattdato(), Manuellbehandling.opprett("UT1127", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT, Manuellbehandlingårsak.SØKNADSFRIST, true, false))
+        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, "Er perioden utsettelse etter mottattdato?")
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(), Manuellbehandling.opprett("UT1127", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT, Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmSøkerErIArbeidPåHeltid);
 
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Er utsettelsesperioden før termin/fødsel eller omsorgsovertakelse?")
                 .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), Manuellbehandling.opprett("UT1109", IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
-                .ellers(sjekkOmUtsettelseEtterEndringssøknadMottattdato);
+                .ellers(sjekkOmUtsettelseEtterSøknadMottattdato);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaSykdomSkade() {
