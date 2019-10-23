@@ -50,7 +50,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     }
 
     private RegelResultatBehandlerResultat finnResultatInnvilget(UttakPeriode uttakPeriode, Optional<TomKontoKnekkpunkt> knekkpunktOpt) {
-        if (!knekkpunktOpt.isPresent()) {
+        if (knekkpunktOpt.isEmpty()) {
             return RegelResultatBehandlerResultat.utenKnekk(uttakPeriode.kopiMedNyPeriode(uttakPeriode.getFom(), uttakPeriode.getTom()));
         }
 
@@ -168,7 +168,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             periode.setStønadskontotype(stønadskontotypeOpt.get());
             //Går til manuell så saksbehandler kan rydde opp
         } else if (periode.getManuellbehandlingårsak() == null) {
-            throw new IllegalStateException("Prøver å trekke dager fra ukjent konto");
+            throw new IllegalStateException("Prøver å trekke dager fra ukjent konto. Periode " + periode.getFom()  + " - " + periode.getTom());
         }
     }
 }
