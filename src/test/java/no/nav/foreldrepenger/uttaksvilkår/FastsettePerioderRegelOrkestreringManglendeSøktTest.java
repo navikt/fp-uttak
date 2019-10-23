@@ -5,10 +5,16 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -146,5 +152,35 @@ public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends Fastse
         assertThat(perioder.get(4).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.UKJENT);
         assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isZero();
         assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+    }
+
+    @Test
+    public void skal_kunne_håndtere_ulikt_antall_dager_gjenværende_på_arbeidsforhold_ved_manglende_søkt_periode() {
+        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
+                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter()
+                        .leggTil(AktivitetIdentifikator.forFrilans(), new ArbeidTidslinje.Builder().build())
+                        .leggTil(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new ArbeidTidslinje.Builder().build()))
+                        .build())
+                .medSøknad(søknad(Søknadstype.FØDSEL,
+                        søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                        //Har igjen 1 dag på fellesperiode på ett arbeidsforhold når manglende søkt skal behandles
+                        søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(17).minusDays(1))
+                ))
+                .medKontoer(Map.of(
+                        AktivitetIdentifikator.forFrilans(), new Kontoer.Builder()
+                                .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 75))
+                                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 1))
+                                .build(),
+                        AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new Kontoer.Builder()
+                                .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 75))
+                                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 0))
+                                .build()))
+                .build();
+        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
+
+        assertThat(perioder).hasSize(5);
+        //UT1291
+        assertThat(perioder.get(4).isManuellBehandling()).isTrue();
     }
 }

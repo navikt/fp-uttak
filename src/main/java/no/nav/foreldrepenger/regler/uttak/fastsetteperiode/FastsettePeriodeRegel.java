@@ -6,6 +6,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAd
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
@@ -31,7 +32,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGradering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåAlleAktivitetene;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaketStarterFørLovligUttakFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato;
@@ -150,8 +151,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDagerIgjen() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktivitetene.ID, SjekkOmTilgjengeligeDagerPåAlleAktivitetene.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktivitetene(), IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false))
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false))
                 .ellers(IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, true, false));
     }
 
@@ -226,7 +227,13 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåAlleSineKonto() {
         return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
                 .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1088", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, false, false))
-                .ellers(IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false));
+                .ellers(sjekkOmDagerIgjenPåAlleAktiviteter());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmDagerIgjenPåAlleAktiviteter() {
+        return rs.hvisRegel(SjekkOmDagerIgjenPåAlleAktiviteter.ID, SjekkOmDagerIgjenPåAlleAktiviteter.BESKRIVELSE)
+                .hvis(new SjekkOmDagerIgjenPåAlleAktiviteter(), IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false))
+                .ellers(Manuellbehandling.opprett("UT1291", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriode() {

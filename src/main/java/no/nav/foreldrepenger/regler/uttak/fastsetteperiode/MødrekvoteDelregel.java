@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåAlleAktivitetene;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
@@ -76,8 +76,8 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDisponibleDagerNode() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktivitetene.ID, "Er det noen disponible stønadsdager på mødrekvote?")
-                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktivitetene(),Oppfylt.opprettForOppholds("UT1261", true, false))
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, "Er det noen disponible stønadsdager på mødrekvote?")
+                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(),Oppfylt.opprettForOppholds("UT1261", true, false))
                 .ellers(Manuellbehandling.opprett("UT1260", null, Manuellbehandlingårsak.OPPHOLD_STØRRE_ENN_TILGJENGELIGE_DAGER, true, false));
     }
 
@@ -187,8 +187,8 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
                 .hvis(new SjekkOmSøkerErMor(), erDetGraderingIPeriode2())
                 .ellers(new OverføringDelregel().getSpecification());
 
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktivitetene.ID, "Er det noen disponible stønadsdager på mødrekvote?")
-                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktivitetene(), sjekkOmSøkerErMor)
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, "Er det noen disponible stønadsdager på mødrekvote?")
+                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), sjekkOmSøkerErMor)
                 .ellers(Manuellbehandling.opprett("UT1002", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
     }
 

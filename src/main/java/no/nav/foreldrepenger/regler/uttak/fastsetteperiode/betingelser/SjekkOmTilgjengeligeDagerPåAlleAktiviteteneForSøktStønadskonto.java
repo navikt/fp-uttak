@@ -9,13 +9,13 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkOmTilgjengeligeDagerPåAlleAktivitetene.ID)
-public class SjekkOmTilgjengeligeDagerPåAlleAktivitetene extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID)
+public class SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.5";
     public static final String BESKRIVELSE = "Har alle aktiviteter disponible stønadsdager på kvoten?";
 
-    public SjekkOmTilgjengeligeDagerPåAlleAktivitetene() {
+    public SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto() {
         super(ID);
     }
 
