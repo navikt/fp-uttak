@@ -44,7 +44,7 @@ import no.nav.fpsak.nare.specification.Specification;
  * - Perioden er etter ukene etter fødsel som er forbeholdt mor og det er nok dager på stønadskontoen for fellesperiode.<br>
  */
 
-@RuleDocumentation(value = FellesperiodeDelregel.ID, specificationReference = "https://confluence.adeo.no/pages/viewpage.action?pageId=252823617")
+@RuleDocumentation(value = FellesperiodeDelregel.ID, specificationReference = "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
 public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 19";

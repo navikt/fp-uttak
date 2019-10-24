@@ -32,7 +32,7 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.ConditionalOrSpecification;
 import no.nav.fpsak.nare.specification.Specification;
 
-@RuleDocumentation(value = ForeldrepengerDelregel.ID, specificationReference = "https://confluence.adeo.no/pages/viewpage.action?pageId=292407153")
+@RuleDocumentation(value = ForeldrepengerDelregel.ID, specificationReference = "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
 public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK XX10";
