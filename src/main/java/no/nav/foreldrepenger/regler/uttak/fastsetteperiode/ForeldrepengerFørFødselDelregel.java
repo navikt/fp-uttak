@@ -32,7 +32,7 @@ import no.nav.fpsak.nare.specification.Specification;
  * - Perioden dekker perioden forbeholdt mor før fødsel og det er mor som søker.
  */
 
-@RuleDocumentation(value = ForeldrepengerFørFødselDelregel.ID, specificationReference = "https://confluence.adeo.no/pages/viewpage.action?pageId=252823617")
+@RuleDocumentation(value = ForeldrepengerFørFødselDelregel.ID, specificationReference = "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
 public class ForeldrepengerFørFødselDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK XX10";

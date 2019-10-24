@@ -48,7 +48,7 @@ import no.nav.fpsak.nare.specification.Specification;
  * - Perioden har gyldig grunn for å starte i ukene etter fødsel som er forbeholdt mor og det er nok dager på stønadskontoen for fedrekvote.<br>
  */
 
-@RuleDocumentation(value = FedrekvoteDelregel.ID, specificationReference = "https://confluence.adeo.no/pages/viewpage.action?pageId=252823417")
+@RuleDocumentation(value = FedrekvoteDelregel.ID, specificationReference = "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
 public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 13";
