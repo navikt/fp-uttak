@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSy
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErArbeidstaker;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaArbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaFerie;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
@@ -49,6 +50,12 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
+        return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1125", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .ellers(sjekkOmFerie());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmFerie() {
         return rs.hvisRegel(SjekkOmUtsettelsePgaFerie.ID, "Er det utsettelse pga ferie?")
                 .hvis(new SjekkOmUtsettelsePgaFerie(), delRegelForFerie())
                 .ellers(sjekkOmUtsettelsePgaArbeid());
