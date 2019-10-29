@@ -20,6 +20,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprose
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OrkestreringTillegg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelResultatBehandler;
@@ -55,7 +57,11 @@ public class FastsettePerioderRegelOrkestrering {
         FastsettePeriodeRegel fastsettePeriodeRegel = new FastsettePeriodeRegel(konfigurasjon, featureToggles);
         OrkestreringTillegg orkestreringTillegg = lagOrkestreringTillegg(grunnlag, konfigurasjon);
 
-        List<UttakPeriode> allePerioderSomSkalFastsettes = filtrereBortHelger(samletUttaksperioder(grunnlag, orkestreringTillegg));
+        List<UttakPeriode> allePerioderSomSkalFastsettes = samletUttaksperioder(grunnlag, orkestreringTillegg)
+                .stream()
+                .filter(periode -> !erHelg(periode))
+                .filter(periode -> !oppholdSomFyllesAvAnnenpart(periode, annenpartUttaksperioder(grunnlag)))
+                .collect(Collectors.toList());
 
         Trekkdagertilstand trekkdagerTilstand;
         if (grunnlag.getBehandling().isTapende()) {
@@ -82,18 +88,33 @@ public class FastsettePerioderRegelOrkestrering {
         return sortByFom(resultatPerioder);
     }
 
-    private List<FastsettePeriodeResultat> sortByFom(List<FastsettePeriodeResultat> resultatPerioder) {
-        return resultatPerioder.stream().sorted(Comparator.comparing(res -> res.getUttakPeriode().getFom())).collect(Collectors.toList());
+    private boolean erHelg(UttakPeriode periode) {
+        return periode.virkedager() == 0;
     }
 
-    private List<UttakPeriode> filtrereBortHelger(List<UttakPeriode> samletUttaksperioder) {
-        List<UttakPeriode> alleUttaksperiodene = new ArrayList<>();
-        for (UttakPeriode periode : samletUttaksperioder) {
-            if (periode.virkedager() != 0) {
-                alleUttaksperiodene.add(periode);
-            }
+    private boolean oppholdSomFyllesAvAnnenpart(UttakPeriode periode, List<AnnenpartUttaksperiode> annenpartUttak) {
+        if (!erOppholdsperiode(periode)) {
+            return false;
         }
-        return alleUttaksperiodene;
+        return annenpartUttak.stream()
+                .filter(ap -> ap.overlapper(periode))
+                .anyMatch(ap -> harTrekkdager(ap) || innvilgetUtsettelse(ap));
+    }
+
+    private boolean innvilgetUtsettelse(AnnenpartUttaksperiode ap) {
+        return ap.isInnvilget() && ap.isUtsettelse();
+    }
+
+    private boolean harTrekkdager(AnnenpartUttaksperiode ap) {
+        return ap.getUttakPeriodeAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
+    }
+
+    private boolean erOppholdsperiode(UttakPeriode periode) {
+        return periode instanceof OppholdPeriode && !((OppholdPeriode) periode).getOppholdårsaktype().equals(Oppholdårsaktype.MANGLENDE_SØKT_PERIODE);
+    }
+
+    private List<FastsettePeriodeResultat> sortByFom(List<FastsettePeriodeResultat> resultatPerioder) {
+        return resultatPerioder.stream().sorted(Comparator.comparing(res -> res.getUttakPeriode().getFom())).collect(Collectors.toList());
     }
 
     private FastsettePeriodeResultat fastsettPeriode(FastsettePeriodeRegel fastsettePeriodeRegel,
