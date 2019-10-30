@@ -15,12 +15,10 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -71,11 +69,7 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest {
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false)
                         .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
@@ -108,11 +102,7 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest {
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false)
                         .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
@@ -129,11 +119,19 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest {
         assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isNotZero();
     }
 
+    static RettOgOmsorg beggeRett() {
+        return new RettOgOmsorg.Builder()
+                .medFarHarRett(true)
+                .medMorHarRett(true)
+                .medSamtykke(true)
+                .build();
+    }
+
     private UttakPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
         return new StønadsPeriode(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, null, false);
     }
 
-    private AnnenpartUttaksperiode annenpartsPeriode(Stønadskontotype stønadskontotype,
+    static AnnenpartUttaksperiode annenpartsPeriode(Stønadskontotype stønadskontotype,
                                                        LocalDate fom,
                                                        LocalDate tom,
                                                        AktivitetIdentifikator aktivitet,
