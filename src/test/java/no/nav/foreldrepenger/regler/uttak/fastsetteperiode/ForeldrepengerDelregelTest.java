@@ -311,6 +311,50 @@ public class ForeldrepengerDelregelTest {
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
     }
 
+    @Test
+    public void UT1192__fødsel_bare_mor_rett_periode_før_fødsel() {
+        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
+        LocalDate fom = familiehendelseDato.minusWeeks(3);
+        LocalDate tom = familiehendelseDato.minusWeeks(2);
+        StønadsPeriode uttakPeriode = stønadsperiode(fom, tom);
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(uttakPeriode)
+                        .build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, foreldrepengerKonto(100))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medMorHarRett(true)
+                        .build())
+                .build();
+
+        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, "UT1192");
+    }
+
+    @Test
+    public void UT1197__fødsel_bare_mor_aleneomsorg_periode_før_fødsel() {
+        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
+        LocalDate fom = familiehendelseDato.minusWeeks(3);
+        LocalDate tom = familiehendelseDato.minusWeeks(2);
+        StønadsPeriode uttakPeriode = stønadsperiode(fom, tom);
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(uttakPeriode)
+                        .build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, foreldrepengerKonto(100))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medAleneomsorg(true)
+                        .build())
+                .build();
+
+        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, "UT1197");
+    }
+
     private void assertManuellBehandling(Regelresultat regelresultat, Årsak årsak, Manuellbehandlingårsak manuellBehandlingÅrsak) {
         assertManuellBehandling(regelresultat, årsak, manuellBehandlingÅrsak, false, false);
     }
@@ -695,6 +739,11 @@ public class ForeldrepengerDelregelTest {
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isTrue();
         assertThat(regelresultat.getInnvilgetÅrsak()).isEqualTo(innvilgetÅrsak);
+    }
+
+    private void assertInnvilget(Regelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak, String sluttpunktId) {
+        assertInnvilget(regelresultat, innvilgetÅrsak);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo((sluttpunktId));
     }
 
     private RegelGrunnlag.Builder grunnlagMor(LocalDate familiehendelseDato) {
