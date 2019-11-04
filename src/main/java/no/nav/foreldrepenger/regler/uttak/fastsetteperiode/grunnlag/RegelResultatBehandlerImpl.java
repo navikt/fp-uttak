@@ -140,17 +140,12 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     private UtbetalingsprosentUtregning bestemUtregning(UttakPeriode uttakPeriode,
                                                         AktivitetIdentifikator aktivitet,
                                                         Arbeidsprosenter arbeidsprosenter) {
-        if (erSøktOmGradering(uttakPeriode, aktivitet)) {
+        if (uttakPeriode.søktGradering(aktivitet)) {
             return new UtbetalingsprosentMedGraderingUtregning(arbeidsprosenter, aktivitet, uttakPeriode);
         } else if (uttakPeriode.getSamtidigUttak().isPresent()){
             return new UtbetalingsprosentSamtidigUttakUtregning(uttakPeriode.getSamtidigUttak().get(), uttakPeriode.getGradertArbeidsprosent());
         }
         return new UtbetalingsprosentUtenGraderingUtregning(arbeidsprosenter, aktivitet, uttakPeriode);
-    }
-
-    private boolean erSøktOmGradering(UttakPeriode uttakPeriode, AktivitetIdentifikator aktivitet) {
-        //Skal ha samme utregning av utbetalingsprosent uansett om gradering i perioden er innvilget eller ikke
-        return uttakPeriode.isGradering(aktivitet) || uttakPeriode.getGraderingIkkeInnvilgetÅrsak() != null;
     }
 
     private void trekkSaldo(UttakPeriode uttakPeriode) {

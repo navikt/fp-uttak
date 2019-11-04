@@ -830,6 +830,47 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
         assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
+    @Test
+    public void opphevet_gradering_skal_ikke_endre_på_hvilket_arbeidsforhold_det_er_søkt_gradering_for() {
+        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create();
+        leggPåKvoter(grunnlag);
+        var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
+        Map<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
+        kontoer.put(ARBEIDSFORHOLD_1, new Kontoer.Builder().leggTilKonto(konto(MØDREKVOTE, 200)).build());
+        kontoer.put(ARBEIDSFORHOLD_2, new Kontoer.Builder().leggTilKonto(konto(MØDREKVOTE, 200)).build());
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFødsel(fødselsdato)
+                .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
+                .build())
+                .medRettOgOmsorg(beggeRett())
+                .medArbeid(new ArbeidGrunnlag.Builder()
+                        .medArbeidsprosenter(new Arbeidsprosenter()
+                                .leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())
+                                .leggTil(ARBEIDSFORHOLD_2, new ArbeidTidslinje.Builder().build())
+                        )
+                        .build())
+                .medKontoer(kontoer)
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .build())
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .medMottattDato(mottattDato)
+                        .leggTilSøknadsperiode(ugradertSøknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
+                        .leggTilSøknadsperiode(gradertSøknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN, List.of(ARBEIDSFORHOLD_1)))
+                        .build())
+                .medInngangsvilkår(oppfyltInngangsvilkår());
+        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        assertThat(resultat).hasSize(4);
+        assertThat(resultat.get(2).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
+        assertThat(resultat.get(2).getUttakPeriode().isGradering()).isFalse();
+        assertThat(resultat.get(2).getUttakPeriode().isGradering(ARBEIDSFORHOLD_1)).isFalse();
+        assertThat(resultat.get(2).getUttakPeriode().isGradering(ARBEIDSFORHOLD_2)).isFalse();
+        assertThat(resultat.get(2).getUttakPeriode().søktGradering(ARBEIDSFORHOLD_1)).isTrue();
+        assertThat(resultat.get(2).getUttakPeriode().søktGradering(ARBEIDSFORHOLD_2)).isFalse();
+    }
+
     private Inngangsvilkår oppfyltInngangsvilkår() {
         return new Inngangsvilkår.Builder()
                 .medAdopsjonOppfylt(true)

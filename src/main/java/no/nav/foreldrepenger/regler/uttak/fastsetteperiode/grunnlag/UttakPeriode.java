@@ -109,10 +109,17 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
     public boolean isGradering() {
-        return !gradertAktiviteter.isEmpty();
+        return !gradertAktiviteter.isEmpty() && graderingIkkeInnvilgetÅrsak == null;
     }
 
     public boolean isGradering(AktivitetIdentifikator aktivitetIdentifikator) {
+        if (graderingIkkeInnvilgetÅrsak != null) {
+            return false;
+        }
+        return søktGradering(aktivitetIdentifikator);
+    }
+
+    public boolean søktGradering(AktivitetIdentifikator aktivitetIdentifikator) {
         for (AktivitetIdentifikator gradertAktivitet : gradertAktiviteter) {
             if (Objects.equals(gradertAktivitet, aktivitetIdentifikator)) {
                 return true;
@@ -177,7 +184,6 @@ public abstract class UttakPeriode extends LukketPeriode {
 
     void opphevGradering(GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
-        gradertAktiviteter = Collections.emptyList();
     }
 
     public GraderingIkkeInnvilgetÅrsak getGraderingIkkeInnvilgetÅrsak() {
