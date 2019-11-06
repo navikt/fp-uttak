@@ -131,8 +131,10 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørFamilieHendelse() {
+        var erDetBareMorSomHarRettSjekk = erDetBareMorSomHarRettSjekk(Oppfylt.opprett("UT1192", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true, true),
+                Oppfylt.opprett("UT1197", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true, true));
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før termin/fødsel?")
-                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), Manuellbehandling.opprett("UT1192", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false))
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), erDetBareMorSomHarRettSjekk)
                 .ellers(sjekkErPeriodenInnenforUkerReservertMor());
     }
 
