@@ -31,7 +31,7 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
     private LocalDate førsteLovligeUttaksdag = førsteLovligeUttaksdag(fødselsdato);
 
     @Test
-    public void fellesperiode_mor_etter_uke_7_etter_fødsel_uten_nok_dager_blir_innvilget_med_knekk_og_manuell_behandling_av_periode_uten_nok_dager() {
+    public void fellesperiode_mor_etter_uke_7_etter_fødsel_uten_nok_dager_blir_innvilget_med_knekk_og_avslått_periode_på_resten() {
         Kontoer kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(1000).build())
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(1000).build())

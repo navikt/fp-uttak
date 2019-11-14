@@ -39,7 +39,7 @@ public class UtsettelsePeriode extends UttakPeriode {
         if (Perioderesultattype.INNVILGET.equals(getPerioderesultattype())) {
             return Trekkdager.ZERO;
         }
-        if (getSluttpunktTrekkerDager()) {
+        if (getSluttpunktTrekkerDager(aktivitetIdentifikator)) {
             return new Trekkdager(Virkedager.beregnAntallVirkedager(this));
         }
         return Trekkdager.ZERO;

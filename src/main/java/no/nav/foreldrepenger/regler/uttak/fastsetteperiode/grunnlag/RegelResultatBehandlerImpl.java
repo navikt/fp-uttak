@@ -127,11 +127,17 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     private void oppdaterUtbetalingsgrad(UttakPeriode uttakPeriode, Arbeidsprosenter arbeidsprosenter, boolean utbetal) {
         for (AktivitetIdentifikator aktivitet : arbeidsprosenter.getAktiviteter()) {
             final BigDecimal utbetalingsgrad;
-            if (utbetal) {
-                UtbetalingsprosentUtregning utregning = bestemUtregning(uttakPeriode, aktivitet, arbeidsprosenter);
-                utbetalingsgrad = utregning.resultat();
+
+            if (trekkdagertilstand.saldo(aktivitet, uttakPeriode.getStønadskontotype()).merEnn0() || !(uttakPeriode instanceof StønadsPeriode) || Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode.getPerioderesultattype())) {
+                if (utbetal) {
+                    UtbetalingsprosentUtregning utregning = bestemUtregning(uttakPeriode, aktivitet, arbeidsprosenter);
+                    utbetalingsgrad = utregning.resultat();
+                } else {
+                    utbetalingsgrad = BigDecimal.ZERO;
+                }
             } else {
                 utbetalingsgrad = BigDecimal.ZERO;
+                uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
             }
             uttakPeriode.setUtbetalingsgrad(aktivitet, utbetalingsgrad);
         }
@@ -153,8 +159,8 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
                 utledeKonto(uttakPeriode);
             }
-            trekkdagertilstand.reduserSaldo(uttakPeriode);
         }
+        trekkdagertilstand.reduserSaldo(uttakPeriode);
     }
 
     private void utledeKonto(UttakPeriode periode) {

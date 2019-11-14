@@ -49,7 +49,7 @@ public class OppholdPeriode extends UttakPeriode {
 
     @Override
     public Trekkdager getTrekkdagerFraSluttpunkt(AktivitetIdentifikator aktivitetIdentifikator) {
-        if (getSluttpunktTrekkerDager()) {
+        if (getSluttpunktTrekkerDager(aktivitetIdentifikator)) {
             return new Trekkdager(Virkedager.beregnAntallVirkedager(this));
         }
         return Trekkdager.ZERO;

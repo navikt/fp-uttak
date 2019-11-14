@@ -31,7 +31,7 @@ public abstract class UttakPeriode extends LukketPeriode {
     private Årsak årsak;
     private GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
     private Map<AktivitetIdentifikator, BigDecimal> utbetalingsgrader = new HashMap<>();
-    private Boolean sluttpunktTrekkerDager;
+    private Map<AktivitetIdentifikator, Boolean> sluttpunktTrekkerDager = new HashMap<>();
     private boolean ikkeTrekkdagerOverstyrt = false;
 
     public UttakPeriode(Stønadskontotype stønadskontotype,
@@ -62,7 +62,7 @@ public abstract class UttakPeriode extends LukketPeriode {
         overføringÅrsak = kilde.overføringÅrsak;
         arbeidsprosenter = new HashMap<>(kilde.arbeidsprosenter);
         periodeVurderingType = kilde.periodeVurderingType;
-        sluttpunktTrekkerDager = kilde.sluttpunktTrekkerDager;
+        sluttpunktTrekkerDager = new HashMap<>(kilde.sluttpunktTrekkerDager);
     }
 
     Optional<SamtidigUttak> getSamtidigUttak() {
@@ -198,13 +198,23 @@ public abstract class UttakPeriode extends LukketPeriode {
         this.periodeVurderingType = periodeVurderingType;
     }
 
-    public void setSluttpunktTrekkerDager(boolean sluttpunktTrekkerDager) {
-        this.sluttpunktTrekkerDager = sluttpunktTrekkerDager;
+    public void setSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator, boolean sluttpunktTrekkerDager) {
+        this.sluttpunktTrekkerDager.put(aktivitetIdentifikator, sluttpunktTrekkerDager);
     }
 
-    public Boolean getSluttpunktTrekkerDager() {
-        return sluttpunktTrekkerDager;
+    public boolean getSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator) {
+        var trekkerDager = sluttpunktTrekkerDager.get(aktivitetIdentifikator);
+        if (trekkerDager != null) {
+            return trekkerDager;
+        }
+        return true;
     }
+
+
+    boolean getSluttpunktTrekkerDager() {
+        return sluttpunktTrekkerDager.values().stream().anyMatch(b -> b);
+    }
+
 
     public void setStønadskontotype(Stønadskontotype stønadskontotype) {
         this.stønadskontotype = stønadskontotype;

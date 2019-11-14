@@ -50,10 +50,7 @@ public class TomKontoIdentifiserer {
                                                                    AktivitetIdentifikator aktivitet,
                                                                    Trekkdagertilstand trekkdagertilstand,
                                                                    Stønadskontotype stønadskontotype) {
-        if (uttakPeriode.getSluttpunktTrekkerDager() == null) {
-            throw new IllegalStateException("Trekkdager fra sluttpunkt må være satt");
-        }
-        if (!uttakPeriode.getSluttpunktTrekkerDager()) {
+        if (!uttakPeriode.getSluttpunktTrekkerDager(aktivitet)) {
             return Optional.empty();
         }
 

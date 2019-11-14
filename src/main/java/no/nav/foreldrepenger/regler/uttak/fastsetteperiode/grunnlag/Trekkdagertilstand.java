@@ -66,9 +66,11 @@ public class Trekkdagertilstand {
 
     private void registrerForbruk(Forbruk forbruk, UttakPeriode periode) {
         for (AktivitetIdentifikator aktivitet : forbruk.getAktiviteter()) {
-            forbruk.registrerForbruk(aktivitet, periode.getStønadskontotype(), periode.getTrekkdager(aktivitet));
-            if (periode.isFlerbarnsdager()) {
-                forbruk.registrerForbruk(aktivitet, Stønadskontotype.FLERBARNSDAGER, periode.getTrekkdager(aktivitet));
+            if (periode.getSluttpunktTrekkerDager(aktivitet)) {
+                forbruk.registrerForbruk(aktivitet, periode.getStønadskontotype(), periode.getTrekkdager(aktivitet));
+                if (periode.isFlerbarnsdager()) {
+                    forbruk.registrerForbruk(aktivitet, Stønadskontotype.FLERBARNSDAGER, periode.getTrekkdager(aktivitet));
+                }
             }
         }
     }
