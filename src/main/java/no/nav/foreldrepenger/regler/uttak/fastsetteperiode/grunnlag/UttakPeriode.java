@@ -203,7 +203,7 @@ public abstract class UttakPeriode extends LukketPeriode {
         if (trekkerDager != null) {
             return trekkerDager;
         }
-        return true;
+        throw new IllegalArgumentException("Ukjent aktivitet: " + aktivitetIdentifikator);
     }
 
 

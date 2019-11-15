@@ -62,8 +62,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                 .leggTilKonto(kvote(FEDREKVOTE, UKER_FK))
                 .leggTilKonto(kvote(FELLESPERIODE, UKER_FP))
                 .build();
-        return builder.medKontoer(Map.of(FAR_ARBEIDSFORHOLD, kontoer))
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(FAR_ARBEIDSFORHOLD, new ArbeidTidslinje.Builder().build())).build());
+        return builder.medKontoer(Map.of(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer))
+                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())).build());
     }
 
     private Konto kvote(Stønadskontotype foreldrepengerFørFødsel, int ukerFpff) {
