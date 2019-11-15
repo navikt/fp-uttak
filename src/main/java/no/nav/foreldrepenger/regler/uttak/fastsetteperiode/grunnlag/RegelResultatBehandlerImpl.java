@@ -88,7 +88,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
         }
         oppdaterUtbetalingsgrad(resultat, arbeidsprosenter, utbetal);
         if (overlapperInnvilgetAnnenpartsPeriode) {
-            resultat.overstyrSluttpunktOmSluttpunktSkalTrekkedager();
+            resultat.setSluttpunktTrekkerDagerForAlleAktiviteter(false);
         }
         trekkSaldo(resultat);
 

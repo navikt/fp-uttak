@@ -32,7 +32,6 @@ public abstract class UttakPeriode extends LukketPeriode {
     private GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
     private Map<AktivitetIdentifikator, BigDecimal> utbetalingsgrader = new HashMap<>();
     private Map<AktivitetIdentifikator, Boolean> sluttpunktTrekkerDager = new HashMap<>();
-    private boolean ikkeTrekkdagerOverstyrt = false;
 
     public UttakPeriode(Stønadskontotype stønadskontotype,
                         Periodetype periodetype,
@@ -167,9 +166,6 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
     public Trekkdager getTrekkdager(AktivitetIdentifikator aktivitetIdentifikator) {
-        if (ikkeTrekkdagerOverstyrt) {
-            return Trekkdager.ZERO;
-        }
         return getTrekkdagerFraSluttpunkt(aktivitetIdentifikator);
     }
 
@@ -215,6 +211,9 @@ public abstract class UttakPeriode extends LukketPeriode {
         return sluttpunktTrekkerDager.values().stream().anyMatch(b -> b);
     }
 
+    void setSluttpunktTrekkerDagerForAlleAktiviteter(boolean trekkDager) {
+        sluttpunktTrekkerDager.keySet().forEach(aktivitet -> sluttpunktTrekkerDager.put(aktivitet, trekkDager));
+    }
 
     public void setStønadskontotype(Stønadskontotype stønadskontotype) {
         this.stønadskontotype = stønadskontotype;
@@ -266,10 +265,6 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
     public void setManuellbehandlingårsak(Manuellbehandlingårsak manuellbehandlingårsak) {
         this.manuellbehandlingårsak = manuellbehandlingårsak;
-    }
-
-    void overstyrSluttpunktOmSluttpunktSkalTrekkedager() {
-        this.ikkeTrekkdagerOverstyrt = true;
     }
 
     public boolean isSamtidigUttak() {
