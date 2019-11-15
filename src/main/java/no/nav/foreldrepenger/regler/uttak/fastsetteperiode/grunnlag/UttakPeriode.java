@@ -211,10 +211,6 @@ public abstract class UttakPeriode extends LukketPeriode {
         return sluttpunktTrekkerDager.values().stream().anyMatch(b -> b);
     }
 
-    void setSluttpunktTrekkerDagerForAlleAktiviteter(boolean trekkDager) {
-        sluttpunktTrekkerDager.keySet().forEach(aktivitet -> sluttpunktTrekkerDager.put(aktivitet, trekkDager));
-    }
-
     public void setStønadskontotype(Stønadskontotype stønadskontotype) {
         this.stønadskontotype = stønadskontotype;
     }
