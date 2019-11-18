@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.*;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
@@ -210,6 +209,75 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
         assertThat(resultat.get(2).getUttakPeriode().isSamtidigUttak()).isTrue();
         assertThat(resultat.get(2).getUttakPeriode().getSamtidigUttaksprosent().get()).isEqualTo(BigDecimal.valueOf(100).subtract(arbeidstidsprosent));
     }
+
+    @Test
+    public void uttak_på_to_arbeidsforhold_hvor_den_ene_går_tom_for_dag_skal_føre_0_utbetaling_og_0_trekkdager_for_den_som_går_tom() {
+        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var prosent50 = new BigDecimal("50.00");
+        RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.normal();
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
+                .medFødsel(fødselsdato)
+                .build())
+                .medArbeid(new ArbeidGrunnlag.Builder()
+                        .medArbeidsprosenter(new Arbeidsprosenter()
+                                .leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())
+                                .leggTil(ARBEIDSFORHOLD_2, new ArbeidTidslinje.Builder().build())
+                        )
+                        .build())
+                .medSøknad(new Søknad.Builder()
+                        .medMottattDato(fødselsdato.minusWeeks(4))
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(ugradertSøknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
+                        .leggTilSøknadsperiode(ugradertSøknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)))
+                        .leggTilSøknadsperiode(gradertSøknadsperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(33).minusDays(1), prosent50, Collections.singletonList(ARBEIDSFORHOLD_1)))
+                        .build())
+                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 3*5))
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 15*5))
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 15*5))
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 16*5))
+                        .build())
+                .leggTilKontoer(ARBEIDSFORHOLD_2, new Kontoer.Builder()
+                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 3*5))
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 15*5))
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 15*5))
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 16*5))
+                        .build());
+
+        RegelGrunnlag fastsettePeriodeGrunnlag = grunnlag.build();
+        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag, new FeatureTogglesForTester());
+
+
+        assertThat(resultat).hasSize(5);
+        assertKontoOgResultat(resultat.get(0), FORELDREPENGER_FØR_FØDSEL, INNVILGET);
+        assertTrekkdager(resultat.get(0), ARBEIDSFORHOLD_1, 3*5);
+        assertTrekkdager(resultat.get(0), ARBEIDSFORHOLD_2, 3*5);
+        assertKontoOgResultat(resultat.get(1), MØDREKVOTE, INNVILGET);
+        assertTrekkdager(resultat.get(1), ARBEIDSFORHOLD_1, 6*5);
+        assertTrekkdager(resultat.get(1), ARBEIDSFORHOLD_2, 6*5);
+        assertKontoOgResultat(resultat.get(2), MØDREKVOTE, INNVILGET);
+        assertTrekkdager(resultat.get(2), ARBEIDSFORHOLD_1, 9*5);
+        assertTrekkdager(resultat.get(2), ARBEIDSFORHOLD_2, 9*5);
+        assertKontoOgResultat(resultat.get(3), FELLESPERIODE, INNVILGET);
+        assertThat(resultat.get(3).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isNull();
+        assertTrekkdager(resultat.get(3), ARBEIDSFORHOLD_1, (16*5)/2);
+        assertTrekkdager(resultat.get(3), ARBEIDSFORHOLD_2, 16*5);
+        assertKontoOgResultat(resultat.get(4), FELLESPERIODE, INNVILGET);
+        assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_1, (2*5)/2);
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(BigDecimal.ZERO);
+        assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_2, 0);
+    }
+
+    private void assertKontoOgResultat(FastsettePeriodeResultat fastsettePeriodeResultat, Stønadskontotype stønadskontotype, Perioderesultattype perioderesultattype) {
+        assertThat(fastsettePeriodeResultat.getUttakPeriode().getStønadskontotype()).isEqualTo(stønadskontotype);
+        assertThat(fastsettePeriodeResultat.getUttakPeriode().getPerioderesultattype()).isEqualTo(perioderesultattype);
+    }
+
+    private void assertTrekkdager(FastsettePeriodeResultat fastsettePeriodeResultat, AktivitetIdentifikator aktivitetIdentifikator, int trekkdager) {
+        assertThat(fastsettePeriodeResultat.getUttakPeriode().getTrekkdager(aktivitetIdentifikator).rundOpp()).isEqualTo(trekkdager);
+    }
+
 
     @Test
     public void utbetalingsgrad_og_trekkdager_skal_ta_utgangspunkt_samtidig_uttaksprosent_for_aktiviteter_uten_gradering_hvis_det_finnes_gradering() {

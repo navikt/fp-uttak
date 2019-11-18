@@ -61,7 +61,7 @@ public class TomKontoIdentifisererTest {
 
         StønadsPeriode uttakPeriode = StønadsPeriode.medGradering(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, idag, idag.plusDays(søktOmDag - 1),
                 Collections.singletonList(ARBEIDSFORHOLD_1), arbeidsprosent, PeriodeVurderingType.PERIODE_OK);
-        uttakPeriode.setSluttpunktTrekkerDager(true);
+        uttakPeriode.setSluttpunktTrekkerDager(ARBEIDSFORHOLD_1, true);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(idag, idag.plusDays(søktOmDag - 1), arbeidsprosent)
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(uttakPeriode)

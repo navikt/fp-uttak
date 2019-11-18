@@ -67,19 +67,17 @@ public class StønadsPeriode extends UttakPeriode {
 
     @Override
     public Trekkdager getTrekkdagerFraSluttpunkt(AktivitetIdentifikator aktivitetIdentifikator) {
-        return getTrekkdager(isGradering(aktivitetIdentifikator));
+        if (getSluttpunktTrekkerDager(aktivitetIdentifikator)) {
+            return TrekkdagerUtregningUtil.trekkdagerFor(this,
+                    isGradering(aktivitetIdentifikator),
+                    getGradertArbeidsprosent(),
+                    getSamtidigUttaksprosent().orElse(null));
+        }
+        return Trekkdager.ZERO;
     }
 
     @Override
     public boolean isUtsettelsePgaFerie() {
         return false;
-    }
-
-    private Trekkdager getTrekkdager(boolean gradert) {
-        if (getSluttpunktTrekkerDager()) {
-            return TrekkdagerUtregningUtil.trekkdagerFor(this, gradert, getGradertArbeidsprosent(),
-                    getSamtidigUttaksprosent().orElse(null));
-        }
-        return Trekkdager.ZERO;
     }
 }

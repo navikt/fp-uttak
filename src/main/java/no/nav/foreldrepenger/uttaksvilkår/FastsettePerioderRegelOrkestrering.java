@@ -182,7 +182,7 @@ public class FastsettePerioderRegelOrkestrering {
                                                                  Trekkdagertilstand trekkdagertilstand) {
         final RegelResultatBehandlerResultat regelResultatBehandlerResultat;
         Regelresultat regelresultat = new Regelresultat(evaluering);
-        aktuellPeriode.setSluttpunktTrekkerDager(regelresultat.trekkDagerFraSaldo());
+        settSluttpunktTrekkerDagerPåAlleAktiviteter(aktuellPeriode, regelGrunnlag, regelresultat);
         UtfallType utfallType = regelresultat.getUtfallType();
 
         UtfallType graderingUtfall = regelresultat.getGradering();
@@ -210,6 +210,13 @@ public class FastsettePerioderRegelOrkestrering {
         }
 
         return regelResultatBehandlerResultat;
+    }
+
+    private void settSluttpunktTrekkerDagerPåAlleAktiviteter(UttakPeriode aktuellPeriode,
+                                                             RegelGrunnlag regelGrunnlag,
+                                                             Regelresultat regelresultat) {
+        var aktiviteter = regelGrunnlag.getKontoer().keySet();
+        aktiviteter.forEach(aktivitet -> aktuellPeriode.setSluttpunktTrekkerDager(aktivitet, regelresultat.trekkDagerFraSaldo()));
     }
 
     private List<AnnenpartUttaksperiode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {

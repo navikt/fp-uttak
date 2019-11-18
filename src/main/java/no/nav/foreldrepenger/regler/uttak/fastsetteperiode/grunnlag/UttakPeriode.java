@@ -31,8 +31,7 @@ public abstract class UttakPeriode extends LukketPeriode {
     private Årsak årsak;
     private GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
     private Map<AktivitetIdentifikator, BigDecimal> utbetalingsgrader = new HashMap<>();
-    private Boolean sluttpunktTrekkerDager;
-    private boolean ikkeTrekkdagerOverstyrt = false;
+    private Map<AktivitetIdentifikator, Boolean> sluttpunktTrekkerDager = new HashMap<>();
 
     public UttakPeriode(Stønadskontotype stønadskontotype,
                         Periodetype periodetype,
@@ -62,7 +61,7 @@ public abstract class UttakPeriode extends LukketPeriode {
         overføringÅrsak = kilde.overføringÅrsak;
         arbeidsprosenter = new HashMap<>(kilde.arbeidsprosenter);
         periodeVurderingType = kilde.periodeVurderingType;
-        sluttpunktTrekkerDager = kilde.sluttpunktTrekkerDager;
+        sluttpunktTrekkerDager = new HashMap<>(kilde.sluttpunktTrekkerDager);
     }
 
     Optional<SamtidigUttak> getSamtidigUttak() {
@@ -167,9 +166,6 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
     public Trekkdager getTrekkdager(AktivitetIdentifikator aktivitetIdentifikator) {
-        if (ikkeTrekkdagerOverstyrt) {
-            return Trekkdager.ZERO;
-        }
         return getTrekkdagerFraSluttpunkt(aktivitetIdentifikator);
     }
 
@@ -198,12 +194,21 @@ public abstract class UttakPeriode extends LukketPeriode {
         this.periodeVurderingType = periodeVurderingType;
     }
 
-    public void setSluttpunktTrekkerDager(boolean sluttpunktTrekkerDager) {
-        this.sluttpunktTrekkerDager = sluttpunktTrekkerDager;
+    public void setSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator, boolean sluttpunktTrekkerDager) {
+        this.sluttpunktTrekkerDager.put(aktivitetIdentifikator, sluttpunktTrekkerDager);
     }
 
-    public Boolean getSluttpunktTrekkerDager() {
-        return sluttpunktTrekkerDager;
+    public boolean getSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator) {
+        var trekkerDager = sluttpunktTrekkerDager.get(aktivitetIdentifikator);
+        if (trekkerDager != null) {
+            return trekkerDager;
+        }
+        throw new IllegalArgumentException("Ukjent aktivitet: " + aktivitetIdentifikator);
+    }
+
+
+    boolean getSluttpunktTrekkerDager() {
+        return sluttpunktTrekkerDager.values().stream().anyMatch(b -> b);
     }
 
     public void setStønadskontotype(Stønadskontotype stønadskontotype) {
@@ -256,10 +261,6 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
     public void setManuellbehandlingårsak(Manuellbehandlingårsak manuellbehandlingårsak) {
         this.manuellbehandlingårsak = manuellbehandlingårsak;
-    }
-
-    void overstyrSluttpunktOmSluttpunktSkalTrekkedager() {
-        this.ikkeTrekkdagerOverstyrt = true;
     }
 
     public boolean isSamtidigUttak() {
