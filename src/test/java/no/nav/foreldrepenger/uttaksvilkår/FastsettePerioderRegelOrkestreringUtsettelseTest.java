@@ -744,11 +744,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     private RegelGrunnlag.Builder basicUtsettelseGrunnlag(LocalDate fødselsdato, Behandling behandling) {
         return grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(behandling)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build());
+                .medRettOgOmsorg(beggeRett());
     }
 
     private Søknad.Builder fødselSøknad(LocalDate mottattDato) {

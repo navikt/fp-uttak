@@ -105,11 +105,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
                 .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(farBehandling())
                 .medSøknad(søknad(Søknadstype.FØDSEL,
                         søknadsperiode(FEDREKVOTE, fødselsdato.plusWeeks(6).minusDays(1), fødselsdato.plusWeeks(10).minusDays(1),
@@ -129,11 +125,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
         grunnlag.medDatoer(datoer(fødselsdato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(farBehandling())
                 .medSøknad(søknad(Søknadstype.FØDSEL,
                     søknadsperiode(Stønadskontotype.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), false,
@@ -180,11 +172,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
     public void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -234,11 +222,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(morBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medSøknad(søknad(
                     Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)),
@@ -279,11 +263,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag
                 .medDatoer(datoer(fødselsdato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
                     Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),

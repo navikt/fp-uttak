@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static no.nav.foreldrepenger.uttaksvilkår.FastsettePerioderRegelOrkestreringTapendeSakTest.annenpartsPeriode;
-import static no.nav.foreldrepenger.uttaksvilkår.FastsettePerioderRegelOrkestreringTapendeSakTest.beggeRett;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -45,7 +44,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class FastsettePeriodeRegelOrkestreringToParterTest {
+public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
     private static final int UKER_FPFF = 3;
@@ -206,11 +205,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest {
                                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(farArbeidsforhold2, FELLESPERIODE, new Trekkdager(5), BigDecimal.valueOf(87.5)))
                                 .build())
                         .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
                         .build())

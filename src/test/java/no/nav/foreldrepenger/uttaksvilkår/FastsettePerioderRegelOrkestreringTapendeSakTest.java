@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -34,15 +33,10 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class FastsettePerioderRegelOrkestreringTapendeSakTest {
+public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
-    private static final int UKER_FPFF = 3;
-    private static final int UKER_MK = 15;
-    private static final int UKER_FK = 15;
-    private static final int UKER_FP = 16;
     private static final AktivitetIdentifikator MOR_ARBEIDSFORHOLD = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-    private static final AktivitetIdentifikator FAR_ARBEIDSFORHOLD = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
 
 
     private LocalDate førsteLovligeDato = LocalDate.of(2017, 10, 1);
@@ -117,14 +111,6 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest {
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isZero();
         assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isNotZero();
-    }
-
-    static RettOgOmsorg beggeRett() {
-        return new RettOgOmsorg.Builder()
-                .medFarHarRett(true)
-                .medMorHarRett(true)
-                .medSamtykke(true)
-                .build();
     }
 
     private UttakPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {

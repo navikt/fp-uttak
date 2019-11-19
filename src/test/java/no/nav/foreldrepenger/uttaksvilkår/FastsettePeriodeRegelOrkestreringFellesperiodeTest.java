@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehan
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
@@ -182,10 +181,6 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
                         .medFødsel(fødselsdato)
                         .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build());
+                .medRettOgOmsorg(beggeRett());
     }
 }

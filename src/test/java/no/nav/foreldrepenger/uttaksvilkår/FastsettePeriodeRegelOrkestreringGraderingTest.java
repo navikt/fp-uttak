@@ -35,7 +35,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
@@ -54,7 +53,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class FastsettePeriodeRegelOrkestreringGraderingTest {
+public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
@@ -66,13 +65,6 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                         .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 50))
                         .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 130))
                         .build());
-    }
-
-    private Konto konto(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Konto.Builder()
-                .medType(stønadskontotype)
-                .medTrekkdager(trekkdager)
-                .build();
     }
 
     @Test
@@ -378,11 +370,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
                 .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
                         .build())
@@ -860,14 +848,6 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest {
         assertThat(trekkdager1).isEqualTo(new Trekkdager(BigDecimal.valueOf(18.4)));
         assertThat(trekkdager2).isEqualTo(new Trekkdager(BigDecimal.ZERO));
         assertThat(trekkdager3).isEqualTo(new Trekkdager(BigDecimal.valueOf(57.2)));
-    }
-
-    private RettOgOmsorg beggeRett() {
-        return new RettOgOmsorg.Builder()
-                .medFarHarRett(true)
-                .medMorHarRett(true)
-                .medSamtykke(true)
-                .build();
     }
 
     @Test
