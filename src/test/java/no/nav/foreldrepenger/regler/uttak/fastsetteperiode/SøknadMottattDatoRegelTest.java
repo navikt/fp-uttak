@@ -143,8 +143,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     private UttakPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, Utsettelseårsaktype utsettelseårsaktype) {
-        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype,
-                PeriodeVurderingType.PERIODE_OK, null, false);
+        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype, PeriodeVurderingType.PERIODE_OK);
     }
 
     private RegelGrunnlag.Builder basicBuilder() {

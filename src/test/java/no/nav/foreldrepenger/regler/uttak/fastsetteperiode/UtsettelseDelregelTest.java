@@ -233,7 +233,7 @@ public class UtsettelseDelregelTest {
     }
 
     private UtsettelsePeriode utsettelsePeriode(LocalDate fom, LocalDate tom, Utsettelseårsaktype utsettelsesÅrsak) {
-        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelsesÅrsak, PeriodeVurderingType.IKKE_VURDERT, null, false);
+        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelsesÅrsak, PeriodeVurderingType.IKKE_VURDERT);
     }
 
 }

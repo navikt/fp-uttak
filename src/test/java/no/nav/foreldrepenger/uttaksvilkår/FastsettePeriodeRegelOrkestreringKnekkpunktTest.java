@@ -35,9 +35,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                         .build())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .build())
@@ -73,9 +71,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                         .build())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .build())
@@ -111,9 +107,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                         .build())
                 .medRettOgOmsorg(beggeRett())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medSøknad(søknad(
                     Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, LocalDate.of(2018, 6, 30)),
@@ -166,9 +160,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                         .build())
                 .medRettOgOmsorg(beggeRett())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medSøknad(søknad(
                     Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15)),

@@ -427,7 +427,7 @@ public class KnekkpunktIdentifisererTest {
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
-                                mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
+                                mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
                         .medMottattDato(mottattdato)
                         .build())
                 .medBehandling(new Behandling.Builder().build())
@@ -448,7 +448,7 @@ public class KnekkpunktIdentifisererTest {
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.minusWeeks(2),
-                                mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
+                                mottattdato.minusWeeks(1), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
                         .medMottattDato(mottattdato)
                         .build())
                 .medBehandling(new Behandling.Builder().build())
@@ -472,7 +472,7 @@ public class KnekkpunktIdentifisererTest {
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato,
-                        mottattdato.plusWeeks(2), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK, null, false))
+                        mottattdato.plusWeeks(2), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK))
                         .medMottattDato(mottattdato)
                         .build())
                 .build();
@@ -495,7 +495,7 @@ public class KnekkpunktIdentifisererTest {
                         .build())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.plusWeeks(1),
-                        mottattdato.plusWeeks(2), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK, null, false))
+                        mottattdato.plusWeeks(2), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
                         .medMottattDato(mottattdato)
                         .build())
                 .build();
@@ -515,7 +515,7 @@ public class KnekkpunktIdentifisererTest {
                         .medType(Søknadstype.FØDSEL)
                         .medMottattDato(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, fødselsdato, tom,
-                                Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT, null, false))
+                                Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT))
                         .build())
                 .medDatoer(datoer(fødselsdato, førsteLovligeSøknadsperiode))
                 .build();

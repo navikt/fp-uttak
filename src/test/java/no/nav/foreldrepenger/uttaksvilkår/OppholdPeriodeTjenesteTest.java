@@ -434,7 +434,7 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, familiehendelse,
                                 familiehendelse.plusWeeks(3), null, false))
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, familiehendelse.plusWeeks(6).plusDays(1),
-                                familiehendelse.plusWeeks(8), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK, null, false))
+                                familiehendelse.plusWeeks(8), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK))
                         .build())
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)

@@ -371,9 +371,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                 .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
                 .build())
                 .medRettOgOmsorg(beggeRett())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medInngangsvilkår(oppfyltInngangsvilkår());
     }
 
@@ -513,9 +511,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                         .medFarHarRett(true)
                         .medSamtykke(true)
                         .build())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medMottattDato(fødselsdato.minusWeeks(4))
@@ -586,9 +582,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                 .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
                 .build())
                 .medRettOgOmsorg(beggeRett())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medMottattDato(fødselsdato.minusWeeks(7))
@@ -831,9 +825,8 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                         .medMottattDato(LocalDate.of(2019, 5, 2))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FEDREKVOTE, LocalDate.of(2019, 5, 3),
                                 LocalDate.of(2019, 7, 5), BigDecimal.valueOf(60)))
-                        .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2019, 7, 8),
-                                LocalDate.of(2019, 7, 26), Utsettelseårsaktype.FERIE, PeriodeVurderingType.IKKE_VURDERT, null,
-                                false))
+                        .leggTilSøknadsperiode(utsettelsePeriode(LocalDate.of(2019, 7, 8),
+                                LocalDate.of(2019, 7, 26), Utsettelseårsaktype.FERIE))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FEDREKVOTE, LocalDate.of(2019, 7, 29),
                                 LocalDate.of(2020, 2, 13), BigDecimal.valueOf(60)))
                         .build())
@@ -861,9 +854,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                 .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
                 .build())
                 .medRettOgOmsorg(beggeRett())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medMottattDato(mottattDato)
@@ -899,9 +890,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                         )
                         .build())
                 .medKontoer(kontoer)
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                .medBehandling(morBehandling())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medMottattDato(mottattDato)

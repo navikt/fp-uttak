@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
@@ -306,18 +305,10 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
         return StønadsPeriode.medOverføringAvKvote(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, årsak, vurderingType, null, false);
     }
 
-    private Behandling morBehandling() {
-        return new Behandling.Builder().medSøkerErMor(true).build();
-    }
-
     private Datoer datoer(LocalDate fødselsdato) {
         return new Datoer.Builder()
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .build();
-    }
-
-    private Behandling farBehandling() {
-        return new Behandling.Builder().medSøkerErMor(false).build();
     }
 }
