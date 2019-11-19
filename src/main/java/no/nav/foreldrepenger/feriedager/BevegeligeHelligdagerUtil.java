@@ -23,7 +23,7 @@ public class BevegeligeHelligdagerUtil {
         return bevegeligeHelligdager;
     }
 
-    public static List<LocalDate> finnBevegeligeHelligdagerUtenHelgPerÅr(int år) {
+    private static List<LocalDate> finnBevegeligeHelligdagerUtenHelgPerÅr(int år) {
         List<LocalDate> bevegeligeHelligdager = new ArrayList<>();
 
         // legger til de satte helligdagene
@@ -64,7 +64,7 @@ public class BevegeligeHelligdagerUtil {
     }
 
 
-    public static List<LocalDate> fjernHelg(List<LocalDate> bevegeligeHelligdager) {
+    private static List<LocalDate> fjernHelg(List<LocalDate> bevegeligeHelligdager) {
         List<LocalDate> utenHelg = new ArrayList<>();
         for (LocalDate helligdag : bevegeligeHelligdager) {
             if (!DayOfWeek.SATURDAY.equals(helligdag.getDayOfWeek()) && !DayOfWeek.SUNDAY.equals(helligdag.getDayOfWeek())) {

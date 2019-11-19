@@ -91,7 +91,7 @@ class KnekkpunktIdentifiserer {
     private static void leggTilKnekkpunkterForUtsettelsePgaFerie(RegelGrunnlag grunnlag, LocalDate minimumsgrenseForLovligUttak, LocalDate maksimumsgrenseForLovligeUttak, Set<LocalDate> knekkpunkter) {
         List<LocalDate> bevegeligeHelligdager = finnKnekkpunktPåBevegeligeHelligdagerI(new LukketPeriode(minimumsgrenseForLovligUttak, maksimumsgrenseForLovligeUttak));
         List<UtsettelsePeriode> perioderMedFerie = perioderMedFerie(grunnlag);
-        leggTilKnekkpunkterForUtsettelsePgaFerie(knekkpunkter, bevegeligeHelligdager, perioderMedFerie);
+        knekkpunkter.addAll(knekkpunkterForUtsettelsePgaFerie(bevegeligeHelligdager, perioderMedFerie));
     }
 
     private static List<UtsettelsePeriode> perioderMedFerie(RegelGrunnlag grunnlag) {
@@ -154,14 +154,16 @@ class KnekkpunktIdentifiserer {
         return knekkpunkt;
     }
 
-    private static void leggTilKnekkpunkterForUtsettelsePgaFerie(Set<LocalDate> knekkpunkter, List<LocalDate> bevegeligeHelligdager, List<UtsettelsePeriode> utsettelsePerioder) {
+    private static List<LocalDate> knekkpunkterForUtsettelsePgaFerie(List<LocalDate> bevegeligeHelligdager, List<UtsettelsePeriode> utsettelsePerioder) {
+        List<LocalDate> knekkpunkter = new ArrayList<>();
         for (Periode periode : utsettelsePerioder) {
             for (LocalDate helligdag : bevegeligeHelligdager) {
-                if (helligdag.isAfter(periode.getFom()) && helligdag.isBefore(periode.getTom())) {
+                if (helligdag.isAfter(periode.getFom()) && !helligdag.isAfter(periode.getTom())) {
                     knekkpunkter.add(helligdag);
                 }
             }
         }
+        return knekkpunkter;
     }
 
     private static void leggTilKnekkpunkterMenIkkeHvisKnekkErMandagOgDetErKnekkIHelgaFør(Set<LocalDate> knekkpunkter, Set<LocalDate> alleEndringstidspunkter) {

@@ -163,9 +163,7 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
 
     private RegelGrunnlag.Builder basicGrunnlagMor() {
         return basicGrunnlag()
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build());
+                .medBehandling(morBehandling());
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar() {

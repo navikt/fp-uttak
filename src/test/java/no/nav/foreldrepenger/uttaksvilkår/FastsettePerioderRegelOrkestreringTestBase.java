@@ -28,6 +28,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
@@ -41,9 +43,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
             .medSøknad(new Søknad.Builder()
                     .medType(Søknadstype.FØDSEL)
                     .build())
-            .medBehandling(new Behandling.Builder()
-                    .medSøkerErMor(true)
-                    .build())
+            .medBehandling(morBehandling())
             .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
                     .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15).build())
                     .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
@@ -61,9 +61,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
             .medSøknad(new Søknad.Builder()
                     .medType(Søknadstype.ADOPSJON)
                     .build())
-            .medBehandling(new Behandling.Builder()
-                    .medSøkerErMor(true)
-                    .build())
+            .medBehandling(morBehandling())
             .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
                     .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
                     .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50).build())
@@ -126,13 +124,19 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).build());
+        return basicGrunnlag(fødselsdato).medBehandling(morBehandling());
+    }
+
+    Behandling morBehandling() {
+        return new Behandling.Builder().medSøkerErMor(true).build();
+    }
+
+    Behandling farBehandling() {
+        return new Behandling.Builder().medSøkerErMor(false).build();
     }
 
     RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(false).build());
+        return basicGrunnlag(fødselsdato).medBehandling(farBehandling());
     }
 
     RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
@@ -164,5 +168,11 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                 .medMorHarRett(true)
                 .medFarHarRett(true)
                 .build();
+    }
+
+    UtsettelsePeriode utsettelsePeriode(LocalDate fom,
+                                        LocalDate tom,
+                                        Utsettelseårsaktype utsettelseårsaktype) {
+        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype, PeriodeVurderingType.IKKE_VURDERT);
     }
 }
