@@ -129,12 +129,11 @@ public class SøknadMottattDatoRegelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
     }
 
-    private Søknad søknad(UttakPeriode søknadsperiode, LocalDate søknadMottattdato) {
+    private Søknad.Builder søknad(UttakPeriode søknadsperiode, LocalDate søknadMottattdato) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
                 .leggTilSøknadsperiode(søknadsperiode)
-                .medMottattDato(søknadMottattdato)
-                .build();
+                .medMottattDato(søknadMottattdato);
     }
 
     private Regelresultat kjørRegler(UttakPeriode søknadsperiode, RegelGrunnlag grunnlag) {
@@ -152,28 +151,21 @@ public class SøknadMottattDatoRegelTest {
                 .leggTilKontoer(aktivitetIdentifikator, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(50)
-                                .build())
-                        .build())
+                                .medTrekkdager(50)))
                 .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build()))
-                        .build())
+                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(FAMILIEHENDELSE_DATO)
-                        .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG)
-                        .build())
+                        .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .build())
+                        .medSamtykke(true))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 
     private UttakPeriode gradertSøknadsperiode(LocalDate fom, LocalDate tom) {

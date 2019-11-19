@@ -19,12 +19,10 @@ public class RegelResultatBehandlerImplTest {
     public void skal_knekke_på_riktig_datoer_ved_avslag() {
         Arbeidsprosenter arbeidsprosenter = new Arbeidsprosenter();
         RegelGrunnlag regelGrunnlag = RegelGrunnlagTestBuilder.create()
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(false)
-                        .build())
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(arbeidsprosenter).build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(false))
+                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(arbeidsprosenter))
                 .medKontoer(Collections.emptyMap())
-                .medAnnenPart(null).build();
+                .build();
         Trekkdagertilstand trekkdagertilstand = Trekkdagertilstand.ny(regelGrunnlag, Collections.emptyList());
         RegelResultatBehandlerImpl behandler = new RegelResultatBehandlerImpl(trekkdagertilstand, regelGrunnlag, StandardKonfigurasjon.KONFIGURASJON);
 

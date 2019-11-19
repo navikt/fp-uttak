@@ -52,8 +52,7 @@ public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends Fastse
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medMorHarRett(false)
-                        .medFarHarRett(true)
-                        .build())
+                        .medFarHarRett(true))
                 .medSøknad(søknad(Søknadstype.FØDSEL,
                         //manglende søkt i mellom blir opprettet før fellesperioden
                         søknadsperiode(Stønadskontotype.FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12))
@@ -160,8 +159,7 @@ public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends Fastse
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter()
                         .leggTil(AktivitetIdentifikator.forFrilans(), new ArbeidTidslinje.Builder().build())
-                        .leggTil(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new ArbeidTidslinje.Builder().build()))
-                        .build())
+                        .leggTil(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new ArbeidTidslinje.Builder().build())))
                 .medSøknad(søknad(Søknadstype.FØDSEL,
                         søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                         //Har igjen 1 dag på fellesperiode på ett arbeidsforhold når manglende søkt skal behandles

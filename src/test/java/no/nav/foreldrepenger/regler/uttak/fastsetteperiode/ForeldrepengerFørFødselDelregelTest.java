@@ -111,8 +111,7 @@ public class ForeldrepengerFørFødselDelregelTest {
                 .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                         //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
-                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
-                        .build())
+                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -125,10 +124,8 @@ public class ForeldrepengerFørFødselDelregelTest {
                 Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
     }
 
-    private Kontoer kontoer(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Kontoer.Builder()
-                .leggTilKonto(konto(stønadskontotype, trekkdager))
-                .build();
+    private Kontoer.Builder kontoer(Stønadskontotype stønadskontotype, int trekkdager) {
+        return new Kontoer.Builder().leggTilKonto(konto(stønadskontotype, trekkdager));
     }
 
     private UttakPeriode gradertPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -142,19 +139,17 @@ public class ForeldrepengerFørFødselDelregelTest {
         return opphold;
     }
 
-    private Konto konto(Stønadskontotype stønadskontotype, int trekkdager) {
+    private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {
         return new Konto.Builder()
                 .medType(stønadskontotype)
-                .medTrekkdager(trekkdager)
-                .build();
+                .medTrekkdager(trekkdager);
     }
 
-    private Søknad søknad(UttakPeriode uttakPeriode, LocalDate mottattDato) {
+    private Søknad.Builder søknad(UttakPeriode uttakPeriode, LocalDate mottattDato) {
         return new Søknad.Builder()
                 .leggTilSøknadsperiode(uttakPeriode)
                 .medType(Søknadstype.FØDSEL)
-                .medMottattDato(mottattDato)
-                .build();
+                .medMottattDato(mottattDato);
     }
 
     private UttakPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -163,10 +158,8 @@ public class ForeldrepengerFørFødselDelregelTest {
         return stønadsPeriode;
     }
 
-    private Behandling søkerErFarBehandling() {
-        return new Behandling.Builder()
-                .medSøkerErMor(false)
-                .build();
+    private Behandling.Builder søkerErFarBehandling() {
+        return new Behandling.Builder().medSøkerErMor(false);
     }
 
     private void assertInnvilget(Regelresultat regelresultat, Årsak innvilgetÅrsak) {
@@ -187,25 +180,20 @@ public class ForeldrepengerFørFødselDelregelTest {
         return RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))
-                        .medFødsel(familiehendelseDato)
-                        .build())
+                        .medFødsel(familiehendelseDato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate familiehendelseDato) {
         return basicGrunnlag(familiehendelseDato)
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build());
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true));
     }
 }

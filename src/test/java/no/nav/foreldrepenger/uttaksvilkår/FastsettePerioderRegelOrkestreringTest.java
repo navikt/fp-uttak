@@ -36,7 +36,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
@@ -72,11 +71,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
     public void skal_innvilge_to_perioder_med_med_mødrekvote_på_under_10_uker() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL, søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -97,11 +92,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         LocalDate fødselsdato = LocalDate.of(2018, 1, 3);
 
         grunnlag.medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL, søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -151,9 +142,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, sluttUgyldigPeriode.plusDays(1), sluttUgyldigPeriode.plusWeeks(10)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, sluttGyldigUtsattPeriode))
-                                .build())
-                        .build());
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, sluttGyldigUtsattPeriode))));
 
         RegelGrunnlag fastsettePeriodeGrunnlag = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag, new FeatureTogglesForTester());
@@ -228,9 +217,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, gyldigUtsettelseSlutt.plusDays(1), fødselsdato.plusWeeks(6).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigUtsettelseStart, gyldigUtsettelseSlutt))
-                                .build())
-                        .build());
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigUtsettelseStart, gyldigUtsettelseSlutt))));
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
         List<UttakPeriode> uttakPerioder = resultat.stream()
@@ -270,9 +257,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         LocalDate fødselsdato = LocalDate.of(2017, 11, 1);
         grunnlag.medDatoer(datoer(fødselsdato, fødselsdato.plusWeeks(6)))
                 .medBehandling(morBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL, søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
@@ -300,11 +285,10 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         assertThat(mødrekvote.get().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKNADSFRIST);
     }
 
-    private Datoer datoer(LocalDate fødselsdato, LocalDate førsteLovligeUttaksdag) {
+    private Datoer.Builder datoer(LocalDate fødselsdato, LocalDate førsteLovligeUttaksdag) {
         return new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
-                .build();
+                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag);
     }
 
     @Test
@@ -393,11 +377,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.normal()
                 .medDatoer(datoer(fødselsdato, LocalDate.of(2017, 10, 1)))
                 .medBehandling(morBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(beggeRett())
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL, søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusYears(3).minusDays(1)),
@@ -408,8 +388,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                         .leggTilKonto(konto(MØDREKVOTE, 10000000))
                         .leggTilKonto(konto(FEDREKVOTE, 15))
-                        .leggTilKonto(konto(FELLESPERIODE, 10000))
-                        .build())
+                        .leggTilKonto(konto(FELLESPERIODE, 10000)))
                 .build();
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -446,20 +425,14 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.normal()
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(søknadsperiode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusYears(1)))
-                                .build())
-                        .build())
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusYears(1)))))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(FEDREKVOTE, 5))
-                        .build())
+                        .leggTilKonto(konto(FEDREKVOTE, 5)))
                 .build();
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -490,16 +463,11 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         LocalDate periodeTom = periodeFom.plusDays(20);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.normal()
                 .medDatoer(datoer(fødselsdato, fødselsdato.plusYears(2)))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .build())
+                .medBehandling(farBehandling())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(FEDREKVOTE, periodeFom, periodeTom)))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(FEDREKVOTE, 15))
-                        .build())
+                        .leggTilKonto(konto(FEDREKVOTE, 15)))
                 .build();
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -534,8 +502,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .medArbeidsprosenter(new Arbeidsprosenter()
                                 .leggTil(aktivitet, new ArbeidTidslinje.Builder()
                                         .medArbeid(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(20), Arbeid.forFrilans(arbeidsprosent))
-                                        .build()))
-                        .build())
+                                        .build())))
                 .build();
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -566,8 +533,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .medArbeidsprosenter(new Arbeidsprosenter()
                                 .leggTil(aktivitet, new ArbeidTidslinje.Builder()
                                         .medArbeid(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(20), Arbeid.forFrilans(arbeidsprosent))
-                                        .build()))
-                        .build())
+                                        .build())))
                 .build();
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -585,8 +551,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
-                        .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10)))
-                        .build());
+                        .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))));
 
         RegelGrunnlag build = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(build, new FeatureTogglesForTester());
@@ -602,25 +567,17 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
     @Test
     public void skal_sette_arbeidsprosent() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1), BigDecimal.valueOf(44));
-        Kontoer kontoer = new Kontoer.Builder()
+        var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(FELLESPERIODE, 130))
                 .leggTilKonto(konto(MØDREKVOTE, 50))
-                .leggTilKonto(konto(FEDREKVOTE, 50))
-                .build();
-        grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .leggTilKonto(konto(FEDREKVOTE, 50));
+        grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1), BigDecimal.valueOf(44))
+                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medRettOgOmsorg(beggeRett())
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
-                        .medForeldreansvarnOppfylt(true)
-                        .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build())
+                .medBehandling(farBehandling())
+                .medInngangsvilkår(oppfyltAlleVilkår())
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(FEDREKVOTE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1))));
 
         RegelGrunnlag build = grunnlag.build();
@@ -659,17 +616,14 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilKonto(konto(FLERBARNSDAGER, 5))
                         .build()))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(6), tom, true,
                         PeriodeVurderingType.PERIODE_OK, null)))
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(annenPartPeriode1)
                         .leggTilUttaksperiode(annenPartPeriode2)
-                        .leggTilUttaksperiode(annenPartPeriode3)
-                        .build())
+                        .leggTilUttaksperiode(annenPartPeriode3))
                 .build();
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(periodeGrunnlag, new FeatureTogglesForTester());
@@ -699,9 +653,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .build()))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .medSøknad(søknad(Søknadstype.FØDSEL,
                         søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), false, PeriodeVurderingType.PERIODE_OK, null),
                         søknadsperiode(Stønadskontotype.FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(100), true, PeriodeVurderingType.PERIODE_OK, null)
@@ -722,17 +674,13 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.annenAktivitet();
         RegelGrunnlag regelGrunnlag = new RegelGrunnlag.Builder()
                 .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build()))
-                        .build())
+                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .build())
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .leggTilKontoer(aktivitetIdentifikator, new Kontoer.Builder()
                         .leggTilKonto(konto(MØDREKVOTE, 75))
-                        .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
-                        .build())
+                        .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medMottattDato(fødselsdato.minusWeeks(4))
@@ -741,15 +689,8 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31),
                                 Utsettelseårsaktype.INNLAGT_HELSEINSTITUSJON, PeriodeVurderingType.PERIODE_OK))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderMedInnleggelse(new PeriodeMedInnleggelse(LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31)))
-                                .build())
-                        .build())
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
-                        .medForeldreansvarnOppfylt(true)
-                        .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build())
+                                .leggPerioderMedInnleggelse(new PeriodeMedInnleggelse(LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31)))))
+                .medInngangsvilkår(oppfyltAlleVilkår())
                 .build();
 
         assertThatCode(() -> fastsettePerioderRegelOrkestrering.fastsettePerioder(regelGrunnlag, new FeatureTogglesForTester())).doesNotThrowAnyException();
@@ -761,8 +702,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag = RegelGrunnlagTestBuilder.normal();
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
-                .leggTilKonto(konto(MØDREKVOTE, 50))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 50)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -792,8 +732,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag = RegelGrunnlagTestBuilder.normal();
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
-                .leggTilKonto(konto(MØDREKVOTE, 50))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 50)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -820,12 +759,9 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(FEDREKVOTE, 15))
-                        .leggTilKonto(konto(FELLESPERIODE, 50))
-                        .build())
+                        .leggTilKonto(konto(FELLESPERIODE, 50)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL, søknadsperiode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1)),
@@ -853,8 +789,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag = RegelGrunnlagTestBuilder.normal();
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
-                .leggTilKonto(konto(MØDREKVOTE, 5 * 15))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 5 * 15)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -881,8 +816,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag = RegelGrunnlagTestBuilder.normal();
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
-                .leggTilKonto(konto(MØDREKVOTE, 5 * 15))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 5 * 15)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -909,21 +843,16 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag = RegelGrunnlagTestBuilder.normal();
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FEDREKVOTE, 15))
-                .leggTilKonto(konto(MØDREKVOTE, 15))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 15)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(StønadsPeriode.medOverføringAvKvote(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(9),
                                 fødselsdato.plusWeeks(11).minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .leggTilSøknadsperiode(søknadsperiode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1)))
-                                .build())
-                        .build());
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1)))));
 
         RegelGrunnlag build = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(build, new FeatureTogglesForTester());
@@ -946,8 +875,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 100))
-                .leggTilKonto(konto(FEDREKVOTE, 5))
-                .build())
+                .leggTilKonto(konto(FEDREKVOTE, 5)))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -956,8 +884,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         //Går tom for fedrekvote i oppholdsperioden
                         .leggTilSøknadsperiode(new OppholdPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.KVOTE_ANNEN_FORELDER,
-                                fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8), null, false))
-                        .build());
+                                fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8), null, false)));
 
         RegelGrunnlag build = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(build, new FeatureTogglesForTester());
@@ -976,13 +903,11 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         LocalDate sisteUttaksdato = LocalDate.of(2019, 5, 13);
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
-                .leggTilKonto(konto(MØDREKVOTE, 5))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 5)))
                 .medArbeid(new ArbeidGrunnlag.Builder()
                         .medArbeidsprosenter(new Arbeidsprosenter()
                                 .leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())
-                        )
-                        .build())
+                        ))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -1006,20 +931,17 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 1, 24);
         grunnlag = RegelGrunnlagTestBuilder.normal();
         grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(konto(MØDREKVOTE, 75 - 28))
-                .build())
+                .leggTilKonto(konto(MØDREKVOTE, 75 - 28)))
                 .medArbeid(new ArbeidGrunnlag.Builder()
                         .medArbeidsprosenter(new Arbeidsprosenter()
                                 .leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())
-                        )
-                        .build())
+                        ))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true)
-                        .medErTapende(true)
-                        .build())
+                        .medErTapende(true))
                 .medRettOgOmsorg(beggeRett())
-                .medRevurdering(new Revurdering.Builder().medEndringsdato(LocalDate.of(2019, 3, 4)).build())
+                .medRevurdering(new Revurdering.Builder().medEndringsdato(LocalDate.of(2019, 3, 4)))
                 //far har fått overført mange dager av mor. Det er noen dager igjen til mor. Skal avslå alle mors perioder og ikke trekk dager
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 6))
@@ -1033,8 +955,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 3))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(25), BigDecimal.valueOf(100)))
-                                .build())
-                        .build())
+                                .build()))
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL,
                         søknadsperiode(MØDREKVOTE, LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 15))
@@ -1058,17 +979,11 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                 .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
                 .leggTilKonto(konto(MØDREKVOTE, 20))
                 .leggTilKonto(konto(FELLESPERIODE, 20))
-                .leggTilKonto(konto(FLERBARNSDAGER, 5))
-                .build())
+                .leggTilKonto(konto(FLERBARNSDAGER, 5)))
                 .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter()
-                                .leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())
-                        )
-                        .build())
+                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(søknad(
                         Søknadstype.FØDSEL,
@@ -1103,38 +1018,27 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
     public void skal_håndtere_flere_knekk_i_samme_søknadsperiode_ved_flere_arbeidsforhold() {
         LocalDate fødselsdato = LocalDate.of(2019, 5, 28);
         RegelGrunnlag.Builder grunnlag = new RegelGrunnlag.Builder();
-        grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 50)).build())
-                .leggTilKontoer(ARBEIDSFORHOLD_2, new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 35)).build())
+        grunnlag.leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 50)))
+                .leggTilKontoer(ARBEIDSFORHOLD_2, new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 35)))
                 .medArbeid(new ArbeidGrunnlag.Builder()
                         .medArbeidsprosenter(new Arbeidsprosenter()
                                 .leggTil(ARBEIDSFORHOLD_1, new ArbeidTidslinje.Builder().build())
                                 .leggTil(ARBEIDSFORHOLD_2, new ArbeidTidslinje.Builder().build())
-                        )
-                        .build())
+                        ))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1))
-                        .build())
+                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 10, 1)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
-                        .medAleneomsorg(true)
-                        .build())
+                        .medAleneomsorg(true))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(6)))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato.plusWeeks(6).plusDays(1), fødselsdato.plusWeeks(15)))
-                        .build()
                 )
-                .medOpptjening(new Opptjening.Builder()
-                        .medSkjæringstidspunkt(fødselsdato)
-                        .build())
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
-                        .medForeldreansvarnOppfylt(true)
-                        .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
+                .medInngangsvilkår(oppfyltAlleVilkår());
 
 
         RegelGrunnlag build = grunnlag.build();

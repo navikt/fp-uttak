@@ -46,11 +46,9 @@ public class FellesperiodeMedGraderingTest {
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
-                        .medMottattDato(graderingFom.minusWeeks(1))
-                        .build())
+                        .medMottattDato(graderingFom.minusWeeks(1)))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5))
-                        .build())
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5)))
                 .build();
 
         Regelresultat regelresultat = evaluer(aktuellPeriode, grunnlag);
@@ -68,11 +66,9 @@ public class FellesperiodeMedGraderingTest {
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
-                        .medMottattDato(graderingFom.minusWeeks(1))
-                        .build())
+                        .medMottattDato(graderingFom.minusWeeks(1)))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5))
-                        .build())
+                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5)))
                 .build();
 
         Regelresultat regelresultat = evaluer(aktuellPeriode, grunnlag);
@@ -80,33 +76,28 @@ public class FellesperiodeMedGraderingTest {
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }
 
-    private Konto konto(Stønadskontotype stønadskontotype, int trekkdager) {
+    private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {
         return new Konto.Builder()
                 .medType(stønadskontotype)
-                .medTrekkdager(trekkdager)
-                .build();
+                .medTrekkdager(trekkdager);
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate graderingFom, LocalDate graderingTom) {
         return RegelGrunnlagTestBuilder.enGraderingsperiode(graderingFom, graderingTom, BigDecimal.valueOf(50))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
-                        .build())
+                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
                         .medMorHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                        .medSamtykke(true))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 
     private Regelresultat evaluer(UttakPeriode aktuellPeriode, RegelGrunnlag grunnlag) {

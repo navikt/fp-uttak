@@ -32,15 +32,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .build())
+                        .medType(Søknadstype.FØDSEL))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -62,25 +59,19 @@ public class SjekkOmTomForAlleSineKontoerTest {
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(15 * 5)
-                                .build())
+                                .medTrekkdager(15 * 5))
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FELLESPERIODE)
-                                .medTrekkdager(10 * 5)
-                                .build())
-                        .build())
+                                .medTrekkdager(10 * 5)))
                 .build();
 
         SjekkOmTomForAlleSineKontoer sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
@@ -95,18 +86,13 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)
-                                .build())
-                        .build())
+                                .medTrekkdager(50)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .build())
+                        .medType(Søknadstype.FØDSEL))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -118,15 +104,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .build())
+                        .medType(Søknadstype.FØDSEL))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -140,18 +123,13 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)
-                                .build())
-                        .build())
+                                .medTrekkdager(50)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .build())
+                        .medFarHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .build())
+                        .medType(Søknadstype.FØDSEL))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -163,15 +141,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.ADOPSJON)
-                        .build())
+                        .medType(Søknadstype.ADOPSJON))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -185,18 +160,13 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)
-                                .build())
-                        .build())
+                                .medTrekkdager(50)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.ADOPSJON)
-                        .build())
+                        .medType(Søknadstype.ADOPSJON))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -208,15 +178,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
 
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.ADOPSJON)
-                        .build())
+                        .medType(Søknadstype.ADOPSJON))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
@@ -230,18 +197,13 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)
-                                .build())
-                        .build())
+                                .medTrekkdager(50)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .build())
+                        .medFarHarRett(true))
                 .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.ADOPSJON)
-                        .build())
+                        .medType(Søknadstype.ADOPSJON))
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);

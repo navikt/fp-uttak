@@ -48,8 +48,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
@@ -72,8 +71,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FELLESPERIODE, 10 * 5))
                 .build();
 
@@ -91,8 +89,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
@@ -122,13 +119,11 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
@@ -152,8 +147,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
@@ -176,8 +170,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
@@ -208,8 +201,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode1)
                         .leggTilSøknadsperiode(uttakPeriode2)
-                        .leggTilSøknadsperiode(uttakPeriode3)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode3))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))
                 .build();
 
@@ -237,30 +229,24 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         return RegelGrunnlagTestBuilder.normal()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
-                        .build())
+                        .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .build())
+                        .medFarHarRett(true))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 
-    private Kontoer enKonto(Stønadskontotype stønadskontotype, int trekkdager) {
+    private Kontoer.Builder enKonto(Stønadskontotype stønadskontotype, int trekkdager) {
         return new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder()
                         .medType(stønadskontotype)
-                        .medTrekkdager(trekkdager)
-                        .build())
-                .build();
+                        .medTrekkdager(trekkdager));
     }
 }

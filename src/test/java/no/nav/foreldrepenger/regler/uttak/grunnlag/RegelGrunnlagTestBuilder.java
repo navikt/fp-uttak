@@ -36,26 +36,23 @@ public class RegelGrunnlagTestBuilder {
 
     public static RegelGrunnlag.Builder normal() {
         ArbeidTidslinje tidslinje = new ArbeidTidslinje.Builder().build();
-        ArbeidGrunnlag arbeidGrunnlag = new ArbeidGrunnlag.Builder()
-                .medArbeidsprosenter(new Arbeidsprosenter().leggTil(ARBEIDSFORHOLD_1, tidslinje))
-                .build();
+        var arbeidGrunnlag = new ArbeidGrunnlag.Builder()
+                .medArbeidsprosenter(new Arbeidsprosenter().leggTil(ARBEIDSFORHOLD_1, tidslinje));
         return new RegelGrunnlag.Builder()
-                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN).build())
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true).build())
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true))
                 .medArbeid(arbeidGrunnlag)
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15).build())
-                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75).build())
-                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75).build())
-                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80).build())
-                        .build())
+                        .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
+                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
+                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
+                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80)))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 
     public static RegelGrunnlag.Builder enGraderingsperiode(LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
@@ -76,10 +73,7 @@ public class RegelGrunnlagTestBuilder {
         for (AktivitetIdentifikator aktivitet : aktiviteter) {
             arbeidsprosenter.leggTil(aktivitet, tidslinje);
         }
-        ArbeidGrunnlag arbeidGrunnlag = new ArbeidGrunnlag.Builder().medArbeidsprosenter(arbeidsprosenter).build();
-        return new RegelGrunnlag.Builder()
-                .medArbeid(arbeidGrunnlag);
+        var arbeidGrunnlag = new ArbeidGrunnlag.Builder().medArbeidsprosenter(arbeidsprosenter);
+        return new RegelGrunnlag.Builder().medArbeid(arbeidGrunnlag);
     }
-
-
 }

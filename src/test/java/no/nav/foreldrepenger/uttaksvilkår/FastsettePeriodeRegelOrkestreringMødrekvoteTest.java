@@ -32,8 +32,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
-                .build())
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
@@ -41,8 +40,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, PeriodeKilde.SØKNAD, fødselsdato.minusWeeks(3),
                                 fødselsdato.minusWeeks(1).minusDays(1), null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.minusWeeks(1),
-                                fødselsdato.plusWeeks(6).minusDays(1), null, false))
-                        .build());
+                                fødselsdato.plusWeeks(6).minusDays(1), null, false)));
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -72,25 +70,17 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
-                .build())
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                        .medSøkerErMor(false))
+                .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(StønadsPeriode.medOverføringAvKvote(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1),
                                 OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), null, false))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
-                                .build())
-                        .build());
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -120,21 +110,17 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
-                .build())
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .build())
+                        .medSamtykke(true))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(StønadsPeriode.medOverføringAvKvote(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK, null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10),
-                                fødselsdato.plusWeeks(12).minusDays(1), null, false))
-                        .build());
+                                fødselsdato.plusWeeks(12).minusDays(1), null, false)));
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -150,23 +136,16 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
-                .build())
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .medFarHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                        .medSøkerErMor(false))
+                .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(StønadsPeriode.medOverføringAvKvote(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), null, PeriodeVurderingType.UAVKLART_PERIODE, null, false))
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10),
-                                fødselsdato.plusWeeks(12).minusDays(1), null, false))
-                        .build());
+                                fødselsdato.plusWeeks(12).minusDays(1), null, false)));
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -196,11 +175,9 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
                     .medFødsel(fødselsdato)
-                    .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
-                    .build())
+                    .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -210,9 +187,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 fødselsdato.plusWeeks(12).minusDays(1), null, false))
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
-                                .build())
-                        .build());
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
