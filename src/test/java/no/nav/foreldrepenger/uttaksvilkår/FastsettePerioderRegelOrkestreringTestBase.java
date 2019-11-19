@@ -58,23 +58,23 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                     .build());
 
     protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.normal()
-        .medSøknad(new Søknad.Builder()
-            .medType(Søknadstype.ADOPSJON)
-            .build())
-        .medBehandling(new Behandling.Builder()
-            .medSøkerErMor(true)
-            .build())
-        .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-            .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
-            .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50).build())
-            .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
-            .build())
-        .medInngangsvilkår(new Inngangsvilkår.Builder()
-            .medAdopsjonOppfylt(true)
-            .medForeldreansvarnOppfylt(true)
-            .medFødselOppfylt(true)
-            .medOpptjeningOppfylt(true)
-            .build());
+            .medSøknad(new Søknad.Builder()
+                    .medType(Søknadstype.ADOPSJON)
+                    .build())
+            .medBehandling(new Behandling.Builder()
+                    .medSøkerErMor(true)
+                    .build())
+            .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
+                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
+                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50).build())
+                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
+                    .build())
+            .medInngangsvilkår(new Inngangsvilkår.Builder()
+                    .medAdopsjonOppfylt(true)
+                    .medForeldreansvarnOppfylt(true)
+                    .medFødselOppfylt(true)
+                    .medOpptjeningOppfylt(true)
+                    .build());
 
     LocalDate førsteLovligeUttaksdag(LocalDate fødselsdag) {
         return fødselsdag.withDayOfMonth(1).minusMonths(3);
@@ -141,11 +141,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                         .medFødsel(fødselsdato)
                         .build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .medSamtykke(true)
-                        .build());
+                .medRettOgOmsorg(beggeRett());
     }
 
     Map<AktivitetIdentifikator, Kontoer> kontoer(Konto... kontoer) {
@@ -162,5 +158,11 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
         return new Konto.Builder().medType(stønadskontotype).medTrekkdager(antallDager).build();
     }
 
-
+    RettOgOmsorg beggeRett() {
+        return new RettOgOmsorg.Builder()
+                .medSamtykke(true)
+                .medMorHarRett(true)
+                .medFarHarRett(true)
+                .build();
+    }
 }
