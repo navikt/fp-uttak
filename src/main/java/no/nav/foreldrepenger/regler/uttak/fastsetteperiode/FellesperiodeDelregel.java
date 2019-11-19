@@ -130,19 +130,24 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkSaldoForMor() {
-        Specification<FastsettePeriodeGrunnlag> erDetGraderingIPeriodenNode =
+        var erDetGraderingIPeriodenMedDagerPåAlleAktiviteterNode =
             rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1219", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
                 .ellers(Oppfylt.opprett("UT1047", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
 
+        var erDetGraderingIPeriodenMedDagerPåNoenAktiviteterNode =
+                rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
+                        .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1243", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
+                        .ellers(Oppfylt.opprett("UT1245", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+
         var ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto =
                 rs.hvisRegel(SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
                 .hvis(new SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), Manuellbehandling.opprett("UT1043", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false))
-                .ellers(Oppfylt.opprett("UT1237", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+                .ellers(erDetGraderingIPeriodenMedDagerPåNoenAktiviteterNode);
 
         Specification<FastsettePeriodeGrunnlag> noenTilgjengligeDagerNode =
             rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, "Er det tilgjengelige dager på fellesperioden?")
-                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), erDetGraderingIPeriodenNode)
+                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), erDetGraderingIPeriodenMedDagerPåAlleAktiviteterNode)
                 .ellers(ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto);
 
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
@@ -176,19 +181,24 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForTidligUttak() {
-        Specification<FastsettePeriodeGrunnlag> omGradertPeriodeNode =
+        var erDetGraderingIPeriodenMedDagerPåAlleAktiviteterNode =
             rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1220", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
                 .ellers(Oppfylt.opprett("UT1055", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
 
+        var erDetGraderingIPeriodenMedDagerPåNoenAktiviteterNode =
+                rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
+                        .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1220", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
+                        .ellers(Oppfylt.opprett("UT1055", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+
         var ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto =
                 rs.hvisRegel(SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
                         .hvis(new SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), Manuellbehandling.opprett("UT1043", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false))
-                        .ellers(Oppfylt.opprett("UT1239", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+                        .ellers(erDetGraderingIPeriodenMedDagerPåNoenAktiviteterNode);
 
         Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode =
             rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), omGradertPeriodeNode)
+                .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), erDetGraderingIPeriodenMedDagerPåAlleAktiviteterNode)
                 .ellers(ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto);
 
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
@@ -200,6 +210,21 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, FLERBARNSDAGER)
                 .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), Oppfylt.opprett("UT1270", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
                 .ellers(Manuellbehandling.opprett("UT1233", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> delflytForNoenDagerIgjenPåAktiviteter() {
+        var sjekkOmPeriodenGjelderGraderteFlerbarnsdager = rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, FLERBARNSDAGER)
+                .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), Oppfylt.opprett("UT1246", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
+                .ellers(Manuellbehandling.opprett("UT1247", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
+
+        var sjekkOmPeriodenGjelderFlerbarnsdager =
+                rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, FLERBARNSDAGER)
+                        .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), Oppfylt.opprett("UT1248", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true))
+                        .ellers(Manuellbehandling.opprett("UT1249", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
+
+        return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
+                .hvis(new SjekkOmGradertPeriode(), sjekkOmPeriodenGjelderGraderteFlerbarnsdager)
+                .ellers(sjekkOmPeriodenGjelderFlerbarnsdager);
     }
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForVanligUttak() {
@@ -216,7 +241,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
         var ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto =
                 rs.hvisRegel(SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
                         .hvis(new SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), Manuellbehandling.opprett("UT1146", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false))
-                        .ellers(Oppfylt.opprett("UT1240", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+                        .ellers(delflytForNoenDagerIgjenPåAktiviteter());
 
         Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode =
             rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, "Er det disponibelt antall stønadsdager på fedrekvoten?")
