@@ -1183,11 +1183,24 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
 
         RegelGrunnlag build = grunnlag.build();
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(build, new FeatureTogglesForTester());
-        assertThat(resultat).hasSize(2);
+        assertThat(resultat).hasSize(3);
         //Flerbarnsdager går tom, trekkdager satt til 5 dager som er resten av flerbansdager kontoen
         assertThat(resultat.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(resultat.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(7).minusDays(1));
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
         assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
+
+        //15 dager fellesperiode igjen
+        assertThat(resultat.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(7));
+        assertThat(resultat.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(15));
+
+        //Resten blir avslått
+        assertThat(resultat.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
+        assertThat(resultat.get(2).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2020, 5, 13));
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(0));
     }
 
     @Test
