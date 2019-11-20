@@ -62,7 +62,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
         var ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto =
                 rs.hvisRegel(SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
                         .hvis(new SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), Manuellbehandling.opprett("UT1264", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.OPPHOLD_STØRRE_ENN_TILGJENGELIGE_DAGER, true, false))
-                        .ellers(Oppfylt.opprett("UT1238", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+                        .ellers(Oppfylt.opprett("UT1238", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, false));
 
         return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, "Er det noen disponible stønadsdager på fellesperiode?")
                 .hvis(new SjekkOmTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(),Oppfylt.opprettForOppholds("UT1265", true, false))
