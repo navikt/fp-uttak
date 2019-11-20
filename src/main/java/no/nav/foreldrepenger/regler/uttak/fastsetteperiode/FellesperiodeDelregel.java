@@ -183,8 +183,8 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> delFlytForTidligUttak() {
         var erDetGraderingIPeriodenMedDagerPåAlleAktiviteterNode =
             rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
-                .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1220", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
-                .ellers(Oppfylt.opprett("UT1055", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+                .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1255", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
+                .ellers(Oppfylt.opprett("UT1256", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
 
         var erDetGraderingIPeriodenMedDagerPåNoenAktiviteterNode =
                 rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
@@ -193,7 +193,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
         var ingenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto =
                 rs.hvisRegel(SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.ID, SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                        .hvis(new SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), Manuellbehandling.opprett("UT1043", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false))
+                        .hvis(new SjekkOmIngenTilgjengeligeDagerPåAlleAktiviteteneForSøktStønadskonto(), Manuellbehandling.opprett("UT1257", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false))
                         .ellers(erDetGraderingIPeriodenMedDagerPåNoenAktiviteterNode);
 
         Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode =
