@@ -653,7 +653,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .build()))
                 .medDatoer(datoer(fødselsdato, førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
+                .medRettOgOmsorg(aleneomsorg())
                 .medSøknad(søknad(Søknadstype.FØDSEL,
                         søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), false, PeriodeVurderingType.PERIODE_OK, null),
                         søknadsperiode(Stønadskontotype.FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(100), true, PeriodeVurderingType.PERIODE_OK, null)

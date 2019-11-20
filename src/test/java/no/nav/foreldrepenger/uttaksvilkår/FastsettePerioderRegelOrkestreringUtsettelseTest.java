@@ -717,8 +717,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     private RegelGrunnlag.Builder aleneomsorgUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {
         return grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(behandling)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(aleneomsorg())
                 .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130)));
     }
