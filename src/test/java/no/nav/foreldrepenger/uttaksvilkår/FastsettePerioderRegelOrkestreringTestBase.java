@@ -165,4 +165,8 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                 .medFødselOppfylt(true)
                 .medOpptjeningOppfylt(true);
     }
+
+    RettOgOmsorg.Builder aleneomsorg() {
+        return beggeRett().medAleneomsorg(true);
+    }
 }
