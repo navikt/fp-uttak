@@ -40,39 +40,23 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
     protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.normal()
-            .medSøknad(new Søknad.Builder()
-                    .medType(Søknadstype.FØDSEL)
-                    .build())
+            .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
             .medBehandling(morBehandling())
             .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                    .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15).build())
-                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
-                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50).build())
-                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
-                    .build())
-            .medInngangsvilkår(new Inngangsvilkår.Builder()
-                    .medAdopsjonOppfylt(true)
-                    .medForeldreansvarnOppfylt(true)
-                    .medFødselOppfylt(true)
-                    .medOpptjeningOppfylt(true)
-                    .build());
+                    .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
+                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+            .medInngangsvilkår(oppfyltAlleVilkår());
 
     protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.normal()
-            .medSøknad(new Søknad.Builder()
-                    .medType(Søknadstype.ADOPSJON)
-                    .build())
+            .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))
             .medBehandling(morBehandling())
             .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50).build())
-                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50).build())
-                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130).build())
-                    .build())
-            .medInngangsvilkår(new Inngangsvilkår.Builder()
-                    .medAdopsjonOppfylt(true)
-                    .medForeldreansvarnOppfylt(true)
-                    .medFødselOppfylt(true)
-                    .medOpptjeningOppfylt(true)
-                    .build());
+                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+            .medInngangsvilkår(oppfyltAlleVilkår());
 
     LocalDate førsteLovligeUttaksdag(LocalDate fødselsdag) {
         return fødselsdag.withDayOfMonth(1).minusMonths(3);
@@ -103,14 +87,14 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
         assertThat(periode.getÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
     }
 
-    Søknad søknad(Søknadstype søknadstype, UttakPeriode... perioder) {
+    Søknad.Builder søknad(Søknadstype søknadstype, UttakPeriode... perioder) {
         Søknad.Builder builder = new Søknad.Builder()
                 .medMottattDato(perioder[0].getFom().minusWeeks(1))
                 .medType(søknadstype);
         for (UttakPeriode uttakPeriode : perioder) {
             builder.leggTilSøknadsperiode(uttakPeriode);
         }
-        return builder.build();
+        return builder;
     }
 
     UttakPeriode søknadsperiode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -127,12 +111,12 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
         return basicGrunnlag(fødselsdato).medBehandling(morBehandling());
     }
 
-    Behandling morBehandling() {
-        return new Behandling.Builder().medSøkerErMor(true).build();
+    Behandling.Builder morBehandling() {
+        return new Behandling.Builder().medSøkerErMor(true);
     }
 
-    Behandling farBehandling() {
-        return new Behandling.Builder().medSøkerErMor(false).build();
+    Behandling.Builder farBehandling() {
+        return new Behandling.Builder().medSøkerErMor(false);
     }
 
     RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
@@ -143,36 +127,42 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
         return grunnlag
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
-                        .medFødsel(fødselsdato)
-                        .build())
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett());
     }
 
-    Map<AktivitetIdentifikator, Kontoer> kontoer(Konto... kontoer) {
+    Map<AktivitetIdentifikator, Kontoer> kontoer(Konto.Builder... kontoer) {
         HashMap<AktivitetIdentifikator, Kontoer> resultat = new HashMap<>();
         Kontoer.Builder builder = new Kontoer.Builder();
-        for (Konto konto : kontoer) {
+        for (Konto.Builder konto : kontoer) {
             builder.leggTilKonto(konto);
         }
         resultat.put(ARBEIDSFORHOLD, builder.build());
         return resultat;
     }
 
-    Konto konto(Stønadskontotype stønadskontotype, int antallDager) {
-        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(antallDager).build();
+    Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {
+        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(antallDager);
     }
 
-    RettOgOmsorg beggeRett() {
+    RettOgOmsorg.Builder beggeRett() {
         return new RettOgOmsorg.Builder()
                 .medSamtykke(true)
                 .medMorHarRett(true)
-                .medFarHarRett(true)
-                .build();
+                .medFarHarRett(true);
     }
 
     UtsettelsePeriode utsettelsePeriode(LocalDate fom,
                                         LocalDate tom,
                                         Utsettelseårsaktype utsettelseårsaktype) {
         return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype, PeriodeVurderingType.IKKE_VURDERT);
+    }
+
+    Inngangsvilkår.Builder oppfyltAlleVilkår() {
+        return new Inngangsvilkår.Builder()
+                .medAdopsjonOppfylt(true)
+                .medForeldreansvarnOppfylt(true)
+                .medFødselOppfylt(true)
+                .medOpptjeningOppfylt(true);
     }
 }

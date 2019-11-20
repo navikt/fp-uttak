@@ -44,8 +44,8 @@ public final class Søknad {
             kladd.uttaksperioder = uttakPerioder;
             return this;
         }
-        public Builder medDokumentasjon(Dokumentasjon dokumentasjon) {
-            kladd.dokumentasjon = dokumentasjon;
+        public Builder medDokumentasjon(Dokumentasjon.Builder dokumentasjon) {
+            kladd.dokumentasjon = dokumentasjon.build();
             return this;
         }
         public Builder medType(Søknadstype type) {

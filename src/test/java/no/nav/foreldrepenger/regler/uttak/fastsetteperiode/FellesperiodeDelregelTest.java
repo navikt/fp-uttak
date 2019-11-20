@@ -114,10 +114,7 @@ public class FellesperiodeDelregelTest {
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar() {
-        return basicGrunnlag()
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build());
+        return basicGrunnlag().medBehandling(new Behandling.Builder().medSøkerErMor(false));
     }
 
     @Test
@@ -279,8 +276,7 @@ public class FellesperiodeDelregelTest {
                 .medSøknad(søknad(søknadsperiode))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 0))
-                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100))
-                        .build())
+                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100)))
                 .build();
 
         Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
@@ -356,8 +352,7 @@ public class FellesperiodeDelregelTest {
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medMorHarRett(false)
                         .medFarHarRett(true)
-                        .medSamtykke(true)
-                        .build())
+                        .medSamtykke(true))
                 .medSøknad(søknad(søknadsperiode))
                 .medKontoer(kontoer)
                 .build();
@@ -373,48 +368,39 @@ public class FellesperiodeDelregelTest {
                 Collections.singletonList(AktivitetIdentifikator.forFrilans()), BigDecimal.TEN, vurderingType, samtidigUttak, flerbarnsdager);
     }
 
-    private Søknad søknad(UttakPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
+    private Søknad.Builder søknad(UttakPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
                 .leggTilSøknadsperiode(søknadsperiode)
                 .medDokumentasjon(new Dokumentasjon.Builder()
-                        .leggPerioderUtenOmsorg(periodeUtenOmsorg)
-                        .build())
-                .build();
+                        .leggPerioderUtenOmsorg(periodeUtenOmsorg));
     }
 
-    private Søknad søknad(UttakPeriode søknadsperiode) {
+    private Søknad.Builder søknad(UttakPeriode søknadsperiode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
                 .medMottattDato(søknadsperiode.getFom().minusWeeks(1))
-                .leggTilSøknadsperiode(søknadsperiode)
-                .build();
+                .leggTilSøknadsperiode(søknadsperiode);
     }
 
-    private Kontoer enFellesperiodeKonto(int trekkdager) {
-        return new Kontoer.Builder()
-                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, trekkdager))
-                .build();
+    private Kontoer.Builder enFellesperiodeKonto(int trekkdager) {
+        return new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, trekkdager));
     }
 
-    private Kontoer fellesperiodeOgFlerbarnsdagerKonto(int fellesperiodeTrekkdager, int flerbarnsdagerTrekkdager) {
+    private Kontoer.Builder fellesperiodeOgFlerbarnsdagerKonto(int fellesperiodeTrekkdager, int flerbarnsdagerTrekkdager) {
         return new Kontoer.Builder()
             .leggTilKonto(new Konto.Builder()
                 .medType(Stønadskontotype.FELLESPERIODE)
-                .medTrekkdager(fellesperiodeTrekkdager)
-                .build())
+                .medTrekkdager(fellesperiodeTrekkdager))
             .leggTilKonto(new Konto.Builder()
                 .medType(Stønadskontotype.FLERBARNSDAGER)
-                .medTrekkdager(flerbarnsdagerTrekkdager)
-                .build())
-            .build();
+                .medTrekkdager(flerbarnsdagerTrekkdager));
     }
 
-    private Konto konto(Stønadskontotype type, int trekkdager) {
+    private Konto.Builder konto(Stønadskontotype type, int trekkdager) {
         return new Konto.Builder()
                 .medType(type)
-                .medTrekkdager(trekkdager)
-                .build();
+                .medTrekkdager(trekkdager);
     }
 
     private UttakPeriode søknadsperiode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType, SamtidigUttak samtidigUttak, boolean flerbarnsdager) {
@@ -465,26 +451,22 @@ public class FellesperiodeDelregelTest {
     private RegelGrunnlag.Builder basicGrunnlagMor() {
         return basicGrunnlag()
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build());
+                        .medSøkerErMor(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
-                        .medFødsel(fødselsdato)
-                        .build())
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .build())
+                        .medMorHarRett(true))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 }

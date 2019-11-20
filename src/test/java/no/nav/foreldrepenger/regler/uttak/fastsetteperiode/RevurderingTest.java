@@ -134,7 +134,7 @@ public class RevurderingTest {
                 FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
 
         RegelGrunnlag grunnlag = basicBuilder(uttaksperiode)
-                .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().plusWeeks(1)).build())
+                .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().plusWeeks(1)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttaksperiode, grunnlag);
@@ -151,7 +151,7 @@ public class RevurderingTest {
                 FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
 
         RegelGrunnlag grunnlag = basicBuilder(uttaksperiode)
-                .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().minusWeeks(1)).build())
+                .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().minusWeeks(1)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttaksperiode, grunnlag);
@@ -168,9 +168,9 @@ public class RevurderingTest {
                 FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12), PeriodeVurderingType.PERIODE_OK);
 
         RegelGrunnlag grunnlag = basicBuilder(uttaksperiode)
-                .medRevurdering(new Revurdering.Builder().build())
+                .medRevurdering(new Revurdering.Builder())
                 .medRettOgOmsorg(samtykke(true))
-                .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getTom().plusWeeks(1)).build())
+                .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getTom().plusWeeks(1)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttaksperiode, grunnlag);
@@ -178,22 +178,16 @@ public class RevurderingTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
     }
 
-    private Behandling tapendeBehandling() {
-        return new Behandling.Builder()
-                .medErTapende(true)
-                .build();
+    private Behandling.Builder tapendeBehandling() {
+        return new Behandling.Builder().medErTapende(true);
     }
 
-    private AnnenPart annenPart(AnnenpartUttaksperiode periode) {
-        return new AnnenPart.Builder()
-                .leggTilUttaksperiode(periode)
-                .build();
+    private AnnenPart.Builder annenPart(AnnenpartUttaksperiode periode) {
+        return new AnnenPart.Builder().leggTilUttaksperiode(periode);
     }
 
-    private RettOgOmsorg samtykke(boolean samtykke) {
-        return new RettOgOmsorg.Builder()
-                .medSamtykke(samtykke)
-                .build();
+    private RettOgOmsorg.Builder samtykke(boolean samtykke) {
+        return new RettOgOmsorg.Builder().medSamtykke(samtykke);
     }
 
     private Regelresultat evaluer(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
@@ -216,32 +210,25 @@ public class RevurderingTest {
     private RegelGrunnlag.Builder basicBuilder(UttakPeriode uttakPeriode) {
         return RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(50)
-                                .build())
+                                .medTrekkdager(50))
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.FELLESPERIODE)
-                                .medTrekkdager(13 * 5)
-                                .build())
-                        .build())
+                                .medTrekkdager(13 * 5)))
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG)
-                        .medFødsel(FAMILIEHENDELSE_DATO)
-                        .build())
+                        .medFødsel(FAMILIEHENDELSE_DATO))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true)
-                        .build());
+                        .medOpptjeningOppfylt(true));
     }
 
     private UttakPeriode uttakPeriode(Stønadskontotype stønadskontotype, PeriodeKilde kilde, LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType) {

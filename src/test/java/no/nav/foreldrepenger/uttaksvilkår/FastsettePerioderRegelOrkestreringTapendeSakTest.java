@@ -53,24 +53,18 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeDato)
-                        .build())
+                        .medFørsteLovligeUttaksdag(førsteLovligeDato))
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), MOR_ARBEIDSFORHOLD, true))
                         .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16), MOR_ARBEIDSFORHOLD, true))
-                        .build())
+                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16), MOR_ARBEIDSFORHOLD, true)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderUtenOmsorg(periodeUtenOmsorg)
-                                .build())
-                        .build());
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 
@@ -86,24 +80,19 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeDato)
-                        .build())
+                        .medFørsteLovligeUttaksdag(førsteLovligeDato))
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), MOR_ARBEIDSFORHOLD, true))
                         .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16), MOR_ARBEIDSFORHOLD, false))
-                        .build())
+                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16), MOR_ARBEIDSFORHOLD, false)))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build())
+                        .medSøkerErMor(false))
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderUtenOmsorg(periodeUtenOmsorg)
-                                .build())
-                        .build());
+                                .leggPerioderUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
 

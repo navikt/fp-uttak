@@ -89,57 +89,57 @@ public class RegelGrunnlag {
 
         private RegelGrunnlag kladd = new RegelGrunnlag();
 
-        public Builder medSøknad(Søknad søknad) {
-            kladd.søknad = søknad;
+        public Builder medSøknad(Søknad.Builder søknad) {
+            kladd.søknad = søknad.build();
             return this;
         }
-        public Builder medBehandling(Behandling behandling) {
-            kladd.behandling = behandling;
+        public Builder medBehandling(Behandling.Builder behandling) {
+            kladd.behandling = behandling == null ? null : behandling.build();
             return this;
         }
-        public Builder medDatoer(Datoer datoer) {
-            kladd.datoer = datoer;
+        public Builder medDatoer(Datoer.Builder datoer) {
+            kladd.datoer = datoer == null ? null : datoer.build();
             return this;
         }
-        public Builder medRettOgOmsorg(RettOgOmsorg rettOgOmsorg) {
-            kladd.rettOgOmsorg = rettOgOmsorg;
+        public Builder medRettOgOmsorg(RettOgOmsorg.Builder rettOgOmsorg) {
+            kladd.rettOgOmsorg = rettOgOmsorg == null ? null : rettOgOmsorg.build();
             return this;
         }
-        public Builder medArbeid(ArbeidGrunnlag arbeid) {
-            kladd.arbeid = arbeid;
+        public Builder medArbeid(ArbeidGrunnlag.Builder arbeid) {
+            kladd.arbeid = arbeid == null ? null : arbeid.build();
             return this;
         }
-        public Builder medRevurdering(Revurdering revurdering) {
-            kladd.revurdering = revurdering;
+        public Builder medRevurdering(Revurdering.Builder revurdering) {
+            kladd.revurdering = revurdering == null ? null : revurdering.build();
             return this;
         }
-        public Builder medAnnenPart(AnnenPart annenPart) {
-            kladd.annenPart = annenPart;
+        public Builder medAnnenPart(AnnenPart.Builder annenPart) {
+            kladd.annenPart = annenPart == null ? null : annenPart.build();
             return this;
         }
-        public Builder leggTilKontoer(AktivitetIdentifikator aktivitetIdentifikator, Kontoer kontoer) {
-            kladd.kontoer.put(aktivitetIdentifikator, kontoer);
+        public Builder leggTilKontoer(AktivitetIdentifikator aktivitetIdentifikator, Kontoer.Builder kontoer) {
+            kladd.kontoer.put(aktivitetIdentifikator, kontoer == null ? null : kontoer.build());
             return this;
         }
-        public Builder medMedlemskap(Medlemskap medlemskap) {
-            kladd.medlemskap = medlemskap;
+        public Builder medMedlemskap(Medlemskap.Builder medlemskap) {
+            kladd.medlemskap = medlemskap == null ? null : medlemskap.build();
             return this;
         }
         public Builder medKontoer(Map<AktivitetIdentifikator, Kontoer> kontoer) {
             kladd.kontoer = kontoer;
             return this;
         }
-        public Builder medInngangsvilkår(Inngangsvilkår inngangsvilkår) {
-            kladd.inngangsvilkår = inngangsvilkår;
+        public Builder medInngangsvilkår(Inngangsvilkår.Builder inngangsvilkår) {
+            kladd.inngangsvilkår = inngangsvilkår == null ? null : inngangsvilkår.build();
             return this;
         }
-        public Builder medOpptjening(Opptjening opptjening) {
-            kladd.opptjening = opptjening;
+        public Builder medOpptjening(Opptjening.Builder opptjening) {
+            kladd.opptjening = opptjening == null ? null : opptjening.build();
             return this;
         }
 
-        public Builder medAdopsjon(Adopsjon adopsjon) {
-            kladd.adopsjon = adopsjon;
+        public Builder medAdopsjon(Adopsjon.Builder adopsjon) {
+            kladd.adopsjon = adopsjon == null ? null : adopsjon.build();
             return this;
         }
 

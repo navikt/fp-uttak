@@ -64,17 +64,13 @@ public class TomKontoIdentifisererTest {
         uttakPeriode.setSluttpunktTrekkerDager(ARBEIDSFORHOLD_1, true);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(idag, idag.plusDays(søktOmDag - 1), arbeidsprosent)
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true)
-                        .build())
+                        .medSøkerErMor(true))
                 .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder()
                                 .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(saldo)
-                                .build())
-                        .build())
+                                .medTrekkdager(saldo)))
                 .build();
 
         Trekkdagertilstand trekkdagertilstand = Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode));

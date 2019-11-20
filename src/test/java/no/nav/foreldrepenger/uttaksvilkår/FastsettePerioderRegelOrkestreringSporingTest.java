@@ -27,10 +27,9 @@ public class FastsettePerioderRegelOrkestreringSporingTest extends FastsettePeri
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
-                .build())
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).build())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true).build())
+                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .medSøknad(søknad(
                     Søknadstype.FØDSEL, søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),

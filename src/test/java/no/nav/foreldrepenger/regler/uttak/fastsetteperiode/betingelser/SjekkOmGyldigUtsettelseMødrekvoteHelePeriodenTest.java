@@ -35,8 +35,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .build())
+                        .leggTilSøknadsperiode(uttakPeriode))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -57,9 +56,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -74,16 +71,14 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeStart.plusWeeks(1);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, 
+        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 periodeStart, periodeSlutt, null, false);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -97,16 +92,14 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeSlutt.minusDays(1);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, 
+        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 periodeStart, periodeSlutt, null, false);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -120,16 +113,14 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.plusWeeks(1);
         LocalDate gyldigGrunnSlutt = gyldigGrunnStart.plusDays(5);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, 
+        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 periodeStart, periodeSlutt, null, false);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -143,16 +134,14 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeSlutt.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeSlutt.plusDays(5);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, 
+        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 periodeStart, periodeSlutt, null, false);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -164,7 +153,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, 
+        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 periodeStart, periodeSlutt, null, false);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
@@ -172,9 +161,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.minusDays(1), periodeStart.plusDays(7)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.minusDays(5), periodeSlutt.plusDays(1)))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.minusDays(5), periodeSlutt.plusDays(1)))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -195,9 +182,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -209,7 +194,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, 
+        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 periodeStart, periodeSlutt, null, false);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
@@ -217,9 +202,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(7)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.plusDays(8), periodeSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.plusDays(8), periodeSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -239,9 +222,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .leggTilSøknadsperiode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(10)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.plusDays(7), periodeSlutt))
-                                .build())
-                        .build())
+                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.plusDays(7), periodeSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);

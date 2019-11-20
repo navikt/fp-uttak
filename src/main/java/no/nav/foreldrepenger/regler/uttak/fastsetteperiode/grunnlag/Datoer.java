@@ -71,8 +71,8 @@ public final class Datoer {
             return this;
         }
 
-        public Builder medDødsdatoer(Dødsdatoer dødsdatoer) {
-            kladd.dødsdatoer = dødsdatoer;
+        public Builder medDødsdatoer(Dødsdatoer.Builder dødsdatoer) {
+            kladd.dødsdatoer = dødsdatoer == null ? null : dødsdatoer.build();
             return this;
         }
 

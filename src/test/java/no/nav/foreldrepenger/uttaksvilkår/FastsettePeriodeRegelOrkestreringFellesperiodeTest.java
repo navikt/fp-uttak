@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -31,14 +30,13 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
 
     @Test
     public void fellesperiode_mor_etter_uke_7_etter_fødsel_uten_nok_dager_blir_innvilget_med_knekk_og_avslått_periode_på_resten() {
-        Kontoer kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(1000).build())
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(1000).build())
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(4 * 5).build())
-                .build();
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(1000))
+                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(1000))
+                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(4 * 5));
         basicGrunnlagMor()
                 .medSøknad(søknad(
-                    Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                        Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                         søknadsperiode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1))))
                 .leggTilKontoer(ARBEIDSFORHOLD, kontoer);
@@ -52,13 +50,11 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
         verifiserManuellBehandlingPeriode(resultater.get(3).getUttakPeriode(), fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
 
-    private Kontoer fellesperiodeKonto(int trekkdager) {
+    private Kontoer.Builder fellesperiodeKonto(int trekkdager) {
         return new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder()
                         .medType(FELLESPERIODE)
-                        .medTrekkdager(trekkdager)
-                        .build())
-                .build();
+                        .medTrekkdager(trekkdager));
     }
 
     @Test
@@ -88,11 +84,10 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
 
     @Test
     public void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_etter_3_uker_før_fødsel_blir_innvilget_med_knekk_ved_3_uker_resten_blir_manuell_behandling() {
-        Kontoer kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(3*5).build())
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(15*5).build())
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(16*5).build())
-                .build();
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(3 * 5))
+                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(15 * 5))
+                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(16 * 5));
 
         var grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(
@@ -113,11 +108,10 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
 
     @Test
     public void fellesperiode_mor_uttak_starter_ved_3_uker_etter_fødsel_blir_knekt_ved_6_uker_og_må_behandles_manuelt() {
-        Kontoer kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(15).medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL).build())
-                .leggTilKonto(new Konto.Builder().medTrekkdager(50).medType(Stønadskontotype.MØDREKVOTE).build())
-                .leggTilKonto(new Konto.Builder().medTrekkdager(13 * 5).medType(Stønadskontotype.FELLESPERIODE).build())
-                .build();
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(15).medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
+                .leggTilKonto(new Konto.Builder().medTrekkdager(50).medType(Stønadskontotype.MØDREKVOTE))
+                .leggTilKonto(new Konto.Builder().medTrekkdager(13 * 5).medType(Stønadskontotype.FELLESPERIODE));
         basicGrunnlagMor()
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10).minusDays(1))))
                 .leggTilKontoer(ARBEIDSFORHOLD, kontoer);
@@ -136,16 +130,14 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
 
     @Test
     public void fellesperiode_mor_uttak_starter_før_12_uker_blir_avslått_med_knekk_ved_12_uker_før_fødsel() {
-        Kontoer kontoer = new Kontoer.Builder()
+        var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder()
                         .medType(Stønadskontotype.MØDREKVOTE)
                         .medTrekkdager(1000)
-                        .build())
+                )
                 .leggTilKonto(new Konto.Builder()
                         .medType(Stønadskontotype.FELLESPERIODE)
-                        .medTrekkdager(13 * 5)
-                        .build())
-                .build();
+                        .medTrekkdager(13 * 5));
         basicGrunnlagMor()
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FELLESPERIODE, fødselsdato.minusWeeks(13), fødselsdato)))
                 .leggTilKontoer(ARBEIDSFORHOLD, kontoer);
@@ -168,17 +160,14 @@ public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends Fastsett
 
     private RegelGrunnlag.Builder basicGrunnlagFar() {
         return basicGrunnlag()
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false)
-                        .build());
+                .medBehandling(farBehandling());
     }
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return grunnlag
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
-                        .medFødsel(fødselsdato)
-                        .build())
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett());
     }
 }
