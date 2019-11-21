@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,28 +38,32 @@ public class Trekkdagertilstand {
 
     private Trekkdagertilstand(RegelGrunnlag grunnlag, List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes) {
         this(grunnlag.getKontoer(),
-                grunnlag.getKontoer() == null ? Collections.emptyList() : new ArrayList<>(grunnlag.getKontoer().keySet()),
-                grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getAktiviteter(),
+                grunnlag.getKontoer() == null ? List.of() : new ArrayList<>(grunnlag.getKontoer().keySet()),
+                grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getAktiviteter(),
                 annenPartsPerioderSomSkalTrekkes,
                 grunnlag.getRettOgOmsorg() != null && grunnlag.getRettOgOmsorg().getSamtykke(),
                 grunnlag.getBehandling().isSøkerMor());
     }
 
     public static Trekkdagertilstand forTapendeBehandling(RegelGrunnlag grunnlag, List<UttakPeriode> uttakPerioderSøker) {
-        List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker,
-                grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getUttaksperioder());
-        Trekkdagertilstand trekkdagertilstand = new Trekkdagertilstand(grunnlag, Collections.emptyList());
+        var annenPart = Objects.requireNonNull(grunnlag.getAnnenPart(), "annenpart");
+        List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker, annenPart.getUttaksperioder());
+        Trekkdagertilstand trekkdagertilstand = new Trekkdagertilstand(grunnlag, List.of());
         for (AnnenpartUttaksperiode annenpartPeriode : annenPartsPerioderSomSkalTrekkes) {
-            if (uttakPerioderSøker.stream().noneMatch(søkersPeriode -> søkersPeriode.overlapper(annenpartPeriode))) {
+            if (!annenpartPeriode.isOppholdsperiode() || !overlapperMedSøktPeriode(uttakPerioderSøker, annenpartPeriode)) {
                 trekkdagertilstand.registrerForbrukAnnenPart(annenpartPeriode);
             }
         }
         return trekkdagertilstand;
     }
 
+    private static boolean overlapperMedSøktPeriode(List<UttakPeriode> uttakPerioderSøker, AnnenpartUttaksperiode annenpartPeriode) {
+        return uttakPerioderSøker.stream().anyMatch(søkersPeriode -> søkersPeriode.overlapper(annenpartPeriode));
+    }
+
     public static Trekkdagertilstand ny(RegelGrunnlag grunnlag, List<UttakPeriode> uttakPerioderSøker) {
         List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes = knekkUttakPerioderAnnenPartBasertPåUttakPerioderSøker(uttakPerioderSøker,
-                grunnlag.getAnnenPart() == null ? Collections.emptyList() : grunnlag.getAnnenPart().getUttaksperioder());
+                grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder());
         return new Trekkdagertilstand(grunnlag, annenPartsPerioderSomSkalTrekkes);
     }
 
