@@ -486,6 +486,43 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
     }
 
     @Test
+    public void skal_trekke_for_overlappende_avslått_hos_annenpart_i_tapende_behandling() {
+        var fødselsdato = LocalDate.of(2019, 9, 25);
+
+        RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
+                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(FAR_ARBEIDSFORHOLD, new ArbeidTidslinje.Builder().build())))
+                .medKontoer(Map.of(FAR_ARBEIDSFORHOLD, new Kontoer.Builder()
+                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
+                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
+                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80))
+                        .build()))
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(førsteLovligeDato))
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))
+                                .medInnvilget(false)
+                                .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE, new Trekkdager(80), BigDecimal.ZERO))
+                                .build()))
+                .medBehandling(new Behandling.Builder()
+                        .medSøkerErMor(true)
+                        .medErTapende(true))
+                .medRevurdering(new Revurdering.Builder().medEndringsdato(fødselsdato))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false))
+                        .leggTilSøknadsperiode(new StønadsPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), null, false)));
+
+        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        assertThat(resultat).hasSize(2);
+        //skal gå tom for dager
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        //tom på dager
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+    }
+
+    @Test
     public void skal_ikke_trekke_for_opphold_hvis_søker_har_søkt_i_perioden() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
