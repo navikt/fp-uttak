@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -15,30 +14,28 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class Trekkdagertilstand {
 
-    private final Map<AktivitetIdentifikator, Kontoer> kontoerForAktiviteter;
+    private final Set<Arbeidsforhold> arbeidsforhold;
     private final boolean samtykke;
     private final boolean erMor;
     private final Forbruk forbrukAnnenpart;
     private final Forbruk forbrukSøker;
     private List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes;
 
-    private Trekkdagertilstand(Map<AktivitetIdentifikator, Kontoer> kontoerForAktiviteter,
-                               List<AktivitetIdentifikator> søkersAktiviteter,
+    private Trekkdagertilstand(Arbeid arbeid,
                                List<AktivitetIdentifikator> annenPartAktiviteter,
                                List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes,
                                boolean samtykke,
                                boolean erMor) {
         this.annenPartsPerioderSomSkalTrekkes = annenPartsPerioderSomSkalTrekkes;
         this.samtykke = samtykke;
-        this.kontoerForAktiviteter = kontoerForAktiviteter;
+        this.arbeidsforhold = arbeid.getArbeidsforhold();
         this.erMor = erMor;
-        forbrukSøker = Forbruk.zero(søkersAktiviteter);
+        forbrukSøker = Forbruk.zero(new ArrayList<>(arbeid.getAktiviteter()));
         forbrukAnnenpart = Forbruk.zero(annenPartAktiviteter);
     }
 
     private Trekkdagertilstand(RegelGrunnlag grunnlag, List<AnnenpartUttaksperiode> annenPartsPerioderSomSkalTrekkes) {
-        this(grunnlag.getKontoer(),
-                grunnlag.getKontoer() == null ? List.of() : new ArrayList<>(grunnlag.getKontoer().keySet()),
+        this(grunnlag.getArbeid(),
                 grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getAktiviteter(),
                 annenPartsPerioderSomSkalTrekkes,
                 grunnlag.getRettOgOmsorg() != null && grunnlag.getRettOgOmsorg().getSamtykke(),
@@ -237,7 +234,7 @@ public class Trekkdagertilstand {
     }
 
     private Trekkdager getGjenstående(AktivitetIdentifikator aktivitetIdentifikator, Stønadskontotype stønadskontotype) {
-        Kontoer kontoer = kontoerForAktiviteter.get(aktivitetIdentifikator);
+        var kontoer = arbeidsforhold.stream().filter(a -> a.getIdentifikator().equals(aktivitetIdentifikator)).findFirst().orElseThrow().getKontoer();
         return new Trekkdager(kvoteForStønadskontotype(kontoer, stønadskontotype).orElse(0)).subtract(getSamletForbruk(aktivitetIdentifikator, stønadskontotype));
     }
 }

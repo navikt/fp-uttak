@@ -13,7 +13,7 @@ public class UtsettelsePeriode extends UttakPeriode {
                              LocalDate tom,
                              Utsettelseårsaktype utsettelseårsaktype,
                              PeriodeVurderingType vurderingType) {
-        super(Stønadskontotype.UKJENT, Periodetype.UTSETTELSE, periodeKilde,fom, tom, null, false);
+        super(Stønadskontotype.UKJENT, Periodetype.UTSETTELSE, periodeKilde, fom, tom, null, false);
         this.utsettelseårsaktype = utsettelseårsaktype;
         setPeriodeVurderingType(vurderingType);
     }

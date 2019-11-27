@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
@@ -45,7 +47,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                     søknadsperiode(FEDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2), false, PeriodeVurderingType.UAVKLART_PERIODE, null)
                 ));
 
-        List<FastsettePeriodeResultat> resultater = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(2);
 
@@ -57,6 +59,10 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
     @Test
     public void skal_gi_ikke_innvilget_når_far_har_gyldig_grunn_til_tidlig_oppstart_men_ikke_omsorg() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(FEDREKVOTE)
+                        .medTrekkdager(100));
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(farBehandling())
@@ -66,12 +72,9 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))))
-                .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(FEDREKVOTE)
-                                .medTrekkdager(100)));
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)));
 
-        List<FastsettePeriodeResultat> periodeResultater = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> periodeResultater = fastsettPerioder(grunnlag);
 
         assertThat(periodeResultater).hasSize(1);
         List<UttakPeriode> perioder = periodeResultater.stream()
@@ -97,7 +100,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                                 false, PeriodeVurderingType.UAVKLART_PERIODE, null)))
                 .build();
 
-        List<FastsettePeriodeResultat> resultater = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(2);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.plusWeeks(6).minusDays(1), fødselsdato.plusWeeks(6).minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
@@ -116,7 +119,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                     søknadsperiode(Stønadskontotype.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), false,
                             PeriodeVurderingType.UAVKLART_PERIODE, null)));
 
-        List<FastsettePeriodeResultat> resultater = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(2);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
@@ -126,6 +129,10 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
     @Test
     public void fedrekvote_bli_ikke_innvilget_når_søker_ikke_har_omsorg() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(FEDREKVOTE)
+                        .medTrekkdager(100));
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(farBehandling())
@@ -134,12 +141,9 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                         .leggTilSøknadsperiode(søknadsperiode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100)))))
-                .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(FEDREKVOTE)
-                                .medTrekkdager(100)));
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)));
 
-        List<FastsettePeriodeResultat> resultater = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
         verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG);
@@ -159,7 +163,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
@@ -204,7 +208,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                         overføringPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK)
                 ));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
@@ -248,7 +252,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
                         )
                 );
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 

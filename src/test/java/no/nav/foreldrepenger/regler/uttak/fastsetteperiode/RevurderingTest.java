@@ -12,6 +12,8 @@ import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -208,19 +210,20 @@ public class RevurderingTest {
     }
 
     private RegelGrunnlag.Builder basicBuilder(UttakPeriode uttakPeriode) {
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.MØDREKVOTE)
+                        .medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FELLESPERIODE)
+                        .medTrekkdager(13 * 5));
         return RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(50))
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.FELLESPERIODE)
-                                .medTrekkdager(13 * 5)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)))
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG)
                         .medFødsel(FAMILIEHENDELSE_DATO))

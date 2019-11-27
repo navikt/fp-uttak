@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
@@ -42,7 +41,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.minusWeeks(1),
                                 fødselsdato.plusWeeks(6).minusDays(1), null, false)));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -81,7 +80,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -120,7 +119,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1), null, false)));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -144,7 +143,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                         .leggTilSøknadsperiode(new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1), null, false)));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -171,8 +170,8 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
-                    .medFødsel(fødselsdato)
-                    .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                .medFødsel(fødselsdato)
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
@@ -185,7 +184,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 

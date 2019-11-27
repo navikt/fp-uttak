@@ -5,15 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashMap;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -43,16 +41,11 @@ public class UtsettelseDelregelTest {
     public void UT1101_ferie_innenfor_seks_første_uker() {
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
         UtsettelsePeriode periode = utsettelsePeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), Utsettelseårsaktype.FERIE); // innenfor seks uker etter fødsel
-        HashMap<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        kontoer.put(aktivitetIdentifikator, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medTrekkdager(100)
-                        .medType(Stønadskontotype.MØDREKVOTE))
-                .build());
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
         RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
-                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator, kontoer)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(periode)
@@ -79,16 +72,11 @@ public class UtsettelseDelregelTest {
     public void UT1124_fødsel_mer_enn_7_uker_før_termin() {
         LocalDate fom = LocalDate.of(2019, 7, 1);
         UtsettelsePeriode periode = utsettelsePeriode(fom, fom, Utsettelseårsaktype.INNLAGT_BARN);
-        HashMap<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        kontoer.put(aktivitetIdentifikator, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medTrekkdager(100)
-                        .medType(Stønadskontotype.MØDREKVOTE))
-                .build());
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
         RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
-                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator, kontoer)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(periode)
@@ -113,16 +101,11 @@ public class UtsettelseDelregelTest {
     public void UT1120_fødsel_mer_enn_7_uker_før_termin_perioden_ligger_etter_termin() {
         LocalDate fom = LocalDate.of(2019, 7, 1);
         UtsettelsePeriode periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), Utsettelseårsaktype.INNLAGT_BARN);
-        HashMap<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        kontoer.put(aktivitetIdentifikator, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medTrekkdager(100)
-                        .medType(Stønadskontotype.MØDREKVOTE))
-                .build());
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
         RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medKontoer(kontoer)
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator, kontoer)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(periode)
@@ -148,16 +131,11 @@ public class UtsettelseDelregelTest {
     public void UT1120_fødsel_mindre_enn_7_uker_før_termin() {
         LocalDate fom = LocalDate.of(2019, 7, 1);
         UtsettelsePeriode periode = utsettelsePeriode(fom, fom, Utsettelseårsaktype.INNLAGT_BARN);
-        HashMap<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        kontoer.put(aktivitetIdentifikator, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medTrekkdager(100)
-                        .medType(Stønadskontotype.MØDREKVOTE))
-                .build());
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
         RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
-                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator, kontoer)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(periode)

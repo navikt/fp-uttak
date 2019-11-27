@@ -61,9 +61,6 @@ class KnekkpunktIdentifiserer {
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
 
-        if (grunnlag.getArbeid() != null) {
-            knekkBasertPåArbeid(grunnlag, knekkpunkter);
-        }
         if (grunnlag.getAnnenPart() != null) {
             knekkBasertPåAnnenPart(grunnlag, knekkpunkter);
         }
@@ -103,10 +100,6 @@ class KnekkpunktIdentifiserer {
 
     private static void knekkBasertPåAnnenPart(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getAnnenPart().getUttaksperioder());
-    }
-
-    private static void knekkBasertPåArbeid(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
-        leggTilKnekkpunkterMenIkkeHvisKnekkErMandagOgDetErKnekkIHelgaFør(knekkpunkter, grunnlag.getArbeid().getArbeidsprosenter().getAlleEndringstidspunkter());
     }
 
     private static void knekkBasertPåDokumentasjon(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {

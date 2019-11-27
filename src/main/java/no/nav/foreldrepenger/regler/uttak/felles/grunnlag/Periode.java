@@ -49,5 +49,11 @@ public class Periode {
         return periode.tilDatoIntervall().contains(tilDatoIntervall());
     }
 
-
+    @Override
+    public String toString() {
+        return "Periode{" +
+                "fom=" + fom +
+                ", tom=" + tom +
+                '}';
+    }
 }

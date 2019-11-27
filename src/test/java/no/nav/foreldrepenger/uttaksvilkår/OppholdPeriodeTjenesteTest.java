@@ -17,9 +17,11 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
@@ -130,13 +132,14 @@ public class OppholdPeriodeTjenesteTest {
     }
 
     private RegelGrunnlag.Builder grunnlagMedKontoer() {
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, førFødselDager))
+                .leggTilKonto(konto(MØDREKVOTE, mødrekvoteDager))
+                .leggTilKonto(konto(FELLESPERIODE, fellesperiodDedager))
+                .leggTilKonto(konto(FEDREKVOTE, fedrekvoteDager));
         return RegelGrunnlagTestBuilder.create()
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, førFødselDager))
-                        .leggTilKonto(konto(MØDREKVOTE, mødrekvoteDager))
-                        .leggTilKonto(konto(FELLESPERIODE, fellesperiodDedager))
-                        .leggTilKonto(konto(FEDREKVOTE, fedrekvoteDager)));
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)));
     }
 
     private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {

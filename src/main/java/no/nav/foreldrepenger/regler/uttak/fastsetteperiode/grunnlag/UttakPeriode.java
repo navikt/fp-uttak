@@ -25,7 +25,6 @@ public abstract class UttakPeriode extends LukketPeriode {
     private final SamtidigUttak samtidigUttak;
 
     //TODO PFP-8744 dele opp klassen. En input-periode og en output
-    private Map<AktivitetIdentifikator, BigDecimal> arbeidsprosenter = new HashMap<>();
     private Perioderesultattype perioderesultattype = Perioderesultattype.IKKE_FASTSATT;
     private Manuellbehandlingårsak manuellbehandlingårsak;
     private Årsak årsak;
@@ -59,7 +58,6 @@ public abstract class UttakPeriode extends LukketPeriode {
         gradertArbeidsprosent = kilde.gradertArbeidsprosent;
         gradertAktiviteter = kilde.gradertAktiviteter;
         overføringÅrsak = kilde.overføringÅrsak;
-        arbeidsprosenter = new HashMap<>(kilde.arbeidsprosenter);
         periodeVurderingType = kilde.periodeVurderingType;
         sluttpunktTrekkerDager = new HashMap<>(kilde.sluttpunktTrekkerDager);
     }
@@ -95,12 +93,6 @@ public abstract class UttakPeriode extends LukketPeriode {
         Objects.requireNonNull(prosentArbeid);
         this.gradertAktiviteter = gradertAktivitet;
         this.gradertArbeidsprosent = prosentArbeid;
-    }
-
-    public void setArbeidsprosent(AktivitetIdentifikator aktivitet, BigDecimal arbeidsprosent) {
-        Objects.requireNonNull(arbeidsprosent);
-        Objects.requireNonNull(aktivitet);
-        arbeidsprosenter.put(aktivitet, arbeidsprosent);
     }
 
     public List<AktivitetIdentifikator> getGradertAktiviteter() {
@@ -171,9 +163,6 @@ public abstract class UttakPeriode extends LukketPeriode {
 
     abstract Trekkdager getTrekkdagerFraSluttpunkt(AktivitetIdentifikator aktivitetIdentifikator);
 
-    public BigDecimal getProsentArbeid(AktivitetIdentifikator aktivitet) {
-        return arbeidsprosenter.get(aktivitet);
-    }
     public BigDecimal getGradertArbeidsprosent() {
         return gradertArbeidsprosent;
     }
@@ -239,7 +228,7 @@ public abstract class UttakPeriode extends LukketPeriode {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), stønadskontotype, perioderesultattype, periodetype, periodeKilde,
-                manuellbehandlingårsak, årsak,gradertArbeidsprosent);
+                manuellbehandlingårsak, årsak, gradertArbeidsprosent);
     }
 
     @Override
@@ -256,9 +245,11 @@ public abstract class UttakPeriode extends LukketPeriode {
     public void setPerioderesultattype(Perioderesultattype perioderesultattype) {
         this.perioderesultattype = perioderesultattype;
     }
+
     public void setÅrsak(Årsak årsak) {
         this.årsak = årsak;
     }
+
     public void setManuellbehandlingårsak(Manuellbehandlingårsak manuellbehandlingårsak) {
         this.manuellbehandlingårsak = manuellbehandlingårsak;
     }

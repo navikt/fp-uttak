@@ -28,7 +28,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
 
@@ -52,7 +52,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
 
@@ -70,7 +70,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
 
@@ -95,7 +95,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(4), fødselsdato.minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -133,7 +133,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -168,7 +168,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3).minusDays(1), fødselsdato.minusWeeks(2))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
@@ -214,7 +214,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1))));
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 

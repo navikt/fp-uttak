@@ -26,25 +26,15 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
                                                                 Årsak innvilgetÅrsak,
                                                                 boolean avslåGradering,
                                                                 GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak,
-                                                                Arbeidsprosenter arbeidsprosenter,
                                                                 boolean utbetal) {
         final RegelResultatBehandlerResultat resultat = finnResultatInnvilget(uttakPeriode, knekkpunktOpt);
-        oppdaterResultat(avslåGradering, graderingIkkeInnvilgetÅrsak, arbeidsprosenter, resultat.getPeriode(), innvilgetÅrsak, utbetal);
-        trekkSaldo(resultat.getPeriode(), arbeidsprosenter, utbetal, false);
-        return resultat;
-    }
-
-    private void oppdaterResultat(boolean avslåGradering,
-                                  GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak,
-                                  Arbeidsprosenter arbeidsprosenter,
-                                  UttakPeriode uttakPeriode,
-                                  Årsak innvilgetÅrsak,
-                                  boolean utbetal) {
-        uttakPeriode.setPerioderesultattype(Perioderesultattype.INNVILGET);
-        uttakPeriode.setÅrsak(innvilgetÅrsak);
+        resultat.getPeriode().setPerioderesultattype(Perioderesultattype.INNVILGET);
+        resultat.getPeriode().setÅrsak(innvilgetÅrsak);
         if (avslåGradering) {
-            uttakPeriode.opphevGradering(graderingIkkeInnvilgetÅrsak);
+            resultat.getPeriode().opphevGradering(graderingIkkeInnvilgetÅrsak);
         }
+        trekkSaldo(resultat.getPeriode(), utbetal, false);
+        return resultat;
     }
 
     private RegelResultatBehandlerResultat finnResultatInnvilget(UttakPeriode uttakPeriode, Optional<TomKontoKnekkpunkt> knekkpunktOpt) {
@@ -66,7 +56,6 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     public RegelResultatBehandlerResultat avslåAktuellPeriode(UttakPeriode uttakPeriode,
                                                               Optional<TomKontoKnekkpunkt> knekkpunktOpt,
                                                               Årsak årsak,
-                                                              Arbeidsprosenter arbeidsprosenter,
                                                               boolean utbetal,
                                                               boolean overlapperInnvilgetAnnenpartsPeriode) {
         final RegelResultatBehandlerResultat regelResultatBehandlerResultat;
@@ -84,7 +73,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             resultat.setÅrsak(årsak);
             regelResultatBehandlerResultat = RegelResultatBehandlerResultat.utenKnekk(resultat);
         }
-        trekkSaldo(resultat, arbeidsprosenter, utbetal, overlapperInnvilgetAnnenpartsPeriode);
+        trekkSaldo(resultat, utbetal, overlapperInnvilgetAnnenpartsPeriode);
 
         return regelResultatBehandlerResultat;
     }
@@ -93,7 +82,6 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     public RegelResultatBehandlerResultat manuellBehandling(UttakPeriode uttakPeriode,
                                                             Manuellbehandlingårsak manuellbehandlingårsak,
                                                             Årsak ikkeOppfyltÅrsak,
-                                                            Arbeidsprosenter arbeidsprosenter,
                                                             boolean utbetal,
                                                             boolean avslåGradering,
                                                             GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
@@ -106,7 +94,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             resultat.opphevGradering(graderingIkkeInnvilgetÅrsak);
         }
 
-        trekkSaldo(resultat, arbeidsprosenter, utbetal, false);
+        trekkSaldo(resultat, utbetal, false);
 
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
@@ -117,14 +105,16 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
         }
     }
 
-    private void oppdaterUtbetalingsgrad(UttakPeriode uttakPeriode, Arbeidsprosenter arbeidsprosenter, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
-        for (AktivitetIdentifikator aktivitet : arbeidsprosenter.getAktiviteter()) {
+    private void oppdaterUtbetalingsgrad(UttakPeriode uttakPeriode, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
+        for (AktivitetIdentifikator aktivitet : regelGrunnlag.getArbeid().getAktiviteter()) {
             BigDecimal utbetalingsgrad = BigDecimal.ZERO;
             if (overlapperInnvilgetAnnenpartsPeriode) {
                 uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
-            } else if (trekkdagertilstand.saldo(aktivitet, uttakPeriode.getStønadskontotype()).merEnn0() || !(uttakPeriode instanceof StønadsPeriode) || Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode.getPerioderesultattype())) {
+            } else if (trekkdagertilstand.saldo(aktivitet, uttakPeriode.getStønadskontotype()).merEnn0() ||
+                    !(uttakPeriode instanceof StønadsPeriode) ||
+                    Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode.getPerioderesultattype())) {
                 if (utbetal) {
-                    UtbetalingsprosentUtregning utregning = bestemUtregning(uttakPeriode, aktivitet, arbeidsprosenter);
+                    UtbetalingsprosentUtregning utregning = bestemUtregning(uttakPeriode, aktivitet);
                     utbetalingsgrad = utregning.resultat();
                 }
             } else {
@@ -135,18 +125,17 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     }
 
     private UtbetalingsprosentUtregning bestemUtregning(UttakPeriode uttakPeriode,
-                                                        AktivitetIdentifikator aktivitet,
-                                                        Arbeidsprosenter arbeidsprosenter) {
+                                                        AktivitetIdentifikator aktivitet) {
         if (uttakPeriode.søktGradering(aktivitet)) {
-            return new UtbetalingsprosentMedGraderingUtregning(arbeidsprosenter, aktivitet, uttakPeriode);
-        } else if (uttakPeriode.getSamtidigUttak().isPresent()){
+            return new UtbetalingsprosentMedGraderingUtregning(uttakPeriode, aktivitet);
+        } else if (uttakPeriode.getSamtidigUttak().isPresent()) {
             return new UtbetalingsprosentSamtidigUttakUtregning(uttakPeriode.getSamtidigUttak().get(), uttakPeriode.getGradertArbeidsprosent());
         }
-        return new UtbetalingsprosentUtenGraderingUtregning(arbeidsprosenter, aktivitet, uttakPeriode);
+        return new UtbetalingsprosentUtenGraderingUtregning();
     }
 
-    private void trekkSaldo(UttakPeriode uttakPeriode, Arbeidsprosenter arbeidsprosenter, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
-        oppdaterUtbetalingsgrad(uttakPeriode, arbeidsprosenter, utbetal, overlapperInnvilgetAnnenpartsPeriode);
+    private void trekkSaldo(UttakPeriode uttakPeriode, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
+        oppdaterUtbetalingsgrad(uttakPeriode, utbetal, overlapperInnvilgetAnnenpartsPeriode);
         if (uttakPeriode.getSluttpunktTrekkerDager()) {
             if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
                 utledeKonto(uttakPeriode);
@@ -161,7 +150,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             periode.setStønadskontotype(stønadskontotypeOpt.get());
             //Går til manuell så saksbehandler kan rydde opp
         } else if (periode.getManuellbehandlingårsak() == null) {
-            throw new IllegalStateException("Prøver å trekke dager fra ukjent konto. Periode " + periode.getFom()  + " - " + periode.getTom());
+            throw new IllegalStateException("Prøver å trekke dager fra ukjent konto. Periode " + periode.getFom() + " - " + periode.getTom());
         }
     }
 }

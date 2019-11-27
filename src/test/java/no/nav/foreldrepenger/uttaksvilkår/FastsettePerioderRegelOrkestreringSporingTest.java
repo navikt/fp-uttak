@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 public class FastsettePerioderRegelOrkestreringSporingTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -36,7 +35,7 @@ public class FastsettePerioderRegelOrkestreringSporingTest extends FastsettePeri
                         søknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))
                 ));
 
-        List<FastsettePeriodeResultat> resultatListe = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultatListe = fastsettPerioder(grunnlag);
 
         assertThat(resultatListe).hasSize(3);
         resultatListe

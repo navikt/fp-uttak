@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

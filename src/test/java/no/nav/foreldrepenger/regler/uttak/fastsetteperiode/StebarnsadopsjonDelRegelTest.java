@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -110,11 +112,13 @@ public class StebarnsadopsjonDelRegelTest {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
+                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
-                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -131,11 +135,12 @@ public class StebarnsadopsjonDelRegelTest {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
+                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                        .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
-                        .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -147,6 +152,10 @@ public class StebarnsadopsjonDelRegelTest {
     }
 
     private RegelGrunnlag.Builder grunnlagFar(LocalDate familiehendelseDato, UttakPeriode uttakPeriode) {
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
         return RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder()
                 .medType(Søknadstype.ADOPSJON)
@@ -155,10 +164,7 @@ public class StebarnsadopsjonDelRegelTest {
             .medDatoer(new Datoer.Builder()
                 .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))
                 .medOmsorgsovertakelse(familiehendelseDato))
-            .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .medBehandling(new Behandling.Builder()
                 .medSøkerErMor(false))
             .medRettOgOmsorg(new RettOgOmsorg.Builder()

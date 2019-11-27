@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.uttaksvilkår;
 
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;

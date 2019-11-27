@@ -14,14 +14,10 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -157,41 +153,6 @@ public class KnekkpunktIdentifisererTest {
                 adopsjonsdato.plusDays(401), //første dag med omsorg
 
                 adopsjonsdato.plusYears(3)    //siste mulige uttak for foreldrepenger
-        );
-    }
-
-    @Test
-    public void skal_finne_knekkpunkter_ved_endring_i_arbeidsprosent() {
-        LocalDate fødselsdato = LocalDate.of(2018, 2, 22);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
-        AktivitetIdentifikator arbeidsforhold1 = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-        LocalDate tirsdagUke18 = LocalDate.of(2018, 5, 1);
-        LocalDate fredagUke18 = LocalDate.of(2018, 5, 4);
-        LocalDate mandagUke19 = LocalDate.of(2018, 5, 7);
-        LocalDate torsdagUke19 = LocalDate.of(2018, 5, 10);
-        LocalDate fredagUke19 = LocalDate.of(2018, 5, 11);
-        LocalDate fredagUke20 = LocalDate.of(2018, 5, 18);
-        ArbeidTidslinje arbeidTidslinje = new ArbeidTidslinje.Builder()
-                .medArbeid(tirsdagUke18, fredagUke18, Arbeid.forOrdinærtArbeid(BigDecimal.valueOf(50), BigDecimal.ZERO))
-                .medArbeid(mandagUke19, torsdagUke19, Arbeid.forOrdinærtArbeid(BigDecimal.valueOf(50), BigDecimal.ZERO))
-                .medArbeid(fredagUke19, fredagUke20, Arbeid.forOrdinærtArbeid(BigDecimal.valueOf(99), BigDecimal.ZERO))
-                .build();
-
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, førsteLovligeSøknadsperiode))
-                .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(arbeidsforhold1, arbeidTidslinje)))
-                .build();
-
-        Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
-
-        knekkpunkter.removeAll(standardKnekkpunktFødsel(fødselsdato, førsteLovligeSøknadsperiode));
-
-        assertThat(knekkpunkter).containsOnly(
-                tirsdagUke18, //starter her
-                fredagUke19, //endrer fra torsdag-fredag, fredag er den første i perioden
-                fredagUke20.plusDays(3) //mandag er den første i neste periode
         );
     }
 

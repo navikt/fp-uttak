@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.fpsak.tidsserie.LocalDateInterval;
 
 public class BevegeligeHelligdagerUtilTest {
 

@@ -10,6 +10,8 @@ import java.util.Collections;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -42,13 +44,14 @@ public class FellesperiodeMedGraderingTest {
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         StønadsPeriode aktuellPeriode = StønadsPeriode.medGradering(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, graderingFom, graderingTom,
                 Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.valueOf(50), PeriodeVurderingType.PERIODE_OK, null, false);
-        RegelGrunnlag grunnlag = basicGrunnlag(graderingFom, graderingTom)
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5)));
+        RegelGrunnlag grunnlag = basicGrunnlag()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
                         .medMottattDato(graderingFom.minusWeeks(1)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(aktuellPeriode, grunnlag);
@@ -62,13 +65,14 @@ public class FellesperiodeMedGraderingTest {
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         StønadsPeriode aktuellPeriode = StønadsPeriode.medGradering(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, graderingFom, graderingTom,
                 Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.valueOf(50), PeriodeVurderingType.PERIODE_OK, null, false);
-        RegelGrunnlag grunnlag = basicGrunnlag(graderingFom, graderingTom)
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5)));
+        RegelGrunnlag grunnlag = basicGrunnlag()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
                         .medMottattDato(graderingFom.minusWeeks(1)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(aktuellPeriode, grunnlag);
@@ -82,8 +86,8 @@ public class FellesperiodeMedGraderingTest {
                 .medTrekkdager(trekkdager);
     }
 
-    private RegelGrunnlag.Builder basicGrunnlag(LocalDate graderingFom, LocalDate graderingTom) {
-        return RegelGrunnlagTestBuilder.enGraderingsperiode(graderingFom, graderingTom, BigDecimal.valueOf(50))
+    private RegelGrunnlag.Builder basicGrunnlag() {
+        return RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag))
