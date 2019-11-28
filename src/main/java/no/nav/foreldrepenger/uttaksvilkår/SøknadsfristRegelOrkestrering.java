@@ -30,9 +30,7 @@ public class SøknadsfristRegelOrkestrering {
         Regelresultat regelresultat = new Regelresultat(evaluation);
         if (!regelresultat.oppfylt()) {
             Optional<String> årsakskode = finnÅrsakskode(evaluation);
-            if (årsakskode.isPresent()) {
-                regelResultatBuilder.medSøknadsfristIkkeOppfylt(årsakskode.get());
-            }
+            årsakskode.ifPresent(regelResultatBuilder::medSøknadsfristIkkeOppfylt);
         } else {
             regelResultatBuilder.medSøknadsfristOppfylt();
         }

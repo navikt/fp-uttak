@@ -91,9 +91,7 @@ public class BevegeligeHelligdagerUtil {
         int n = (h + l - (7 * m) + 114) / 31; // Tallet på måneden
         int p = (h + l - (7 * m) + 114) % 31; // Tallet på dagen
 
-        LocalDate dato = LocalDate.of(år, n, p + 1);
-
-        return dato;
+        return LocalDate.of(år, n, p + 1);
     }
 
     private static List<Integer> utledÅreneDetSkalFinnesHelligdagerFor(LukketPeriode uttaksperiode) {
