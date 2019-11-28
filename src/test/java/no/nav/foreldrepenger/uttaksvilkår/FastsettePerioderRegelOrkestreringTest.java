@@ -544,8 +544,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         assertThat(førstePeriode.getTom()).isEqualTo(tom.minusDays(1));
 
         UttakPeriode andrePeriode = resultat.get(1).getUttakPeriode();
-        assertThat(andrePeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(andrePeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(andrePeriode.getPerioderesultattype()).isEqualTo(INNVILGET);
         assertThat(andrePeriode.getFom()).isEqualTo(tom);
         assertThat(andrePeriode.getTom()).isEqualTo(tom);
     }

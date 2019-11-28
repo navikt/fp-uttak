@@ -226,7 +226,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void UT1188_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_ikkeDisponibleDager() {
+    public void UT1188_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_noenDisponibleDager() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         StønadsPeriode uttakPeriode = stønadsperiode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(12));
         var arbeidsforhold1 = new Arbeidsforhold(AktivitetIdentifikator.forFrilans(), foreldrepengerKonto(0));
@@ -241,8 +241,8 @@ public class ForeldrepengerDelregelTest {
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
-        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1188");
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1190");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
     }
 
     @Test
@@ -422,8 +422,8 @@ public class ForeldrepengerDelregelTest {
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
-        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1195");
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1198");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
     }
 
     @Test
@@ -589,7 +589,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void UT1203_far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_utenDisponibleDager() {
+    public void UT1203_far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_utenDisponibleDagerPåAlleAktiviteter() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         LocalDate fom = familiehendelseDato.plusWeeks(8);
         LocalDate tom = familiehendelseDato.plusWeeks(9);
@@ -608,8 +608,8 @@ public class ForeldrepengerDelregelTest {
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
-        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1203");
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1201");
+        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
 
     @Test
@@ -672,7 +672,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void UT1269_far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_utenDisponibleDager() {
+    public void UT1269_far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_noenDisponibleDager() {
         LocalDate familiehendelseDato = LocalDate.now().minusMonths(2);
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(3);
@@ -687,8 +687,8 @@ public class ForeldrepengerDelregelTest {
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
 
-        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1269");
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1266");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
     }
 
     private void assertInnvilget(Regelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {
