@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.regler.søknadsfrist.grunnlag;
 
-import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
-
 import java.time.LocalDate;
 import java.util.Objects;
+
+import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 @RuleDocumentationGrunnlag
 public class SøknadsfristGrunnlag {

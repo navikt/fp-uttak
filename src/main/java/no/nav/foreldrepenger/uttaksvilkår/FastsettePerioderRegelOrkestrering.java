@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,9 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeRegel;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
@@ -69,8 +66,6 @@ public class FastsettePerioderRegelOrkestrering {
         } else {
             trekkdagerTilstand = Trekkdagertilstand.ny(grunnlag, allePerioderSomSkalFastsettes);
         }
-
-        fastsettArbeidsprosenter(allePerioderSomSkalFastsettes, grunnlag.getArbeid().getArbeidsprosenter());
 
         List<FastsettePeriodeResultat> resultatPerioder = new ArrayList<>();
         for (UttakPeriode aktuellPeriode : allePerioderSomSkalFastsettes) {
@@ -165,15 +160,6 @@ public class FastsettePerioderRegelOrkestrering {
         return new OrkestreringTillegg(OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon), knekkpunkter);
     }
 
-    private void fastsettArbeidsprosenter(List<UttakPeriode> perioder, Arbeidsprosenter arbeidsprosenter) {
-        for (UttakPeriode periode : perioder) {
-            for (AktivitetIdentifikator aktivitet : arbeidsprosenter.getAktiviteter()) {
-                BigDecimal arbeidsprosent = arbeidsprosenter.getArbeidsprosent(aktivitet, periode);
-                periode.setArbeidsprosent(aktivitet, arbeidsprosent);
-            }
-        }
-    }
-
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,
                                                                  UttakPeriode aktuellPeriode,
                                                                  RegelResultatBehandler behandler,
@@ -190,20 +176,19 @@ public class FastsettePerioderRegelOrkestrering {
         GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak = regelresultat.getGraderingIkkeInnvilgetÅrsak();
         Optional<TomKontoKnekkpunkt> knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, trekkdagertilstand);
 
-        Arbeidsprosenter arbeidsprosenter = regelGrunnlag.getArbeid().getArbeidsprosenter();
         switch (utfallType) {
             case AVSLÅTT:
                 List<AnnenpartUttaksperiode> annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
                 regelResultatBehandlerResultat = behandler.avslåAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getAvklaringÅrsak(),
-                        arbeidsprosenter, regelresultat.skalUtbetale(), overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
+                        regelresultat.skalUtbetale(), overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
                 break;
             case INNVILGET:
                 regelResultatBehandlerResultat = behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getInnvilgetÅrsak(), avslåGradering,
-                        graderingIkkeInnvilgetÅrsak, arbeidsprosenter, regelresultat.skalUtbetale());
+                        graderingIkkeInnvilgetÅrsak, regelresultat.skalUtbetale());
                 break;
             case MANUELL_BEHANDLING:
                 regelResultatBehandlerResultat = behandler.manuellBehandling(aktuellPeriode, regelresultat.getManuellbehandlingårsak(), regelresultat.getAvklaringÅrsak(),
-                        arbeidsprosenter, regelresultat.skalUtbetale(), avslåGradering, graderingIkkeInnvilgetÅrsak);
+                        regelresultat.skalUtbetale(), avslåGradering, graderingIkkeInnvilgetÅrsak);
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Ukjent utfalltype: %s", utfallType.name()));
@@ -215,7 +200,7 @@ public class FastsettePerioderRegelOrkestrering {
     private void settSluttpunktTrekkerDagerPåAlleAktiviteter(UttakPeriode aktuellPeriode,
                                                              RegelGrunnlag regelGrunnlag,
                                                              Regelresultat regelresultat) {
-        var aktiviteter = regelGrunnlag.getKontoer().keySet();
+        var aktiviteter = regelGrunnlag.getArbeid().getAktiviteter();
         aktiviteter.forEach(aktivitet -> aktuellPeriode.setSluttpunktTrekkerDager(aktivitet, regelresultat.trekkDagerFraSaldo()));
     }
 
@@ -235,7 +220,7 @@ public class FastsettePerioderRegelOrkestrering {
             return Optional.empty();
         }
         var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, trekkdagertilstand, konfig);
-        return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(regelGrunnlag.getKontoer().keySet()),
+        return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(regelGrunnlag.getArbeid().getAktiviteter()),
                 trekkdagertilstand, stønadskontotype);
     }
 

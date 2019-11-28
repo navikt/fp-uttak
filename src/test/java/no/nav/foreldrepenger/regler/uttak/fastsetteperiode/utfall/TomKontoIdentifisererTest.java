@@ -10,6 +10,8 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -62,15 +64,15 @@ public class TomKontoIdentifisererTest {
         StønadsPeriode uttakPeriode = StønadsPeriode.medGradering(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, idag, idag.plusDays(søktOmDag - 1),
                 Collections.singletonList(ARBEIDSFORHOLD_1), arbeidsprosent, PeriodeVurderingType.PERIODE_OK);
         uttakPeriode.setSluttpunktTrekkerDager(ARBEIDSFORHOLD_1, true);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.enGraderingsperiode(idag, idag.plusDays(søktOmDag - 1), arbeidsprosent)
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.MØDREKVOTE)
+                        .medTrekkdager(saldo));
+        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(uttakPeriode))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(true))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(saldo)))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Trekkdagertilstand trekkdagertilstand = Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode));

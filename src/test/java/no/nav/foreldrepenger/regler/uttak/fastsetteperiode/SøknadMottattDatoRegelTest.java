@@ -10,9 +10,8 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -146,14 +145,13 @@ public class SøknadMottattDatoRegelTest {
     }
 
     private RegelGrunnlag.Builder basicBuilder() {
-        AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
+        var aktivitetIdentifikator = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
+        var konto = new Konto.Builder()
+                .medType(Stønadskontotype.MØDREKVOTE)
+                .medTrekkdager(50);
+        var arbeidsforhold = new Arbeidsforhold(aktivitetIdentifikator, new Kontoer.Builder().leggTilKonto(konto));
         return new RegelGrunnlag.Builder()
-                .leggTilKontoer(aktivitetIdentifikator, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(50)))
-                .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(new Arbeidsprosenter().leggTil(aktivitetIdentifikator, new ArbeidTidslinje.Builder().build())))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(FAMILIEHENDELSE_DATO)
                         .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG))

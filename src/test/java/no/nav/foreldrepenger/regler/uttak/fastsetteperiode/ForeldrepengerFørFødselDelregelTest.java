@@ -1,15 +1,19 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.create;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.List;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
@@ -33,7 +37,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagerti
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Årsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class ForeldrepengerFørFødselDelregelTest {
@@ -44,9 +47,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1070_mor_utenFor3UkerFørFødsel() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8), familiehendelseDato.plusWeeks(9));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -58,9 +62,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1071_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_ikkeGradering() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -72,9 +77,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1072_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_gradering() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(4)))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -88,9 +94,10 @@ public class ForeldrepengerFørFødselDelregelTest {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = oppholdPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
                 familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -105,13 +112,14 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1076_far_søker_fpff() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+                //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
+                .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100)));
         RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato)
                 .medBehandling(søkerErFarBehandling())
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
-                        //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
-                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
@@ -121,7 +129,7 @@ public class ForeldrepengerFørFødselDelregelTest {
 
     private Regelresultat evaluer(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
         return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
+                Trekkdagertilstand.ny(grunnlag, List.of(uttakPeriode)), uttakPeriode)));
     }
 
     private Kontoer.Builder kontoer(Stønadskontotype stønadskontotype, int trekkdager) {
@@ -129,7 +137,7 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     private UttakPeriode gradertPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return StønadsPeriode.medGradering(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, Collections.singletonList(AktivitetIdentifikator.forFrilans()),
+        return StønadsPeriode.medGradering(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, List.of(AktivitetIdentifikator.forFrilans()),
                 BigDecimal.TEN, PeriodeVurderingType.PERIODE_OK);
     }
 
@@ -177,7 +185,7 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate familiehendelseDato) {
-        return RegelGrunnlagTestBuilder.create()
+        return create()
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))
                         .medFødsel(familiehendelseDato))

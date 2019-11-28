@@ -17,7 +17,7 @@ public class SjekkOmFulltArbeidForUtsettelse extends LeafSpecification<Fastsette
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        BigDecimal stillingsprosent = grunnlag.getArbeidsprosenter().getStillingsprosent(uttakPeriode);
+        BigDecimal stillingsprosent = grunnlag.getArbeid().getStillingsprosent(uttakPeriode.getFom());
         if (stillingsprosent.compareTo(BigDecimal.valueOf(100)) >= 0) {
             return ja();
         }

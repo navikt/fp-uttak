@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
@@ -10,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -19,12 +19,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ArbeidTidslinje;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsprosenter;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvStilling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -35,7 +34,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSy
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periodetype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -44,8 +42,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -61,7 +57,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -87,7 +83,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderMedInnleggelse(new PeriodeMedInnleggelse(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -113,7 +109,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderMedSykdomEllerSkade(new PeriodeMedSykdomEllerSkade(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -131,22 +127,22 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     @Test
     public void periode_med_gyldig_utsettelse_pga_arbeid_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        Arbeidsprosenter arbeidsprosenter = new Arbeidsprosenter();
         LocalDate utsettelseFom = fødselsdato.plusWeeks(10);
         LocalDate utsettelseTom = fødselsdato.plusWeeks(12).minusDays(1);
-        ArbeidTidslinje arbeidTidslinje = new ArbeidTidslinje.Builder()
-                .medArbeid(utsettelseFom, utsettelseTom, Arbeid.forOrdinærtArbeid(BigDecimal.ZERO, BigDecimal.valueOf(100)))
-                .build();
-        arbeidsprosenter.leggTil(ARBEIDSFORHOLD, arbeidTidslinje);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+                .leggTilKonto(konto(MØDREKVOTE, 75))
+                .leggTilKonto(konto(FEDREKVOTE, 75))
+                .leggTilKonto(konto(FELLESPERIODE, 80));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD, kontoer).leggTilEndringIStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(100)));
         basicUtsettelseGrunnlag(fødselsdato)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
-                        .leggTilSøknadsperiode(utsettelsePeriode(utsettelseFom, utsettelseTom, Utsettelseårsaktype.ARBEID)))
-                .medArbeid(new ArbeidGrunnlag.Builder()
-                        .medArbeidsprosenter(arbeidsprosenter));
+                        .leggTilSøknadsperiode(utsettelsePeriode(utsettelseFom, utsettelseTom, Utsettelseårsaktype.ARBEID)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -158,27 +154,28 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         assertThat(utsettelsePeriode.getFom()).isEqualTo(utsettelseFom);
         assertThat(utsettelsePeriode.getTom()).isEqualTo(utsettelseTom);
         assertThat(utsettelsePeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(utsettelsePeriode.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(utsettelsePeriode.getTrekkdager(arbeidsforhold.getIdentifikator())).isEqualTo(Trekkdager.ZERO);
     }
 
     @Test
     public void UT1110_periode_med_utsettelse_pga_arbeid_med_50_prosent_stilling_skal_manuell_behandles() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        Arbeidsprosenter arbeidsprosenter = new Arbeidsprosenter();
         LocalDate utsettelseFom = fødselsdato.plusWeeks(10);
         LocalDate utsettelseTom = fødselsdato.plusWeeks(12).minusDays(1);
-        ArbeidTidslinje arbeidTidslinje = new ArbeidTidslinje.Builder()
-                .medArbeid(utsettelseFom, utsettelseTom, Arbeid.forOrdinærtArbeid(BigDecimal.ZERO, BigDecimal.valueOf(50)))
-                .build();
-        arbeidsprosenter.leggTil(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, arbeidTidslinje);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+                .leggTilKonto(konto(MØDREKVOTE, 75))
+                .leggTilKonto(konto(FELLESPERIODE, 80))
+                .leggTilKonto(konto(FEDREKVOTE, 75));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD, kontoer).leggTilEndringIStilling(new EndringAvStilling(utsettelseFom, BigDecimal.valueOf(50)));
         basicUtsettelseGrunnlag(fødselsdato)
                 .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(utsettelseFom, utsettelseTom, Utsettelseårsaktype.ARBEID)))
-                .medArbeid(new ArbeidGrunnlag.Builder().medArbeidsprosenter(arbeidsprosenter));
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -203,7 +200,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -227,7 +224,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         UttakPeriode uttakPeriode = resultat.get(3).getUttakPeriode();
@@ -244,7 +241,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(8);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -314,7 +311,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(17).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(17), fødselsdato.plusWeeks(18).minusDays(1), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(12);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -420,7 +417,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.INNLAGT_BARN)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -445,7 +442,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(utsettelsePeriode(LocalDate.of(2018, 12, 25),
                                 LocalDate.of(2018, 12, 25), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         //2 neste uker med gyldig utsettelse
@@ -468,7 +465,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), Utsettelseårsaktype.SYKDOM_SKADE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
         assertDeTreFørstePeriodene(resultat, fødselsdato);
@@ -501,7 +498,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), Utsettelseårsaktype.INNLAGT_BARN))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(6), termindato)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
@@ -516,12 +513,9 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         //Over 7 uker for tidlig, får pleiepenger. Utsettelsen skal avlås og det skal trekkes dager
         LocalDate termindato = LocalDate.of(2019, 9, 1);
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
-        HashMap<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
-        kontoer.put(ARBEIDSFORHOLD, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(100))
-                .build());
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(100));
         basicUtsettelseGrunnlag(fødselsdato)
-                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
                 .medDatoer(new Datoer.Builder()
                         .medTermin(termindato)
                         .medFødsel(fødselsdato)
@@ -533,7 +527,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), Utsettelseårsaktype.INNLAGT_BARN))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato.plusWeeks(6), termindato)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
@@ -555,7 +549,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(2).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
@@ -576,7 +570,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
         assertThat(resultat.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
@@ -597,7 +591,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(2).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
@@ -616,7 +610,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), Utsettelseårsaktype.FERIE)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
@@ -634,7 +628,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(36), fødselsdato.plusWeeks(37).minusDays(1), Utsettelseårsaktype.FERIE))
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(37), fødselsdato.plusWeeks(100), Utsettelseårsaktype.ARBEID))).build();
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(uttakAvsluttetMedUtsettelse, new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(uttakAvsluttetMedUtsettelse);
 
         assertThat(resultat).hasSize(6);
         assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
@@ -663,7 +657,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilSøknadsperiode(utsettelsePeriode(fødselsdato.plusWeeks(6), LocalDate.of(2020, 1, 1), Utsettelseårsaktype.FERIE))
                         .medMottattDato(fødselsdato));
 
-        List<FastsettePeriodeResultat> perioder = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);
         //Før jul ok
@@ -715,11 +709,12 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     }
 
     private RegelGrunnlag.Builder aleneomsorgUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD, new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130)));
         return grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(behandling)
                 .medRettOgOmsorg(aleneomsorg())
-                .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130)));
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold));
     }
 
     private RegelGrunnlag.Builder basicUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {

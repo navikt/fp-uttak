@@ -9,6 +9,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -56,6 +58,13 @@ public class SjekkOmTomForAlleSineKontoerTest {
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
         StønadsPeriode uttakPeriode = new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, periodeStart, periodeSlutt, null, false);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.MØDREKVOTE)
+                        .medTrekkdager(15 * 5))
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FELLESPERIODE)
+                        .medTrekkdager(10 * 5));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -65,13 +74,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
                         .medMorHarRett(true))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.MØDREKVOTE)
-                                .medTrekkdager(15 * 5))
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.FELLESPERIODE)
-                                .medTrekkdager(10 * 5)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         SjekkOmTomForAlleSineKontoer sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
@@ -82,11 +85,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
     @Test
     public void når_søknadstype_er_fødsel_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 2
 
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FORELDREPENGER)
+                        .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -119,11 +123,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
     @Test
     public void når_søknadstype_er_fødsel_og_søker_er_far_og_kun_far_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 4
 
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FORELDREPENGER)
+                        .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -156,11 +161,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
     @Test
     public void når_søknadstype_er_adopsjon_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 6
 
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FORELDREPENGER)
+                        .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -193,11 +199,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
     @Test
     public void når_søknadstype_er_adopsjon_og_søker_er_far_og_kun_en_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 8
 
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FORELDREPENGER)
+                        .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .leggTilKontoer(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(new Konto.Builder()
-                                .medType(Stønadskontotype.FORELDREPENGER)
-                                .medTrekkdager(50)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()

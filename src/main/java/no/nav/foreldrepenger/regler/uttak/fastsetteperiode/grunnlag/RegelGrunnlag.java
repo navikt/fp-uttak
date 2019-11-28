@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,10 +12,9 @@ public class RegelGrunnlag {
     private Behandling behandling;
     private Datoer datoer;
     private RettOgOmsorg rettOgOmsorg;
-    private ArbeidGrunnlag arbeid;
+    private Arbeid arbeid;
     private Revurdering revurdering;
     private AnnenPart annenPart;
-    private Map<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
     private Medlemskap medlemskap;
     private Inngangsvilkår inngangsvilkår;
     private Opptjening opptjening;
@@ -43,7 +40,7 @@ public class RegelGrunnlag {
         return rettOgOmsorg;
     }
 
-    public ArbeidGrunnlag getArbeid() {
+    public Arbeid getArbeid() {
         return arbeid;
     }
 
@@ -53,7 +50,7 @@ public class RegelGrunnlag {
 
     public Set<Stønadskontotype> getGyldigeStønadskontotyper() {
         Set<Stønadskontotype> gyldige = new HashSet<>();
-        kontoer.values().forEach(k -> gyldige.addAll(k.getKontoList().stream().map(Konto::getType).collect(Collectors.toList())));
+        arbeid.getKontoer().forEach(k -> gyldige.addAll(k.getKontoList().stream().map(Konto::getType).collect(Collectors.toList())));
         return gyldige;
     }
 
@@ -63,10 +60,6 @@ public class RegelGrunnlag {
 
     public AnnenPart getAnnenPart() {
         return annenPart;
-    }
-
-    public Map<AktivitetIdentifikator, Kontoer> getKontoer() {
-        return kontoer;
     }
 
     public Medlemskap getMedlemskap() {
@@ -105,7 +98,7 @@ public class RegelGrunnlag {
             kladd.rettOgOmsorg = rettOgOmsorg == null ? null : rettOgOmsorg.build();
             return this;
         }
-        public Builder medArbeid(ArbeidGrunnlag.Builder arbeid) {
+        public Builder medArbeid(Arbeid.Builder arbeid) {
             kladd.arbeid = arbeid == null ? null : arbeid.build();
             return this;
         }
@@ -117,18 +110,12 @@ public class RegelGrunnlag {
             kladd.annenPart = annenPart == null ? null : annenPart.build();
             return this;
         }
-        public Builder leggTilKontoer(AktivitetIdentifikator aktivitetIdentifikator, Kontoer.Builder kontoer) {
-            kladd.kontoer.put(aktivitetIdentifikator, kontoer == null ? null : kontoer.build());
-            return this;
-        }
+
         public Builder medMedlemskap(Medlemskap.Builder medlemskap) {
             kladd.medlemskap = medlemskap == null ? null : medlemskap.build();
             return this;
         }
-        public Builder medKontoer(Map<AktivitetIdentifikator, Kontoer> kontoer) {
-            kladd.kontoer = kontoer;
-            return this;
-        }
+
         public Builder medInngangsvilkår(Inngangsvilkår.Builder inngangsvilkår) {
             kladd.inngangsvilkår = inngangsvilkår == null ? null : inngangsvilkår.build();
             return this;
@@ -147,19 +134,10 @@ public class RegelGrunnlag {
             if (kladd.getDatoer() != null) {
                 validerDatoerOppMotSøknad();
             }
-            sjekkAtAlleArbeidsforholdHarKontoer();
             //Hindre gjenbruk
             RegelGrunnlag regelGrunnlag = this.kladd;
             kladd = null;
             return regelGrunnlag;
-        }
-
-        private void sjekkAtAlleArbeidsforholdHarKontoer() {
-            Set<AktivitetIdentifikator> arbeidsforhold = new HashSet<>(kladd.getArbeid().getAktiviteter());
-            Set<AktivitetIdentifikator> arbeidsforholdMedKontoer = kladd.getKontoer().keySet();
-            if (!arbeidsforhold.equals(arbeidsforholdMedKontoer)) {
-                throw new IllegalArgumentException("Alle arbeidsforhold må ha kontoer");
-            }
         }
 
         private void validerDatoerOppMotSøknad() {

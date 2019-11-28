@@ -8,10 +8,11 @@ import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuild
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
@@ -33,29 +34,32 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseå
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
+import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 public abstract class FastsettePerioderRegelOrkestreringTestBase {
     static final AktivitetIdentifikator ARBEIDSFORHOLD = ARBEIDSFORHOLD_1;
 
-    protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
+    private FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
-    protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.normal()
+    protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
             .medBehandling(morBehandling())
-            .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                    .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
-                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+            .medArbeid(new Arbeid.Builder()
+                    .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, new Kontoer.Builder()
+                            .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
+                            .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                            .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                            .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))))
             .medInngangsvilkår(oppfyltAlleVilkår());
 
-    protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.normal()
+    protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))
             .medBehandling(morBehandling())
-            .leggTilKontoer(ARBEIDSFORHOLD, new Kontoer.Builder()
-                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+            .medArbeid(new Arbeid.Builder()
+                    .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, new Kontoer.Builder()
+                            .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                            .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                            .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))))
             .medInngangsvilkår(oppfyltAlleVilkår());
 
     LocalDate førsteLovligeUttaksdag(LocalDate fødselsdag) {
@@ -131,14 +135,12 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                 .medRettOgOmsorg(beggeRett());
     }
 
-    Map<AktivitetIdentifikator, Kontoer> kontoer(Konto.Builder... kontoer) {
-        HashMap<AktivitetIdentifikator, Kontoer> resultat = new HashMap<>();
-        Kontoer.Builder builder = new Kontoer.Builder();
-        for (Konto.Builder konto : kontoer) {
-            builder.leggTilKonto(konto);
+    Arbeid.Builder arbeid(Konto.Builder... kontoList) {
+        var kontoer = new Kontoer.Builder();
+        for (Konto.Builder konto : kontoList) {
+            kontoer.leggTilKonto(konto);
         }
-        resultat.put(ARBEIDSFORHOLD, builder.build());
-        return resultat;
+        return new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer));
     }
 
     Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {
@@ -168,5 +170,13 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
 
     RettOgOmsorg.Builder aleneomsorg() {
         return beggeRett().medAleneomsorg(true);
+    }
+
+    List<FastsettePeriodeResultat> fastsettPerioder(RegelGrunnlag grunnlag) {
+        return fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
+    }
+
+    List<FastsettePeriodeResultat> fastsettPerioder(RegelGrunnlag.Builder grunnlag) {
+        return fastsettPerioder(grunnlag.build());
     }
 }

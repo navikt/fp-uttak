@@ -1,80 +1,53 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class Arbeid {
+public final class Arbeid {
 
-    private static final String ARBEIDSPROSENT_NON_NULL_MESSAGE = "arbeidsprosent";
-    private final BigDecimal arbeidsprosent;
-    private final BigDecimal stillingsprosent;
-    private final boolean gradert;
+    private Set<Arbeidsforhold> arbeidsforholdListe = new HashSet<>();
 
-    Arbeid(BigDecimal arbeidsprosent, BigDecimal stillingsprosent, boolean gradert) {
-        this.arbeidsprosent = arbeidsprosent;
-        this.stillingsprosent = stillingsprosent;
-        this.gradert = gradert;
+    private Arbeid() {
     }
 
-    public BigDecimal getArbeidsprosent() {
-        return arbeidsprosent;
+    public BigDecimal getStillingsprosent(LocalDate dato) {
+        return arbeidsforholdListe.stream()
+                .map(arbeidsforhold -> getStillingsprosent(dato, arbeidsforhold.getIdentifikator()))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.valueOf(100));
     }
 
-    public BigDecimal getStillingsprosent() {
-        return stillingsprosent;
+    public BigDecimal getStillingsprosent(LocalDate dato, AktivitetIdentifikator aktivitet) {
+        var arbeidsforhold = arbeidsforholdListe.stream().filter(a -> a.getIdentifikator().equals(aktivitet)).findFirst().orElseThrow();
+        return arbeidsforhold.getStillingsprosent(dato);
     }
 
-    public boolean isGradert() {
-        return gradert;
+    public Set<AktivitetIdentifikator> getAktiviteter() {
+        return arbeidsforholdListe.stream().map(Arbeidsforhold::getIdentifikator).collect(Collectors.toSet());
     }
 
-    public static Arbeid forFrilans(BigDecimal arbeidsprosent) {
-        Objects.requireNonNull(arbeidsprosent, ARBEIDSPROSENT_NON_NULL_MESSAGE);
-        boolean gradert = erGradert(arbeidsprosent);
-        return new Arbeid(arbeidsprosent, null, gradert);
+    public Set<Kontoer> getKontoer() {
+        return arbeidsforholdListe.stream().map(Arbeidsforhold::getKontoer).collect(Collectors.toSet());
     }
 
-    public static Arbeid forSelvstendigNæringsdrivende(BigDecimal arbeidsprosent) {
-        Objects.requireNonNull(arbeidsprosent, ARBEIDSPROSENT_NON_NULL_MESSAGE);
-        boolean gradert = erGradert(arbeidsprosent);
-        return new Arbeid(arbeidsprosent,null, gradert);
+    public Set<Arbeidsforhold> getArbeidsforhold() {
+        return arbeidsforholdListe;
     }
 
-    public static Arbeid forOrdinærtArbeid(BigDecimal arbeidsprosent, BigDecimal stillingsprosent) {
-        return forOrdinærtArbeid(arbeidsprosent, stillingsprosent, false);
-    }
+    public static class Builder {
 
-    public static Arbeid forGradertOrdinærtArbeid(BigDecimal arbeidsprosent, BigDecimal stillingsprosent) {
-        return forOrdinærtArbeid(arbeidsprosent, stillingsprosent, true);
-    }
+        private final Arbeid kladd = new Arbeid();
 
-    private static Arbeid forOrdinærtArbeid(BigDecimal arbeidsprosent, BigDecimal stillingsprosent, boolean gradert) {
-        Objects.requireNonNull(stillingsprosent, "stillingsprosent");
-        Objects.requireNonNull(arbeidsprosent, ARBEIDSPROSENT_NON_NULL_MESSAGE);
-        return new Arbeid(arbeidsprosent, stillingsprosent, gradert);
-    }
+        public Builder leggTilArbeidsforhold(Arbeidsforhold arbeidsforhold) {
+            kladd.arbeidsforholdListe.add(arbeidsforhold);
+            return this;
+        }
 
-    public static Arbeid forAnnet() {
-        return new Arbeid(BigDecimal.ZERO, null, false);
-    }
-
-    private static boolean erGradert(BigDecimal arbeidsprosent) {
-        return arbeidsprosent.compareTo(BigDecimal.ZERO) > 0;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Arbeid arbeid = (Arbeid) o;
-        return gradert == arbeid.gradert &&
-                Objects.equals(arbeidsprosent, arbeid.arbeidsprosent) &&
-                Objects.equals(stillingsprosent, arbeid.stillingsprosent);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(arbeidsprosent, stillingsprosent, gradert);
+        public Arbeid build() {
+            return kladd;
+        }
     }
 }

@@ -19,14 +19,14 @@ public interface FastsettePeriodeGrunnlag {
      */
     UttakPeriode getAktuellPeriode();
 
-    List<AktivitetIdentifikator> getAktiviteter();
+    Set<AktivitetIdentifikator> getAktiviteter();
 
     /**
-     * Hent arbeidsprosenter for alle arbeidsforhold/aktiviteter
+     * Hent arbeidsgrunnlag
      *
-     * @return arbeidsprosenter for alle arbeidsforhold/aktiviteter
+     * @return arbeidsgrunnlag for alle arbeidsforhold/aktiviteter
      */
-    Arbeidsprosenter getArbeidsprosenter();
+    Arbeid getArbeid();
 
     /**
      * Finn perioder der søker har gyldig grunn for tidlig oppstart eller utsettelse.

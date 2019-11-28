@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -46,13 +45,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public List<AktivitetIdentifikator> getAktiviteter() {
-        return new ArrayList<>(regelGrunnlag.getKontoer().keySet());
+    public Set<AktivitetIdentifikator> getAktiviteter() {
+        return regelGrunnlag.getArbeid().getAktiviteter();
     }
 
     @Override
-    public Arbeidsprosenter getArbeidsprosenter() {
-        return regelGrunnlag.getArbeid().getArbeidsprosenter();
+    public Arbeid getArbeid() {
+        return regelGrunnlag.getArbeid();
     }
 
     @Override

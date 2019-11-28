@@ -6,13 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -53,7 +54,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -68,7 +69,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -81,17 +82,15 @@ public class FedrekvoteDelregelTest {
     public void UT1292_fedrekvote_uten_at_mor_har_rett_blir_avslått() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        HashMap<AktivitetIdentifikator, Kontoer> kontoer = new HashMap<>();
-        kontoer.put(ARBEIDSFORHOLD_1, new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10 * 5)).build());
-
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10 * 5)));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medMorHarRett(false)
                         .medFarHarRett(true)
                         .medSamtykke(true))
                 .medSøknad(søknad(søknadsperiode))
-                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -113,7 +112,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100))))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(10 * 5))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -127,9 +126,10 @@ public class FedrekvoteDelregelTest {
 
         StønadsPeriode søknadsperiode = new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), null, true);
         søknadsperiode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteOgFlerbarnsdagerKonto(1000, 85));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
             .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
-            .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteOgFlerbarnsdagerKonto(1000, 85))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
             .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -154,7 +154,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -179,7 +179,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -204,7 +204,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -229,7 +229,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -254,7 +254,7 @@ public class FedrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -275,7 +275,7 @@ public class FedrekvoteDelregelTest {
         søknadsperiode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -290,7 +290,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -305,7 +305,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -320,7 +320,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6).plusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -335,7 +335,7 @@ public class FedrekvoteDelregelTest {
         StønadsPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, fedrekvoteKonto(1000))))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -356,7 +356,7 @@ public class FedrekvoteDelregelTest {
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medSøknadsperioder(List.of(periode)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(periode, grunnlag);
@@ -377,7 +377,7 @@ public class FedrekvoteDelregelTest {
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medSøknadsperioder(List.of(periode)))
-                .leggTilKontoer(ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(periode, grunnlag);

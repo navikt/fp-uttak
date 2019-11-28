@@ -16,7 +16,6 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
@@ -65,7 +64,7 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                         .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         UttakPeriode resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
@@ -92,7 +91,7 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderUtenOmsorg(periodeUtenOmsorg)));
 
-        List<FastsettePeriodeResultat> resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(grunnlag.build(), new FeatureTogglesForTester());
+        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         UttakPeriode resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.create;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -10,6 +12,8 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -37,7 +41,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagerti
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class MødrekvoteDelregelTest {
@@ -48,9 +51,10 @@ public class MødrekvoteDelregelTest {
     public void mødrekvoteperiode_med_nok_dager_på_konto() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -62,9 +66,10 @@ public class MødrekvoteDelregelTest {
     public void mødrekvote_slutter_på_fredag_og_første_uker_slutter_på_søndag_blir_innvilget() {
         LocalDate fødselsdato = LocalDate.of(2017, 12, 31);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(2));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -75,9 +80,10 @@ public class MødrekvoteDelregelTest {
     public void mødrekvote_de_første_6_ukene_etter_fødsel_skal_innvilges_også_når_mor_ikke_har_omsorg() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -89,9 +95,10 @@ public class MødrekvoteDelregelTest {
     public void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_nok_på_kvoten_men_ikke_har_omsorg() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -110,9 +117,10 @@ public class MødrekvoteDelregelTest {
     public void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_noe_men_ikke_nok_på_kvoten_og_ikke_har_omsorg() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 1);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 1))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -124,9 +132,10 @@ public class MødrekvoteDelregelTest {
     public void UT1007_mor_etterTermin_innenFor6Uker_ikkeGradering_disponibleDager() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -140,9 +149,10 @@ public class MødrekvoteDelregelTest {
     public void UT1008_mor_innenFor6UkerEtterFødsel_gradering() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -157,9 +167,10 @@ public class MødrekvoteDelregelTest {
     public void UT1221_mor_etterTermin_etter6Uker_omsorg_disponibleDager_gradering_avklart() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -173,9 +184,10 @@ public class MødrekvoteDelregelTest {
     public void UT1251_fødselsvilkår_ikke_oppfylt() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medInngangsvilkår(new Inngangsvilkår.Builder().medFødselOppfylt(false))
                 .build();
 
@@ -193,9 +205,10 @@ public class MødrekvoteDelregelTest {
     public void UT1252_adopsjonsvilkår_ikke_oppfylt() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medFødselOppfylt(true)
                         .medAdopsjonOppfylt(false))
@@ -215,9 +228,10 @@ public class MødrekvoteDelregelTest {
     public void UT1253_foreldreansvarsvilkår_ikke_oppfylt() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medFødselOppfylt(true)
                         .medAdopsjonOppfylt(true)
@@ -238,9 +252,10 @@ public class MødrekvoteDelregelTest {
     public void UT1254_opptjeningsvilkår_ikke_oppfylt() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(uttakPeriode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 100))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .medInngangsvilkår(new Inngangsvilkår.Builder()
                         .medFødselOppfylt(true)
                         .medAdopsjonOppfylt(true)
@@ -264,11 +279,12 @@ public class MødrekvoteDelregelTest {
 
         UttakPeriode oppholdsperiode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD,
                 Oppholdårsaktype.KVOTE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
+                .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(oppholdsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
-                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(oppholdsperiode, grunnlag);
@@ -285,11 +301,12 @@ public class MødrekvoteDelregelTest {
 
         UttakPeriode oppholdsperiode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD,
                 Oppholdårsaktype.KVOTE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
+                .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 0));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(oppholdsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                        .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
-                        .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 0)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(oppholdsperiode, grunnlag);
@@ -304,9 +321,10 @@ public class MødrekvoteDelregelTest {
     public void UT1275_søkte_mødrekvoteperiode_men_søker_døde_i_mellomtiden() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(6).minusDays(1));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
@@ -324,9 +342,10 @@ public class MødrekvoteDelregelTest {
     public void UT1289_søkte_mødrekvoteperiode_men_barn_døde_i_mellomtiden() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
@@ -346,9 +365,10 @@ public class MødrekvoteDelregelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         LocalDate barnsDødsdato = fødselsdato.plusDays(1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, barnsDødsdato.plusWeeks(6).minusDays(2));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
@@ -367,9 +387,10 @@ public class MødrekvoteDelregelTest {
     public void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_barn_døde_i_mellomtiden_men_alle_barn_er_ikke_døde() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         UttakPeriode søknadsperiode = søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
             .medSøknad(søknad(søknadsperiode))
-            .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5))
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
@@ -396,7 +417,7 @@ public class MødrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -421,7 +442,7 @@ public class MødrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -446,7 +467,7 @@ public class MødrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -471,7 +492,7 @@ public class MødrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -496,7 +517,7 @@ public class MødrekvoteDelregelTest {
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
                 .medSøknad(søknad(søknadsperiode))
-                .leggTilKontoer(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -510,7 +531,7 @@ public class MødrekvoteDelregelTest {
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
-        return RegelGrunnlagTestBuilder.create()
+        return create()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
@@ -563,7 +584,7 @@ public class MødrekvoteDelregelTest {
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
-        return RegelGrunnlagTestBuilder.create()
+        return create()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
