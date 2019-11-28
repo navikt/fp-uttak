@@ -42,7 +42,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsettePerioderRegelOrkestreringTestBase {
 

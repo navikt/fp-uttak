@@ -22,9 +22,7 @@ public class Manuellbehandling {
                 .utbetal(utbetal)
                 .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
                 .medId(id);
-        if (graderingIkkeInnvilgetÅrsak.isPresent()) {
-            builder.medAvslåttGradering(graderingIkkeInnvilgetÅrsak.get());
-        }
+        graderingIkkeInnvilgetÅrsak.ifPresent(builder::medAvslåttGradering);
         return builder.create();
     }
 

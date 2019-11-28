@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -10,6 +7,8 @@ import java.util.Collections;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TrekkdagerUtregningUtilTest {
 
