@@ -51,7 +51,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
         return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
-                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1125", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1125", IkkeOppfyltÅrsak.INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE, false, false))
                 .ellers(sjekkOmFerie());
     }
 

@@ -33,6 +33,7 @@ public enum IkkeOppfyltÅrsak implements Årsak {
     UTSETTELSE_FØR_TERMIN_FØDSEL(4030, "Avslag utsettelse før termin/fødsel"),
     FERIE_INNENFOR_DE_FØRSTE_6_UKENE(4031, "Ferie/arbeid innenfor de første 6 ukene"),
     FERIE_SELVSTENDIG_NÆRINGSDRIVENDSE_FRILANSER(4032, "Ferie - selvstendig næringsdrivende/frilanser"),
+    INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE(4034, "Avslag utsettelse - ingen stønadsdager igjen"),
     IKKE_HELTIDSARBEID(4037, "Ikke heltidsarbeid"),
     SØKERS_SYKDOM_SKADE_IKKE_OPPFYLT(4038, "Søkers sykdom/skade ikke oppfylt"),
     SØKERS_INNLEGGELSE_IKKE_OPPFYLT(4039, "Søkers innleggelse ikke oppfylt"),
