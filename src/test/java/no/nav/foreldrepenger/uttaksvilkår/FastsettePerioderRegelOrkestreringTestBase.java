@@ -45,12 +45,16 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
             .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
             .medBehandling(morBehandling())
             .medArbeid(new Arbeid.Builder()
-                    .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, new Kontoer.Builder()
-                            .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
-                            .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                            .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                            .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))))
+                    .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, defaultKontoer())))
             .medInngangsvilkår(oppfyltAlleVilkår());
+
+    Kontoer.Builder defaultKontoer() {
+        return new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
+                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
+    }
 
     protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
@@ -19,7 +20,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -33,21 +33,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class StebarnsadopsjonDelRegelTest {
-
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON, featureToggles());
-
-    private FeatureToggles featureToggles() {
-        return new FeatureToggles() {
-        };
-    }
 
     @Test
     public void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
@@ -62,7 +52,7 @@ public class StebarnsadopsjonDelRegelTest {
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -80,7 +70,7 @@ public class StebarnsadopsjonDelRegelTest {
 
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -98,7 +88,7 @@ public class StebarnsadopsjonDelRegelTest {
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -121,7 +111,7 @@ public class StebarnsadopsjonDelRegelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -143,7 +133,7 @@ public class StebarnsadopsjonDelRegelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
@@ -184,9 +174,4 @@ public class StebarnsadopsjonDelRegelTest {
     private StønadsPeriode stønadsperiode(LocalDate fom, LocalDate tom) {
         return new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fom, tom, null, false);
     }
-
-    private Regelresultat evaluer(StønadsPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
-    }
-
 }

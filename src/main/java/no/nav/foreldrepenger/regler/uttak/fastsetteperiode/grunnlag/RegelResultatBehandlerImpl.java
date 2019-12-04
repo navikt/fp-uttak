@@ -5,17 +5,18 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ValgA
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
 
-    private final Trekkdagertilstand trekkdagertilstand;
+    private final SaldoUtregning saldoUtregning;
     private final RegelGrunnlag regelGrunnlag;
     private final Konfigurasjon konfigurasjon;
 
-    public RegelResultatBehandlerImpl(Trekkdagertilstand trekkdagertilstand, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
-        this.trekkdagertilstand = trekkdagertilstand;
+    public RegelResultatBehandlerImpl(SaldoUtregning saldoUtregning, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
+        this.saldoUtregning = saldoUtregning;
         this.regelGrunnlag = regelGrunnlag;
         this.konfigurasjon = konfigurasjon;
     }
@@ -33,7 +34,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
         if (avslåGradering) {
             resultat.getPeriode().opphevGradering(graderingIkkeInnvilgetÅrsak);
         }
-        trekkSaldo(resultat.getPeriode(), utbetal, false);
+        oppdaterUtbetalingsgrad(resultat.getPeriode(), utbetal, false);
         return resultat;
     }
 
@@ -73,7 +74,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             resultat.setÅrsak(årsak);
             regelResultatBehandlerResultat = RegelResultatBehandlerResultat.utenKnekk(resultat);
         }
-        trekkSaldo(resultat, utbetal, overlapperInnvilgetAnnenpartsPeriode);
+        oppdaterUtbetalingsgrad(resultat, utbetal, overlapperInnvilgetAnnenpartsPeriode);
 
         return regelResultatBehandlerResultat;
     }
@@ -94,7 +95,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             resultat.opphevGradering(graderingIkkeInnvilgetÅrsak);
         }
 
-        trekkSaldo(resultat, utbetal, false);
+        oppdaterUtbetalingsgrad(resultat, utbetal, false);
 
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
@@ -102,25 +103,6 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
     private void validerKnekkpunkt(UttakPeriode uttakPeriode, TomKontoKnekkpunkt knekkpunkt) {
         if (!uttakPeriode.overlapper(knekkpunkt.getDato())) {
             throw new IllegalArgumentException("Knekkpunkt må være i periode. " + knekkpunkt.getDato() + " - " + uttakPeriode);
-        }
-    }
-
-    private void oppdaterUtbetalingsgrad(UttakPeriode uttakPeriode, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
-        for (AktivitetIdentifikator aktivitet : regelGrunnlag.getArbeid().getAktiviteter()) {
-            BigDecimal utbetalingsgrad = BigDecimal.ZERO;
-            if (overlapperInnvilgetAnnenpartsPeriode) {
-                uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
-            } else if (trekkdagertilstand.saldo(aktivitet, uttakPeriode.getStønadskontotype()).merEnn0() ||
-                    !(uttakPeriode instanceof StønadsPeriode) ||
-                    Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode.getPerioderesultattype())) {
-                if (utbetal) {
-                    UtbetalingsprosentUtregning utregning = bestemUtregning(uttakPeriode, aktivitet);
-                    utbetalingsgrad = utregning.resultat();
-                }
-            } else {
-                uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
-            }
-            uttakPeriode.setUtbetalingsgrad(aktivitet, utbetalingsgrad);
         }
     }
 
@@ -134,18 +116,33 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
         return new UtbetalingsprosentUtenGraderingUtregning();
     }
 
-    private void trekkSaldo(UttakPeriode uttakPeriode, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
-        oppdaterUtbetalingsgrad(uttakPeriode, utbetal, overlapperInnvilgetAnnenpartsPeriode);
-        if (uttakPeriode.getSluttpunktTrekkerDager()) {
+    private void oppdaterUtbetalingsgrad(UttakPeriode uttakPeriode, boolean utbetal, boolean overlapperInnvilgetAnnenpartsPeriode) {
+        for (AktivitetIdentifikator aktivitet : uttakPeriode.getAktiviteter()) {
+            BigDecimal utbetalingsgrad = BigDecimal.ZERO;
+            if (overlapperInnvilgetAnnenpartsPeriode) {
+                uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
+            } else if (saldoUtregning.saldoITrekkdager(aktivitet, uttakPeriode.getStønadskontotype()).merEnn0() ||
+                    !(uttakPeriode instanceof StønadsPeriode) ||
+                    uttakPeriode instanceof ManglendeSøktPeriode ||
+                    Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode.getPerioderesultattype())) {
+                if (utbetal) {
+                    UtbetalingsprosentUtregning utregning = bestemUtregning(uttakPeriode, aktivitet);
+                    utbetalingsgrad = utregning.resultat();
+                }
+            } else {
+                uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
+            }
+            uttakPeriode.setUtbetalingsgrad(aktivitet, utbetalingsgrad);
+        }
+        if (uttakPeriode.getSkalTrekkedager()) {
             if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
                 utledeKonto(uttakPeriode);
             }
         }
-        trekkdagertilstand.reduserSaldo(uttakPeriode);
     }
 
     private void utledeKonto(UttakPeriode periode) {
-        Optional<Stønadskontotype> stønadskontotypeOpt = velgStønadskonto(periode, regelGrunnlag, trekkdagertilstand, konfigurasjon);
+        Optional<Stønadskontotype> stønadskontotypeOpt = velgStønadskonto(periode, regelGrunnlag, saldoUtregning, konfigurasjon);
         if (stønadskontotypeOpt.isPresent()) {
             periode.setStønadskontotype(stønadskontotypeOpt.get());
             //Går til manuell så saksbehandler kan rydde opp

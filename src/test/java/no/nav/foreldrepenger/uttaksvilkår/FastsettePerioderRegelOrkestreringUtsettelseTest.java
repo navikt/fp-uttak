@@ -32,7 +32,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periodetype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -500,7 +499,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
+        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isZero();
@@ -529,7 +528,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
+        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isZero();
@@ -551,7 +550,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
+        assertThat(resultat.get(2).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
         assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
@@ -572,7 +571,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
+        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
@@ -593,7 +592,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.UTSETTELSE);
+        assertThat(resultat.get(2).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
         assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();

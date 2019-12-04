@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
@@ -21,10 +20,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
-import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregningTjeneste;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 public class SjekkOmTomForAlleSineKontoerTest {
@@ -43,21 +42,19 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     private List<Stønadskontotype> stønadskontotypene(RegelGrunnlag grunnlag) {
-        SjekkOmTomForAlleSineKontoer sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
-
-        return sjekkOmTomForAlleSineKontoer.hentSøkerSineKonto(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.emptyList()), null));
+        return SjekkOmTomForAlleSineKontoer.hentSøkerSineKonto(new FastsettePeriodeGrunnlagImpl(grunnlag, null, null));
     }
 
     @Test
     public void når_søker_har_kontoene_FPFF_MK_FP_er_søker_ikke_tom_for_alle_sine_konto_selvom_en_konto_er_tom() {
-        LocalDate periodeStart = LocalDate.of(2018, 1, 8);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.of(2018, 1, 8);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
-        StønadsPeriode uttakPeriode = new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new StønadsPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, periodeStart, periodeSlutt, null, false);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder()
                         .medType(Stønadskontotype.MØDREKVOTE)
@@ -65,7 +62,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .leggTilKonto(new Konto.Builder()
                         .medType(Stønadskontotype.FELLESPERIODE)
                         .medTrekkdager(10 * 5));
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
@@ -77,9 +74,12 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        SjekkOmTomForAlleSineKontoer sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
-        Evaluation evaluation = sjekkOmTomForAlleSineKontoer.evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode));
-        Assertions.assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
+        var sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
+        uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), false, List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
+        var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
+                SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
+        assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
@@ -193,7 +193,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
@@ -214,6 +214,6 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .build();
 
         List<Stønadskontotype> stønadskontotypene = stønadskontotypene(grunnlag);
-        Assertions.assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
+        assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
     }
 }

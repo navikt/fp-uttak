@@ -9,9 +9,10 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.InnvilgetÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periodetype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
@@ -116,7 +117,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
 
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
+        assertThat(perioder.get(2).getUttakPeriode()).isInstanceOf(ManglendeSøktPeriode.class);
         assertThat(perioder.get(2).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(3));
@@ -173,7 +174,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
 
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.STØNADSPERIODE);
+        assertThat(perioder.get(0).getUttakPeriode()).isInstanceOf(StønadsPeriode.class);
         assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(3).minusDays(1));
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.minusWeeks(3).minusDays(1));
@@ -182,7 +183,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
 
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.STØNADSPERIODE);
+        assertThat(perioder.get(1).getUttakPeriode()).isInstanceOf(StønadsPeriode.class);
         assertThat(perioder.get(1).getUttakPeriode().getManuellbehandlingårsak()).isNull();
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(3));
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.minusWeeks(2));
@@ -191,7 +192,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
 
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
+        assertThat(perioder.get(2).getUttakPeriode()).isInstanceOf(ManglendeSøktPeriode.class);
         assertThat(perioder.get(2).getUttakPeriode().getManuellbehandlingårsak()).isNull();
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(2).plusDays(1));
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
@@ -200,7 +201,7 @@ public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest exte
 
         assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
+        assertThat(perioder.get(3).getUttakPeriode()).isInstanceOf(ManglendeSøktPeriode.class);
         assertThat(perioder.get(3).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));

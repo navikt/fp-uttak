@@ -25,6 +25,9 @@ public final class Arbeid {
         return arbeidsforhold.getStillingsprosent(dato);
     }
 
+    /**
+     * ALLE aktiviteter, som regel burde aktivitene hentes fra {@link UttakPeriode()} mtp at alle perioder ikke har samme aktivieter
+     */
     public Set<AktivitetIdentifikator> getAktiviteter() {
         return arbeidsforholdListe.stream().map(Arbeidsforhold::getIdentifikator).collect(Collectors.toSet());
     }

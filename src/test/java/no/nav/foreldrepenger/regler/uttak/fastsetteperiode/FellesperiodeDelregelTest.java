@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
@@ -19,7 +20,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -38,15 +38,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class FellesperiodeDelregelTest {
 
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
     private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
     private LocalDate førsteLovligeUttaksdag = fødselsdato.minusMonths(3);
 
@@ -59,7 +56,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
 
@@ -74,7 +71,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
@@ -88,7 +85,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
@@ -102,7 +99,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }
@@ -116,7 +113,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
@@ -134,7 +131,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
@@ -148,7 +145,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }
@@ -162,7 +159,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -176,7 +173,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilgetAvslåttGradering(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
@@ -190,7 +187,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -204,7 +201,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -218,7 +215,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
     }
@@ -232,7 +229,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -246,7 +243,7 @@ public class FellesperiodeDelregelTest {
             .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertAvslått(regelresultat, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false);
     }
@@ -260,7 +257,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -270,14 +267,14 @@ public class FellesperiodeDelregelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
         OppholdPeriode søknadsperiode = new OppholdPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD,
-                Oppholdårsaktype.KVOTE_FELLESPERIODE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
+                Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -290,7 +287,7 @@ public class FellesperiodeDelregelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
         OppholdPeriode søknadsperiode = new OppholdPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD,
-                Oppholdårsaktype.KVOTE_FELLESPERIODE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
+                Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(FELLESPERIODE, 0))
                 .leggTilKonto(konto(MØDREKVOTE, 100));
@@ -299,7 +296,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -317,7 +314,7 @@ public class FellesperiodeDelregelTest {
             .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
@@ -331,7 +328,7 @@ public class FellesperiodeDelregelTest {
             .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -345,7 +342,7 @@ public class FellesperiodeDelregelTest {
             .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
@@ -359,7 +356,7 @@ public class FellesperiodeDelregelTest {
             .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
             .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
@@ -380,7 +377,7 @@ public class FellesperiodeDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_IKKE_RETT_FP);
@@ -430,11 +427,6 @@ public class FellesperiodeDelregelTest {
         StønadsPeriode stønadsPeriode = new StønadsPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD, fom, tom, samtidigUttak, flerbarnsdager);
         stønadsPeriode.setPeriodeVurderingType(vurderingType);
         return stønadsPeriode;
-    }
-
-    private Regelresultat kjørRegler(UttakPeriode søknadsperiode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                Trekkdagertilstand.ny(grunnlag, Collections.singletonList(søknadsperiode)), søknadsperiode)));
     }
 
     private void assertInnvilget(Regelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

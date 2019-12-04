@@ -4,20 +4,17 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
 import no.nav.fpsak.nare.evaluation.Resultat;
@@ -30,8 +27,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(2);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -49,8 +45,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeStart.minusDays(1);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -71,8 +66,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeStart.plusWeeks(1);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -92,8 +86,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeSlutt.minusDays(1);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -113,8 +106,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart.plusWeeks(1);
         LocalDate gyldigGrunnSlutt = gyldigGrunnStart.plusDays(5);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -134,8 +126,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeSlutt.minusWeeks(1);
         LocalDate gyldigGrunnSlutt = periodeSlutt.plusDays(5);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -153,8 +144,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -175,8 +165,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate gyldigGrunnStart = periodeStart;
         LocalDate gyldigGrunnSlutt = periodeSlutt;
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -194,8 +183,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -214,8 +202,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppholdPeriode uttakPeriode = new OppholdPeriode(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                periodeStart, periodeSlutt, null, false);
+        var uttakPeriode = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
@@ -229,8 +216,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
         assertThat(resultat).isEqualTo(Resultat.JA);
     }
 
-    private Resultat evaluer(OppholdPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new SjekkOmGyldigUtsettelseMødrekvoteHelePerioden().evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)).result();
+    private Resultat evaluer(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
+        return new SjekkOmGyldigUtsettelseMødrekvoteHelePerioden().evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag, null, uttakPeriode)).result();
     }
 }

@@ -13,4 +13,11 @@ public class TomKontoKnekkpunkt {
     public LocalDate getDato() {
         return dato;
     }
+
+    @Override
+    public String toString() {
+        return "TomKontoKnekkpunkt{" +
+                "dato=" + dato +
+                '}';
+    }
 }

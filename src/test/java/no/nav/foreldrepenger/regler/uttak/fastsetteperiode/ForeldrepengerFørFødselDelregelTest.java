@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.create;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,16 +17,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -33,15 +32,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Årsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class ForeldrepengerFørFødselDelregelTest {
-
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
 
     @Test
     public void UT1070_mor_utenFor3UkerFørFødsel() {
@@ -53,7 +48,7 @@ public class ForeldrepengerFørFødselDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuell(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
     }
@@ -68,7 +63,7 @@ public class ForeldrepengerFørFødselDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL);
     }
@@ -83,7 +78,7 @@ public class ForeldrepengerFørFødselDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL);
         assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
@@ -92,15 +87,14 @@ public class ForeldrepengerFørFødselDelregelTest {
     @Test
     public void UT1073_mor_innenFor3UkerFørFødsel_manglendeSøktPeriode() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        UttakPeriode uttakPeriode = oppholdPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE,
-                familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
+                .medSøknad(søknad(msp, familiehendelseDato.minusWeeks(1)))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(msp, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -122,14 +116,9 @@ public class ForeldrepengerFørFødselDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuell(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false);
-    }
-
-    private Regelresultat evaluer(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                Trekkdagertilstand.ny(grunnlag, List.of(uttakPeriode)), uttakPeriode)));
     }
 
     private Kontoer.Builder kontoer(Stønadskontotype stønadskontotype, int trekkdager) {
@@ -141,10 +130,8 @@ public class ForeldrepengerFørFødselDelregelTest {
                 BigDecimal.TEN, PeriodeVurderingType.PERIODE_OK);
     }
 
-    private UttakPeriode oppholdPeriode(Stønadskontotype stønadskontotype, Oppholdårsaktype oppholdårsaktype, LocalDate fom, LocalDate tom) {
-        OppholdPeriode opphold = new OppholdPeriode(stønadskontotype, PeriodeKilde.SØKNAD, oppholdårsaktype, fom, tom, null, false);
-        opphold.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
-        return opphold;
+    private ManglendeSøktPeriode manglendeSøktPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
+        return new ManglendeSøktPeriode(stønadskontotype, fom, tom);
     }
 
     private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {

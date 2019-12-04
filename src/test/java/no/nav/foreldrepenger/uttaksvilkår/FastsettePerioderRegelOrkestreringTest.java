@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
@@ -43,7 +44,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedIn
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periodetype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -166,7 +166,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         UttakPeriode ugyldigUtsettelsePeriode = uttakPerioder.get(2);
         assertThat(ugyldigUtsettelsePeriode.getFom()).isEqualTo(sluttGyldigUtsattPeriode.plusDays(1));
         assertThat(ugyldigUtsettelsePeriode.getTom()).isEqualTo(sluttUgyldigPeriode);
-        assertThat(ugyldigUtsettelsePeriode.getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
+        assertThat(ugyldigUtsettelsePeriode).isInstanceOf(ManglendeSøktPeriode.class);
         assertThat(ugyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(ugyldigUtsettelsePeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(ugyldigUtsettelsePeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
@@ -174,7 +174,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         /* Splittes ved knekkpunkt ved 6 uker pga regelflyt */
         UttakPeriode uttakPeriode1 = uttakPerioder.get(3);
         assertThat(uttakPeriode1.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(uttakPeriode1.getPeriodetype()).isEqualTo(Periodetype.STØNADSPERIODE);
+        assertThat(uttakPeriode1).isInstanceOf(StønadsPeriode.class);
         assertThat(uttakPeriode1.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(uttakPeriode1.getFom()).isEqualTo(sluttUgyldigPeriode.plusDays(1));
         assertThat(uttakPeriode1.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -182,7 +182,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
 
         UttakPeriode uttakPeriode2 = uttakPerioder.get(4);
         assertThat(uttakPeriode2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(uttakPeriode2.getPeriodetype()).isEqualTo(Periodetype.STØNADSPERIODE);
+        assertThat(uttakPeriode2).isInstanceOf(StønadsPeriode.class);
         assertThat(uttakPeriode2.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(uttakPeriode2.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(uttakPeriode2.getTom()).isEqualTo(sluttUgyldigPeriode.plusWeeks(8).plusDays(2));
@@ -192,7 +192,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         // (gyldigutsett + ugyldigutsett) som gikk til manuell behandling
         UttakPeriode uttakPeriode3 = uttakPerioder.get(5);
         assertThat(uttakPeriode3.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(uttakPeriode3.getPeriodetype()).isEqualTo(Periodetype.STØNADSPERIODE);
+        assertThat(uttakPeriode3).isInstanceOf(StønadsPeriode.class);
         assertThat(uttakPeriode3.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(uttakPeriode3.getFom()).isEqualTo(sluttUgyldigPeriode.plusWeeks(8).plusDays(3));
         assertThat(uttakPeriode3.getTom()).isEqualTo(sluttUgyldigPeriode.plusWeeks(10));
@@ -221,13 +221,13 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
 
         assertThat(uttakPerioder).hasSize(4);
 
-        // Første del av opphold-perioden blir manuell behandling
+        // Første del av msp blir manuell behandling
         UttakPeriode ugyldigUtsattPeriode = uttakPerioder.get(1);
         assertThat(ugyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(ugyldigUtsattPeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(ugyldigUtsattPeriode.getFom()).isEqualTo(fødselsdato);
         assertThat(ugyldigUtsattPeriode.getTom()).isEqualTo(fødselsdato.plusDays(4));
-        assertThat(ugyldigUtsattPeriode.getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
+        assertThat(ugyldigUtsattPeriode).isInstanceOf(ManglendeSøktPeriode.class);
         assertThat(ugyldigUtsattPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
 
         UttakPeriode gyldigUtsattPeriode = uttakPerioder.get(2);
@@ -235,7 +235,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         assertThat(gyldigUtsattPeriode.getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(gyldigUtsattPeriode.getFom()).isEqualTo(gyldigUtsettelseStart);
         assertThat(gyldigUtsattPeriode.getTom()).isEqualTo(gyldigUtsettelseSlutt);
-        assertThat(gyldigUtsattPeriode.getPeriodetype()).isEqualTo(Periodetype.OPPHOLD);
+        assertThat(gyldigUtsattPeriode).isInstanceOf(ManglendeSøktPeriode.class);
         assertThat(gyldigUtsattPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
 
         UttakPeriode innvilgetUttakPeriode = uttakPerioder.get(3);
@@ -243,7 +243,7 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         assertThat(innvilgetUttakPeriode.getManuellbehandlingårsak()).isNull();
         assertThat(innvilgetUttakPeriode.getFom()).isEqualTo(gyldigUtsettelseSlutt.plusDays(1));
         assertThat(innvilgetUttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(innvilgetUttakPeriode.getPeriodetype()).isEqualTo(Periodetype.STØNADSPERIODE);
+        assertThat(innvilgetUttakPeriode).isInstanceOf(StønadsPeriode.class);
         assertThat(innvilgetUttakPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
     }
 
@@ -791,16 +791,16 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         //Går tom for fedrekvote i oppholdsperioden
-                        .leggTilSøknadsperiode(new OppholdPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.KVOTE_ANNEN_FORELDER,
+                        .leggTilSøknadsperiode(new OppholdPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER,
                                 fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8), null, false)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(2).getUttakPeriode()).isInstanceOf(OppholdPeriode.class);
-        assertThat(((OppholdPeriode) resultat.get(2).getUttakPeriode()).getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.KVOTE_ANNEN_FORELDER);
+        assertThat(((OppholdPeriode) resultat.get(2).getUttakPeriode()).getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER);
         assertThat(resultat.get(3).getUttakPeriode()).isInstanceOf(OppholdPeriode.class);
-        assertThat(((OppholdPeriode) resultat.get(3).getUttakPeriode()).getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.KVOTE_ANNEN_FORELDER);
+        assertThat(((OppholdPeriode) resultat.get(3).getUttakPeriode()).getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER);
     }
 
     @Test

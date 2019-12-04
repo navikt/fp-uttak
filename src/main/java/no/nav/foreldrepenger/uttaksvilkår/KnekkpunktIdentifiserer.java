@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import no.nav.foreldrepenger.feriedager.BevegeligeHelligdagerUtil;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
@@ -53,6 +55,7 @@ class KnekkpunktIdentifiserer {
             knekkpunkter.add(grunnlag.getMedlemskap().getOpphørsdato());
         }
 
+        knekkpunkter.addAll(knekkpunkterPåArbeid(grunnlag.getArbeid()));
         leggTilKnekkpunkterForUtsettelsePgaFerie(grunnlag, minimumsgrenseForLovligUttak, maksimumsgrenseForLovligeUttak, knekkpunkter);
 
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getUttaksperioder());
@@ -70,6 +73,12 @@ class KnekkpunktIdentifiserer {
         return knekkpunkter.stream()
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
                 .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<LocalDate> knekkpunkterPåArbeid(Arbeid arbeid) {
+        return arbeid.getArbeidsforhold().stream()
+                .map(Arbeidsforhold::getStartdato)
                 .collect(Collectors.toSet());
     }
 

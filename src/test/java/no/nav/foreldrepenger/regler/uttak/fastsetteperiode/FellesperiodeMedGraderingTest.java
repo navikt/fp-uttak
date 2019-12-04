@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -25,16 +25,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class FellesperiodeMedGraderingTest {
 
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
     private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
     private LocalDate førsteLovligeUttaksdag = fødselsdato.minusMonths(3);
 
@@ -54,7 +50,7 @@ public class FellesperiodeMedGraderingTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(aktuellPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }
@@ -75,7 +71,7 @@ public class FellesperiodeMedGraderingTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = evaluer(aktuellPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }
@@ -103,10 +99,4 @@ public class FellesperiodeMedGraderingTest {
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));
     }
-
-    private Regelresultat evaluer(UttakPeriode aktuellPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(aktuellPeriode)),
-                aktuellPeriode)));
-    }
-
 }

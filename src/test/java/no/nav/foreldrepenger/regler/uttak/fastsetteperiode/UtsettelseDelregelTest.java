@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 import org.junit.Test;
 
@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -27,12 +26,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 
 public class UtsettelseDelregelTest {
 
@@ -59,7 +55,7 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        Regelresultat resultat = evaluer(periode, grunnlag);
+        Regelresultat resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1101");
         assertThat(resultat.oppfylt()).isFalse();
@@ -92,7 +88,7 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        Regelresultat resultat = evaluer(periode, grunnlag);
+        Regelresultat resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1124");
     }
@@ -122,7 +118,7 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        Regelresultat resultat = evaluer(periode, grunnlag);
+        Regelresultat resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1120");
     }
@@ -152,7 +148,7 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        Regelresultat resultat = evaluer(periode, grunnlag);
+        Regelresultat resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1120");
     }
@@ -174,12 +170,6 @@ public class UtsettelseDelregelTest {
                 .medAdopsjonOppfylt(true)
                 .medForeldreansvarnOppfylt(true)
                 .medOpptjeningOppfylt(true);
-    }
-
-    private Regelresultat evaluer(UtsettelsePeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
-        Evaluation evaluer = regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode));
-        return new Regelresultat(evaluer);
     }
 
     private UtsettelsePeriode utsettelsePeriode(LocalDate fom, LocalDate tom, Utsettelseårsaktype utsettelsesÅrsak) {

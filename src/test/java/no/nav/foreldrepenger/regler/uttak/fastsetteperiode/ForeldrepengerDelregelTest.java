@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -34,21 +34,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Årsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class ForeldrepengerDelregelTest {
-
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON, featureToggles());
-
-    private FeatureToggles featureToggles() {
-        return new FeatureToggles() {
-        };
-    }
 
     @Test
     public void UT1185_mor_starter_tidligere_enn_12_uker_før_termin() {
@@ -59,7 +49,7 @@ public class ForeldrepengerDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, foreldrepengerKonto(15))))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
@@ -79,7 +69,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
     }
@@ -96,7 +86,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
     }
 
@@ -113,7 +103,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
@@ -142,7 +132,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
@@ -161,7 +151,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_ALENEOMSORG);
     }
@@ -181,7 +171,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT);
     }
@@ -198,7 +188,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
     }
@@ -215,7 +205,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
     }
@@ -239,7 +229,7 @@ public class ForeldrepengerDelregelTest {
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1190");
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
@@ -261,7 +251,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -286,7 +276,7 @@ public class ForeldrepengerDelregelTest {
                         .medFarHarRett(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
     }
@@ -306,7 +296,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, "UT1192");
     }
@@ -326,7 +316,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, "UT1197");
     }
@@ -374,7 +364,7 @@ public class ForeldrepengerDelregelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, foreldrepengerKonto(100))))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
     }
@@ -395,7 +385,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -420,7 +410,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1198");
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
@@ -440,7 +430,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_ALENEOMSORG);
     }
@@ -457,7 +447,7 @@ public class ForeldrepengerDelregelTest {
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
     }
@@ -479,7 +469,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -501,7 +491,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -525,7 +515,7 @@ public class ForeldrepengerDelregelTest {
                         .medAleneomsorg(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
@@ -544,7 +534,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
@@ -563,7 +553,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
@@ -583,7 +573,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
     }
@@ -606,7 +596,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1201");
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
@@ -625,7 +615,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(true))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
     }
@@ -645,7 +635,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
     }
@@ -666,7 +656,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT);
     }
@@ -685,7 +675,7 @@ public class ForeldrepengerDelregelTest {
                         .medMorHarRett(false))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1266");
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
@@ -748,10 +738,6 @@ public class ForeldrepengerDelregelTest {
                 .medType(Søknadstype.FØDSEL)
                 .medMottattDato(uttakPeriode.getFom().minusWeeks(1))
                 .leggTilSøknadsperiode(uttakPeriode);
-    }
-
-    private Regelresultat evaluer(StønadsPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
     }
 
     private StønadsPeriode stønadsperiode(LocalDate fom, LocalDate tom) {

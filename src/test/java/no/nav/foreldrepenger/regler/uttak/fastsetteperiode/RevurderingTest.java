@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 
 import org.junit.Test;
 
@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -32,20 +31,17 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeri
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class RevurderingTest {
 
     private static final LocalDate FØRSTE_LOVLIGE_UTTAKSDAG = LocalDate.of(2018, 5, 5);
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
 
     @Test
     public void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilAvslagPgaSamtykke() {
@@ -57,7 +53,7 @@ public class RevurderingTest {
                         FAMILIEHENDELSE_DATO.plusWeeks(12), BigDecimal.TEN, false)))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_SAMTYKKE);
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
@@ -77,7 +73,7 @@ public class RevurderingTest {
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE);
     }
@@ -93,7 +89,7 @@ public class RevurderingTest {
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK);
     }
@@ -109,7 +105,7 @@ public class RevurderingTest {
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK);
     }
@@ -125,7 +121,7 @@ public class RevurderingTest {
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        Regelresultat regelresultat = evaluerTapendeBehandling(uttakPeriode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
     }
@@ -139,7 +135,7 @@ public class RevurderingTest {
                 .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().plusWeeks(1)))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttaksperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -156,7 +152,7 @@ public class RevurderingTest {
                 .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().minusWeeks(1)))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttaksperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -175,7 +171,7 @@ public class RevurderingTest {
                 .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getTom().plusWeeks(1)))
                 .build();
 
-        Regelresultat regelresultat = evaluer(uttaksperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
     }
@@ -190,14 +186,6 @@ public class RevurderingTest {
 
     private RettOgOmsorg.Builder samtykke(boolean samtykke) {
         return new RettOgOmsorg.Builder().medSamtykke(samtykke);
-    }
-
-    private Regelresultat evaluer(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.ny(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
-    }
-
-    private Regelresultat evaluerTapendeBehandling(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, Trekkdagertilstand.forTapendeBehandling(grunnlag, Collections.singletonList(uttakPeriode)), uttakPeriode)));
     }
 
     private AnnenpartUttaksperiode lagPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom,

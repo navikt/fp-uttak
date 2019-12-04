@@ -4,22 +4,21 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.List;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.grunnlag.RegelGrunnlagTestBuilder;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregningTjeneste;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -32,7 +31,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate gyldigGrunnStart = periodeStart;
         LocalDate gyldigGrunnSlutt = periodeStart.plusDays(1);
 
-        UttakPeriode søknadsperiode = oppholdPeriode(Stønadskontotype.MØDREKVOTE, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, periodeStart, periodeSlutt);
+        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(søknadsperiode)
@@ -51,7 +50,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate gyldigGrunnStart = periodeStart.plusWeeks(3);
         LocalDate gyldigGrunnSlutt = periodeStart.plusWeeks(4);
 
-        UttakPeriode søknadsperiode = oppholdPeriode(Stønadskontotype.MØDREKVOTE, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, periodeStart, periodeSlutt);
+        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(søknadsperiode)
@@ -69,7 +68,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate gyldigGrunnStart = periodeStart.plusWeeks(5);
         LocalDate gyldigGrunnSlutt = periodeSlutt;
 
-        UttakPeriode søknadsperiode = oppholdPeriode(Stønadskontotype.MØDREKVOTE, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, periodeStart, periodeSlutt);
+        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(søknadsperiode)
@@ -86,7 +85,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        UttakPeriode søknadsperiode = oppholdPeriode(Stønadskontotype.MØDREKVOTE, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, periodeStart, periodeSlutt);
+        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(søknadsperiode)
@@ -104,7 +103,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        UttakPeriode søknadsperiode = oppholdPeriode(Stønadskontotype.MØDREKVOTE, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, periodeStart, periodeSlutt);
+        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilSøknadsperiode(søknadsperiode))
                 .build();
@@ -114,12 +113,14 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     private Evaluation evaluer(UttakPeriode søknadsperiode, RegelGrunnlag grunnlag) {
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), false,
+                List.of(), grunnlag.getArbeid().getArbeidsforhold(), søknadsperiode.getFom());
         return new SjekkOmDelerAvPeriodenHarGyldigGrunn().evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                Trekkdagertilstand.ny(grunnlag, Collections.singletonList(søknadsperiode)), søknadsperiode));
+                SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), søknadsperiode));
     }
 
-    private UttakPeriode oppholdPeriode(Stønadskontotype stønadskontotype, Oppholdårsaktype oppholdårsaktype, LocalDate fom, LocalDate tom) {
-        return new OppholdPeriode(stønadskontotype, PeriodeKilde.SØKNAD, oppholdårsaktype, fom, tom, null, false);
+    private UttakPeriode manglendeSøktPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
+        return new ManglendeSøktPeriode(stønadskontotype, fom, tom);
     }
 
 }

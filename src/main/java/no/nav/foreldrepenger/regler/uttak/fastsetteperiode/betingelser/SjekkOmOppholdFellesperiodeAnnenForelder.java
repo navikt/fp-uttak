@@ -20,7 +20,7 @@ public class SjekkOmOppholdFellesperiodeAnnenForelder extends LeafSpecification<
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
         if (uttakPeriode instanceof OppholdPeriode) {
             OppholdPeriode oppholdPeriode = (OppholdPeriode)uttakPeriode;
-            if (Oppholdårsaktype.KVOTE_FELLESPERIODE_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype())) {
+            if (Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype())) {
                 return ja();
             }
         }

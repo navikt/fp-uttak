@@ -34,7 +34,7 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
     }
 
     private boolean finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(AnnenpartUttaksperiode periodeAnnenPart) {
-        for (UttakPeriodeAktivitet periodeAktivitet : periodeAnnenPart.getUttakPeriodeAktiviteter()) {
+        for (UttakPeriodeAktivitet periodeAktivitet : periodeAnnenPart.getAktiviteter()) {
             if (periodeAktivitet.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0) {
                 return true;
             }

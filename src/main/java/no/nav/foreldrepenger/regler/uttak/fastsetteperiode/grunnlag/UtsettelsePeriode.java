@@ -13,7 +13,7 @@ public class UtsettelsePeriode extends UttakPeriode {
                              LocalDate tom,
                              Utsettelseårsaktype utsettelseårsaktype,
                              PeriodeVurderingType vurderingType) {
-        super(Stønadskontotype.UKJENT, Periodetype.UTSETTELSE, periodeKilde, fom, tom, null, false);
+        super(Stønadskontotype.UKJENT, periodeKilde, fom, tom, null, false);
         this.utsettelseårsaktype = utsettelseårsaktype;
         setPeriodeVurderingType(vurderingType);
     }
@@ -44,6 +44,11 @@ public class UtsettelsePeriode extends UttakPeriode {
     }
 
     @Override
+    public boolean isUtsettelsePgaFerie() {
+        return getUtsettelseårsaktype().equals(Utsettelseårsaktype.FERIE);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -59,10 +64,5 @@ public class UtsettelsePeriode extends UttakPeriode {
         int result = super.hashCode();
         result = 31 * result + utsettelseårsaktype.hashCode();
         return result;
-    }
-
-    @Override
-    public boolean isUtsettelsePgaFerie() {
-        return getUtsettelseårsaktype().equals(Utsettelseårsaktype.FERIE);
     }
 }
