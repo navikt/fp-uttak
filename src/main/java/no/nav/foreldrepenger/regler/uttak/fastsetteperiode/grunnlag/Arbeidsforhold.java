@@ -9,17 +9,29 @@ import java.util.Set;
 
 public class Arbeidsforhold {
 
+    private static final LocalDate DEFAULT_STARTDATO = LocalDate.MIN;
+
     private final AktivitetIdentifikator identifikator;
     private final Set<EndringAvStilling> endringAvStillingListe = new HashSet<>();
     private final Kontoer kontoer;
+    private final LocalDate startdato;
 
-    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer) {
+    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer, LocalDate startdato) {
         this.identifikator = identifikator;
         this.kontoer = kontoer;
+        this.startdato = startdato;
+    }
+
+    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer.Builder kontoer, LocalDate startdato) {
+        this(identifikator, kontoer.build(), startdato);
     }
 
     public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer.Builder kontoer) {
         this(identifikator, kontoer.build());
+    }
+
+    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer) {
+        this(identifikator, kontoer, DEFAULT_STARTDATO);
     }
 
     public AktivitetIdentifikator getIdentifikator() {
@@ -28,6 +40,10 @@ public class Arbeidsforhold {
 
     public Kontoer getKontoer() {
         return kontoer;
+    }
+
+    public LocalDate getStartdato() {
+        return startdato;
     }
 
     public Arbeidsforhold leggTilEndringIStilling(EndringAvStilling endringAvStilling) {

@@ -16,7 +16,7 @@ public class SjekkOmSøkerErArbeidstaker extends LeafSpecification<FastsettePeri
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        for (AktivitetIdentifikator aktiviteter : grunnlag.getAktiviteter()) {
+        for (AktivitetIdentifikator aktiviteter : grunnlag.getAktuellPeriode().getAktiviteter()) {
             if (AktivitetType.ARBEID.equals(aktiviteter.getAktivitetType())) {
                 return ja();
             }

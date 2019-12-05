@@ -15,7 +15,7 @@ public class OppholdPeriode extends UttakPeriode {
                           LocalDate tom,
                           SamtidigUttak samtidigUttak,
                           boolean flerbarnsdager) {
-        super(stønadskontotype, Periodetype.OPPHOLD, periodeKilde,fom, tom, samtidigUttak, flerbarnsdager);
+        super(stønadskontotype, periodeKilde,fom, tom, samtidigUttak, flerbarnsdager);
         this.oppholdårsaktype = oppholdårsaktype;
     }
 

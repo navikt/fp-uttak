@@ -6,16 +6,16 @@ import java.util.Set;
 
 public class OrkestreringTillegg {
 
-    private final List<OppholdPeriode> oppholdsperioder;
+    private final List<ManglendeSøktPeriode> manglendeSøktPerioder;
     private final Set<LocalDate> knekkpunkter;
 
-    public OrkestreringTillegg(List<OppholdPeriode> oppholdsperioder, Set<LocalDate> knekkpunkter) {
-        this.oppholdsperioder = oppholdsperioder;
+    public OrkestreringTillegg(List<ManglendeSøktPeriode> manglendeSøktPerioder, Set<LocalDate> knekkpunkter) {
+        this.manglendeSøktPerioder = manglendeSøktPerioder;
         this.knekkpunkter = knekkpunkter;
     }
 
-    public List<OppholdPeriode> getOppholdsperioder() {
-        return oppholdsperioder;
+    public List<ManglendeSøktPeriode> getManglendeSøktPerioder() {
+        return manglendeSøktPerioder;
     }
 
     public Set<LocalDate> getKnekkpunkter() {

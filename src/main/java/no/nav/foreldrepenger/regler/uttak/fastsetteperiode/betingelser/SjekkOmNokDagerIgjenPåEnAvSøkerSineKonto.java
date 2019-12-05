@@ -25,8 +25,8 @@ public class SjekkOmNokDagerIgjenPåEnAvSøkerSineKonto extends LeafSpecificatio
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         for (Stønadskontotype stønadskontotype : hentSøkerSineKonto(grunnlag)) {
-            for (AktivitetIdentifikator aktivitet : grunnlag.getAktiviteter()) {
-                Trekkdager saldo = grunnlag.getTrekkdagertilstand().saldo(aktivitet, stønadskontotype);
+            for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
+                Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(aktivitet, stønadskontotype);
                 var virkedager = Virkedager.beregnAntallVirkedager(aktuellPeriode.getFom(), aktuellPeriode.getTom());
                 if (!saldo.subtract(new Trekkdager(virkedager)).mindreEnn0()) {
                     return ja();

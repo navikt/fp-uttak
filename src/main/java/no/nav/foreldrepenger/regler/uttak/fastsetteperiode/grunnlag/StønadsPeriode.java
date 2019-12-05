@@ -15,10 +15,10 @@ public class StønadsPeriode extends UttakPeriode {
                           LocalDate tom,
                           SamtidigUttak samtidigUttak,
                           boolean flerbarnsdager) {
-        super(stønadskontotype, Periodetype.STØNADSPERIODE, periodeKilde, fom, tom, samtidigUttak, flerbarnsdager);
+        super(stønadskontotype, periodeKilde, fom, tom, samtidigUttak, flerbarnsdager);
     }
 
-    private StønadsPeriode(StønadsPeriode kilde, LocalDate fom, LocalDate tom) {
+    StønadsPeriode(StønadsPeriode kilde, LocalDate fom, LocalDate tom) {
         super(kilde, fom, tom);
     }
 

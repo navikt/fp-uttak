@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -20,10 +19,6 @@ public class SjekkOmManglendeSøktPeriode extends LeafSpecification<FastsettePer
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         UttakPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
-        if(aktuellPeriode instanceof OppholdPeriode) {
-            OppholdPeriode oppholdPeriode = (OppholdPeriode) aktuellPeriode;
-            return Oppholdårsaktype.MANGLENDE_SØKT_PERIODE.equals(oppholdPeriode.getOppholdårsaktype()) ? ja() : nei();
-        }
-        return nei();
+        return aktuellPeriode instanceof ManglendeSøktPeriode ? ja() : nei();
     }
 }

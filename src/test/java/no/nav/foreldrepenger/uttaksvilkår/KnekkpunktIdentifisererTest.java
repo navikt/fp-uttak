@@ -15,9 +15,12 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -388,7 +391,7 @@ public class KnekkpunktIdentifisererTest {
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato,
-                        mottattdato.plusWeeks(2), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK))
+                                mottattdato.plusWeeks(2), Utsettelseårsaktype.ARBEID, PeriodeVurderingType.PERIODE_OK))
                         .medMottattDato(mottattdato))
                 .build();
 
@@ -408,7 +411,7 @@ public class KnekkpunktIdentifisererTest {
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
                         .leggTilSøknadsperiode(new UtsettelsePeriode(PeriodeKilde.SØKNAD, mottattdato.plusWeeks(1),
-                        mottattdato.plusWeeks(2), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
+                                mottattdato.plusWeeks(2), Utsettelseårsaktype.FERIE, PeriodeVurderingType.PERIODE_OK))
                         .medMottattDato(mottattdato))
                 .build();
 
@@ -453,6 +456,24 @@ public class KnekkpunktIdentifisererTest {
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         assertThat(knekkpunkter).contains(termin, fødselsdato);
+    }
+
+    @Test
+    public void skal_knekke_på_startdato_hos_arbeidsforhold() {
+        var fødselsdato = LocalDate.of(2019, 9, 23);
+        var startdato1 = fødselsdato.plusWeeks(8);
+        var startdato2 = fødselsdato.plusWeeks(10);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
+                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .medArbeid(new Arbeid.Builder()
+                        .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder(), startdato1))
+                        .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), new Kontoer.Builder(), startdato2)))
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).contains(startdato1, startdato2);
     }
 
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {

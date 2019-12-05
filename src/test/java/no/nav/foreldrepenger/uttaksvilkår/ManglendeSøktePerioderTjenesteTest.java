@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype.MANGLENDE_SØKT_PERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
@@ -10,7 +9,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -24,8 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
@@ -43,7 +40,7 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
-public class OppholdPeriodeTjenesteTest {
+public class ManglendeSøktePerioderTjenesteTest {
 
     private final Konfigurasjon konfigurasjon = StandardKonfigurasjon.KONFIGURASJON;
     private final int mødrekvoteDager = konfigurasjon.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT, LocalDate.of(2018, 06, 01));
@@ -70,12 +67,12 @@ public class OppholdPeriodeTjenesteTest {
                 .medDatoer(new Datoer.Builder().medFødsel(fødsel))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(fødsel);
-        assertThat(hull.get(0).getTom()).isEqualTo(førsteUttakSøktFom.minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(fødsel);
+        assertThat(msp.get(0).getTom()).isEqualTo(førsteUttakSøktFom.minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -99,12 +96,12 @@ public class OppholdPeriodeTjenesteTest {
                         .medStebarnsadopsjon(false))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(adopsjonsDato);
-        assertThat(hull.get(0).getTom()).isEqualTo(førsteUttakSøktFom.minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(adopsjonsDato);
+        assertThat(msp.get(0).getTom()).isEqualTo(førsteUttakSøktFom.minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -115,17 +112,16 @@ public class OppholdPeriodeTjenesteTest {
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
                 .build();
 
-        List<OppholdPeriode> oppholdPerioder = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
+        var manglendeSøktePerioder = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
 
-        assertThat(oppholdPerioder).isNotEmpty();
+        assertThat(manglendeSøktePerioder).isNotEmpty();
 
-        Optional<OppholdPeriode> oppholdFørFødsel = oppholdPerioder.stream()
+        Optional<ManglendeSøktPeriode> oppholdFørFødsel = manglendeSøktePerioder.stream()
                 .filter(oppholdPeriode -> oppholdPeriode.getStønadskontotype().equals(FORELDREPENGER_FØR_FØDSEL))
                 .findFirst();
 
         assertThat(oppholdFørFødsel).isPresent();
         oppholdFørFødsel.ifPresent(opphold -> {
-            assertThat(opphold.getOppholdårsaktype()).isEqualTo(MANGLENDE_SØKT_PERIODE);
             assertThat(opphold.getFom()).isEqualTo(startForeldrepengerFørFødsel(familiehendelsesDato));
             assertThat(opphold.getTom()).isEqualTo(sluttForeldrepengerFørFødsel(familiehendelsesDato));
         });
@@ -160,11 +156,11 @@ public class OppholdPeriodeTjenesteTest {
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(LocalDate.of(2018, 6, 5)))
                 .build();
 
-        List<OppholdPeriode> oppholdPerioder = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
+        var manglendeSøktePerioder = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
 
-        assertThat(oppholdPerioder).isNotEmpty();
+        assertThat(manglendeSøktePerioder).isNotEmpty();
 
-        Optional<OppholdPeriode> oppholdFørFødsel = oppholdPerioder.stream()
+        Optional<ManglendeSøktPeriode> oppholdFørFødsel = manglendeSøktePerioder.stream()
                 .filter(oppholdPeriode -> oppholdPeriode.getStønadskontotype().equals(FORELDREPENGER_FØR_FØDSEL))
                 .findFirst();
 
@@ -184,19 +180,18 @@ public class OppholdPeriodeTjenesteTest {
                 .build();
 
 
-        List<OppholdPeriode> oppholdPerioder = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
+        var manglendeSøktePerioder = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
 
-        assertThat(oppholdPerioder).isNotEmpty();
+        assertThat(manglendeSøktePerioder).isNotEmpty();
 
-        Optional<OppholdPeriode> oppholdFørFødsel = oppholdPerioder.stream()
-                .filter(oppholdPeriode -> oppholdPeriode.getStønadskontotype().equals(FELLESPERIODE))
+        Optional<ManglendeSøktPeriode> mspFørFødsel = manglendeSøktePerioder.stream()
+                .filter(periode -> periode.getStønadskontotype().equals(FELLESPERIODE))
                 .findFirst();
 
-        assertThat(oppholdFørFødsel).isPresent();
-        oppholdFørFødsel.ifPresent(opphold -> {
-            assertThat(opphold.getOppholdårsaktype()).isEqualTo(MANGLENDE_SØKT_PERIODE);
-            assertThat(opphold.getFom()).isEqualTo(startForeldrepengerFørFødsel(familiehendelsesDato).minusWeeks(2).plusDays(1));
-            assertThat(opphold.getTom()).isEqualTo(startForeldrepengerFørFødsel(familiehendelsesDato).minusDays(3)); //-3 pga helg
+        assertThat(mspFørFødsel).isPresent();
+        mspFørFødsel.ifPresent(msp -> {
+            assertThat(msp.getFom()).isEqualTo(startForeldrepengerFørFødsel(familiehendelsesDato).minusWeeks(2).plusDays(1));
+            assertThat(msp.getTom()).isEqualTo(startForeldrepengerFørFødsel(familiehendelsesDato).minusDays(3)); //-3 pga helg
         });
     }
 
@@ -208,18 +203,17 @@ public class OppholdPeriodeTjenesteTest {
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelsesDato))
                 .build();
 
-        List<OppholdPeriode> oppholdPerioder = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
+        var manglendeSøktePerioder = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
 
-        assertThat(oppholdPerioder).isNotEmpty();
+        assertThat(manglendeSøktePerioder).isNotEmpty();
 
-        Optional<OppholdPeriode> oppholdEtterFødsel = oppholdPerioder.stream()
+        Optional<ManglendeSøktPeriode> oppholdEtterFødsel = manglendeSøktePerioder.stream()
                 .filter(opphold -> opphold.getStønadskontotype().equals(MØDREKVOTE))
                 .findFirst();
 
         assertThat(oppholdEtterFødsel).isPresent();
 
         oppholdEtterFødsel.ifPresent(opphold -> {
-            assertThat(opphold.getOppholdårsaktype()).isEqualTo(MANGLENDE_SØKT_PERIODE);
             assertThat(opphold.getFom()).isEqualTo(startMødrekvoteEtterFødsel(familiehendelsesDato));
             assertThat(opphold.getTom()).isEqualTo(sluttMødrekvoteEtterFødsel(familiehendelsesDato).minusDays(3));//-3 pga helg
         });
@@ -235,9 +229,9 @@ public class OppholdPeriodeTjenesteTest {
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(LocalDate.of(2019, 6, 4)))
                 .build();
 
-        List<OppholdPeriode> oppholdPerioder = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
+        var manglendeSøktePerioder = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
 
-        assertThat(oppholdPerioder).isEmpty();
+        assertThat(manglendeSøktePerioder).isEmpty();
     }
 
     @Test
@@ -253,10 +247,10 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(hullDato);
-        assertThat(hull.get(0).getTom()).isEqualTo(hullDato);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(hullDato);
+        assertThat(msp.get(0).getTom()).isEqualTo(hullDato);
     }
 
     @Test
@@ -275,8 +269,8 @@ public class OppholdPeriodeTjenesteTest {
                 .medBehandling(new Behandling.Builder())
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, konfigurasjon);
-        assertThat(hull).isEmpty();
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
+        assertThat(msp).isEmpty();
     }
 
 
@@ -293,8 +287,8 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(9).plusDays(1), fødselsdato.plusWeeks(11)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
-        assertThat(hull).hasSize(0);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).hasSize(0);
     }
 
     @Test
@@ -312,8 +306,8 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(annenPartStart, annenPartStart.plusWeeks(10)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
-        assertThat(hull).isEmpty();
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -333,14 +327,12 @@ public class OppholdPeriodeTjenesteTest {
                                 .build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         //Sjekk at det bare opprettes manglende søkt periode for mandag 21. mai 2018. Helg skal ikke tas med.
-        assertThat(hull).hasSize(1);
-        OppholdPeriode hull0 = hull.get(0);
-        assertThat(hull0.getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.MANGLENDE_SØKT_PERIODE);
-        assertThat(hull0.getFom()).isEqualTo(LocalDate.of(2018, 5, 21));
-        assertThat(hull0.getTom()).isEqualTo(LocalDate.of(2018, 5, 21));
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(LocalDate.of(2018, 5, 21));
+        assertThat(msp.get(0).getTom()).isEqualTo(LocalDate.of(2018, 5, 21));
     }
 
     @Test
@@ -359,12 +351,12 @@ public class OppholdPeriodeTjenesteTest {
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelse))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
-        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
+        assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -389,14 +381,14 @@ public class OppholdPeriodeTjenesteTest {
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelse))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(2);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(3).plusDays(1));
-        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6).minusDays(1));
-        assertThat(hull.get(1).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
-        assertThat(hull.get(1).getTom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(msp).hasSize(2);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(3).plusDays(1));
+        assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6).minusDays(1));
+        assertThat(msp.get(1).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
+        assertThat(msp.get(1).getTom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(MØDREKVOTE);
     }
 
     @Test
@@ -422,9 +414,9 @@ public class OppholdPeriodeTjenesteTest {
                         .medAnkomstNorge(null))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull.get(0).getFom()).isNotEqualTo(familiehendelse.plusWeeks(7));
+        assertThat(msp.get(0).getFom()).isNotEqualTo(familiehendelse.plusWeeks(7));
     }
 
     @Test
@@ -444,12 +436,12 @@ public class OppholdPeriodeTjenesteTest {
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
-        assertThat(hull.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(1).minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(UKJENT);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
+        assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(1).minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(UKJENT);
     }
 
     @Test
@@ -469,12 +461,12 @@ public class OppholdPeriodeTjenesteTest {
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
-        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(UKJENT);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
+        assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(UKJENT);
     }
 
     @Test
@@ -494,12 +486,12 @@ public class OppholdPeriodeTjenesteTest {
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(familiehendelse.plusDays(3)))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getAdopsjon().getAnkomstNorgeDato());
-        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(UKJENT);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getAdopsjon().getAnkomstNorgeDato());
+        assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(UKJENT);
     }
 
     @Test
@@ -522,9 +514,9 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(omsorgsovertakelse, førsteUttaksdato.minusDays(1)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).isEmpty();
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -550,10 +542,10 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(omsorgsovertakelse, førsteUttaksdato.minusWeeks(1)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
-        assertThat(hull.get(0).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
+        assertThat(msp.get(0).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
     }
 
     @Test
@@ -579,12 +571,12 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(omsorgsovertakelse.plusWeeks(1), førsteUttaksdato.minusWeeks(1)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
-        assertThat(hull).hasSize(2);
-        assertThat(hull.get(0).getFom()).isEqualTo(omsorgsovertakelse);
-        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getFom().minusDays(1));
-        assertThat(hull.get(1).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
-        assertThat(hull.get(1).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).hasSize(2);
+        assertThat(msp.get(0).getFom()).isEqualTo(omsorgsovertakelse);
+        assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getFom().minusDays(1));
+        assertThat(msp.get(1).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
+        assertThat(msp.get(1).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
     }
 
     @Test
@@ -609,16 +601,16 @@ public class OppholdPeriodeTjenesteTest {
                         .medAnkomstNorge(familiehendelse.plusDays(3)))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(2);
-        assertThat(hull.get(0).getFom()).isEqualTo(grunnlag.getAdopsjon().getAnkomstNorgeDato());
-        assertThat(hull.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
-        assertThat(hull.get(0).getStønadskontotype()).isEqualTo(UKJENT);
+        assertThat(msp).hasSize(2);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getAdopsjon().getAnkomstNorgeDato());
+        assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getFom().minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(UKJENT);
 
-        assertThat(hull.get(1).getFom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getTom().plusDays(1));
-        assertThat(hull.get(1).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(1).getFom().minusDays(1));
-        assertThat(hull.get(1).getStønadskontotype()).isEqualTo(UKJENT);
+        assertThat(msp.get(1).getFom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(0).getTom().plusDays(1));
+        assertThat(msp.get(1).getTom()).isEqualTo(grunnlag.getSøknad().getUttaksperioder().get(1).getFom().minusDays(1));
+        assertThat(msp.get(1).getStønadskontotype()).isEqualTo(UKJENT);
     }
 
     @Test
@@ -639,14 +631,12 @@ public class OppholdPeriodeTjenesteTest {
                                 .build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         //Lager manglende søkt bare for fredagen, ok ikke helgen
-        assertThat(hull).hasSize(1);
-        OppholdPeriode hull0 = hull.get(0);
-        assertThat(hull0.getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.MANGLENDE_SØKT_PERIODE);
-        assertThat(hull0.getFom()).isEqualTo(LocalDate.of(2018, 6, 8));
-        assertThat(hull0.getTom()).isEqualTo(LocalDate.of(2018, 6, 8));
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(LocalDate.of(2018, 6, 8));
+        assertThat(msp.get(0).getTom()).isEqualTo(LocalDate.of(2018, 6, 8));
     }
 
     @Test
@@ -662,9 +652,9 @@ public class OppholdPeriodeTjenesteTest {
                         .medSkjæringstidspunkt(fødselsdato))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).isEmpty();
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -680,13 +670,11 @@ public class OppholdPeriodeTjenesteTest {
                         .medSkjæringstidspunkt(fødselsdato.minusWeeks(1)))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        OppholdPeriode hull0 = hull.get(0);
-        assertThat(hull0.getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.MANGLENDE_SØKT_PERIODE);
-        assertThat(hull0.getFom()).isEqualTo(grunnlag.getOpptjening().getSkjæringstidspunkt());
-        assertThat(hull0.getTom()).isEqualTo(fødselsdato.minusDays(1));
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getOpptjening().getSkjæringstidspunkt());
+        assertThat(msp.get(0).getTom()).isEqualTo(fødselsdato.minusDays(1));
     }
 
     @Test
@@ -705,9 +693,9 @@ public class OppholdPeriodeTjenesteTest {
                         .leggTilUttaksperiode(AnnenpartUttaksperiode.Builder.uttak(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8)).build()))
                 .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).isEmpty();
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -731,13 +719,11 @@ public class OppholdPeriodeTjenesteTest {
                 .medEndringsdato(fødselsdato.plusWeeks(18)))
             .build();
 
-        List<OppholdPeriode> hull = OppholdPeriodeTjeneste.finnOppholdsperioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
-        assertThat(hull).hasSize(1);
-        OppholdPeriode hull0 = hull.get(0);
-        assertThat(hull0.getOppholdårsaktype()).isEqualTo(Oppholdårsaktype.MANGLENDE_SØKT_PERIODE);
-        assertThat(hull0.getFom()).isEqualTo(grunnlag.getRevurdering().getEndringsdato());
-        assertThat(hull0.getTom()).isEqualTo(fødselsdato.plusWeeks(20).minusDays(1));
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getRevurdering().getEndringsdato());
+        assertThat(msp.get(0).getTom()).isEqualTo(fødselsdato.plusWeeks(20).minusDays(1));
     }
 
     private LocalDate startForeldrepengerFørFødsel(LocalDate familiehendelsesDato) {

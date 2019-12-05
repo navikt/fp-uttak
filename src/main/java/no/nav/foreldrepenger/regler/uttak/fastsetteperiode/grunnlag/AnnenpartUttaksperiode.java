@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public class AnnenpartUttaksperiode extends LukketPeriode {
 
-    private List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter = new ArrayList<>();
+    private Set<UttakPeriodeAktivitet> aktiviteter = new HashSet<>();
 
     private boolean samtidigUttak;
     private boolean flerbarnsdager;
@@ -22,8 +22,8 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
         super(fom, tom);
     }
 
-    public List<UttakPeriodeAktivitet> getUttakPeriodeAktiviteter() {
-        return Collections.unmodifiableList(uttakPeriodeAktiviteter);
+    public Set<UttakPeriodeAktivitet> getAktiviteter() {
+        return new HashSet<>(aktiviteter);
     }
 
     public boolean isSamtidigUttak() {
@@ -50,7 +50,7 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
         return oppholdårsaktype;
     }
 
-    AnnenpartUttaksperiode kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
+    public AnnenpartUttaksperiode kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
         return AnnenpartUttaksperiode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(this.samtidigUttak)
                 .medFlerbarnsdager(this.flerbarnsdager)
@@ -82,12 +82,12 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
         }
 
         public Builder medUttakPeriodeAktivitet(UttakPeriodeAktivitet uttakPeriodeAktivitet) {
-            kladd.uttakPeriodeAktiviteter.add(uttakPeriodeAktivitet);
+            kladd.aktiviteter.add(uttakPeriodeAktivitet);
             return this;
         }
 
         public Builder medUttakPeriodeAktiviteter(List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
-            kladd.uttakPeriodeAktiviteter.addAll(uttakPeriodeAktiviteter);
+            kladd.aktiviteter.addAll(uttakPeriodeAktiviteter);
             return this;
         }
 

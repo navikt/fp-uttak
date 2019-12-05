@@ -10,12 +10,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
-public class FinnOppholdUtilTest {
+public class ManglendeSøktPeriodeUtilTest {
 
     @Test
     public void skalFinneHullPåBegynnelsenAvEnPeriodOfInterest() {
@@ -25,16 +24,16 @@ public class FinnOppholdUtilTest {
         /* Tre dagers "period of interest" f.o.m. i dag */
         LukketPeriode poi = new LukketPeriode(start, slutt);
         List<LukketPeriode> perioder = Arrays.asList(
-                // !!! Skal finne et hull her (f.o.m. i dag t.o.m. i dag) !!!
+                // !!! Skal finne et msp her (f.o.m. i dag t.o.m. i dag) !!!
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start.plusDays(1), start.plusDays(1), null, true), // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, slutt, slutt, null, true)  // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
         );
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(start);
-        assertThat(hull.get(0).getTom()).isEqualTo(start);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(start);
+        assertThat(msp.get(0).getTom()).isEqualTo(start);
     }
 
     @Test
@@ -46,15 +45,15 @@ public class FinnOppholdUtilTest {
         LukketPeriode poi = new LukketPeriode(start, slutt);
         List<LukketPeriode> perioder = Arrays.asList(
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start, start, null, true), // En uttaksperiode f.o.m. i dag t.o.m. i dag
-                // !!! Skal finne et hull her (f.o.m. i morgen t.o.m. i morgen) !!!
+                // !!! Skal finne et msp her (f.o.m. i morgen t.o.m. i morgen) !!!
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, slutt, slutt, null, true) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
         );
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(start.plusDays(1));
-        assertThat(hull.get(0).getTom()).isEqualTo(start.plusDays(1));
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(start.plusDays(1));
+        assertThat(msp.get(0).getTom()).isEqualTo(start.plusDays(1));
     }
 
     @Test
@@ -66,19 +65,19 @@ public class FinnOppholdUtilTest {
         LukketPeriode poi = new LukketPeriode(start, slutt);
         List<LukketPeriode> perioder = Arrays.asList(
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start, start, null, true), // En uttaksperiode f.o.m. i dag t.o.m. i dag
-                // !!! Skal finne et hull her (f.o.m. i morgen t.o.m. i morgen) !!!
+                // !!! Skal finne et msp her (f.o.m. i morgen t.o.m. i morgen) !!!
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start.plusDays(2), start.plusDays(2), null, true), // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
-                // !!! Skal finne et hull her (f.o.m. om tre dager t.o.m. om tre dager) !!!
+                // !!! Skal finne et msp her (f.o.m. om tre dager t.o.m. om tre dager) !!!
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, slutt, slutt, null, true) // En uttaksperiode f.o.m. om fire dager t.o.m. om fire dager
         );
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).hasSize(2);
-        assertThat(hull.get(0).getFom()).isEqualTo(start.plusDays(1));
-        assertThat(hull.get(0).getTom()).isEqualTo(start.plusDays(1));
-        assertThat(hull.get(1).getFom()).isEqualTo(start.plusDays(3));
-        assertThat(hull.get(1).getTom()).isEqualTo(start.plusDays(3));
+        assertThat(msp).hasSize(2);
+        assertThat(msp.get(0).getFom()).isEqualTo(start.plusDays(1));
+        assertThat(msp.get(0).getTom()).isEqualTo(start.plusDays(1));
+        assertThat(msp.get(1).getFom()).isEqualTo(start.plusDays(3));
+        assertThat(msp.get(1).getTom()).isEqualTo(start.plusDays(3));
     }
 
     @Test
@@ -91,14 +90,14 @@ public class FinnOppholdUtilTest {
         List<LukketPeriode> perioder = Arrays.asList(
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start, start, null, true), // En uttaksperiode f.o.m. i dag t.o.m. i dag
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start.plusDays(1), start.plusDays(1), null, true) // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
-                // !!! Skal finne et hull her (f.o.m. overimorgen t.o.m. overimorgen) !!!
+                // !!! Skal finne et msp her (f.o.m. overimorgen t.o.m. overimorgen) !!!
         );
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(slutt);
-        assertThat(hull.get(0).getTom()).isEqualTo(slutt);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(slutt);
+        assertThat(msp.get(0).getTom()).isEqualTo(slutt);
     }
 
     @Test
@@ -112,13 +111,13 @@ public class FinnOppholdUtilTest {
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start, start, null, true), // En uttaksperiode f.o.m. i dag t.o.m. i dag
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start.plusDays(1), start.plusDays(1), null, true), // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, slutt, slutt, null, true)  // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
-                /// !!! Skal ikke finne noen hull !!!
+                /// !!! Skal ikke finne noen msp !!!
         );
 
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).isEmpty();
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -130,14 +129,14 @@ public class FinnOppholdUtilTest {
         LukketPeriode poi = new LukketPeriode(start, slutt);
         List<LukketPeriode> perioder = Collections.singletonList(
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start.minusDays(1), slutt.minusDays(1), null, true) // En uttaksperiode f.o.m. i går t.o.m. i morgen
-                // !!! Skal finne et hull her (f.o.m. overimorgen t.o.m. overimorgen) !!!
+                // !!! Skal finne et msp her (f.o.m. overimorgen t.o.m. overimorgen) !!!
         );
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(slutt);
-        assertThat(hull.get(0).getTom()).isEqualTo(slutt);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(slutt);
+        assertThat(msp.get(0).getTom()).isEqualTo(slutt);
     }
 
     @Test
@@ -148,15 +147,15 @@ public class FinnOppholdUtilTest {
         /* Tre dagers "period of interest" f.o.m. i dag */
         LukketPeriode poi = new LukketPeriode(start, slutt);
         List<LukketPeriode> perioder = Collections.singletonList(
-                // !!! Skal finne et hull her (f.o.m. i dag t.o.m. i dag) !!!
+                // !!! Skal finne et msp her (f.o.m. i dag t.o.m. i dag) !!!
                 new StønadsPeriode(MØDREKVOTE, PeriodeKilde.SØKNAD, start.plusDays(1), slutt.plusDays(1), null, true) // En uttaksperiode f.o.m. i morgen t.o.m. om tre dager
         );
 
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, poi);
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
-        assertThat(hull).hasSize(1);
-        assertThat(hull.get(0).getFom()).isEqualTo(start);
-        assertThat(hull.get(0).getTom()).isEqualTo(start);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(start);
+        assertThat(msp.get(0).getTom()).isEqualTo(start);
     }
 
     @Test
@@ -165,9 +164,9 @@ public class FinnOppholdUtilTest {
         LukketPeriode enDagPeriode = new LukketPeriode(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 1, 1));
         LukketPeriode etterPeriode = new LukketPeriode(LocalDate.of(2019, 1, 2), LocalDate.of(2019, 1, 10));
         List<LukketPeriode> perioder = Arrays.asList(førPeriode, enDagPeriode, etterPeriode);
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, new LukketPeriode(førPeriode.getFom(), etterPeriode.getTom()));
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, new LukketPeriode(førPeriode.getFom(), etterPeriode.getTom()));
 
-        assertThat(hull).isEmpty();
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -178,12 +177,12 @@ public class FinnOppholdUtilTest {
         LukketPeriode periode4 = new LukketPeriode(LocalDate.of(2019, 1, 15), LocalDate.of(2019, 1, 20));
         LukketPeriode periode5 = new LukketPeriode(LocalDate.of(2019, 1, 25), LocalDate.of(2019, 1, 30));
         List<LukketPeriode> perioder = Arrays.asList(periode1, periode2, periode3, periode4, periode5);
-        List<OppholdPeriode> hull = FinnOppholdUtil.finnOppholdIPeriode(perioder, new LukketPeriode(periode1.getFom(), periode5.getTom()));
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, new LukketPeriode(periode1.getFom(), periode5.getTom()));
 
-        assertThat(hull).hasSize(2);
-        assertThat(hull.get(0).getFom()).isEqualTo(LocalDate.of(2019, 1, 11));
-        assertThat(hull.get(0).getTom()).isEqualTo(LocalDate.of(2019, 1, 14));
-        assertThat(hull.get(1).getFom()).isEqualTo(LocalDate.of(2019, 1, 21));
-        assertThat(hull.get(1).getTom()).isEqualTo(LocalDate.of(2019, 1, 24));
+        assertThat(msp).hasSize(2);
+        assertThat(msp.get(0).getFom()).isEqualTo(LocalDate.of(2019, 1, 11));
+        assertThat(msp.get(0).getTom()).isEqualTo(LocalDate.of(2019, 1, 14));
+        assertThat(msp.get(1).getFom()).isEqualTo(LocalDate.of(2019, 1, 21));
+        assertThat(msp.get(1).getTom()).isEqualTo(LocalDate.of(2019, 1, 24));
     }
 }

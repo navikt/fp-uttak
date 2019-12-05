@@ -2,12 +2,13 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -15,9 +16,8 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 public abstract class UttakPeriode extends LukketPeriode {
 
     private Stønadskontotype stønadskontotype;
-    private Periodetype periodetype;
     private BigDecimal gradertArbeidsprosent;
-    private List<AktivitetIdentifikator> gradertAktiviteter = Collections.emptyList();
+    private List<AktivitetIdentifikator> gradertAktiviteter = List.of();
     private OverføringÅrsak overføringÅrsak;
     private PeriodeVurderingType periodeVurderingType;
     private PeriodeKilde periodeKilde;
@@ -30,10 +30,10 @@ public abstract class UttakPeriode extends LukketPeriode {
     private Årsak årsak;
     private GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
     private Map<AktivitetIdentifikator, BigDecimal> utbetalingsgrader = new HashMap<>();
-    private Map<AktivitetIdentifikator, Boolean> sluttpunktTrekkerDager = new HashMap<>();
+    private Map<AktivitetIdentifikator, Boolean> skalTrekkedager = new HashMap<>();
+    private Set<AktivitetIdentifikator> aktiviteter = new HashSet<>();
 
     public UttakPeriode(Stønadskontotype stønadskontotype,
-                        Periodetype periodetype,
                         PeriodeKilde periodeKilde,
                         LocalDate fom,
                         LocalDate tom,
@@ -43,15 +43,13 @@ public abstract class UttakPeriode extends LukketPeriode {
         this.samtidigUttak = samtidigUttak;
         this.flerbarnsdager = flerbarnsdager;
         Objects.requireNonNull(stønadskontotype);
-        Objects.requireNonNull(periodetype);
         Objects.requireNonNull(periodeKilde);
-        this.periodetype = periodetype;
         this.stønadskontotype = stønadskontotype;
         this.periodeKilde = periodeKilde;
     }
 
     protected UttakPeriode(UttakPeriode kilde, LocalDate fom, LocalDate tom) {
-        this(kilde.stønadskontotype, kilde.periodetype, kilde.periodeKilde, fom, tom, kilde.getSamtidigUttak().orElse(null), kilde.isFlerbarnsdager());
+        this(kilde.stønadskontotype, kilde.periodeKilde, fom, tom, kilde.getSamtidigUttak().orElse(null), kilde.isFlerbarnsdager());
         perioderesultattype = kilde.perioderesultattype;
         årsak = kilde.årsak;
         manuellbehandlingårsak = kilde.manuellbehandlingårsak;
@@ -59,7 +57,8 @@ public abstract class UttakPeriode extends LukketPeriode {
         gradertAktiviteter = kilde.gradertAktiviteter;
         overføringÅrsak = kilde.overføringÅrsak;
         periodeVurderingType = kilde.periodeVurderingType;
-        sluttpunktTrekkerDager = new HashMap<>(kilde.sluttpunktTrekkerDager);
+        skalTrekkedager = new HashMap<>(kilde.skalTrekkedager);
+        aktiviteter = new HashSet<>(kilde.aktiviteter);
     }
 
     Optional<SamtidigUttak> getSamtidigUttak() {
@@ -133,10 +132,6 @@ public abstract class UttakPeriode extends LukketPeriode {
 
     public abstract <T extends UttakPeriode> T kopiMedNyPeriode(LocalDate fom, LocalDate tom);
 
-    public Periodetype getPeriodetype() {
-        return periodetype;
-    }
-
     public PeriodeKilde getPeriodeKilde() {
         return periodeKilde;
     }
@@ -184,11 +179,11 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
     public void setSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator, boolean sluttpunktTrekkerDager) {
-        this.sluttpunktTrekkerDager.put(aktivitetIdentifikator, sluttpunktTrekkerDager);
+        this.skalTrekkedager.put(aktivitetIdentifikator, sluttpunktTrekkerDager);
     }
 
     public boolean getSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator) {
-        var trekkerDager = sluttpunktTrekkerDager.get(aktivitetIdentifikator);
+        var trekkerDager = skalTrekkedager.get(aktivitetIdentifikator);
         if (trekkerDager != null) {
             return trekkerDager;
         }
@@ -196,50 +191,12 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
 
-    boolean getSluttpunktTrekkerDager() {
-        return sluttpunktTrekkerDager.values().stream().anyMatch(b -> b);
+    boolean getSkalTrekkedager() {
+        return skalTrekkedager.values().stream().anyMatch(b -> b);
     }
 
     public void setStønadskontotype(Stønadskontotype stønadskontotype) {
         this.stønadskontotype = stønadskontotype;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        UttakPeriode that = (UttakPeriode) o;
-        return stønadskontotype == that.stønadskontotype &&
-                perioderesultattype == that.perioderesultattype &&
-                periodetype == that.periodetype &&
-                periodeKilde == that.periodeKilde &&
-                manuellbehandlingårsak == that.manuellbehandlingårsak &&
-                Objects.equals(årsak, that.årsak) &&
-                Objects.equals(gradertArbeidsprosent, that.gradertArbeidsprosent);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), stønadskontotype, perioderesultattype, periodetype, periodeKilde,
-                manuellbehandlingårsak, årsak, gradertArbeidsprosent);
-    }
-
-    @Override
-    public String toString() {
-        return "UttakPeriode{" +
-                "fom=" + getFom() +
-                ", tom=" + getTom() +
-                ", stønadskontotype=" + stønadskontotype +
-                ", perioderesultattype=" + perioderesultattype +
-                ", manuellbehandlingårsak=" + manuellbehandlingårsak +
-                '}';
     }
 
     public void setPerioderesultattype(Perioderesultattype perioderesultattype) {
@@ -259,4 +216,59 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
     public abstract boolean isUtsettelsePgaFerie();
+
+    public Set<AktivitetIdentifikator> getAktiviteter() {
+        return new HashSet<>(aktiviteter);
+    }
+
+    public void setAktiviteter(Set<AktivitetIdentifikator> aktiviteter) {
+        this.aktiviteter = new HashSet<>(aktiviteter);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        UttakPeriode that = (UttakPeriode) o;
+        return stønadskontotype == that.stønadskontotype &&
+                perioderesultattype == that.perioderesultattype &&
+                periodeKilde == that.periodeKilde &&
+                manuellbehandlingårsak == that.manuellbehandlingårsak &&
+                Objects.equals(årsak, that.årsak) &&
+                Objects.equals(gradertArbeidsprosent, that.gradertArbeidsprosent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), stønadskontotype, perioderesultattype, periodeKilde,
+                manuellbehandlingårsak, årsak, gradertArbeidsprosent);
+    }
+
+    @Override
+    public String toString() {
+        return "UttakPeriode{" +
+                "stønadskontotype=" + stønadskontotype +
+                ", gradertArbeidsprosent=" + gradertArbeidsprosent +
+                ", gradertAktiviteter=" + gradertAktiviteter +
+                ", overføringÅrsak=" + overføringÅrsak +
+                ", periodeVurderingType=" + periodeVurderingType +
+                ", periodeKilde=" + periodeKilde +
+                ", flerbarnsdager=" + flerbarnsdager +
+                ", samtidigUttak=" + samtidigUttak +
+                ", perioderesultattype=" + perioderesultattype +
+                ", manuellbehandlingårsak=" + manuellbehandlingårsak +
+                ", årsak=" + årsak +
+                ", graderingIkkeInnvilgetÅrsak=" + graderingIkkeInnvilgetÅrsak +
+                ", utbetalingsgrader=" + utbetalingsgrader +
+                ", skalTrekkedager=" + skalTrekkedager +
+                ", aktiviteter=" + aktiviteter +
+                '}';
+    }
 }

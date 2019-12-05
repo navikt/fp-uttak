@@ -24,13 +24,13 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto e
         UttakPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
         Stønadskontotype stønadskontotype = aktuellPeriode.getStønadskontotype();
 
-        for (AktivitetIdentifikator aktivitet : grunnlag.getAktiviteter()) {
-            Trekkdager saldo = grunnlag.getTrekkdagertilstand().saldo(aktivitet, stønadskontotype);
+        for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
+            Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(aktivitet, stønadskontotype);
             if (saldo.compareTo(Trekkdager.ZERO) > 0) {
                 return ja();
             }
             if (aktuellPeriode.isFlerbarnsdager()) {
-                Trekkdager saldoFlerbarnsdager = grunnlag.getTrekkdagertilstand().saldo(aktivitet, Stønadskontotype.FLERBARNSDAGER);
+                Trekkdager saldoFlerbarnsdager = grunnlag.getSaldoUtregning().saldoITrekkdager(aktivitet, Stønadskontotype.FLERBARNSDAGER);
                 if (saldoFlerbarnsdager.compareTo(Trekkdager.ZERO) > 0) {
                     return ja();
                 }

@@ -58,7 +58,18 @@ public final class Søknad {
         }
 
         public Søknad build() {
+            validerOverlapp();
             return kladd;
+        }
+
+        private void validerOverlapp() {
+            for (int i = 0; i < kladd.uttaksperioder.size(); i++) {
+                for (int j = i + 1; j < kladd.uttaksperioder.size(); j++) {
+                    if (kladd.uttaksperioder.get(i).overlapper(kladd.uttaksperioder.get(j))) {
+                        throw new IllegalStateException("Overlapp i søknad");
+                    }
+                }
+            }
         }
     }
 }

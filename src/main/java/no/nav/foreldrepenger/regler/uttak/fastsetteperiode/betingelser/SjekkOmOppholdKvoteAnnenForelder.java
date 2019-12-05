@@ -19,8 +19,10 @@ public class SjekkOmOppholdKvoteAnnenForelder extends LeafSpecification<Fastsett
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
         if (uttakPeriode instanceof OppholdPeriode) {
-            OppholdPeriode oppholdPeriode = (OppholdPeriode)uttakPeriode;
-            if (Oppholdårsaktype.KVOTE_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype())) {
+            OppholdPeriode oppholdPeriode = (OppholdPeriode) uttakPeriode;
+            if (Oppholdårsaktype.MØDREKVOTE_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype()) ||
+                    Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype()) ||
+                    Oppholdårsaktype.FORELDREPENGER_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype())) {
                 return ja();
             }
         }

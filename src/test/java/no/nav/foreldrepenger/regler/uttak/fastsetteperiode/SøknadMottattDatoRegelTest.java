@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -14,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -27,18 +27,15 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class SøknadMottattDatoRegelTest {
 
     private static final LocalDate FØRSTE_LOVLIGE_UTTAKSDAG = LocalDate.of(2018, 5, 5);
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
-    private FastsettePeriodeRegel regel = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
 
     @Test
     public void søknadMottattdatoFørGradertPeriodeBlirSendtManuellBehandling() {
@@ -48,7 +45,7 @@ public class SøknadMottattDatoRegelTest {
                 .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNull();
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
@@ -65,7 +62,7 @@ public class SøknadMottattDatoRegelTest {
                 .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_GRADERING_ETTER_PERIODEN_HAR_BEGYNT);
     }
@@ -78,7 +75,7 @@ public class SøknadMottattDatoRegelTest {
                 .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -94,7 +91,7 @@ public class SøknadMottattDatoRegelTest {
                 .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
     }
@@ -107,7 +104,7 @@ public class SøknadMottattDatoRegelTest {
                 .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -123,7 +120,7 @@ public class SøknadMottattDatoRegelTest {
                 .medSøknad(søknad(søknadsperiode, søknadMottattdato))
                 .build();
 
-        Regelresultat regelresultat = kjørRegler(søknadsperiode, grunnlag);
+        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
     }
@@ -133,11 +130,6 @@ public class SøknadMottattDatoRegelTest {
                 .medType(Søknadstype.FØDSEL)
                 .leggTilSøknadsperiode(søknadsperiode)
                 .medMottattDato(søknadMottattdato);
-    }
-
-    private Regelresultat kjørRegler(UttakPeriode søknadsperiode, RegelGrunnlag grunnlag) {
-        return new Regelresultat(regel.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                Trekkdagertilstand.ny(grunnlag, Collections.singletonList(søknadsperiode)), søknadsperiode)));
     }
 
     private UttakPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, Utsettelseårsaktype utsettelseårsaktype) {

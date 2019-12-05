@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class AnnenPart {
@@ -15,11 +16,10 @@ public final class AnnenPart {
         return uttaksperioder;
     }
 
-    public List<AktivitetIdentifikator> getAktiviteter() {
-        return uttaksperioder.stream().flatMap(periode -> periode.getUttakPeriodeAktiviteter().stream())
+    public Set<AktivitetIdentifikator> getAktiviteter() {
+        return uttaksperioder.stream().flatMap(periode -> periode.getAktiviteter().stream())
                 .map(UttakPeriodeAktivitet::getAktivitetIdentifikator)
-                .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public static class Builder {

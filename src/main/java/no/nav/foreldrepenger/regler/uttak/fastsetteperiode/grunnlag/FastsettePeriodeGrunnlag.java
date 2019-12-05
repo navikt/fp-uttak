@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
@@ -18,8 +19,6 @@ public interface FastsettePeriodeGrunnlag {
      * @return Aktuell periode. Det er den perioden som skal behandles av regel.
      */
     UttakPeriode getAktuellPeriode();
-
-    Set<AktivitetIdentifikator> getAktiviteter();
 
     /**
      * Hent arbeidsgrunnlag
@@ -162,7 +161,7 @@ public interface FastsettePeriodeGrunnlag {
      */
     LocalDate getSøknadMottattdato();
 
-    Trekkdagertilstand getTrekkdagertilstand();
+    SaldoUtregning getSaldoUtregning();
 
     /**
      * Finnes alle uttaks perioder av annenpart

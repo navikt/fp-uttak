@@ -13,9 +13,9 @@ import java.util.Set;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdagertilstand;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class TomKontoIdentifiserer {
@@ -26,15 +26,15 @@ public class TomKontoIdentifiserer {
 
     public static Optional<TomKontoKnekkpunkt> identifiser(UttakPeriode uttakPeriode,
                                                            List<AktivitetIdentifikator> aktiviteter,
-                                                           Trekkdagertilstand trekkdagertilstand,
+                                                           SaldoUtregning saldoUtregning,
                                                            Stønadskontotype stønadskontotype) {
 
         Map<LocalDate, TomKontoKnekkpunkt> knekkpunkter = new HashMap<>();
         for (AktivitetIdentifikator aktivitet : aktiviteter) {
-            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, trekkdagertilstand, stønadskontotype);
+            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype);
             datoKontoGårTomIPeriode.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             if (uttakPeriode.isFlerbarnsdager()) {
-                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, trekkdagertilstand, Stønadskontotype.FLERBARNSDAGER);
+                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, Stønadskontotype.FLERBARNSDAGER);
                 knekkpunktFlerbarnsdager.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
         }
@@ -48,13 +48,13 @@ public class TomKontoIdentifiserer {
 
     private static Optional<LocalDate> finnDatoKontoGårTomIPeriode(UttakPeriode uttakPeriode,
                                                                    AktivitetIdentifikator aktivitet,
-                                                                   Trekkdagertilstand trekkdagertilstand,
+                                                                   SaldoUtregning saldoUtregning,
                                                                    Stønadskontotype stønadskontotype) {
         if (!uttakPeriode.getSluttpunktTrekkerDager(aktivitet)) {
             return Optional.empty();
         }
 
-        Trekkdager saldo = trekkdagertilstand.saldo(aktivitet, stønadskontotype);
+        Trekkdager saldo = saldoUtregning.saldoITrekkdager(aktivitet, stønadskontotype);
         int saldoTilVirkedager = saldoTilVirkedager(uttakPeriode, aktivitet, saldo);
 
         LocalDate datoKontoGårTom = Virkedager.plusVirkedager(uttakPeriode.getFom(), saldoTilVirkedager);

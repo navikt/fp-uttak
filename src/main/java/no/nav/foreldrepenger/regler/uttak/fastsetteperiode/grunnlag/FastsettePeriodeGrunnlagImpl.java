@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
@@ -15,15 +16,15 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final RegelGrunnlag regelGrunnlag;
 
-    private final Trekkdagertilstand trekkdagertilstand;
+    private final SaldoUtregning saldoUtregning;
 
     private final UttakPeriode aktuellPeriode;
 
     public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag,
-                                        Trekkdagertilstand trekkdagertilstand,
+                                        SaldoUtregning saldoUtregning,
                                         UttakPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;
-        this.trekkdagertilstand = trekkdagertilstand;
+        this.saldoUtregning = saldoUtregning;
         this.aktuellPeriode = aktuellPeriode;
     }
 
@@ -42,11 +43,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
                 .filter(p -> p.overlapper(aktuellPeriode))
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Set<AktivitetIdentifikator> getAktiviteter() {
-        return regelGrunnlag.getArbeid().getAktiviteter();
     }
 
     @Override
@@ -155,8 +151,8 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public Trekkdagertilstand getTrekkdagertilstand() {
-        return trekkdagertilstand;
+    public SaldoUtregning getSaldoUtregning() {
+        return saldoUtregning;
     }
 
     @Override

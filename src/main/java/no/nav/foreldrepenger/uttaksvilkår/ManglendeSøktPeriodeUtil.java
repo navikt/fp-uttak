@@ -7,33 +7,31 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-final class FinnOppholdUtil {
-    private FinnOppholdUtil() {
+final class ManglendeSøktPeriodeUtil {
+    private ManglendeSøktPeriodeUtil() {
 
     }
 
-    static List<OppholdPeriode> finnOppholdIPeriode(List<LukketPeriode> perioder, LukketPeriode periode) {
+    static List<ManglendeSøktPeriode> finnManglendeSøktePerioder(List<LukketPeriode> perioder, LukketPeriode periode) {
         Objects.requireNonNull(periode, "periode");
         List<LukketPeriode> sortertePerioder = perioder.stream()
                 .filter(p -> !p.getTom().isBefore(periode.getFom()) && !p.getFom().isAfter(periode.getTom()))
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
 
-        List<OppholdPeriode> oppholdPerioder = new ArrayList<>();
+        List<ManglendeSøktPeriode> msp = new ArrayList<>();
         LocalDate hullFom = periode.getFom();
         for (LukketPeriode lukketPeriode : sortertePerioder) {
             if (hullFom.isBefore(lukketPeriode.getFom())) {
                 LocalDate hullTom = lukketPeriode.getFom().minusDays(1);
                 if (Virkedager.beregnAntallVirkedager(hullFom, hullTom) > 0) {
-                    oppholdPerioder.add(lagOppholdPeriode(hullFom, hullTom));
+                    msp.add(lagManglendeSøktPeriode(hullFom, hullTom));
                 }
             }
             LocalDate nesteDatoFom = lukketPeriode.getTom().plusDays(1);
@@ -44,20 +42,19 @@ final class FinnOppholdUtil {
         if (!hullFom.isAfter(periode.getTom())) {
             LocalDate hullTom = periode.getTom();
             if (Virkedager.beregnAntallVirkedager(hullFom, hullTom) > 0) {
-                oppholdPerioder.add(lagOppholdPeriode(hullFom, hullTom));
+                msp.add(lagManglendeSøktPeriode(hullFom, hullTom));
             }
 
         }
-        return oppholdPerioder;
+        return msp;
     }
 
-    static OppholdPeriode lagOppholdPeriode(LocalDate hullFom, LocalDate hullTom) {
-        return lagOppholdPeriode(hullFom, hullTom, Stønadskontotype.UKJENT);
+    static ManglendeSøktPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom) {
+        return lagManglendeSøktPeriode(hullFom, hullTom, Stønadskontotype.UKJENT);
     }
 
-    static OppholdPeriode lagOppholdPeriode(LocalDate hullFom, LocalDate hullTom, Stønadskontotype type) {
-        return new OppholdPeriode(type, PeriodeKilde.SØKNAD, Oppholdårsaktype.MANGLENDE_SØKT_PERIODE, hullFom, hullTom,
-                null, false);
+    static ManglendeSøktPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom, Stønadskontotype type) {
+        return new ManglendeSøktPeriode(type, hullFom, hullTom);
     }
 
 }
