@@ -19,7 +19,7 @@ public class Arbeidsforhold {
     public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer, LocalDate startdato) {
         this.identifikator = identifikator;
         this.kontoer = kontoer;
-        this.startdato = startdato;
+        this.startdato = startdato == null ? DEFAULT_STARTDATO : startdato;
     }
 
     public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer.Builder kontoer, LocalDate startdato) {
@@ -31,7 +31,7 @@ public class Arbeidsforhold {
     }
 
     public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer) {
-        this(identifikator, kontoer, DEFAULT_STARTDATO);
+        this(identifikator, kontoer, null);
     }
 
     public AktivitetIdentifikator getIdentifikator() {

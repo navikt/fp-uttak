@@ -28,7 +28,7 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
         boolean tomForAlleSineKontoer = true;
         for (Stønadskontotype stønadskontotype : hentSøkerSineKonto(grunnlag)) {
             for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(aktivitet, stønadskontotype);
+                Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
                 if (saldo.merEnn0()) {
                     tomForAlleSineKontoer = false;
                 }

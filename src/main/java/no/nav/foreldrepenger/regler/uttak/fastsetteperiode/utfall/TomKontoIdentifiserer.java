@@ -54,7 +54,7 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        Trekkdager saldo = saldoUtregning.saldoITrekkdager(aktivitet, stønadskontotype);
+        Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
         int saldoTilVirkedager = saldoTilVirkedager(uttakPeriode, aktivitet, saldo);
 
         LocalDate datoKontoGårTom = Virkedager.plusVirkedager(uttakPeriode.getFom(), saldoTilVirkedager);
