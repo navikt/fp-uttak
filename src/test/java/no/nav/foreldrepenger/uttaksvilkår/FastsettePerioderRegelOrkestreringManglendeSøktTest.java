@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.uttaksvilkår;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,8 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -172,8 +172,8 @@ public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends Fastse
                 .build();
         var perioder = fastsettPerioder(grunnlag);
 
-        assertThat(perioder).hasSize(5);
+        assertThat(perioder).hasSize(4);
         //UT1291
-        assertThat(perioder.get(4).isManuellBehandling()).isTrue();
+        assertThat(perioder.get(3).isManuellBehandling()).isTrue();
     }
 }

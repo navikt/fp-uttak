@@ -498,12 +498,12 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isZero();
-        assertThat(resultat.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(0).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultat.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isZero();
+        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
     }
 
     @Test
@@ -527,12 +527,12 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isZero();
-        assertThat(resultat.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(0).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultat.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isZero();
+        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -549,12 +549,12 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
-        assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
+        assertThat(resultat.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
     }
 
     @Test
@@ -591,12 +591,12 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
-        assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(1).getUttakPeriode()).isInstanceOf(UtsettelsePeriode.class);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isNotZero();
+        assertThat(resultat.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -610,10 +610,10 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(2).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -628,15 +628,15 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(uttakAvsluttetMedUtsettelse);
 
-        assertThat(resultat).hasSize(6);
+        assertThat(resultat).hasSize(5);
+        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(3).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE);
+
         assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
         assertThat(resultat.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
         assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(4).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE);
-
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
-        assertThat(resultat.get(5).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
-        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     @Test
