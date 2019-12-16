@@ -250,29 +250,27 @@ class ManglendeSøktePerioderTjeneste {
         if (Søknadstype.ADOPSJON.equals(søknadstype)) {
             return new ArrayList<>();
         }
-        int fellesperiodeFørFødselUker = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato);
-        LukketPeriode betingetPeriodeFørFødsel = new LukketPeriode(familiehendelseDato.minusWeeks(fellesperiodeFørFødselUker), familiehendelseDato.minusDays(1));
+        var antallUkerFpffFørFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato);
+        var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
 
-        List<ManglendeSøktPeriode> mspFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(søktePerioder, betingetPeriodeFørFødsel).stream()
+        var førsteUttaksdagSøknad = sorterteSøktePerioder.get(0).getFom();
+
+        if (!førsteUttaksdagSøknad.isBefore(familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel))) {
+            return List.of();
+        }
+        var startdatoBegingetFpff = førsteUttaksdagSøknad.isBefore(familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel)) ?
+                familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel) : førsteUttaksdagSøknad;
+        var betingetFpffPeriode = new LukketPeriode(startdatoBegingetFpff, familiehendelseDato.minusDays(1));
+        var mspFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(sorterteSøktePerioder, betingetFpffPeriode).stream()
                 .map(msp -> lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
                 .collect(Collectors.toList());
-
-        List<ManglendeSøktPeriode> mspForFellesperiodeFørFødsel = new ArrayList<>();
-
-        if (!søktePerioder.isEmpty()) {
-            søktePerioder.sort(Comparator.comparing(Periode::getFom));
-
-            if (søktePerioder.get(0).getFom().isBefore(familiehendelseDato.minusWeeks(fellesperiodeFørFødselUker))) {
-
-                LukketPeriode betingetFellesperiodeFørFødsel = new LukketPeriode(søktePerioder.get(0).getFom(), familiehendelseDato.minusWeeks(fellesperiodeFørFødselUker).minusDays(1));
-                mspForFellesperiodeFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(søktePerioder, betingetFellesperiodeFørFødsel).stream()
-                        .map(msp -> {
-                            Stønadskontotype type = gyldigeStønadskontotyper.contains(Stønadskontotype.FELLESPERIODE) ? Stønadskontotype.FELLESPERIODE : Stønadskontotype.FORELDREPENGER;
-                            return lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), type);
-                        })
-                        .collect(Collectors.toList());
-            }
-        }
+        var betingetFellesperiode = new LukketPeriode(førsteUttaksdagSøknad, familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel).minusDays(1));
+        var mspForFellesperiodeFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(sorterteSøktePerioder, betingetFellesperiode).stream()
+                .map(msp -> {
+                    Stønadskontotype type = gyldigeStønadskontotyper.contains(Stønadskontotype.FELLESPERIODE) ? Stønadskontotype.FELLESPERIODE : Stønadskontotype.FORELDREPENGER;
+                    return lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), type);
+                })
+                .collect(Collectors.toList());
         return Stream.of(mspForFellesperiodeFørFødsel, mspFørFødsel)
                 .flatMap(Collection::stream)
                 .filter(p -> p.virkedager() > 0)

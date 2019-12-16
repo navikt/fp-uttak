@@ -777,10 +777,10 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                         .leggTilSøknadsperiode(ugradertSøknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN)));
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(resultat.get(2).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -805,12 +805,12 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                         .leggTilSøknadsperiode(gradertSøknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN, List.of(ARBEIDSFORHOLD_1))))
                 .medInngangsvilkår(oppfyltAlleVilkår());
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
-        assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
-        assertThat(resultat.get(2).getUttakPeriode().isGradering()).isFalse();
-        assertThat(resultat.get(2).getUttakPeriode().isGradering(ARBEIDSFORHOLD_1)).isFalse();
-        assertThat(resultat.get(2).getUttakPeriode().isGradering(ARBEIDSFORHOLD_2)).isFalse();
-        assertThat(resultat.get(2).getUttakPeriode().søktGradering(ARBEIDSFORHOLD_1)).isTrue();
-        assertThat(resultat.get(2).getUttakPeriode().søktGradering(ARBEIDSFORHOLD_2)).isFalse();
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(1).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
+        assertThat(resultat.get(1).getUttakPeriode().isGradering()).isFalse();
+        assertThat(resultat.get(1).getUttakPeriode().isGradering(ARBEIDSFORHOLD_1)).isFalse();
+        assertThat(resultat.get(1).getUttakPeriode().isGradering(ARBEIDSFORHOLD_1)).isFalse();
+        assertThat(resultat.get(1).getUttakPeriode().søktGradering(ARBEIDSFORHOLD_1)).isTrue();
+        assertThat(resultat.get(1).getUttakPeriode().søktGradering(ARBEIDSFORHOLD_2)).isFalse();
     }
 }
