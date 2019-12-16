@@ -30,7 +30,7 @@ public class SaldoUtregningTest {
 
 
     private Stønadskonto stønadskonto(Stønadskontotype kontoType, int trekkdager) {
-        return new Stønadskonto(kontoType, trekkdager);
+        return new Stønadskonto(kontoType, new Trekkdager(trekkdager));
     }
 
     @Test

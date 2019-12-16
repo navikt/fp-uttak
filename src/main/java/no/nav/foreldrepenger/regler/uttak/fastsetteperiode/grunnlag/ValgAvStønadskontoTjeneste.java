@@ -98,7 +98,7 @@ public final class ValgAvStønadskontoTjeneste {
     private static boolean erTomForKonto(Stønadskontotype stønadskontotype, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
         boolean tomForKonto = false;
         for (AktivitetIdentifikator aktivitet : regelGrunnlag.getArbeid().getAktiviteter()) {
-            Trekkdager saldo = saldoUtregning.saldoITrekkdager(aktivitet, stønadskontotype);
+            Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
             if (!saldo.merEnn0()) {
                 tomForKonto = true;
                 break;

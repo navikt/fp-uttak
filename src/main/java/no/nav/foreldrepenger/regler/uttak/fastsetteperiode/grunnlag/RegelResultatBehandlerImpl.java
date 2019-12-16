@@ -121,7 +121,7 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             BigDecimal utbetalingsgrad = BigDecimal.ZERO;
             if (overlapperInnvilgetAnnenpartsPeriode) {
                 uttakPeriode.setSluttpunktTrekkerDager(aktivitet, false);
-            } else if (saldoUtregning.saldoITrekkdager(aktivitet, uttakPeriode.getStønadskontotype()).merEnn0() ||
+            } else if (saldoUtregning.saldoITrekkdager(uttakPeriode.getStønadskontotype(), aktivitet).merEnn0() ||
                     !(uttakPeriode instanceof StønadsPeriode) ||
                     uttakPeriode instanceof ManglendeSøktPeriode ||
                     Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode.getPerioderesultattype())) {

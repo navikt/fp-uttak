@@ -32,7 +32,7 @@ public class SjekkOmDagerIgjenPåAlleAktiviteter extends LeafSpecification<Fasts
 
     private boolean dagerIgjenPåKonto(FastsettePeriodeGrunnlag grunnlag, Stønadskontotype stønadskontotype) {
         for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-            Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(aktivitet, stønadskontotype);
+            Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (!saldo.merEnn0()) {
                 return false;
             }

@@ -70,28 +70,28 @@ public final class SaldoUtregningTjeneste {
                                                      LocalDate utregningsdato) {
         var stønadskontoer = arbeidsforhold.getKontoer().getKontoList().stream()
                 .map(konto -> {
-                    int saldo = saldoForArbeidsforhold(arbeidsforhold, grunnlag, fastsattePerioder, konto, utregningsdato);
+                    var saldo = saldoForArbeidsforhold(arbeidsforhold, grunnlag, fastsattePerioder, konto, utregningsdato);
                     return new Stønadskonto(konto.getType(), saldo);
                 })
                 .collect(Collectors.toSet());
         return new KontoForArbeidsforhold(arbeidsforhold.getIdentifikator(), stønadskontoer);
     }
 
-    private static int saldoForArbeidsforhold(Arbeidsforhold arbeidsforhold,
+    private static Trekkdager saldoForArbeidsforhold(Arbeidsforhold arbeidsforhold,
                                               SaldoUtregningGrunnlag grunnlag,
                                               List<FastsattUttakPeriode> fastsattePerioder,
                                               Konto konto,
                                               LocalDate utregningsdato) {
         var startdatoArbeidsforhold = arbeidsforhold.getStartdato();
-        if (arbeidsforholdStartetEtterFørsteUttaksdag(arbeidsforhold, grunnlag) && !startdatoArbeidsforhold.isAfter(utregningsdato)) {
+        if (arbeidsforholdStarterEtterFørsteUttaksdag(grunnlag, startdatoArbeidsforhold) && !startdatoArbeidsforhold.isAfter(utregningsdato)) {
             var arbeidsforholdFørStartdato = ekisterendeArbeidsforholdVedStartdato(grunnlag, startdatoArbeidsforhold);
             var fastsattePerioderFørStartdato = fastsattePerioderVedStartdato(fastsattePerioder, startdatoArbeidsforhold);
             var annenpart = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), startdatoArbeidsforhold, grunnlag.getAnnenpartsPerioder());
             var stønadskontoer = lagStønadskontoer(arbeidsforholdFørStartdato, grunnlag, fastsattePerioderFørStartdato, startdatoArbeidsforhold);
             var saldoUtregning = new SaldoUtregning(stønadskontoer, fastsattePerioderFørStartdato, annenpart, grunnlag.isTapendeBehandling());
-            return saldoUtregning.saldo(konto.getType());
+            return saldoUtregning.saldoITrekkdager(konto.getType());
         }
-        return konto.getTrekkdager();
+        return new Trekkdager(konto.getTrekkdager());
     }
 
     private static Set<Arbeidsforhold> ekisterendeArbeidsforholdVedStartdato(SaldoUtregningGrunnlag grunnlag, LocalDate startdatoArbeidsforhold) {
@@ -106,10 +106,10 @@ public final class SaldoUtregningTjeneste {
                 .collect(Collectors.toList());
     }
 
-    private static boolean arbeidsforholdStartetEtterFørsteUttaksdag(Arbeidsforhold arbeidsforhold, SaldoUtregningGrunnlag grunnlag) {
+    private static boolean arbeidsforholdStarterEtterFørsteUttaksdag(SaldoUtregningGrunnlag grunnlag, LocalDate arbeidsforholdStartdato) {
         var søkersFastsattePerioder = grunnlag.getSøkersFastsattePerioder();
         var søkersFørsteUttaksdato = søkersFastsattePerioder.isEmpty() ? grunnlag.getUtregningsdato() : søkersFastsattePerioder.get(0).getFom();
-        return arbeidsforhold.getStartdato().isAfter(søkersFørsteUttaksdato);
+        return arbeidsforholdStartdato.isAfter(søkersFørsteUttaksdato);
     }
 
     private static FastsattUttakPeriode map(AnnenpartUttaksperiode annenpartsPeriode) {

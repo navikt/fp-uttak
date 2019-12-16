@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -18,11 +19,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.FastsattUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -105,5 +109,32 @@ public class SaldoUtregningTjenesteTest {
         var resultat = SaldoUtregningTjeneste.lagUtregning(lagGrunnlag(aktuellPeriode, grunnlag));
 
         assertThat(resultat.saldo(Stønadskontotype.FELLESPERIODE)).isEqualTo(100 - 70);
+    }
+
+    @Test
+    public void skal_ikke_avrunde_før_saldo_arves_til_nytt_arbeidsforhold() {
+        var kontoerArbeidsforhold1 = new Kontoer.Builder().leggTilKonto(new Konto.Builder()
+                .medTrekkdager(100)
+                .medType(Stønadskontotype.FELLESPERIODE));
+        var kontoerNyttArbeidsforhold = new Kontoer.Builder().leggTilKonto(new Konto.Builder()
+                .medTrekkdager(100)
+                .medType(Stønadskontotype.FELLESPERIODE));
+
+        var utregningsdato = LocalDate.of(2019, 12, 5);
+        var identifikator1 = AktivitetIdentifikator.annenAktivitet();
+        var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forFrilans();
+        var fastsattPeriode = new FastsattUttakPeriode.Builder()
+                .medTidsperiode(utregningsdato.minusWeeks(1), utregningsdato.minusDays(1))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(2.5)), Stønadskontotype.FELLESPERIODE, identifikator1)))
+                .build();
+        var arbeidsforhold1 = new Arbeidsforhold(identifikator1, kontoerArbeidsforhold1);
+        var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, kontoerNyttArbeidsforhold, utregningsdato);
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
+                false, List.of(), Set.of(arbeidsforhold1, nyttArbeidsforhold), utregningsdato);
+        var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
+
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
     }
 }

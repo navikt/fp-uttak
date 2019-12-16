@@ -81,7 +81,7 @@ public class SaldoUtregning {
      * @return antall gjenstående dager for angitt stønadskonto og aktivitet.
      */
     public int saldo(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
-        var saldo = saldoITrekkdager(aktivitet, stønadskonto);
+        var saldo = saldoITrekkdager(stønadskonto, aktivitet);
         if (saldo.mindreEnn0()) {
             return saldo.decimalValue().setScale(0, RoundingMode.DOWN).intValue();
         }
@@ -95,16 +95,32 @@ public class SaldoUtregning {
      * @param aktivitet    angitt aktivitet.
      * @return antall gjenstående dager for angitt stønadskonto og aktivitet.
      */
-    public Trekkdager saldoITrekkdager(AktivitetIdentifikator aktivitet, Stønadskontotype stønadskonto) {
+    public Trekkdager saldoITrekkdager(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
         BigDecimal forbruktSøker = forbruktSøker(stønadskonto, aktivitet);
         int forbruktAnnenpart = minForbruktAnnenpart(stønadskonto);
         //frigitte dager er dager fra annenpart som blir ledig når søker tar uttak i samme periode
         int frigitteDager = frigitteDager(stønadskonto);
-        BigDecimal saldo = BigDecimal.valueOf(getMaxDager(stønadskonto, aktivitet))
-                .subtract(forbruktSøker)
-                .subtract(BigDecimal.valueOf(forbruktAnnenpart))
-                .add(BigDecimal.valueOf(frigitteDager));
-        return new Trekkdager(saldo);
+        return getMaxDager(stønadskonto, aktivitet)
+                .subtract(new Trekkdager(forbruktSøker))
+                .subtract(new Trekkdager(forbruktAnnenpart))
+                .add(new Trekkdager(frigitteDager));
+    }
+
+    /**
+     * Saldo for angitt stønadskonto. Dersom saldo der forskjellige på aktivitetene, så blir største saldo valgt.
+     *
+     * @param stønadskonto angitt stønadskonto.
+     * @return antall gjenstående dager for angitt stønadskonto.
+     */
+    public Trekkdager saldoITrekkdager(Stønadskontotype stønadskonto) {
+        Trekkdager max = Trekkdager.ZERO;
+        for (AktivitetIdentifikator aktivitet : aktiviteterForSøker()) {
+            var saldo = saldoITrekkdager(stønadskonto, aktivitet);
+            if (max.compareTo(saldo) < 0) {
+                max = saldo;
+            }
+        }
+        return max;
     }
 
     /**
@@ -191,21 +207,21 @@ public class SaldoUtregning {
         return stønadskontoer.stream()
                 .flatMap(konto -> konto.getStønadskontoer().stream())
                 .filter(stønadskonto -> stønadskonto.getStønadskontotype().equals(stønadskontotype))
-                .map(Stønadskonto::getMaksdager)
+                .map(stønadskonto -> stønadskonto.getMaksdager().decimalValue().intValue())
                 .max(Integer::compareTo)
                 .orElse(0);
     }
 
-    private int getMaxDager(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitetIdentifikator) {
+    private Trekkdager getMaxDager(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitetIdentifikator) {
         var kontoForArbeidsforhold = kontoForArbeidsforhold(aktivitetIdentifikator);
         if (kontoForArbeidsforhold.isEmpty()) {
-            return 0;
+            return Trekkdager.ZERO;
         }
         return kontoForArbeidsforhold.get().getStønadskontoer().stream()
                 .filter(konto -> konto.getStønadskontotype().equals(stønadskonto))
                 .map(Stønadskonto::getMaksdager)
                 .findFirst()
-                .orElse(0);
+                .orElse(Trekkdager.ZERO);
     }
 
     private int frigitteDager(Stønadskontotype stønadskonto) {

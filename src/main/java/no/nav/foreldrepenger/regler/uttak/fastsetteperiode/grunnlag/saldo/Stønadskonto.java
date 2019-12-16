@@ -1,13 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class Stønadskonto {
 
     private final Stønadskontotype stønadskontoType;
-    private final int maksdager;
+    private final Trekkdager maksdager;
 
-    public Stønadskonto(Stønadskontotype stønadskontoType, int maksdager) {
+    public Stønadskonto(Stønadskontotype stønadskontoType, Trekkdager maksdager) {
         this.stønadskontoType = stønadskontoType;
         this.maksdager = maksdager;
     }
@@ -16,7 +17,7 @@ public class Stønadskonto {
         return stønadskontoType;
     }
 
-    int getMaksdager() {
+    Trekkdager getMaksdager() {
         return maksdager;
     }
 
