@@ -39,6 +39,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.SaldoU
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.saldo.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
@@ -73,7 +74,8 @@ public class FastsettePerioderRegelOrkestrering {
         for (var aktuellPeriode : allePerioderSomSkalFastsettes) {
             FastsettePeriodeResultat resultat;
             do {
-                var saldoUtregning = lagUtregning(saldoGrunnlag(grunnlag, resultatPerioder, aktuellPeriode));
+                var saldoUtregningGrunnlag = saldoGrunnlag(grunnlag, resultatPerioder, aktuellPeriode, allePerioderSomSkalFastsettes);
+                var saldoUtregning = lagUtregning(saldoUtregningGrunnlag);
                 resultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, aktuellPeriode, saldoUtregning);
                 resultatPerioder.add(resultat);
                 if (resultat.harFørtTilKnekk()) {
@@ -254,10 +256,22 @@ public class FastsettePerioderRegelOrkestrering {
         }
     }
 
-    private SaldoUtregningGrunnlag saldoGrunnlag(RegelGrunnlag grunnlag, List<FastsettePeriodeResultat> resultatPerioder, UttakPeriode aktuellPeriode) {
+    private SaldoUtregningGrunnlag saldoGrunnlag(RegelGrunnlag grunnlag,
+                                                 List<FastsettePeriodeResultat> resultatPerioder,
+                                                 UttakPeriode aktuellPeriode,
+                                                 List<UttakPeriode> allePerioderSomSkalFastsettes) {
         List<AnnenpartUttaksperiode> annenpartPerioder = grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder();
-        return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(map(resultatPerioder), grunnlag.getBehandling().isTapende(),
-                annenpartPerioder, grunnlag.getArbeid().getArbeidsforhold(), aktuellPeriode.getFom());
+
+        var søkersFastsattePerioder = map(resultatPerioder);
+        var arbeidsforhold = grunnlag.getArbeid().getArbeidsforhold();
+        var utregningsdato = aktuellPeriode.getFom();
+        if (grunnlag.getBehandling().isTapende()) {
+            var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
+            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(søkersFastsattePerioder,
+                    annenpartPerioder, arbeidsforhold, utregningsdato, søktePerioder);
+        }
+        return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder,
+                arbeidsforhold, utregningsdato);
     }
 
     private FastsattUttakPeriode map(UttakPeriode periode) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -14,6 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public final class SaldoUtregningTjeneste {
 
@@ -22,7 +24,8 @@ public final class SaldoUtregningTjeneste {
 
     public static SaldoUtregning lagUtregning(SaldoUtregningGrunnlag grunnlag) {
         var utregningsdato = grunnlag.getUtregningsdato();
-        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), utregningsdato, grunnlag.getAnnenpartsPerioder());
+        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), grunnlag.getUtregningsdato(),
+                grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
         var søkersFastsattePerioder = grunnlag.getSøkersFastsattePerioder();
         var stønadskontoer = lagStønadskontoer(grunnlag.getArbeidsforhold(), grunnlag, søkersFastsattePerioder, utregningsdato);
         return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isTapendeBehandling());
@@ -30,14 +33,19 @@ public final class SaldoUtregningTjeneste {
 
     private static List<FastsattUttakPeriode> finnRelevanteAnnenpartsPerioder(boolean isTapendeBehandling,
                                                                               LocalDate utregningsdato,
-                                                                              List<AnnenpartUttaksperiode> annenPartUttaksperioder) {
+                                                                              List<AnnenpartUttaksperiode> annenPartUttaksperioder,
+                                                                              List<LukketPeriode> søktePerioder) {
         var annenpartsPerioder = annenPartUttaksperioder;
-        if (!isTapendeBehandling) {
+        if (isTapendeBehandling) {
+            annenpartsPerioder = annenpartsPerioder.stream()
+                    .flatMap(ap -> finnDelerAvOppholdsperiode(søktePerioder, ap))
+                    .collect(Collectors.toList());
+        } else {
             annenpartsPerioder = annenpartsPerioder.stream()
                     .filter(ap -> ap.getFom().isBefore(utregningsdato))
                     .map(ap -> {
                         if (ap.overlapper(utregningsdato)) {
-                            return knekk(ap, utregningsdato.minusDays(1));
+                            return knekk(ap, ap.getFom(), utregningsdato.minusDays(1));
                         }
                         return ap;
                     })
@@ -49,9 +57,28 @@ public final class SaldoUtregningTjeneste {
                 .collect(Collectors.toList());
     }
 
-    private static AnnenpartUttaksperiode knekk(AnnenpartUttaksperiode ap, LocalDate nyTom) {
-        var aktiviteterForPeriodeFørKnekkpunkt = aktiviteterForPeriodeFørKnekkpunkt(ap, nyTom);
-        return ap.kopiMedNyPeriode(ap.getFom(), nyTom, aktiviteterForPeriodeFørKnekkpunkt);
+    private static Stream<AnnenpartUttaksperiode> finnDelerAvOppholdsperiode(List<LukketPeriode> søktePerioder, AnnenpartUttaksperiode ap) {
+        for (LukketPeriode søktPeriode : søktePerioder) {
+            if (ap.isOppholdsperiode() && ap.overlapper(søktPeriode.getFom())) {
+                if (søktPeriode.getFom().isEqual(ap.getFom()) && søktPeriode.getTom().isEqual(ap.getTom())) {
+                    return Stream.of();
+                }
+                var etterknekk = new ArrayList<AnnenpartUttaksperiode>();
+                if (ap.getFom().isBefore(søktPeriode.getFom())) {
+                    etterknekk.add(knekk(ap, ap.getFom(), søktPeriode.getFom().minusDays(1)));
+                }
+                if (ap.getTom().isAfter(søktPeriode.getTom())) {
+                    etterknekk.add(knekk(ap, søktPeriode.getTom().plusDays(1), ap.getTom()));
+                }
+                return etterknekk.stream();
+            }
+        }
+        return Stream.of(ap);
+    }
+
+    private static AnnenpartUttaksperiode knekk(AnnenpartUttaksperiode ap, LocalDate nyFom, LocalDate nyTom) {
+        var aktiviteterForPeriodeFørKnekkpunkt = aktiviteterForPeriodeFørKnekkpunkt(ap, nyFom, nyTom);
+        return ap.kopiMedNyPeriode(nyFom, nyTom, aktiviteterForPeriodeFørKnekkpunkt);
     }
 
     private static Set<KontoForArbeidsforhold> lagStønadskontoer(Set<Arbeidsforhold> arbeidsforholdListe,
@@ -86,7 +113,8 @@ public final class SaldoUtregningTjeneste {
         if (arbeidsforholdStarterEtterFørsteUttaksdag(grunnlag, startdatoArbeidsforhold) && !startdatoArbeidsforhold.isAfter(utregningsdato)) {
             var arbeidsforholdFørStartdato = ekisterendeArbeidsforholdVedStartdato(grunnlag, startdatoArbeidsforhold);
             var fastsattePerioderFørStartdato = fastsattePerioderVedStartdato(fastsattePerioder, startdatoArbeidsforhold);
-            var annenpart = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), startdatoArbeidsforhold, grunnlag.getAnnenpartsPerioder());
+            var annenpart = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), startdatoArbeidsforhold,
+                    grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
             var stønadskontoer = lagStønadskontoer(arbeidsforholdFørStartdato, grunnlag, fastsattePerioderFørStartdato, startdatoArbeidsforhold);
             var saldoUtregning = new SaldoUtregning(stønadskontoer, fastsattePerioderFørStartdato, annenpart, grunnlag.isTapendeBehandling());
             return saldoUtregning.saldoITrekkdager(konto.getType());
@@ -133,8 +161,9 @@ public final class SaldoUtregningTjeneste {
                 .collect(Collectors.toList());
     }
 
-    private static List<no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(AnnenpartUttaksperiode periode, LocalDate knekkTom) {
-        int virkedagerInnenfor = Virkedager.beregnAntallVirkedager(periode.getFom(), knekkTom);
+    private static List<no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(AnnenpartUttaksperiode periode,
+                                                                                                                                               LocalDate nyFom, LocalDate nyTom) {
+        int virkedagerInnenfor = Virkedager.beregnAntallVirkedager(nyFom, nyTom);
         int virkedagerHele = periode.virkedager();
 
         List<no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet> uttakPeriodeAktivitetMedNyttTrekkDager = new ArrayList<>();

@@ -19,7 +19,7 @@ final class DelRegelTestUtil {
     }
 
     static Regelresultat kjørRegel(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), false,
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
                 List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
         return kjørRegel(uttakPeriode, grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag));
     }
