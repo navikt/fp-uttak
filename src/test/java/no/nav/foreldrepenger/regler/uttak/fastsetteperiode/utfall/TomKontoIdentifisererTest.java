@@ -74,7 +74,7 @@ public class TomKontoIdentifisererTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
                 .build();
 
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), false,
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
                 List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
         var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
         var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(uttakPeriode, Collections.singletonList(ARBEIDSFORHOLD_1), saldoUtregning, Stønadskontotype.MØDREKVOTE);
