@@ -31,7 +31,7 @@ public class RegelResultatBehandlerImplTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), false,
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
                 List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
         var behandler = new RegelResultatBehandlerImpl(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 

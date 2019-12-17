@@ -76,7 +76,8 @@ public class SjekkOmTomForAlleSineKontoerTest {
 
         var sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), false, List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(),
+                grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
         var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
                 SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);

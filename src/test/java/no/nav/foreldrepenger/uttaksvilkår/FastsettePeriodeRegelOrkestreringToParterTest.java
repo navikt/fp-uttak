@@ -628,6 +628,29 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
         assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
     }
 
+    //FAGSYSTEM-85385
+    @Test
+    public void tapende_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perrioden() {
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(førsteLovligeDato))
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), AktivitetIdentifikator.forFrilans(), true))
+                        .leggTilUttaksperiode(annenpartPeriodeOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1), Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER))
+                )
+                .medBehandling(farBehandling().medErTapende(true))
+                .medRettOgOmsorg(beggeRett())
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
     private AnnenpartUttaksperiode annenpartPeriodeOpphold(LocalDate fom, LocalDate tom, Oppholdårsaktype oppholdårsaktype) {
         return AnnenpartUttaksperiode.Builder.opphold(fom, tom, oppholdårsaktype)
                 .medInnvilget(true)

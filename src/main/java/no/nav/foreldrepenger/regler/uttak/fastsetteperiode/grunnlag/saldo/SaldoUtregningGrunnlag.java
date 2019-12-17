@@ -6,6 +6,7 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public class SaldoUtregningGrunnlag {
     private List<FastsattUttakPeriode> søkersFastsattePerioder;
@@ -13,32 +14,42 @@ public class SaldoUtregningGrunnlag {
     private boolean tapendeBehandling;
     private List<AnnenpartUttaksperiode> annenpartsPerioder;
     private Set<Arbeidsforhold> arbeidsforhold;
+    private List<LukketPeriode> søktePerioder;
 
     private SaldoUtregningGrunnlag(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                    LocalDate utregningsdato,
                                    boolean tapendeBehandling,
                                    List<AnnenpartUttaksperiode> annenpartsPerioder,
-                                   Set<Arbeidsforhold> arbeidsforhold) {
+                                   Set<Arbeidsforhold> arbeidsforhold,
+                                   List<LukketPeriode> søktePerioder) {
         this.søkersFastsattePerioder = søkersFastsattePerioder;
         this.utregningsdato = utregningsdato;
         this.tapendeBehandling = tapendeBehandling;
         this.annenpartsPerioder = annenpartsPerioder;
         this.arbeidsforhold = arbeidsforhold;
+        this.søktePerioder = søktePerioder;
     }
 
     public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                                                    boolean tapendeBehandling,
                                                                    List<AnnenpartUttaksperiode> annenpartsPerioder,
                                                                    Set<Arbeidsforhold> arbeidsforhold) {
-        return forUtregningAvDelerAvUttak(søkersFastsattePerioder, tapendeBehandling, annenpartsPerioder, arbeidsforhold, LocalDate.MAX);
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, tapendeBehandling, annenpartsPerioder, arbeidsforhold, List.of());
     }
 
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttak(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                    boolean tapendeBehandling,
                                                                     List<AnnenpartUttaksperiode> annenpartsPerioder,
                                                                     Set<Arbeidsforhold> arbeidsforhold,
                                                                     LocalDate utregningsdato) {
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, tapendeBehandling, annenpartsPerioder, arbeidsforhold);
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, false, annenpartsPerioder, arbeidsforhold, List.of());
+    }
+
+    public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakTapendeBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
+                                                                                     List<AnnenpartUttaksperiode> annenpartsPerioder,
+                                                                                     Set<Arbeidsforhold> arbeidsforhold,
+                                                                                     LocalDate utregningsdato,
+                                                                                     List<LukketPeriode> søktePerioder) {
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, true, annenpartsPerioder, arbeidsforhold, søktePerioder);
     }
 
     List<FastsattUttakPeriode> getSøkersFastsattePerioder() {
@@ -59,5 +70,9 @@ public class SaldoUtregningGrunnlag {
 
     Set<Arbeidsforhold> getArbeidsforhold() {
         return arbeidsforhold;
+    }
+
+    public List<LukketPeriode> getSøktePerioder() {
+        return søktePerioder;
     }
 }
