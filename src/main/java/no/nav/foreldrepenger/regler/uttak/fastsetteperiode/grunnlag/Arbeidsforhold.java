@@ -55,11 +55,15 @@ public class Arbeidsforhold {
 
     public BigDecimal getStillingsprosent(LocalDate dato) {
         return endringAvStillingListe.stream()
-                .sorted(Comparator.comparing(EndringAvStilling::getDato))
+                .sorted(reverse())
                 .filter(endring -> !dato.isBefore(endring.getDato()))
                 .findFirst()
                 .map(EndringAvStilling::getStillingsprosent)
                 .orElse(BigDecimal.valueOf(100));
+    }
+
+    private Comparator<EndringAvStilling> reverse() {
+        return (o1, o2) -> o2.getDato().compareTo(o1.getDato());
     }
 
     @Override
