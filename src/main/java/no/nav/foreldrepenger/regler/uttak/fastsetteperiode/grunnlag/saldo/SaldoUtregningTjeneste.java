@@ -4,11 +4,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -16,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public final class SaldoUtregningTjeneste {
 
@@ -23,11 +28,10 @@ public final class SaldoUtregningTjeneste {
     }
 
     public static SaldoUtregning lagUtregning(SaldoUtregningGrunnlag grunnlag) {
-        var utregningsdato = grunnlag.getUtregningsdato();
         var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), grunnlag.getUtregningsdato(),
                 grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
         var søkersFastsattePerioder = grunnlag.getSøkersFastsattePerioder();
-        var stønadskontoer = lagStønadskontoer(grunnlag.getArbeidsforhold(), grunnlag, søkersFastsattePerioder, utregningsdato);
+        var stønadskontoer = lagStønadskontoer(grunnlag);
         return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isTapendeBehandling());
     }
 
@@ -81,51 +85,70 @@ public final class SaldoUtregningTjeneste {
         return ap.kopiMedNyPeriode(nyFom, nyTom, aktiviteterForPeriodeFørKnekkpunkt);
     }
 
-    private static Set<KontoForArbeidsforhold> lagStønadskontoer(Set<Arbeidsforhold> arbeidsforholdListe,
-                                                                 SaldoUtregningGrunnlag grunnlag,
-                                                                 List<FastsattUttakPeriode> fastsattePerioder,
-                                                                 LocalDate utregningsdato) {
-        return arbeidsforholdListe.stream()
-                .filter(arbeidsforhold -> !arbeidsforhold.getStartdato().isAfter(utregningsdato))
-                .map(arbeidsforhold -> lagKontoer(arbeidsforhold, grunnlag, fastsattePerioder, utregningsdato))
+    private static Set<KontoForArbeidsforhold> lagStønadskontoer(SaldoUtregningGrunnlag grunnlag) {
+        return grunnlag.getArbeidsforhold().stream()
+                .filter(arbeidsforhold -> !arbeidsforhold.getStartdato().isAfter(grunnlag.getUtregningsdato()))
+                .map(arbeidsforhold -> lagKontoer(arbeidsforhold, grunnlag))
                 .collect(Collectors.toSet());
     }
 
     private static KontoForArbeidsforhold lagKontoer(Arbeidsforhold arbeidsforhold,
-                                                     SaldoUtregningGrunnlag grunnlag,
-                                                     List<FastsattUttakPeriode> fastsattePerioder,
-                                                     LocalDate utregningsdato) {
+                                                     SaldoUtregningGrunnlag grunnlag) {
         var stønadskontoer = arbeidsforhold.getKontoer().getKontoList().stream()
-                .map(konto -> {
-                    var saldo = saldoForArbeidsforhold(arbeidsforhold, grunnlag, fastsattePerioder, konto, utregningsdato);
-                    return new Stønadskonto(konto.getType(), saldo);
-                })
+                .map(konto -> lagKonto(arbeidsforhold, grunnlag, konto))
                 .collect(Collectors.toSet());
         return new KontoForArbeidsforhold(arbeidsforhold.getIdentifikator(), stønadskontoer);
     }
 
-    private static Trekkdager saldoForArbeidsforhold(Arbeidsforhold arbeidsforhold,
-                                              SaldoUtregningGrunnlag grunnlag,
-                                              List<FastsattUttakPeriode> fastsattePerioder,
-                                              Konto konto,
-                                              LocalDate utregningsdato) {
-        var startdatoArbeidsforhold = arbeidsforhold.getStartdato();
-        if (arbeidsforholdStarterEtterFørsteUttaksdag(grunnlag, startdatoArbeidsforhold) && !startdatoArbeidsforhold.isAfter(utregningsdato)) {
-            var arbeidsforholdFørStartdato = ekisterendeArbeidsforholdVedStartdato(grunnlag, startdatoArbeidsforhold);
-            var fastsattePerioderFørStartdato = fastsattePerioderVedStartdato(fastsattePerioder, startdatoArbeidsforhold);
-            var annenpart = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), startdatoArbeidsforhold,
-                    grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
-            var stønadskontoer = lagStønadskontoer(arbeidsforholdFørStartdato, grunnlag, fastsattePerioderFørStartdato, startdatoArbeidsforhold);
-            var saldoUtregning = new SaldoUtregning(stønadskontoer, fastsattePerioderFørStartdato, annenpart, grunnlag.isTapendeBehandling());
-            return saldoUtregning.saldoITrekkdager(konto.getType());
+    private static Stønadskonto lagKonto(Arbeidsforhold arbeidsforhold, SaldoUtregningGrunnlag grunnlag, Konto konto) {
+
+        if (arbeidsforholdStarterEtterFørsteUttaksdag(grunnlag, arbeidsforhold.getStartdato())) {
+            var dato = arbeidsforhold.getStartdato().isBefore(grunnlag.getUtregningsdato()) ? arbeidsforhold.getStartdato() : grunnlag.getUtregningsdato();
+            var antallDagerBrukt = antallDagerBruktFramTilDato(konto.getType(), grunnlag.getSøkersFastsattePerioder(), dato,
+                    arbeidsforhold.getIdentifikator(), startDatoer(grunnlag));
+            return new Stønadskonto(konto.getType(), new Trekkdager(konto.getTrekkdager()).subtract(antallDagerBrukt));
         }
-        return new Trekkdager(konto.getTrekkdager());
+        return new Stønadskonto(konto.getType(), new Trekkdager(konto.getTrekkdager()));
     }
 
-    private static Set<Arbeidsforhold> ekisterendeArbeidsforholdVedStartdato(SaldoUtregningGrunnlag grunnlag, LocalDate startdatoArbeidsforhold) {
-        return grunnlag.getArbeidsforhold().stream()
-                .filter(a -> a.getStartdato().isBefore(startdatoArbeidsforhold))
+    private static Map<AktivitetIdentifikator, LocalDate> startDatoer(SaldoUtregningGrunnlag grunnlag) {
+        var resultat = new HashMap<AktivitetIdentifikator, LocalDate>();
+        for (Arbeidsforhold arbeidsforhold : grunnlag.getArbeidsforhold()) {
+            resultat.put(arbeidsforhold.getIdentifikator(), arbeidsforhold.getStartdato());
+        }
+        return resultat;
+    }
+
+    private static Trekkdager antallDagerBruktFramTilDato(Stønadskontotype stønadskontoType,
+                                                          List<FastsattUttakPeriode> fastsatteUttaksperioder,
+                                                          LocalDate dato,
+                                                          AktivitetIdentifikator aktivitetIdentifikator,
+                                                          Map<AktivitetIdentifikator, LocalDate> startdatoer) {
+
+        var forbrukteDager = Trekkdager.ZERO;
+        var aktiviteterFørDato = fastsattePerioderVedStartdato(fastsatteUttaksperioder, dato)
+                .stream()
+                .flatMap(periode -> periode.getAktiviteter().stream())
                 .collect(Collectors.toSet());
+        var aktiviteter = aktiviteterFørDato.stream()
+                .filter(aktivitet -> aktivitet.getAktivitetIdentifikator().equals(aktivitetIdentifikator))
+                .filter(aktivitet -> Objects.equals(aktivitet.getTrekkonto(), stønadskontoType))
+                .collect(Collectors.toList());
+        for (var aktivitet : aktiviteter) {
+            forbrukteDager = forbrukteDager.add(aktivitet.getTrekkdager());
+        }
+        var startdatoForAktivitet = startdatoer.get(aktivitetIdentifikator);
+        if (!fastsatteUttaksperioder.isEmpty() && startdatoForAktivitet.isAfter(fastsatteUttaksperioder.get(0).getFom())) {
+            //Skal arve saldo fra aktivitet som har igjen mest
+            var minimumTrektDagerFørDato = startdatoer.entrySet().stream()
+                    .filter(entry -> entry.getValue().isBefore(dato))
+                    .map(entry -> entry.getKey())
+                    .map(ai -> antallDagerBruktFramTilDato(stønadskontoType, fastsatteUttaksperioder, startdatoForAktivitet.isBefore(dato) ? startdatoForAktivitet : dato, ai, startdatoer))
+                    .min((o1, o2) -> o1.compareTo(o2))
+                    .orElse(Trekkdager.ZERO);
+            forbrukteDager = forbrukteDager.add(minimumTrektDagerFørDato);
+        }
+        return forbrukteDager;
     }
 
     private static List<FastsattUttakPeriode> fastsattePerioderVedStartdato(List<FastsattUttakPeriode> fastsattePerioder, LocalDate utregningsdato) {

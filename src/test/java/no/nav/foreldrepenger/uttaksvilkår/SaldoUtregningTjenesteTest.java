@@ -246,20 +246,96 @@ public class SaldoUtregningTjenesteTest {
                 .medType(Stønadskontotype.FELLESPERIODE));
 
         var utregningsdato = LocalDate.of(2019, 12, 5);
-        var identifikator1 = AktivitetIdentifikator.annenAktivitet();
+        var identifikator = AktivitetIdentifikator.annenAktivitet();
         var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var fastsattPeriode = new FastsattUttakPeriode.Builder()
                 .medTidsperiode(utregningsdato.minusWeeks(1), utregningsdato.minusDays(1))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(2.5)), Stønadskontotype.FELLESPERIODE, identifikator1)))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(2.5)), Stønadskontotype.FELLESPERIODE, identifikator)))
                 .build();
-        var arbeidsforhold1 = new Arbeidsforhold(identifikator1, kontoerArbeidsforhold1);
+        var arbeidsforhold1 = new Arbeidsforhold(identifikator, kontoerArbeidsforhold1);
         var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, kontoerNyttArbeidsforhold, utregningsdato);
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(),
                 Set.of(arbeidsforhold1, nyttArbeidsforhold), utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
         assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
+    }
+
+    @Test
+    public void skal_ikke_dobbelt_trekke_fra_annenpart_når_arbeidsforhold_starter_ila_uttaket() {
+        var kontoerArbeidsforhold1 = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE))
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.FELLESPERIODE));
+        var kontoerNyttArbeidsforhold = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE))
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.FELLESPERIODE));
+
+        var utregningsdato = LocalDate.MAX;
+        var identifikator = AktivitetIdentifikator.forArbeid("123", "456");
+        var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forArbeid("123", "789");
+        var fastsattPeriode = new FastsattUttakPeriode.Builder()
+                .medTidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 19))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikator)))
+                .build();
+        var arbeidsforhold1 = new Arbeidsforhold(identifikator, kontoerArbeidsforhold1, LocalDate.of(2018, 1, 1));
+        var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, kontoerNyttArbeidsforhold, LocalDate.of(2019, 12, 20));
+        var annenpartsPeriode = AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 12, 11), LocalDate.of(2019, 12, 17))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forSelvstendigNæringsdrivende(),
+                        Stønadskontotype.MØDREKVOTE, new Trekkdager(100), BigDecimal.valueOf(100)))
+                .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(annenpartsPeriode),
+                Set.of(arbeidsforhold1, nyttArbeidsforhold), utregningsdato);
+        var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
+
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.MØDREKVOTE, identifikator)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.MØDREKVOTE, identifikatorNyttArbeidsforhold)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    public void skal_arve_saldo_flere_ganger() {
+        var kontoerArbeidsforhold1 = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(155).medType(Stønadskontotype.FELLESPERIODE));
+        var kontoerNyttArbeidsforhold1 = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(155).medType(Stønadskontotype.FELLESPERIODE));
+        var kontoerNyttArbeidsforhold2 = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(155).medType(Stønadskontotype.FELLESPERIODE));
+
+        var utregningsdato = LocalDate.MAX;
+        var identifikator = AktivitetIdentifikator.forArbeid("123", "456");
+        var identifikatorNyttArbeidsforhold1 = AktivitetIdentifikator.forArbeid("123", "789");
+        var identifikatorNyttArbeidsforhold2 = AktivitetIdentifikator.forArbeid("345", null);
+        var fastsattPeriode1 = new FastsattUttakPeriode.Builder()
+                .medTidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 18))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikator)))
+                .build();
+        var fastsattPeriode2 = new FastsattUttakPeriode.Builder()
+                .medTidsperiode(LocalDate.of(2019, 12, 19), LocalDate.of(2019, 12, 19))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikator),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold1)))
+                .build();
+        var fastsattPeriode3 = new FastsattUttakPeriode.Builder()
+                .medTidsperiode(LocalDate.of(2019, 12, 20), LocalDate.of(2019, 12, 20))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikator),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold1),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold2)))
+                .build();
+        var arbeidsforhold1 = new Arbeidsforhold(identifikator, kontoerArbeidsforhold1, LocalDate.of(2018, 1, 1));
+        var nyttArbeidsforhold1 = new Arbeidsforhold(identifikatorNyttArbeidsforhold1, kontoerNyttArbeidsforhold1, LocalDate.of(2019, 12, 19));
+        var nyttArbeidsforhold2 = new Arbeidsforhold(identifikatorNyttArbeidsforhold2, kontoerNyttArbeidsforhold2, LocalDate.of(2019, 12, 20));
+
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode1, fastsattPeriode2, fastsattPeriode3), List.of(),
+                Set.of(arbeidsforhold1, nyttArbeidsforhold1, nyttArbeidsforhold2), utregningsdato);
+        var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
+
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold1)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold2)).isEqualTo(new Trekkdager(5));
     }
 }
