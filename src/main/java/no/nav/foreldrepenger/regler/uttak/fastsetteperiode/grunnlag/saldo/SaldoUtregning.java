@@ -28,9 +28,9 @@ public class SaldoUtregning {
     private final boolean tapendeBehandling;
 
     SaldoUtregning(Set<KontoForArbeidsforhold> stønadskontoer,
-                          List<FastsattUttakPeriode> søkersPerioder,
-                          List<FastsattUttakPeriode> annenpartsPerioder,
-                          boolean tapendeBehandling) {
+                   List<FastsattUttakPeriode> søkersPerioder,
+                   List<FastsattUttakPeriode> annenpartsPerioder,
+                   boolean tapendeBehandling) {
         this.stønadskontoer = stønadskontoer;
         this.søkersPerioder = søkersPerioder;
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
