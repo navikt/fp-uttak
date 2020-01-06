@@ -77,6 +77,9 @@ class KnekkpunktIdentifiserer {
     }
 
     private static Set<LocalDate> knekkpunkterPåArbeid(Arbeid arbeid) {
+        if (arbeid.getArbeidsforhold().size() == 1) {
+            return Set.of();
+        }
         return arbeid.getArbeidsforhold().stream()
                 .map(Arbeidsforhold::getStartdato)
                 .collect(Collectors.toSet());

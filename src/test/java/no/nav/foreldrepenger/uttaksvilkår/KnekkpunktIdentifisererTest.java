@@ -476,6 +476,22 @@ public class KnekkpunktIdentifisererTest {
         assertThat(knekkpunkter).contains(startdato1, startdato2);
     }
 
+    @Test
+    public void skal_ikke_knekke_på_startdato_hos_arbeidsforhold_hvis_bare_ett_arbeidsforhold() {
+        var fødselsdato = LocalDate.of(2019, 9, 23);
+        var startdato = fødselsdato.plusWeeks(8);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
+                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .medArbeid(new Arbeid.Builder()
+                        .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans(), new Kontoer.Builder(), startdato)))
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).doesNotContain(startdato);
+    }
+
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
         return Arrays.asList(
                 fødselsdato.minusWeeks(12), //tidligste mulige uttak
