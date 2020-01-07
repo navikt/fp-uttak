@@ -96,7 +96,7 @@ public class FastsettePerioderRegelOrkestrering {
 
     private Set<AktivitetIdentifikator> aktiviteterIPeriode(UttakPeriode periode, Arbeid arbeid) {
         return arbeid.getArbeidsforhold().stream()
-                .filter(arbeidsforhold -> !arbeidsforhold.getStartdato().isAfter(periode.getFom()))
+                .filter(arbeidsforhold -> arbeid.getArbeidsforhold().size() == 1 || !arbeidsforhold.getStartdato().isAfter(periode.getFom()))
                 .map(Arbeidsforhold::getIdentifikator)
                 .collect(Collectors.toSet());
     }

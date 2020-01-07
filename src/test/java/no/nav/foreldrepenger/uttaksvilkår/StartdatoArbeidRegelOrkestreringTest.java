@@ -122,4 +122,25 @@ public class StartdatoArbeidRegelOrkestreringTest extends FastsettePerioderRegel
         assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
+    @Test
+    public void skal_ikke_ta_hensyn_til_startdato_hvis_bare_ett_arbeidsforhold() {
+        var fødselsdato = LocalDate.of(2019, 11, 27);
+        var arbeidsforhold = AktivitetIdentifikator.annenAktivitet();
+        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold, defaultKontoer(), fødselsdato.plusWeeks(4)));
+        var fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
+        grunnlag.medArbeid(arbeid)
+                .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote))
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(fødselsdato.minusYears(3)));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold);
+        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold);
+        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold);
+    }
+
 }

@@ -87,7 +87,7 @@ public final class SaldoUtregningTjeneste {
 
     private static Set<KontoForArbeidsforhold> lagStønadskontoer(SaldoUtregningGrunnlag grunnlag) {
         return grunnlag.getArbeidsforhold().stream()
-                .filter(arbeidsforhold -> !arbeidsforhold.getStartdato().isAfter(grunnlag.getUtregningsdato()))
+                .filter(arbeidsforhold -> grunnlag.getArbeidsforhold().size() == 1  || !arbeidsforhold.getStartdato().isAfter(grunnlag.getUtregningsdato()))
                 .map(arbeidsforhold -> lagKontoer(arbeidsforhold, grunnlag))
                 .collect(Collectors.toSet());
     }
@@ -102,7 +102,7 @@ public final class SaldoUtregningTjeneste {
 
     private static Stønadskonto lagKonto(Arbeidsforhold arbeidsforhold, SaldoUtregningGrunnlag grunnlag, Konto konto) {
 
-        if (arbeidsforholdStarterEtterFørsteUttaksdag(grunnlag, arbeidsforhold.getStartdato())) {
+        if (grunnlag.getArbeidsforhold().size() > 1 && arbeidsforholdStarterEtterFørsteUttaksdag(grunnlag, arbeidsforhold.getStartdato())) {
             var dato = arbeidsforhold.getStartdato().isBefore(grunnlag.getUtregningsdato()) ? arbeidsforhold.getStartdato() : grunnlag.getUtregningsdato();
             var antallDagerBrukt = antallDagerBruktFramTilDato(konto.getType(), grunnlag.getSøkersFastsattePerioder(), dato,
                     arbeidsforhold.getIdentifikator(), startDatoer(grunnlag));

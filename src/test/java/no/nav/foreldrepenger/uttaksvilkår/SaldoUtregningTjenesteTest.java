@@ -296,6 +296,25 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
+    public void skal_ikke_ta_hensyn_til_startdato_hvis_ett_arbeidsforhold() {
+        var kontoerArbeidsforhold = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.FELLESPERIODE));
+
+        var utregningsdato = LocalDate.MAX;
+        var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forArbeid("123", "789");
+        var fastsattPeriode = new FastsattUttakPeriode.Builder()
+                .medTidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 19))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)))
+                .build();
+        var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, kontoerArbeidsforhold, LocalDate.of(2019, 12, 20));
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(), Set.of(nyttArbeidsforhold), utregningsdato);
+        var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
+
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(50));
+    }
+
+    @Test
     public void skal_arve_saldo_flere_ganger() {
         var kontoerArbeidsforhold1 = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(155).medType(Stønadskontotype.FELLESPERIODE));
