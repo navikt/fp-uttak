@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.feriedager.BevegeligeHelligdagerUtil;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;

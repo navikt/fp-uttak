@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.felles.grunnlag;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 /**
  * En periode som har definert både start- og slutt-tidpunkt
