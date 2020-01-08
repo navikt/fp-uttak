@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public class PrematurukerUtilTest {

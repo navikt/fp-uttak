@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.Regelresultat;
+import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;

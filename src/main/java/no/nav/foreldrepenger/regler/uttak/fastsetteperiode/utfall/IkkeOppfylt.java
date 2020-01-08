@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.IkkeOppfyltÅrsak;
-
 public class IkkeOppfylt {
 
     private IkkeOppfylt() {

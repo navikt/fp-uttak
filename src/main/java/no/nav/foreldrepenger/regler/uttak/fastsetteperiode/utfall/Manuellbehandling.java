@@ -2,10 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
 import java.util.Optional;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Årsak;
-
 public class Manuellbehandling {
 
     private Manuellbehandling() {

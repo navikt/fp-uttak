@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GraderingIkkeInnvilgetÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.InnvilgetÅrsak;
-
 public class Oppfylt {
 
     private Oppfylt() {

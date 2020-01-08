@@ -8,7 +8,8 @@ import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
+import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.doc.RuleDocumentation;

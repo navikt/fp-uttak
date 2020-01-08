@@ -10,6 +10,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Årsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
@@ -61,7 +65,7 @@ public abstract class UttakPeriode extends LukketPeriode {
         aktiviteter = new HashSet<>(kilde.aktiviteter);
     }
 
-    Optional<SamtidigUttak> getSamtidigUttak() {
+    public Optional<SamtidigUttak> getSamtidigUttak() {
         return Optional.ofNullable(samtidigUttak);
     }
 
@@ -83,7 +87,7 @@ public abstract class UttakPeriode extends LukketPeriode {
         return utbetalingsgrader.get(aktivitetIdentifikator);
     }
 
-    void setUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator, BigDecimal utbetalingsgrad) {
+    public void setUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator, BigDecimal utbetalingsgrad) {
         this.utbetalingsgrader.put(aktivitetIdentifikator, utbetalingsgrad);
     }
 
@@ -162,7 +166,7 @@ public abstract class UttakPeriode extends LukketPeriode {
         return gradertArbeidsprosent;
     }
 
-    void opphevGradering(GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
+    public void opphevGradering(GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
     }
 
@@ -191,7 +195,7 @@ public abstract class UttakPeriode extends LukketPeriode {
     }
 
 
-    boolean getSkalTrekkedager() {
+    public boolean getSkalTrekkedager() {
         return skalTrekkedager.values().stream().anyMatch(b -> b);
     }
 
