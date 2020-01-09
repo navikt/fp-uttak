@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
@@ -34,12 +33,13 @@ final class ValgAvStønadskontoTjeneste {
         if (erUtsettelse(periode)) {
             return velgStønadskontoForUtsettelse((UtsettelsePeriode) periode, regelGrunnlag, saldoUtregning, konfigurasjon);
         }
-        return velgStønadskontoVanligPeriode(regelGrunnlag, saldoUtregning);
+        return velgStønadskontoVanligPeriode(periode, regelGrunnlag, saldoUtregning);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(RegelGrunnlag regelGrunnlag,
+    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(UttakPeriode periode,
+                                                                            RegelGrunnlag regelGrunnlag,
                                                                             SaldoUtregning saldoUtregning) {
-        return velgStønadskonto(regelGrunnlag, saldoUtregning);
+        return velgStønadskonto(periode, regelGrunnlag, saldoUtregning);
     }
 
     private static boolean erUtsettelse(UttakPeriode periode) {
@@ -53,13 +53,14 @@ final class ValgAvStønadskontoTjeneste {
         if (periodeErPleiepenger(periode, regelGrunnlag, konfigurasjon)) {
             return stønadskontoVedPleiepenger(regelGrunnlag);
         }
-        return velgStønadskonto(regelGrunnlag, saldoUtregning);
+        return velgStønadskonto(periode, regelGrunnlag, saldoUtregning);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskonto(RegelGrunnlag regelGrunnlag,
+    private static Optional<Stønadskontotype> velgStønadskonto(UttakPeriode periode,
+                                                               RegelGrunnlag regelGrunnlag,
                                                                SaldoUtregning saldoUtregning) {
         for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
-            if (!erTomForKonto(stønadskontotype, regelGrunnlag, saldoUtregning)) {
+            if (!erTomForKonto(periode, stønadskontotype, regelGrunnlag, saldoUtregning)) {
                 return Optional.of(stønadskontotype);
             }
         }
@@ -100,15 +101,22 @@ final class ValgAvStønadskontoTjeneste {
         return søkerSineKonto;
     }
 
-    private static boolean erTomForKonto(Stønadskontotype stønadskontotype, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
-        boolean tomForKonto = false;
-        for (AktivitetIdentifikator aktivitet : regelGrunnlag.getArbeid().getAktiviteter()) {
-            Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
-            if (!saldo.merEnn0()) {
+    private static boolean erTomForKonto(UttakPeriode periode, Stønadskontotype stønadskontotype, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
+        boolean tomForKonto = true;
+        for (var arbeidsforhold : regelGrunnlag.getArbeid().getArbeidsforhold()) {
+            //Hopp over arbeidsforhold dersom det starter etter perioden.
+            if (arbeidsforhold.getStartdato().isAfter(periode.getFom())) {
+                continue;
+            }
+            Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, arbeidsforhold.getIdentifikator());
+            if (saldo.merEnn0()) {
+                tomForKonto = false;
+            } else {
                 tomForKonto = true;
                 break;
             }
         }
         return tomForKonto;
     }
+    
 }
