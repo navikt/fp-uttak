@@ -60,7 +60,7 @@ final class ValgAvStønadskontoTjeneste {
                                                                RegelGrunnlag regelGrunnlag,
                                                                SaldoUtregning saldoUtregning) {
         for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
-            if (!erTomForKonto(periode, stønadskontotype, regelGrunnlag, saldoUtregning)) {
+            if (!erTomForKonto(periode, stønadskontotype, saldoUtregning)) {
                 return Optional.of(stønadskontotype);
             }
         }
@@ -101,14 +101,10 @@ final class ValgAvStønadskontoTjeneste {
         return søkerSineKonto;
     }
 
-    private static boolean erTomForKonto(UttakPeriode periode, Stønadskontotype stønadskontotype, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
+    private static boolean erTomForKonto(UttakPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
         boolean tomForKonto = true;
-        for (var arbeidsforhold : regelGrunnlag.getArbeid().getArbeidsforhold()) {
-            //Hopp over arbeidsforhold dersom det starter etter perioden.
-            if (arbeidsforhold.getStartdato().isAfter(periode.getFom())) {
-                continue;
-            }
-            Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, arbeidsforhold.getIdentifikator());
+        for (var arbeidsforhold : periode.getAktiviteter()) {
+            Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, arbeidsforhold);
             if (saldo.merEnn0()) {
                 tomForKonto = false;
             } else {
