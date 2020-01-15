@@ -33,8 +33,10 @@ jobs:
         run: |
           mvn --quiet deploy sonar:sonar -e --batch-mode --settings ./.github/.m2/settings.xml -DdeployAtEnd=true -Dsonar.projectKey="navikt_fp-uttak" -Dsonar.login=${SONAR_TOKEN}
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
           
       - name: Create Release
         id: create_release
@@ -46,5 +48,3 @@ jobs:
           release_name: Release ${{ env.TAG }}
           draft: false
           prerelease: false
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
