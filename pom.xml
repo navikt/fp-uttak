@@ -5,7 +5,7 @@
 
     <groupId>no.nav.foreldrepenger</groupId>
     <artifactId>uttak-regler</artifactId>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>${sha1}</version>
     <packaging>jar</packaging>
     <name>FPSAK Uttaksregler ::</name>
     <description>Uttaksregler for foreldrepenger.</description>
