@@ -39,6 +39,8 @@
     </developers>
 
     <properties>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>navit</sonar.organization>
         <revision>2.1</revision>
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
