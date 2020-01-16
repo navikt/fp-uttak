@@ -1,3 +1,10 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=alert_status)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=code_smells)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=coverage)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=sqale_index)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
+
+
 fp-uttak
 ================
 
