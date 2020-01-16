@@ -13,33 +13,19 @@ public class Arbeidsforhold {
 
     private final AktivitetIdentifikator identifikator;
     private final Set<EndringAvStilling> endringAvStillingListe = new HashSet<>();
-    private final Kontoer kontoer;
     private final LocalDate startdato;
 
-    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer, LocalDate startdato) {
+    public Arbeidsforhold(AktivitetIdentifikator identifikator, LocalDate startdato) {
         this.identifikator = identifikator;
-        this.kontoer = kontoer;
         this.startdato = startdato == null ? DEFAULT_STARTDATO : startdato;
     }
 
-    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer.Builder kontoer, LocalDate startdato) {
-        this(identifikator, kontoer.build(), startdato);
-    }
-
-    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer.Builder kontoer) {
-        this(identifikator, kontoer.build());
-    }
-
-    public Arbeidsforhold(AktivitetIdentifikator identifikator, Kontoer kontoer) {
-        this(identifikator, kontoer, null);
+    public Arbeidsforhold(AktivitetIdentifikator identifikator) {
+        this(identifikator, null);
     }
 
     public AktivitetIdentifikator getIdentifikator() {
         return identifikator;
-    }
-
-    public Kontoer getKontoer() {
-        return kontoer;
     }
 
     public LocalDate getStartdato() {

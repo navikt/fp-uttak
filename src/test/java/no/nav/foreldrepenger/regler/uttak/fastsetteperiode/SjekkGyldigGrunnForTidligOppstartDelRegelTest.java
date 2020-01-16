@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perio
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -14,8 +13,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -44,11 +41,12 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(6), null, false);
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))))
+                .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -67,11 +65,12 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         StønadsPeriode uttakPeriode = new StønadsPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false);
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var kontoer = enKonto(FELLESPERIODE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FELLESPERIODE, 10 * 5))))
+                .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -85,11 +84,12 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10), null, false);
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.UAVKLART_PERIODE);
+        var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))))
+                .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -116,10 +116,9 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), null, false);
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
-                .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(uttakPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))))
+                .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
@@ -142,11 +141,12 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
                 null, false);
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))))
+                .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -165,11 +165,12 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
                 null, false);
         uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.UAVKLART_PERIODE);
+        var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))))
+                .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
@@ -194,13 +195,14 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         StønadsPeriode uttakPeriode3 = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1),
                 null, false);
         uttakPeriode3.setPeriodeVurderingType(PeriodeVurderingType.UAVKLART_PERIODE);
+        var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(uttakPeriode1)
                         .leggTilSøknadsperiode(uttakPeriode2)
                         .leggTilSøknadsperiode(uttakPeriode3))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, enKonto(FEDREKVOTE, 10 * 5))))
+                .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());

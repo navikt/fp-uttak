@@ -31,8 +31,9 @@ public class RegelGrunnlagTestBuilder {
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer);
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         return new RegelGrunnlag.Builder()
+                .medKontoer(kontoer)
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true))

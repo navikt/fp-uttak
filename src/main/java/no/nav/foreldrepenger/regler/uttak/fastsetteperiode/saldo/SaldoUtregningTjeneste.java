@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
@@ -94,7 +96,7 @@ public final class SaldoUtregningTjeneste {
 
     private static KontoForArbeidsforhold lagKontoer(Arbeidsforhold arbeidsforhold,
                                                      SaldoUtregningGrunnlag grunnlag) {
-        var stønadskontoer = arbeidsforhold.getKontoer().getKontoList().stream()
+        var stønadskontoer = grunnlag.getKontoer().getKontoList().stream()
                 .map(konto -> lagKonto(arbeidsforhold, grunnlag, konto))
                 .collect(Collectors.toSet());
         return new KontoForArbeidsforhold(arbeidsforhold.getIdentifikator(), stønadskontoer);

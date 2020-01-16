@@ -32,10 +32,6 @@ public final class Arbeid {
         return arbeidsforholdListe.stream().map(Arbeidsforhold::getIdentifikator).collect(Collectors.toSet());
     }
 
-    public Set<Kontoer> getKontoer() {
-        return arbeidsforholdListe.stream().map(Arbeidsforhold::getKontoer).collect(Collectors.toSet());
-    }
-
     public Set<Arbeidsforhold> getArbeidsforhold() {
         return arbeidsforholdListe;
     }

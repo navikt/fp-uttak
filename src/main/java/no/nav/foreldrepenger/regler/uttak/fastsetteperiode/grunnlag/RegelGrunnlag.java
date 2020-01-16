@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +18,7 @@ public class RegelGrunnlag {
     private Inngangsvilkår inngangsvilkår;
     private Opptjening opptjening;
     private Adopsjon adopsjon;
+    private Kontoer kontoer;
 
     private RegelGrunnlag() {
 
@@ -49,9 +49,7 @@ public class RegelGrunnlag {
     }
 
     public Set<Stønadskontotype> getGyldigeStønadskontotyper() {
-        Set<Stønadskontotype> gyldige = new HashSet<>();
-        arbeid.getKontoer().forEach(k -> gyldige.addAll(k.getKontoList().stream().map(Konto::getType).collect(Collectors.toList())));
-        return gyldige;
+        return kontoer.getKontoList().stream().map(Konto::getType).collect(Collectors.toSet());
     }
 
     public boolean erRevurdering() {
@@ -76,6 +74,10 @@ public class RegelGrunnlag {
 
     public Adopsjon getAdopsjon() {
         return adopsjon;
+    }
+
+    public Kontoer getKontoer() {
+        return kontoer;
     }
 
     public static class Builder  {
@@ -127,6 +129,11 @@ public class RegelGrunnlag {
 
         public Builder medAdopsjon(Adopsjon.Builder adopsjon) {
             kladd.adopsjon = adopsjon == null ? null : adopsjon.build();
+            return this;
+        }
+
+        public Builder medKontoer(Kontoer.Builder kontoer) {
+            kladd.kontoer = kontoer == null ? null : kontoer.build();
             return this;
         }
 

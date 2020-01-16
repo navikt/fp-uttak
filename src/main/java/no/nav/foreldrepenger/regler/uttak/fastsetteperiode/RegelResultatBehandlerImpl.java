@@ -12,10 +12,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Årsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Årsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
@@ -120,8 +120,11 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
                                                         AktivitetIdentifikator aktivitet) {
         if (uttakPeriode.søktGradering(aktivitet)) {
             return new UtbetalingsprosentMedGraderingUtregning(uttakPeriode, aktivitet);
-        } else if (uttakPeriode.getSamtidigUttak().isPresent()) {
-            return new UtbetalingsprosentSamtidigUttakUtregning(uttakPeriode.getSamtidigUttak().get(), uttakPeriode.getGradertArbeidsprosent());
+        } else {
+            var samtidigUttak = uttakPeriode.getSamtidigUttak();
+            if (samtidigUttak.isPresent()) {
+                return new UtbetalingsprosentSamtidigUttakUtregning(samtidigUttak.get(), uttakPeriode.getGradertArbeidsprosent());
+            }
         }
         return new UtbetalingsprosentUtenGraderingUtregning();
     }

@@ -141,9 +141,10 @@ public class SøknadMottattDatoRegelTest {
         var konto = new Konto.Builder()
                 .medType(Stønadskontotype.MØDREKVOTE)
                 .medTrekkdager(50);
-        var arbeidsforhold = new Arbeidsforhold(aktivitetIdentifikator, new Kontoer.Builder().leggTilKonto(konto));
+        var kontoer = new Kontoer.Builder().leggTilKonto(konto);
         return new RegelGrunnlag.Builder()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(FAMILIEHENDELSE_DATO)
                         .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG))

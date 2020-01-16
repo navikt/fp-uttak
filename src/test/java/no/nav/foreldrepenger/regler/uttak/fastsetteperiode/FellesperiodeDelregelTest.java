@@ -52,7 +52,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -67,7 +68,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -81,7 +83,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -95,7 +98,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -109,7 +113,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -127,7 +132,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14))))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -141,7 +147,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10))))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -155,7 +162,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -169,7 +177,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(13 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -183,7 +192,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -197,7 +207,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -211,7 +222,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -225,7 +237,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -238,9 +251,10 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.PERIODE_OK, null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
-            .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
-            .build();
+                .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
+                .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -253,7 +267,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -270,7 +285,8 @@ public class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -292,7 +308,8 @@ public class FellesperiodeDelregelTest {
                 .leggTilKonto(konto(MØDREKVOTE, 100));
         RegelGrunnlag grunnlag = basicGrunnlagMor()
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -309,9 +326,10 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
-            .medSøknad(søknad(søknadsperiode))
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
-            .build();
+                .medSøknad(søknad(søknadsperiode))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
+                .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -323,9 +341,10 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
-            .medSøknad(søknad(søknadsperiode))
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
-            .build();
+                .medSøknad(søknad(søknadsperiode))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
+                .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -337,9 +356,10 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
-            .medSøknad(søknad(søknadsperiode))
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
-            .build();
+                .medSøknad(søknad(søknadsperiode))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
+                .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -351,9 +371,10 @@ public class FellesperiodeDelregelTest {
         UttakPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), PeriodeVurderingType.PERIODE_OK, null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
-            .medSøknad(søknad(søknadsperiode))
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
-            .build();
+                .medSøknad(søknad(søknadsperiode))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
+                .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -373,7 +394,8 @@ public class FellesperiodeDelregelTest {
                         .medFarHarRett(true)
                         .medSamtykke(true))
                 .medSøknad(søknad(søknadsperiode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .medKontoer(kontoer)
                 .build();
 
         Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -382,7 +404,7 @@ public class FellesperiodeDelregelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_IKKE_RETT_FP);
     }
 
-    private UttakPeriode gradertSøknadsperiode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType,  SamtidigUttak samtidigUttak, boolean flerbarnsdager) {
+    private UttakPeriode gradertSøknadsperiode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType, SamtidigUttak samtidigUttak, boolean flerbarnsdager) {
         return StønadsPeriode.medGradering(FELLESPERIODE, PeriodeKilde.SØKNAD, fom, tom,
                 Collections.singletonList(AktivitetIdentifikator.forFrilans()), BigDecimal.TEN, vurderingType, samtidigUttak, flerbarnsdager);
     }
@@ -408,12 +430,12 @@ public class FellesperiodeDelregelTest {
 
     private Kontoer.Builder fellesperiodeOgFlerbarnsdagerKonto(int fellesperiodeTrekkdager, int flerbarnsdagerTrekkdager) {
         return new Kontoer.Builder()
-            .leggTilKonto(new Konto.Builder()
-                .medType(FELLESPERIODE)
-                .medTrekkdager(fellesperiodeTrekkdager))
-            .leggTilKonto(new Konto.Builder()
-                .medType(FLERBARNSDAGER)
-                .medTrekkdager(flerbarnsdagerTrekkdager));
+                .leggTilKonto(new Konto.Builder()
+                        .medType(FELLESPERIODE)
+                        .medTrekkdager(fellesperiodeTrekkdager))
+                .leggTilKonto(new Konto.Builder()
+                        .medType(FLERBARNSDAGER)
+                        .medTrekkdager(flerbarnsdagerTrekkdager));
     }
 
     private Konto.Builder konto(Stønadskontotype type, int trekkdager) {

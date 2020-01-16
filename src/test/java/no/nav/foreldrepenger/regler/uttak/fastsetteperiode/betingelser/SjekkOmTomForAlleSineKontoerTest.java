@@ -71,13 +71,13 @@ public class SjekkOmTomForAlleSineKontoerTest {
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)
                         .medMorHarRett(true))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .build();
 
         var sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(),
-                grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
+                grunnlag.getArbeid().getArbeidsforhold(), kontoer.build(), uttakPeriode.getFom());
         var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
                 SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
@@ -91,7 +91,8 @@ public class SjekkOmTomForAlleSineKontoerTest {
                         .medType(Stønadskontotype.FORELDREPENGER)
                         .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -129,7 +130,8 @@ public class SjekkOmTomForAlleSineKontoerTest {
                         .medType(Stønadskontotype.FORELDREPENGER)
                         .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -167,7 +169,8 @@ public class SjekkOmTomForAlleSineKontoerTest {
                         .medType(Stønadskontotype.FORELDREPENGER)
                         .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -205,7 +208,8 @@ public class SjekkOmTomForAlleSineKontoerTest {
                         .medType(Stønadskontotype.FORELDREPENGER)
                         .medTrekkdager(50));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer)))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()

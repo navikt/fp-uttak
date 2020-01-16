@@ -111,7 +111,8 @@ public class ManglendeSøktePerioderTjenesteTest {
                 .leggTilKonto(konto(FEDREKVOTE, fedrekvoteDager));
         return RegelGrunnlagTestBuilder.create()
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)));
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)));
     }
 
     private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {
