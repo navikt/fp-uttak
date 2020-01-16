@@ -43,7 +43,7 @@
         <sonar.organization>navit</sonar.organization>
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
         <revision>2.1</revision>
-        <sha1></sha1>
+        <sha1>1.0-SNAPSHOT</sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
