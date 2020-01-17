@@ -28,11 +28,11 @@ jobs:
 
       - name: Hent tag    
         run: |
+          echo "::set-env name=MVN_TIMESTAMP::$(mvn help:evaluate -Dexpression=timestamp -q -DforceStdout)"
           echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"  
        
       - name: Hent maven version    
         run: |
-          echo "::set-env name=MVN_TIMESTAMP::$(mvn help:evaluate -Dsha1=${TAG} -Dexpression=timestamp -q -DforceStdout)"
           echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dsha1=${TAG} -Dexpression=project.version -q -DforceStdout)"
          
       - name: Build artifacts & deploy
