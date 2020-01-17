@@ -5,7 +5,7 @@
 
     <groupId>no.nav.foreldrepenger</groupId>
     <artifactId>uttak-regler</artifactId>
-    <version>${sha1}</version>
+    <version>${revision}-${sha1}</version>
     <packaging>jar</packaging>
     <name>FPSAK Uttaksregler ::</name>
     <description>Uttaksregler for foreldrepenger.</description>
@@ -42,8 +42,8 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>navit</sonar.organization>
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
-        <revision>2.1</revision>
-        <sha1>1.0-SNAPSHOT</sha1>
+        <revision>1.2</revision>
+        <sha1>1.2-SNAPSHOT</sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
