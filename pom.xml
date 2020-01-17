@@ -103,6 +103,26 @@
 
     <build>
         <plugins>
+                 
+                 <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.10</version>
+            <executions>
+                <execution>
+                    <id>timestamp-property</id>
+                    <goals>
+                        <goal>timestamp-property</goal>
+                    </goals>
+                    <configuration>
+                        <name>build.time</name>
+                        <pattern>yyyyMMdd_HH24mmss</pattern>
+                        <locale>no_NO</locale>
+                        <timeZone>GMT+1</timeZone>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
                  <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
