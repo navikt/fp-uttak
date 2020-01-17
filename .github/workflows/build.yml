@@ -32,6 +32,7 @@ jobs:
        
       - name: Hent maven version    
         run: |
+          echo "::set-env name=MVN_TIMESTAMP::$(mvn help:evaluate -Dsha1=${TAG} -Dexpression=maven.build.timestamp -q -DforceStdout)"
           echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dsha1=${TAG} -Dexpression=project.version -q -DforceStdout)"
          
       - name: Build artifacts & deploy
