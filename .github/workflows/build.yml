@@ -28,7 +28,6 @@ jobs:
 
       - name: Hent tag    
         run: |
-          echo "::set-env name=MVN_TIMESTAMP::$(mvn help:evaluate -Dexpression=build.time -q -DforceStdout)"
           echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"  
        
       - name: Hent maven version    
