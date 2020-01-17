@@ -34,7 +34,7 @@ jobs:
       - name: Build artifacts & deploy
         shell: bash
         run: |
-          echo "::set-env name=MVN_VERSION::$(mvn help:evaluate Dsha1=${TAG} -Dexpression=project.version -q -DforceStdout)"
+          echo "::set-env name=MVN_VERSION::$(mvn help:evaluate -Dsha1=${TAG} -Dexpression=project.version -q -DforceStdout)"
           mvn --quiet jacoco:prepare-agent deploy  -e --batch-mode --settings ./.github/.m2/settings.xml -Dsha1=${TAG}  -Dsonar.login=${SONAR_TOKEN} -Djacoco.destFile=$(pwd)/target/jacoco.exec
           mvn jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dsha1=${TAG} -Djacoco.dataFile=$(pwd)/target/jacoco.exec  -Dsonar.login=${SONAR_TOKEN}
         env:
