@@ -50,7 +50,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <fpsak.nare.version>2.1-20200107075119-63ba30e</fpsak.nare.version>
+        <fpsak.nare.version>2.1.0-20200117132347-3c9af59</fpsak.nare.version>
         <fpsak.tidsserie.version>2.0_20191220142239_d22df82</fpsak.tidsserie.version>
         <junit5.version>5.5.2</junit5.version>
         <assertj.version>3.14.0</assertj.version>
