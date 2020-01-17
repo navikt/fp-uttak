@@ -39,7 +39,7 @@
     </developers>
 
     <properties>
-        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMdd'_'HHmmss</maven.build.timestamp.format>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>navit</sonar.organization>
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
