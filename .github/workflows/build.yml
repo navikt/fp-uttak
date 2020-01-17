@@ -27,11 +27,14 @@ jobs:
           java-version: 1.11
 
       - name: Hent tag    
-        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"  
+
+        run: |
+          echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"  
        
       - name: Build artifacts & deploy
         shell: bash
         run: |
+          echo "::set-env name=MVN_VERSION::$(mvn help:evaluate Dsha1=${TAG} -Dexpression=project.version -q -DforceStdout)"
           mvn --quiet jacoco:prepare-agent deploy  -e --batch-mode --settings ./.github/.m2/settings.xml -Dsha1=${TAG}  -Dsonar.login=${SONAR_TOKEN} -Djacoco.destFile=$(pwd)/target/jacoco.exec
           mvn jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dsha1=${TAG} -Djacoco.dataFile=$(pwd)/target/jacoco.exec  -Dsonar.login=${SONAR_TOKEN}
         env:
@@ -46,7 +49,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
-          tag_name: ${{ env.TAG }}
-          release_name: Release ${{ env.TAG }}
+          tag_name: ${{ env.MVN_VERSION }}
+          release_name: Release ${{ env.MVN_VERSION }}
           draft: false
           prerelease: false
