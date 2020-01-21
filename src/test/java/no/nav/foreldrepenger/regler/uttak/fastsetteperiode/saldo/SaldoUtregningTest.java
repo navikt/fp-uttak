@@ -1062,4 +1062,26 @@ public class SaldoUtregningTest {
         //-20 dager på saldo, bare 19 dager igjen å frigi fra annenpart
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FEDREKVOTE)).isFalse();
     }
+
+    @Test
+    public void skal_telle_riktig_antall_dager_på_annenpart_når_det_er_tilkommet_nytt_arbeidsforhold() {
+        var kontoerForArbeidsforhold = kontoerForArbeidsforhold(Set.of(stønadskonto(MØDREKVOTE, 75), stønadskonto(FELLESPERIODE, 80)), Set.of(AKTIVITET1_SØKER));
+        var annenpartsPeriode1 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(80), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
+                .build();
+        var annenpartsPeriode2 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(75), MØDREKVOTE, AKTIVITET1_ANNENPART),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(75), MØDREKVOTE, AKTIVITET2_ANNENPART))
+                )
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
+                .build();
+        var perioderAnnenpart = List.of(annenpartsPeriode1, annenpartsPeriode2);
+        var saldoUtregning = new SaldoUtregning(kontoerForArbeidsforhold, List.of(), perioderAnnenpart, false);
+
+        assertThat(saldoUtregning.saldo(FELLESPERIODE)).isZero();
+    }
 }

@@ -331,12 +331,23 @@ public class SaldoUtregning {
                 if (erOpphold(periode)) {
                     trekkdager = trekkdagerForOppholdsperiode(stønadskonto, periode);
                 } else {
-                    trekkdager = trekkdagerForUttaksperiode(stønadskonto, annenpartAktivitet, periode);
+                    if (!aktivitetIPeriode(periode, annenpartAktivitet)) {
+                        trekkdager = minForbrukteDager(periode, stønadskonto).decimalValue();
+                    } else {
+                        trekkdager = trekkdagerForUttaksperiode(stønadskonto, annenpartAktivitet, periode);
+                    }
                 }
-                forbrukte.put(annenpartAktivitet, forbrukte.getOrDefault(annenpartAktivitet, BigDecimal.ZERO).add(trekkdager));
+                forbrukte.put(annenpartAktivitet,
+                        forbrukte.getOrDefault(annenpartAktivitet, BigDecimal.ZERO).add(trekkdager));
             }
         }
         return forbrukte.values().stream().mapToInt(BigDecimal::intValue).min().orElse(0);
+    }
+
+    private boolean aktivitetIPeriode(FastsattUttakPeriode periode, AktivitetIdentifikator annenpartAktivitet) {
+        return periode.getAktiviteter().stream()
+                .map(a -> a.getAktivitetIdentifikator())
+                .anyMatch(aktivitetIdentifikator -> aktivitetIdentifikator.equals(annenpartAktivitet));
     }
 
     private Set<AktivitetIdentifikator> aktiviteterForAnnenpart() {
