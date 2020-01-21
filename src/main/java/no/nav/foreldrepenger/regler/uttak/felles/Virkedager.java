@@ -11,9 +11,9 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
 public class Virkedager {
 
-    private static int DAGER_PR_UKE = 7;
-    private static int VIRKEDAGER_PR_UKE = 5;
-    private static int HELGEDAGER_PR_UKE = DAGER_PR_UKE - VIRKEDAGER_PR_UKE;
+    private static final int DAGER_PR_UKE = 7;
+    private static final int VIRKEDAGER_PR_UKE = 5;
+    private static final int HELGEDAGER_PR_UKE = DAGER_PR_UKE - VIRKEDAGER_PR_UKE;
 
     private Virkedager() {
         // For å unngå instanser

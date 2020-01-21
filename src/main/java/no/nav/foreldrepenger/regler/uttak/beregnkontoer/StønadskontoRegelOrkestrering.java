@@ -41,7 +41,7 @@ public class StønadskontoRegelOrkestrering {
     private Map<Stønadskontotype, Integer> hentStønadskontoer(Evaluation evaluation) {
         Regelresultat resultat = new Regelresultat(evaluation);
         if (resultat.oppfylt()) {
-            Map<Stønadskontotype, Integer> kontoer = (Map<Stønadskontotype, Integer>) resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);
+            Map<Stønadskontotype, Integer> kontoer = resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);
             if (kontoer != null) {
                 return kontoer;
             } else {

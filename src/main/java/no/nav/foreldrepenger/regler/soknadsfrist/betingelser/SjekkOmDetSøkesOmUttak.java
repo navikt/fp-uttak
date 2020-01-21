@@ -1,6 +1,6 @@
-package no.nav.foreldrepenger.regler.søknadsfrist.betingelser;
+package no.nav.foreldrepenger.regler.soknadsfrist.betingelser;
 
-import no.nav.foreldrepenger.regler.søknadsfrist.grunnlag.SøknadsfristGrunnlag;
+import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;

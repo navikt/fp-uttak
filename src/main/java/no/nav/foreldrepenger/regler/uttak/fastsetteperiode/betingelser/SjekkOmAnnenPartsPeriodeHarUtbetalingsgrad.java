@@ -24,10 +24,9 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
         for (AnnenpartUttaksperiode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
-                if(finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(periodeAnnenPart)) {
-                    return ja();
-                }
+            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart) &&
+                    finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(periodeAnnenPart)) {
+                return ja();
             }
         }
         return nei();

@@ -37,11 +37,6 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePerioderRegelOrkestreringTestBase {
 
-    @Test
-    public void adopsjon() {
-
-    }
-
     // MØDREKVOTE
     @Test
     public void UT1230_adopsjon_mor_søker_mødrekvote_før_omsorgsovertakelse() {
