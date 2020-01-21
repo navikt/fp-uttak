@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.søknadsfrist;
+package no.nav.foreldrepenger.regler.soknadsfrist;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -12,9 +12,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.regler.søknadsfrist.SøknadsfristRegelOrkestrering;
-import no.nav.foreldrepenger.regler.søknadsfrist.SøknadsfristResultat;
-import no.nav.foreldrepenger.regler.søknadsfrist.grunnlag.SøknadsfristGrunnlag;
+import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 
 public class SøknadsfristRegelOrkestreringTest {
 

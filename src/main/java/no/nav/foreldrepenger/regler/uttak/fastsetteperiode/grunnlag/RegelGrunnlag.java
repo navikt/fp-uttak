@@ -148,15 +148,11 @@ public class RegelGrunnlag {
         }
 
         private void validerDatoerOppMotSøknad() {
-            if (Søknadstype.FØDSEL.equals(kladd.getSøknad().getType())) {
-                if (kladd.getDatoer().getFødsel() == null && kladd.getDatoer().getTermin() == null) {
-                    throw new IllegalStateException("Forventer enten fødselsdato eller termindato eller begge ved fødselssøknad");
-                }
+            if (Søknadstype.FØDSEL.equals(kladd.getSøknad().getType()) && kladd.getDatoer().getFødsel() == null && kladd.getDatoer().getTermin() == null) {
+                throw new IllegalStateException("Forventer enten fødselsdato eller termindato eller begge ved fødselssøknad");
             }
-            if (Søknadstype.ADOPSJON.equals(kladd.getSøknad().getType())) {
-                if (kladd.getDatoer().getOmsorgsovertakelse() == null) {
-                    throw new IllegalStateException("Forventer omsorgsovertakelsedato ved adopsjonssøknad");
-                }
+            if (Søknadstype.ADOPSJON.equals(kladd.getSøknad().getType()) && kladd.getDatoer().getOmsorgsovertakelse() == null) {
+                throw new IllegalStateException("Forventer omsorgsovertakelsedato ved adopsjonssøknad");
             }
         }
     }

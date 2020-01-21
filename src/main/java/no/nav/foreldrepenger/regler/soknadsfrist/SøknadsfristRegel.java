@@ -1,10 +1,10 @@
-package no.nav.foreldrepenger.regler.søknadsfrist;
+package no.nav.foreldrepenger.regler.soknadsfrist;
 
 import no.nav.foreldrepenger.regler.KanIkkeVurdere;
 import no.nav.foreldrepenger.regler.Oppfylt;
-import no.nav.foreldrepenger.regler.søknadsfrist.betingelser.SjekkOmDetSøkesOmUttak;
-import no.nav.foreldrepenger.regler.søknadsfrist.betingelser.SjekkOmFørsteUttakErInnenforSøknadsfrist;
-import no.nav.foreldrepenger.regler.søknadsfrist.grunnlag.SøknadsfristGrunnlag;
+import no.nav.foreldrepenger.regler.soknadsfrist.betingelser.SjekkOmDetSøkesOmUttak;
+import no.nav.foreldrepenger.regler.soknadsfrist.betingelser.SjekkOmFørsteUttakErInnenforSøknadsfrist;
+import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;

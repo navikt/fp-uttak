@@ -1,10 +1,10 @@
-package no.nav.foreldrepenger.regler.søknadsfrist;
+package no.nav.foreldrepenger.regler.soknadsfrist;
 
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.regler.søknadsfrist.grunnlag.SøknadsfristGrunnlag;
+import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;

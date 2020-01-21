@@ -147,10 +147,8 @@ public class RegelResultatBehandlerImpl implements RegelResultatBehandler {
             }
             uttakPeriode.setUtbetalingsgrad(aktivitet, utbetalingsgrad);
         }
-        if (uttakPeriode.getSkalTrekkedager()) {
-            if (Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
-                utledeKonto(uttakPeriode);
-            }
+        if (uttakPeriode.getSkalTrekkedager() && Stønadskontotype.UKJENT.equals(uttakPeriode.getStønadskontotype())) {
+            utledeKonto(uttakPeriode);
         }
     }
 

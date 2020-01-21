@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.søknadsfrist;
+package no.nav.foreldrepenger.regler.soknadsfrist;
 
 import java.time.LocalDate;
 import java.util.Optional;

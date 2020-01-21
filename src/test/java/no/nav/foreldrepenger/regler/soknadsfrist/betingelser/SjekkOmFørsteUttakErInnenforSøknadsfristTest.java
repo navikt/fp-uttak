@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.søknadsfrist.betingelser;
+package no.nav.foreldrepenger.regler.soknadsfrist.betingelser;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,7 +8,7 @@ import java.time.Month;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.søknadsfrist.grunnlag.SøknadsfristGrunnlag;
+import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 

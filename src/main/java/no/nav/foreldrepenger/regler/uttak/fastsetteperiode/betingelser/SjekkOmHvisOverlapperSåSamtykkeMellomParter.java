@@ -22,10 +22,8 @@ public class SjekkOmHvisOverlapperSåSamtykkeMellomParter extends LeafSpecificat
         boolean ikkeOverlapperEllerOverlapperOgSamtykke = true;
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
         for (AnnenpartUttaksperiode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
-                if (!grunnlag.isSamtykke()) {
-                    ikkeOverlapperEllerOverlapperOgSamtykke = false;
-                }
+            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart) && !grunnlag.isSamtykke()) {
+                ikkeOverlapperEllerOverlapperOgSamtykke = false;
             }
         }
         return ikkeOverlapperEllerOverlapperOgSamtykke ? ja() : nei();

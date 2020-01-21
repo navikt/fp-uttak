@@ -30,10 +30,8 @@ public class SjekkOmSamtidigUttak extends LeafSpecification<FastsettePeriodeGrun
 
     private boolean harAnnenForelderHuketAvForSamtidigUttak(UttakPeriode uttakPeriode, List<AnnenpartUttaksperiode> perioderAnnenPart) {
         for (AnnenpartUttaksperiode periodeAnnenPart : perioderAnnenPart) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
-                if (periodeAnnenPart.isSamtidigUttak()) {
-                    return true;
-                }
+            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart) && periodeAnnenPart.isSamtidigUttak()) {
+                return true;
             }
         }
         return false;

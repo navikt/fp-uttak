@@ -21,10 +21,10 @@ public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse extends LeafSpecifica
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
         for (AnnenpartUttaksperiode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart)) {
-                if (periodeAnnenPart.isUtsettelse() && periodeAnnenPart.isInnvilget()) {
-                    return ja();
-                }
+            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart) &&
+                    periodeAnnenPart.isUtsettelse() &&
+                    periodeAnnenPart.isInnvilget()) {
+                return ja();
             }
         }
         return nei();

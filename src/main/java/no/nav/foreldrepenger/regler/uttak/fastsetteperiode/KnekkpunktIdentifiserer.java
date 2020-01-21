@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +7,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
-import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -17,6 +14,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
+import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -169,15 +168,6 @@ class KnekkpunktIdentifiserer {
             }
         }
         return knekkpunkter;
-    }
-
-    private static void leggTilKnekkpunkterMenIkkeHvisKnekkErMandagOgDetErKnekkIHelgaFør(Set<LocalDate> knekkpunkter, Set<LocalDate> alleEndringstidspunkter) {
-        for (LocalDate kandidat : alleEndringstidspunkter) {
-            if (kandidat.getDayOfWeek() == DayOfWeek.MONDAY && (knekkpunkter.contains(kandidat.minusDays(1)) || knekkpunkter.contains(kandidat.minusDays(2)))) {
-                continue;
-            }
-            knekkpunkter.add(kandidat);
-        }
     }
 
     private static void leggTilKnekkpunkterForFødsel(Set<LocalDate> knekkpunkter, LocalDate familiehendelseDato, Konfigurasjon konfigurasjon) {
