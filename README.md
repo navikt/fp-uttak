@@ -3,7 +3,8 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=coverage)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=sqale_index)](https://sonarcloud.io/dashboard?id=navikt_fp-uttak)
-
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/navikt/fp-uttak)
+![GitHub](https://img.shields.io/github/license/navikt/fp-uttak)
 
 fp-uttak
 ================
