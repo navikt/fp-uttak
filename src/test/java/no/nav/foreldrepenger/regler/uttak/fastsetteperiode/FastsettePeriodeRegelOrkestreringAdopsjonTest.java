@@ -348,7 +348,7 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
         var kontoer = new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagAdopsjon
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medOmsorgsovertakelse(omsorgsovertakelseDato)
                         .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.minusMonths(3)))
@@ -376,7 +376,7 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
         var kontoer = new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagAdopsjon
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medOmsorgsovertakelse(omsorgsovertakelseDato)
                         .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.minusMonths(3)))
@@ -405,7 +405,7 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
         var kontoer = new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagAdopsjon
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medOmsorgsovertakelse(omsorgsovertakelseDato)
                         .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.minusMonths(3)))
@@ -433,7 +433,8 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
         var kontoer = new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagAdopsjon
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medOmsorgsovertakelse(omsorgsovertakelseDato)
                         .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.minusMonths(3)))
@@ -465,7 +466,8 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
         var kontoer = new Kontoer.Builder()
                         .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         var grunnlag = grunnlagAdopsjon
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medOmsorgsovertakelse(omsorgsovertakelseDato)
                         .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.minusMonths(3)))
@@ -573,7 +575,7 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(1300));
         var grunnlag = grunnlagAdopsjon
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medOmsorgsovertakelse(omsorgsovertakelseDato)
                         .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.minusMonths(3)))
@@ -592,6 +594,4 @@ public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePeri
         assertThat(resultater).hasSize(1);
         verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
-
-
 }

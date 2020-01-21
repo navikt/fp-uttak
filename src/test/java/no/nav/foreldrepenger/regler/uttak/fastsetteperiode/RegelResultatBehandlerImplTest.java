@@ -28,8 +28,9 @@ public class RegelResultatBehandlerImplTest {
 
     @Test
     public void skal_knekke_på_riktig_datoer_ved_avslag() {
-        var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet(), new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FELLESPERIODE)));
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FELLESPERIODE));
+        var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet());
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
         var uttakPeriode = new StønadsPeriode(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD,
@@ -38,10 +39,11 @@ public class RegelResultatBehandlerImplTest {
                 .medSøknad(new Søknad.Builder().leggTilSøknadsperiode(uttakPeriode))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(false))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
+                .medKontoer(kontoer)
                 .build();
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
+                List.of(), grunnlag.getArbeid().getArbeidsforhold(), grunnlag.getKontoer(), uttakPeriode.getFom());
         var behandler = new RegelResultatBehandlerImpl(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         uttakPeriode.setSluttpunktTrekkerDager(arbeidsforhold.getIdentifikator(), true);

@@ -39,9 +39,11 @@ public class FellesperiodeMedGraderingTest {
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         StønadsPeriode aktuellPeriode = StønadsPeriode.medGradering(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, graderingFom, graderingTom,
                 Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.valueOf(50), PeriodeVurderingType.PERIODE_OK, null, false);
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5)));
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         RegelGrunnlag grunnlag = basicGrunnlag()
+                .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)
@@ -60,9 +62,11 @@ public class FellesperiodeMedGraderingTest {
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         StønadsPeriode aktuellPeriode = StønadsPeriode.medGradering(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, graderingFom, graderingTom,
                 Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.valueOf(50), PeriodeVurderingType.PERIODE_OK, null, false);
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder()
-                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5)));
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         RegelGrunnlag grunnlag = basicGrunnlag()
+                .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilSøknadsperiode(aktuellPeriode)

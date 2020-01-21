@@ -43,8 +43,8 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
             .medBehandling(morBehandling())
-            .medArbeid(new Arbeid.Builder()
-                    .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, defaultKontoer())))
+            .medKontoer(defaultKontoer())
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .medInngangsvilkår(oppfyltAlleVilkår());
 
     Kontoer.Builder defaultKontoer() {
@@ -58,11 +58,11 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))
             .medBehandling(morBehandling())
-            .medArbeid(new Arbeid.Builder()
-                    .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, new Kontoer.Builder()
-                            .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                            .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                            .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))))
+            .medKontoer(new Kontoer.Builder()
+                    .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
+                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
+            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .medInngangsvilkår(oppfyltAlleVilkår());
 
     LocalDate førsteLovligeUttaksdag(LocalDate fødselsdag) {
@@ -136,14 +136,6 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                         .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett());
-    }
-
-    Arbeid.Builder arbeid(Konto.Builder... kontoList) {
-        var kontoer = new Kontoer.Builder();
-        for (Konto.Builder konto : kontoList) {
-            kontoer.leggTilKonto(konto);
-        }
-        return new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer));
     }
 
     Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {

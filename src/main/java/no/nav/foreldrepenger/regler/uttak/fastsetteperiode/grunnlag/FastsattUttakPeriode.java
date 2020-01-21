@@ -1,10 +1,7 @@
-package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 
 public class FastsattUttakPeriode {
     private Perioderesultattype perioderesultattype;

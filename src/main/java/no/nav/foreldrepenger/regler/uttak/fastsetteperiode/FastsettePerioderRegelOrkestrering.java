@@ -14,20 +14,22 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.foreldrepenger.regler.Regelresultat;
+import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
+import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
@@ -37,8 +39,6 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
-import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
-import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -254,16 +254,25 @@ public class FastsettePerioderRegelOrkestrering {
                                                  List<UttakPeriode> allePerioderSomSkalFastsettes) {
         List<AnnenpartUttaksperiode> annenpartPerioder = grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder();
 
-        var søkersFastsattePerioder = map(resultatPerioder);
+        var vedtaksperioder = vedtaksperioder(grunnlag);
+        var søkersFastsattePerioder = map(resultatPerioder, vedtaksperioder);
         var arbeidsforhold = grunnlag.getArbeid().getArbeidsforhold();
         var utregningsdato = aktuellPeriode.getFom();
+        var kontoer = grunnlag.getKontoer();
         if (grunnlag.getBehandling().isTapende()) {
             var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
             return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(søkersFastsattePerioder,
-                    annenpartPerioder, arbeidsforhold, utregningsdato, søktePerioder);
+                    annenpartPerioder, arbeidsforhold, kontoer, utregningsdato, søktePerioder);
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder,
-                arbeidsforhold, utregningsdato);
+                arbeidsforhold, kontoer, utregningsdato);
+    }
+
+    private List<FastsattUttakPeriode> vedtaksperioder(RegelGrunnlag grunnlag) {
+        if (grunnlag.getRevurdering() == null) {
+            return List.of();
+        }
+        return grunnlag.getRevurdering().getGjeldendeVedtak() == null ? List.of() : grunnlag.getRevurdering().getGjeldendeVedtak().getPerioder();
     }
 
     private FastsattUttakPeriode map(UttakPeriode periode) {
@@ -277,8 +286,11 @@ public class FastsettePerioderRegelOrkestrering {
                 .build();
     }
 
-    private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> perioder) {
-        return perioder.stream().map(this::map).collect(Collectors.toList());
+    private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder, List<FastsattUttakPeriode> vedtaksperioder) {
+        var fastsattePerioder = new ArrayList<>(vedtaksperioder);
+        var mapped = resultatPerioder.stream().map(this::map).collect(Collectors.toList());
+        fastsattePerioder.addAll(mapped);
+        return fastsattePerioder;
     }
 
     private FastsattUttakPeriode map(FastsettePeriodeResultat fastsattPeriode) {

@@ -131,9 +131,10 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                 .leggTilKonto(konto(MØDREKVOTE, 75))
                 .leggTilKonto(konto(FEDREKVOTE, 75))
                 .leggTilKonto(konto(FELLESPERIODE, 80));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD, kontoer).leggTilEndringIStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(100)));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD).leggTilEndringIStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(100)));
         basicUtsettelseGrunnlag(fødselsdato)
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
+                .medKontoer(kontoer)
                 .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
@@ -164,8 +165,9 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                 .leggTilKonto(konto(MØDREKVOTE, 75))
                 .leggTilKonto(konto(FELLESPERIODE, 80))
                 .leggTilKonto(konto(FEDREKVOTE, 75));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD, kontoer).leggTilEndringIStilling(new EndringAvStilling(utsettelseFom, BigDecimal.valueOf(50)));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD).leggTilEndringIStilling(new EndringAvStilling(utsettelseFom, BigDecimal.valueOf(50)));
         basicUtsettelseGrunnlag(fødselsdato)
+                .medKontoer(kontoer)
                 .medSøknad(fødselSøknad(fødselsdato.minusWeeks(4))
                         .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilSøknadsperiode(søknadsperiode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
@@ -512,7 +514,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(100));
         basicUtsettelseGrunnlag(fødselsdato)
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medTermin(termindato)
                         .medFødsel(fødselsdato)
@@ -706,12 +708,12 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
     }
 
     private RegelGrunnlag.Builder aleneomsorgUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD, new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130)));
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         return grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(behandling)
-                .medRettOgOmsorg(aleneomsorg())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold));
+                .medKontoer(kontoer)
+                .medRettOgOmsorg(aleneomsorg());
     }
 
     private RegelGrunnlag.Builder basicUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public final class Revurdering {
 
     private LocalDate endringsdato;
+    private Vedtak gjeldendeVedtak;
 
     private Revurdering() {
     }
@@ -13,12 +14,21 @@ public final class Revurdering {
         return endringsdato;
     }
 
+    public Vedtak getGjeldendeVedtak() {
+        return gjeldendeVedtak;
+    }
+
     public static class Builder {
 
         private final Revurdering kladd = new Revurdering();
 
         public Builder medEndringsdato(LocalDate endringsdato) {
             this.kladd.endringsdato = endringsdato;
+            return this;
+        }
+
+        public Builder medGjeldendeVedtak(Vedtak.Builder vedtak) {
+            kladd.gjeldendeVedtak = vedtak == null ? null : vedtak.build();
             return this;
         }
 

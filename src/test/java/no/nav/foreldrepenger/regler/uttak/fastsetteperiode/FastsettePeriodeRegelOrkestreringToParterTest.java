@@ -55,7 +55,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .leggTilKonto(kvote(MØDREKVOTE, UKER_MK))
                 .leggTilKonto(kvote(FEDREKVOTE, UKER_FK))
                 .leggTilKonto(kvote(FELLESPERIODE, UKER_FP));
-        return builder.medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1, kontoer)));
+        return builder.medKontoer(kontoer);
     }
 
     private Konto.Builder kvote(Stønadskontotype foreldrepengerFørFødsel, int uker) {
@@ -422,7 +422,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeDato))
@@ -451,7 +452,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD, kontoer)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD)))
+                .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeDato))
@@ -484,7 +486,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeDato))
@@ -520,7 +523,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD, kontoer)))
+                .medKontoer(kontoer)
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeDato))

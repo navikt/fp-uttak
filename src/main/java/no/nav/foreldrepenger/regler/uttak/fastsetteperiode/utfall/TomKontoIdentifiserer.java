@@ -65,7 +65,7 @@ public class TomKontoIdentifiserer {
     }
 
     private static LocalDate tidligst(Set<LocalDate> knekkpunkter) {
-        return knekkpunkter.stream().min(Comparator.comparing(date -> date)).get();
+        return knekkpunkter.stream().min(Comparator.comparing(date -> date)).orElseThrow();
     }
 
     private static int saldoTilVirkedager(UttakPeriode periode, AktivitetIdentifikator aktivitet, Trekkdager saldo) {
@@ -82,7 +82,7 @@ public class TomKontoIdentifiserer {
     }
 
     private static int saldoTilVirkedagerSamtidigUttak(UttakPeriode periode, Trekkdager saldo) {
-        return saldoTilVirkedagerVedRedusertUttak(saldo, periode.getSamtidigUttaksprosent().get());
+        return saldoTilVirkedagerVedRedusertUttak(saldo, periode.getSamtidigUttaksprosent().orElseThrow());
     }
 
     private static int saldoTilVirkedagerGradering(UttakPeriode periode, Trekkdager saldo) {

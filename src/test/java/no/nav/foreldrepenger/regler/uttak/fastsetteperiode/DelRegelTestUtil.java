@@ -3,12 +3,12 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.util.List;
 
 import no.nav.foreldrepenger.regler.Regelresultat;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
+import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 final class DelRegelTestUtil {
 
@@ -18,13 +18,14 @@ final class DelRegelTestUtil {
     }
 
     static Regelresultat kjørRegel(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getArbeid().getArbeidsforhold(), uttakPeriode.getFom());
-        return kjørRegel(uttakPeriode, grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag));
+        return kjørRegel(uttakPeriode, grunnlag, List.of());
     }
 
-    static Regelresultat kjørRegel(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag, SaldoUtregning saldoUtregning) {
+    static Regelresultat kjørRegel(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag, List<FastsattUttakPeriode> søkersFastsattePerioder) {
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder,
+                List.of(), grunnlag.getArbeid().getArbeidsforhold(), grunnlag.getKontoer(), uttakPeriode.getFom());
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
-        return new Regelresultat(REGEL.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, saldoUtregning, uttakPeriode)));
+        return new Regelresultat(REGEL.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode)));
     }
+
 }

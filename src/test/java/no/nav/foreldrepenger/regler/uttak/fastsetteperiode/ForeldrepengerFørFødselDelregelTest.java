@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.create;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,8 +12,6 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -29,11 +26,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeri
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Årsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Årsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class ForeldrepengerFørFødselDelregelTest {
@@ -42,10 +39,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1070_mor_utenFor3UkerFørFødsel() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8), familiehendelseDato.plusWeeks(9));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
+        var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
+                .medKontoer(kontoer)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -57,10 +54,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1071_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_ikkeGradering() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
+        var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
+                .medKontoer(kontoer)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -72,10 +69,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1072_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_gradering() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
+        var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
+                .medKontoer(kontoer)
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(4)))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -88,10 +85,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1073_mor_innenFor3UkerFørFødsel_manglendeSøktPeriode() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100));
+        var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
+                .medKontoer(kontoer)
                 .medSøknad(søknad(msp, familiehendelseDato.minusWeeks(1)))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(msp, grunnlag);
@@ -106,14 +103,14 @@ public class ForeldrepengerFørFødselDelregelTest {
     public void UT1076_far_søker_fpff() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         UttakPeriode uttakPeriode = uttakPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1, new Kontoer.Builder()
+        var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
-                .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100)));
+                .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
         RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato)
+                .medKontoer(kontoer)
                 .medBehandling(søkerErFarBehandling())
                 .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
