@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
@@ -80,7 +79,7 @@ class KnekkpunktIdentifiserer {
             return Set.of();
         }
         return arbeid.getArbeidsforhold().stream()
-                .map(Arbeidsforhold::getStartdato)
+                .map(a -> a.getStartdato())
                 .collect(Collectors.toSet());
     }
 

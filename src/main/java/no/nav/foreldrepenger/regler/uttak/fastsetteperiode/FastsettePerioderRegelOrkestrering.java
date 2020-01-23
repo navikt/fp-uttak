@@ -88,7 +88,7 @@ public class FastsettePerioderRegelOrkestrering {
 
     private Set<AktivitetIdentifikator> aktiviteterIPeriode(UttakPeriode periode, Arbeid arbeid) {
         return arbeid.getArbeidsforhold().stream()
-                .filter(arbeidsforhold -> arbeid.getArbeidsforhold().size() == 1 || !arbeidsforhold.getStartdato().isAfter(periode.getFom()))
+                .filter(arbeidsforhold -> arbeid.getArbeidsforhold().size() == 1 || arbeidsforhold.erAktivtPåDato(periode.getFom()))
                 .map(Arbeidsforhold::getIdentifikator)
                 .collect(Collectors.toSet());
     }
@@ -256,16 +256,16 @@ public class FastsettePerioderRegelOrkestrering {
 
         var vedtaksperioder = vedtaksperioder(grunnlag);
         var søkersFastsattePerioder = map(resultatPerioder, vedtaksperioder);
-        var arbeidsforhold = grunnlag.getArbeid().getArbeidsforhold();
         var utregningsdato = aktuellPeriode.getFom();
         var kontoer = grunnlag.getKontoer();
+        var alleAktiviteter = grunnlag.getArbeid().getAktiviteter();
         if (grunnlag.getBehandling().isTapende()) {
             var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
             return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(søkersFastsattePerioder,
-                    annenpartPerioder, arbeidsforhold, kontoer, utregningsdato, søktePerioder);
+                    annenpartPerioder, kontoer, utregningsdato, søktePerioder, alleAktiviteter);
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder,
-                arbeidsforhold, kontoer, utregningsdato);
+                kontoer, utregningsdato, alleAktiviteter);
     }
 
     private List<FastsattUttakPeriode> vedtaksperioder(RegelGrunnlag grunnlag) {

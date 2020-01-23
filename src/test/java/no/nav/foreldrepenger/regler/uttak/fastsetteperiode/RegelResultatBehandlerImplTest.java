@@ -43,7 +43,7 @@ public class RegelResultatBehandlerImplTest {
                 .build();
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getArbeid().getArbeidsforhold(), grunnlag.getKontoer(), uttakPeriode.getFom());
+                List.of(), grunnlag.getKontoer(), uttakPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
         var behandler = new RegelResultatBehandlerImpl(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         uttakPeriode.setSluttpunktTrekkerDager(arbeidsforhold.getIdentifikator(), true);

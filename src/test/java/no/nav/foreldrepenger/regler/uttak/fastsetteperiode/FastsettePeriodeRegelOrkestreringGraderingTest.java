@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -638,20 +637,21 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
 
     @Test
     public void skal_knekke_riktig_ved_flere_graderingsperioder_og_flere_arbeidsforhold() {
-        LocalDate omsorgsovertakelse = LocalDate.of(2019, 4, 8);
+        var omsorgsovertakelse = LocalDate.of(2019, 4, 8);
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
         var arbeidsforhold3 = new Arbeidsforhold(ARBEIDSFORHOLD_3);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         //Fastsatt periode før å få ulik saldo
         var fastsattAktiviter = List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(96), FORELDREPENGER, ARBEIDSFORHOLD_1),
-                new FastsattUttakPeriodeAktivitet(new Trekkdager(96), FORELDREPENGER, ARBEIDSFORHOLD_2));
+                new FastsattUttakPeriodeAktivitet(new Trekkdager(96), FORELDREPENGER, ARBEIDSFORHOLD_2),
+                new FastsattUttakPeriodeAktivitet(Trekkdager.ZERO, FORELDREPENGER, ARBEIDSFORHOLD_3));
         var fastsattPeriode = new FastsattUttakPeriode.Builder()
                 .medPeriodeResultatType(INNVILGET)
                 .medTidsperiode(omsorgsovertakelse.minusDays(1), omsorgsovertakelse.minusDays(1))
                 .medAktiviteter(fastsattAktiviter);
         var vedtak = new Vedtak.Builder().leggTilPeriode(fastsattPeriode);
-        RegelGrunnlag.Builder grunnlag = new RegelGrunnlag.Builder()
+        var grunnlag = new RegelGrunnlag.Builder()
                 .medArbeid(new Arbeid.Builder()
                         .leggTilArbeidsforhold(arbeidsforhold1)
                         .leggTilArbeidsforhold(arbeidsforhold2)
@@ -667,14 +667,14 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                         .medType(Søknadstype.ADOPSJON)
                         .medMottattDato(omsorgsovertakelse.minusWeeks(1))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FORELDREPENGER, omsorgsovertakelse, omsorgsovertakelse.plusDays(4),
-                                BigDecimal.valueOf(50), Arrays.asList(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2)))
+                                BigDecimal.valueOf(50), List.of(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2)))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FORELDREPENGER, omsorgsovertakelse.plusWeeks(1), omsorgsovertakelse.plusWeeks(1),
-                                BigDecimal.TEN, Arrays.asList(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2)))
+                                BigDecimal.TEN, List.of(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2)))
                         .leggTilSøknadsperiode(gradertSøknadsperiode(FORELDREPENGER, omsorgsovertakelse.plusWeeks(1).plusDays(1),
-                                omsorgsovertakelse.plusWeeks(10), BigDecimal.valueOf(75), Arrays.asList(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2))))
+                                omsorgsovertakelse.plusWeeks(10), BigDecimal.valueOf(75), List.of(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2))))
                 .medInngangsvilkår(oppfyltAlleVilkår())
                 .medRevurdering(new Revurdering.Builder().medGjeldendeVedtak(vedtak));
-        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
+        var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
         //Resten av dagene 4 - 2.5 - 0.9.
@@ -686,7 +686,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
 
     @Test
     public void skal_knekke_riktig_når_arbeidsforhold_som_ikke_er_gradert_går_tom_for_dager() {
-        LocalDate omsorgsovertakelse = LocalDate.of(2019, 4, 8);
+        var omsorgsovertakelse = LocalDate.of(2019, 4, 8);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
@@ -694,9 +694,11 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
         var fastsattPeriode = new FastsattUttakPeriode.Builder()
                 .medPeriodeResultatType(INNVILGET)
                 .medTidsperiode(omsorgsovertakelse.minusDays(1), omsorgsovertakelse.minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(96), FORELDREPENGER, ARBEIDSFORHOLD_2)));
+                .medAktiviteter(List.of(
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(96), FORELDREPENGER, ARBEIDSFORHOLD_2),
+                        new FastsattUttakPeriodeAktivitet(Trekkdager.ZERO, FORELDREPENGER, ARBEIDSFORHOLD_1)));
         var vedtak = new Vedtak.Builder().leggTilPeriode(fastsattPeriode);
-        RegelGrunnlag.Builder grunnlag = new RegelGrunnlag.Builder()
+        var grunnlag = new RegelGrunnlag.Builder()
                 .medArbeid(new Arbeid.Builder()
                         .leggTilArbeidsforhold(arbeidsforhold1)
                         .leggTilArbeidsforhold(arbeidsforhold2))
@@ -715,7 +717,7 @@ public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePer
                                 BigDecimal.valueOf(50), List.of(ARBEIDSFORHOLD_1))))
                 .medInngangsvilkår(oppfyltAlleVilkår())
                 .medRevurdering(new Revurdering.Builder().medGjeldendeVedtak(vedtak));
-        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
+        var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);

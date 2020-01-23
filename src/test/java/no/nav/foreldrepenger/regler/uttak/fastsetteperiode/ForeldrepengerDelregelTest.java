@@ -222,7 +222,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void UT1188_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_noenDisponibleDager() {
+    public void UT1190_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_noenDisponibleDager() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         StønadsPeriode uttakPeriode = stønadsperiode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(12));
         RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
@@ -237,7 +237,7 @@ public class ForeldrepengerDelregelTest {
         var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder()
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(uttakPeriode.getFom().minusWeeks(1), uttakPeriode.getFom().minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(8), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans())))
                 .build());
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag, fastsattePerioder);
 
@@ -422,7 +422,8 @@ public class ForeldrepengerDelregelTest {
         var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder()
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(fom.minusWeeks(1), fom.minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans()),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
                 .build());
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag, fastsattePerioder);
 
@@ -615,7 +616,8 @@ public class ForeldrepengerDelregelTest {
         var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder()
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(fom.minusWeeks(1), fom.minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans()),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
                 .build());
         Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag, fastsattePerioder);
 
