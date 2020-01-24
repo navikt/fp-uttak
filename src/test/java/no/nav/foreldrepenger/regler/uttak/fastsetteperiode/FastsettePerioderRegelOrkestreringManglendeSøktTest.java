@@ -173,15 +173,14 @@ public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends Fastse
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 75))
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 1));
-        var arbeidsforhold1 = new Arbeidsforhold(AktivitetIdentifikator.forFrilans());
-        var arbeidsforhold2 = new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende());
         var arbeid = new Arbeid.Builder()
-                .leggTilArbeidsforhold(arbeidsforhold1)
-                .leggTilArbeidsforhold(arbeidsforhold2);
+                .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
+                .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende()));
         //En fastsatt periode for å få ulikt antall saldo
         var fastsattPeriode = new FastsattUttakPeriode.Builder()
                 .medTidsperiode(fødselsdato.minusDays(1), fødselsdato.minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), Stønadskontotype.FELLESPERIODE, AktivitetIdentifikator.forFrilans())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), Stønadskontotype.FELLESPERIODE, AktivitetIdentifikator.forFrilans()),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(0), Stønadskontotype.FELLESPERIODE, AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET);
         var grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(søknad(Søknadstype.FØDSEL,

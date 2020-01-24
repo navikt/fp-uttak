@@ -186,10 +186,10 @@ public class SaldoUtregningTjenesteTest {
     private SaldoUtregningGrunnlag lagGrunnlag(StønadsPeriode aktuellPeriode, RegelGrunnlag grunnlag) {
         if (grunnlag.getBehandling().isTapende()) {
             return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(List.of(), grunnlag.getAnnenPart().getUttaksperioder(),
-                    grunnlag.getArbeid().getArbeidsforhold(), grunnlag.getKontoer(), aktuellPeriode.getFom(), new ArrayList<>(grunnlag.getSøknad().getUttaksperioder()));
+                    grunnlag.getKontoer(), aktuellPeriode.getFom(), new ArrayList<>(grunnlag.getSøknad().getUttaksperioder()), grunnlag.getArbeid().getAktiviteter());
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                grunnlag.getAnnenPart().getUttaksperioder(), grunnlag.getArbeid().getArbeidsforhold(), grunnlag.getKontoer(), aktuellPeriode.getFom());
+                grunnlag.getAnnenPart().getUttaksperioder(), grunnlag.getKontoer(), aktuellPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
     }
 
     @Test
@@ -256,10 +256,8 @@ public class SaldoUtregningTjenesteTest {
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(2.5)), Stønadskontotype.FELLESPERIODE, identifikator)))
                 .build();
-        var arbeidsforhold1 = new Arbeidsforhold(identifikator);
-        var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, utregningsdato);
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(),
-                Set.of(arbeidsforhold1, nyttArbeidsforhold), kontoer.build(), utregningsdato);
+                kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold));
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
@@ -280,39 +278,17 @@ public class SaldoUtregningTjenesteTest {
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikator)))
                 .build();
-        var arbeidsforhold1 = new Arbeidsforhold(identifikator, LocalDate.of(2018, 1, 1));
-        var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, LocalDate.of(2019, 12, 20));
         var annenpartsPeriode = AnnenpartUttaksperiode.Builder.uttak(LocalDate.of(2019, 12, 11), LocalDate.of(2019, 12, 17))
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(AktivitetIdentifikator.forSelvstendigNæringsdrivende(),
                         Stønadskontotype.MØDREKVOTE, new Trekkdager(100), BigDecimal.valueOf(100)))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(annenpartsPeriode),
-                Set.of(arbeidsforhold1, nyttArbeidsforhold), kontoer.build(), utregningsdato);
+                kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold));
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(Stønadskontotype.MØDREKVOTE, identifikator)).isEqualTo(Trekkdager.ZERO);
         assertThat(resultat.saldoITrekkdager(Stønadskontotype.MØDREKVOTE, identifikatorNyttArbeidsforhold)).isEqualTo(Trekkdager.ZERO);
-    }
-
-    @Test
-    public void skal_ikke_ta_hensyn_til_startdato_hvis_ett_arbeidsforhold() {
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.FELLESPERIODE));
-
-        var utregningsdato = LocalDate.MAX;
-        var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forArbeid("123", "789");
-        var fastsattPeriode = new FastsattUttakPeriode.Builder()
-                .medTidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 19))
-                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)))
-                .build();
-        var nyttArbeidsforhold = new Arbeidsforhold(identifikatorNyttArbeidsforhold, LocalDate.of(2019, 12, 20));
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(), Set.of(nyttArbeidsforhold),
-                kontoer.build(), utregningsdato);
-        var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
-
-        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(50));
     }
 
     @Test
@@ -342,12 +318,8 @@ public class SaldoUtregningTjenesteTest {
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold1),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(50), Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold2)))
                 .build();
-        var arbeidsforhold1 = new Arbeidsforhold(identifikator, LocalDate.of(2018, 1, 1));
-        var nyttArbeidsforhold1 = new Arbeidsforhold(identifikatorNyttArbeidsforhold1, LocalDate.of(2019, 12, 19));
-        var nyttArbeidsforhold2 = new Arbeidsforhold(identifikatorNyttArbeidsforhold2, LocalDate.of(2019, 12, 20));
-
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode1, fastsattPeriode2, fastsattPeriode3), List.of(),
-                Set.of(arbeidsforhold1, nyttArbeidsforhold1, nyttArbeidsforhold2), kontoer.build(), utregningsdato);
+                kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold1, identifikatorNyttArbeidsforhold2));
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(5));

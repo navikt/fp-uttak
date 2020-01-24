@@ -23,7 +23,7 @@ final class DelRegelTestUtil {
 
     static Regelresultat kjørRegel(UttakPeriode uttakPeriode, RegelGrunnlag grunnlag, List<FastsattUttakPeriode> søkersFastsattePerioder) {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder,
-                List.of(), grunnlag.getArbeid().getArbeidsforhold(), grunnlag.getKontoer(), uttakPeriode.getFom());
+                List.of(), grunnlag.getKontoer(), uttakPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         return new Regelresultat(REGEL.evaluer(new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode)));
     }

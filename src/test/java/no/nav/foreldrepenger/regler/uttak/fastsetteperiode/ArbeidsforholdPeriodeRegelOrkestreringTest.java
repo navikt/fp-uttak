@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 
-public class StartdatoArbeidRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void skal_starte_arbeidsforhold_fra_startdato() {
@@ -123,6 +123,37 @@ public class StartdatoArbeidRegelOrkestreringTest extends FastsettePerioderRegel
     }
 
     @Test
+    public void nytt_arbeidsforhold_skal_hente_saldo_fra_arbeidsforholdet_som_har_høyest_saldo_på_startdato_2() {
+        //Testen sjekker om det nye arbeidsforholdet vinner dager på at begge eksisterende arbeidsforhold graderer to uker hver
+        var fødselsdato = LocalDate.of(2019, 11, 27);
+        var arbeidsforhold1 = ARBEIDSFORHOLD;
+        var arbeidsforhold2 = AktivitetIdentifikator.annenAktivitet();
+        var arbeidsforhold3 = AktivitetIdentifikator.forFrilans();
+        var arbeid = new Arbeid.Builder()
+                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
+                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
+                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
+        var mødrekvote1 = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertMødrekvote1 = StønadsPeriode.medGradering(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+                List.of(arbeidsforhold1), BigDecimal.valueOf(50), PeriodeVurderingType.IKKE_VURDERT);
+        var gradertMødrekvote2 = StønadsPeriode.medGradering(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1),
+                List.of(arbeidsforhold2), BigDecimal.valueOf(50), PeriodeVurderingType.IKKE_VURDERT);
+        var mødrekvote2 = søknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
+        grunnlag.medArbeid(arbeid)
+                .medSøknad(søknad(Søknadstype.FØDSEL, mødrekvote1, gradertMødrekvote1, gradertMødrekvote2, mødrekvote2))
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(fødselsdato.minusYears(3)));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(5);
+
+        //Arver 45 dager, har igjen 50. Nok til en uke. Siste uken skal avslås for tom for dager
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.ZERO);
+    }
+
+    @Test
     public void skal_ikke_ta_hensyn_til_startdato_hvis_bare_ett_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold = AktivitetIdentifikator.annenAktivitet();
@@ -138,9 +169,8 @@ public class StartdatoArbeidRegelOrkestreringTest extends FastsettePerioderRegel
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold);
-        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold);
-        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold);
+        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactly(arbeidsforhold);
+        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactly(arbeidsforhold);
+        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactly(arbeidsforhold);
     }
-
 }

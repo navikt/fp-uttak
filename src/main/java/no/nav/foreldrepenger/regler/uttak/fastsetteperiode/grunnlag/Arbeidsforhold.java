@@ -32,6 +32,10 @@ public class Arbeidsforhold {
         return startdato;
     }
 
+    public boolean erAktivtPåDato(LocalDate dato) {
+        return !getStartdato().isAfter(dato);
+    }
+
     public Arbeidsforhold leggTilEndringIStilling(EndringAvStilling endringAvStilling) {
         if (getStillingsprosent(endringAvStilling.getDato()).compareTo(endringAvStilling.getStillingsprosent()) != 0) {
             endringAvStillingListe.add(endringAvStilling);
