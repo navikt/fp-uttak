@@ -962,4 +962,55 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
 
         assertThatCode(() -> fastsettPerioder(grunnlag)).doesNotThrowAnyException();
     }
+
+    @Test
+    public void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom() {
+        var fødselsdato = LocalDate.of(2018, 6, 14);
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .medRettOgOmsorg(aleneomsorg())
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(fødselsdato.plusYears(1).plusDays(1)))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusYears(1)))
+                )
+                .medKontoer(new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 50)));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(30));
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(20));
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    public void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom_manglende_søkt_periode() {
+        var fødselsdato = LocalDate.of(2018, 6, 14);
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .medRettOgOmsorg(aleneomsorg())
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato)
+                        .medFørsteLovligeUttaksdag(fødselsdato.plusYears(1).plusDays(1)))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilSøknadsperiode(søknadsperiode(FORELDREPENGER, fødselsdato.plusYears(1), fødselsdato.plusYears(1)))
+                )
+                .medKontoer(new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 50)));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(4);
+        //første 6
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(30));
+        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        //fram til tom på konto
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(20));
+        assertThat(resultat.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        //mellom tom på konto og første søkte
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.UKJENT);
+        //første søkte
+        assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
 }
