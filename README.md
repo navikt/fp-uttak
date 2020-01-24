@@ -10,9 +10,10 @@ fp-uttak
 ================
 
 Uttaksregler for foreldrepenger.
-Denne modulene inneholder to tjenester for foreldrepenger:
+Denne modulene inneholder tre tjenester for foreldrepenger:
 * Opprett stønadskontoer
 * Fastsett uttaksperioder
+* Søknadsfrist
 
 # Komme i gang
 
@@ -21,5 +22,5 @@ Bygges med maven, java 11
 ## For NAV-ansatte
 
 Interne henvendelser kan sendes via Slack i kanalen #teamforeldrepenger
-https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter
+https://confluence.adeo.no/display/TVF/1.+Samleside+for+oppdaterte+regelflyter
 
