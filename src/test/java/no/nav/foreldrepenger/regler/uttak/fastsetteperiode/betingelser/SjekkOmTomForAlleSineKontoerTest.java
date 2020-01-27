@@ -46,7 +46,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     private List<Stønadskontotype> stønadskontotypene(RegelGrunnlag grunnlag) {
-        return SjekkOmTomForAlleSineKontoer.hentSøkerSineKonto(new FastsettePeriodeGrunnlagImpl(grunnlag, null, null));
+        return SjekkOmTomForAlleSineKontoer.hentSøkerSineKontoer(new FastsettePeriodeGrunnlagImpl(grunnlag, null, null));
     }
 
     @Test

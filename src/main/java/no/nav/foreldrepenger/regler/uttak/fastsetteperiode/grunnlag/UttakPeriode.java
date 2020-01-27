@@ -259,6 +259,8 @@ public abstract class UttakPeriode extends LukketPeriode {
     public String toString() {
         return "UttakPeriode{" +
                 "stønadskontotype=" + stønadskontotype +
+                ", fom=" + getFom() +
+                ", tom=" + getTom() +
                 ", gradertArbeidsprosent=" + gradertArbeidsprosent +
                 ", gradertAktiviteter=" + gradertAktiviteter +
                 ", overføringÅrsak=" + overføringÅrsak +

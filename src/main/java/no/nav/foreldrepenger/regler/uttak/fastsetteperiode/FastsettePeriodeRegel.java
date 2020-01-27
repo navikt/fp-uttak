@@ -31,7 +31,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGradering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTapendeBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaketStarterFørLovligUttakFørFødsel;
@@ -139,20 +138,26 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
         return rs.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
-                .hvis(new SjekkOmManglendeSøktPeriode(), IkkeOppfylt.opprett("UT1084", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false))
+                .hvis(new SjekkOmManglendeSøktPeriode(), sjekkOmTomPåKontoVedManglendeSøktPeriode())
                 .ellers(sjekkOmPeriodeErForTidlig());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
         return rs.hvisRegel(SjekkOmUttaketStarterFørLovligUttakFørFødsel.ID, "Gjelder det periode tidligere enn 12 uker før fødsel/termin?")
                 .hvis(new SjekkOmUttaketStarterFørLovligUttakFørFødsel(konfigurasjon), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
-                .ellers(sjekkOmNoenDagerIgjen());
+                .ellers(sjekkOmTomPåKontoVedSøktPeriode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDagerIgjen() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false))
-                .ellers(IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, true, false));
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode() {
+        return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .ellers(IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedManglendeSøktPeriode() {
+        return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .ellers(IkkeOppfylt.opprett("UT1084", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense() {

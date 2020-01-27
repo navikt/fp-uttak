@@ -26,7 +26,7 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         boolean tomForAlleSineKontoer = true;
-        for (Stønadskontotype stønadskontotype : hentSøkerSineKonto(grunnlag)) {
+        for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
             for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
                 if (saldo.merEnn0()) {
@@ -38,11 +38,7 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
 
     }
 
-    static List<Stønadskontotype> hentSøkerSineKonto(FastsettePeriodeGrunnlag grunnlag) {
-        return hentSøkerSineKontoer(grunnlag);
-    }
-
-    private static List<Stønadskontotype> hentSøkerSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
+    static List<Stønadskontotype> hentSøkerSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         if (!søkerOgAnnenForelderSineKontoer(grunnlag).contains(Stønadskontotype.FORELDREPENGER)) {
             if (grunnlag.isSøkerMor()) {
