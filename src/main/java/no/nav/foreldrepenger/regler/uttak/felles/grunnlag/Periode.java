@@ -2,24 +2,17 @@ package no.nav.foreldrepenger.regler.uttak.felles.grunnlag;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import no.nav.fpsak.tidsserie.LocalDateInterval;
-
 public class Periode {
 
     private final LocalDate fom;
     private final LocalDate tom;
 
-    @JsonIgnore
-    private LocalDateInterval datoIntervall;
-
     public Periode(LocalDate fom, LocalDate tom) {
         if (fom != null && tom != null && tom.isBefore(fom)) {
             throw new IllegalArgumentException("Til og med dato før fra og med dato: " + fom + ">" + tom);
         }
-        this.fom = fom;
-        this.tom = tom;
+        this.fom = fom == null ? LocalDate.MIN : fom;
+        this.tom = tom == null ? LocalDate.MAX : tom;
     }
 
     public LocalDate getFom() {
@@ -30,23 +23,16 @@ public class Periode {
         return tom;
     }
 
-    LocalDateInterval tilDatoIntervall() {
-        if (datoIntervall == null) {
-            datoIntervall = new LocalDateInterval(fom, tom);
-        }
-        return datoIntervall;
-    }
-
     public boolean overlapper(LocalDate dato) {
-        return tilDatoIntervall().encloses  (dato);
+        return !(dato.isBefore(fom) || dato.isAfter(tom));
     }
 
     public boolean overlapper(LukketPeriode periode) {
-        return tilDatoIntervall().overlaps(periode.tilDatoIntervall());
+        return overlapper(periode.getFom()) || overlapper(periode.getTom()) || erOmsluttetAv(periode);
     }
 
     public boolean erOmsluttetAv(LukketPeriode periode) {
-        return periode.tilDatoIntervall().contains(tilDatoIntervall());
+        return !periode.getFom().isAfter(fom) && !periode.getTom().isBefore(tom);
     }
 
     @Override
