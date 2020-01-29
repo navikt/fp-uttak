@@ -377,10 +377,9 @@ public class SaldoUtregning {
 
     private BigDecimal trekkdagerForUttaksperiode(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
         for (FastsattUttakPeriodeAktivitet periodeAktivitet : periode.getAktiviteter()) {
-            if (periodeAktivitet.getAktivitetIdentifikator().equals(aktivitet)) {
-                if (Objects.equals(periodeAktivitet.getStønadskontotype(), stønadskonto) || (Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER) && periode.isFlerbarnsdager())) {
-                    return periodeAktivitet.getTrekkdager().decimalValue();
-                }
+            if (periodeAktivitet.getAktivitetIdentifikator().equals(aktivitet) &&
+                    (Objects.equals(periodeAktivitet.getStønadskontotype(), stønadskonto) || (Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER) && periode.isFlerbarnsdager()))) {
+                return periodeAktivitet.getTrekkdager().decimalValue();
             }
         }
         return BigDecimal.ZERO;

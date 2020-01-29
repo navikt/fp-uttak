@@ -97,9 +97,7 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         }
 
         public Builder medAvslåttGradering(GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak) {
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak);
-            });
+            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
             return this;
         }
 
