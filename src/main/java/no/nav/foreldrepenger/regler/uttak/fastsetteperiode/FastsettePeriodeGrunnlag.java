@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
@@ -29,7 +29,7 @@ public interface FastsettePeriodeGrunnlag {
      *
      * @return Aktuell periode. Det er den perioden som skal behandles av regel.
      */
-    UttakPeriode getAktuellPeriode();
+    OppgittPeriode getAktuellPeriode();
 
     /**
      * Hent arbeidsgrunnlag
@@ -45,13 +45,6 @@ public interface FastsettePeriodeGrunnlag {
      * perioder med gyldig grunn.
      */
     List<GyldigGrunnPeriode> getAktuelleGyldigeGrunnPerioder();
-
-    /**
-     * Finn stønadskontotype for aktuell periode.
-     *
-     * @return stønadskontotype. Returmerer Stønadskontotype.UKJENT dersom det ikke er noen aktuell periode.
-     */
-    Stønadskontotype getStønadskontotype();
 
     /**
      * Finn søknadstype.
@@ -128,28 +121,28 @@ public interface FastsettePeriodeGrunnlag {
      *
      * @return list av perioder der søkers annen forelder er innlagt på helseinstitusjon.
      */
-    List<UttakPeriode> getPerioderMedAnnenForelderInnlagt();
+    List<OppgittPeriode> getPerioderMedAnnenForelderInnlagt();
 
     /**
      * Finn alle perioder der søkers annen forelder har bekreftet sykdom eller skade.
      *
      * @return list av perioder der søkers annen forelder har bekreftet sykdom eller skade.
      */
-    List<UttakPeriode> getPerioderMedAnnenForelderSykdomEllerSkade();
+    List<OppgittPeriode> getPerioderMedAnnenForelderSykdomEllerSkade();
 
     /**
      * Finn alle perioder der søkers annen forelder har bekreftet ikke rett.
      *
      * @return list av perioder der søkers annen forelder har bekreftet ikke rett.
      */
-    List<UttakPeriode> getPerioderMedAnnenForelderIkkeRett();
+    List<OppgittPeriode> getPerioderMedAnnenForelderIkkeRett();
 
     /**
      * Finn alle perioder der søkers annen forelder har bekreftet ikke omsorg.
      *
      * @return list av perioder der søkers annen forelder har bekreftet ikke omsorg.
      */
-    List<UttakPeriode> getPerioderMedAleneomsorg();
+    List<OppgittPeriode> getPerioderMedAleneomsorg();
 
     /**
      * Har far/medmor rett til foreldrepenger.
@@ -178,7 +171,7 @@ public interface FastsettePeriodeGrunnlag {
      * Finnes alle uttaks perioder av annenpart
      * @return list av annenpart sin uttaksperioder
      */
-    List<AnnenpartUttaksperiode> getAnnenPartUttaksperioder();
+    List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder();
 
     boolean harAleneomsorg();
 

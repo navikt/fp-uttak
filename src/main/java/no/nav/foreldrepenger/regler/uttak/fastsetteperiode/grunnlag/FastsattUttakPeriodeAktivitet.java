@@ -5,12 +5,12 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class FastsattUttakPeriodeAktivitet {
     private final Trekkdager trekkdager;
-    private final Stønadskontotype trekkonto;
+    private final Stønadskontotype stønadskontotype;
     private final AktivitetIdentifikator aktivitetIdentifikator;
 
-    public FastsattUttakPeriodeAktivitet(Trekkdager trekkdager, Stønadskontotype trekkonto, AktivitetIdentifikator aktivitetIdentifikator) {
+    public FastsattUttakPeriodeAktivitet(Trekkdager trekkdager, Stønadskontotype stønadskontotype, AktivitetIdentifikator aktivitetIdentifikator) {
         this.trekkdager = trekkdager;
-        this.trekkonto = trekkonto;
+        this.stønadskontotype = stønadskontotype;
         this.aktivitetIdentifikator = aktivitetIdentifikator;
     }
 
@@ -18,8 +18,8 @@ public class FastsattUttakPeriodeAktivitet {
         return trekkdager;
     }
 
-    public Stønadskontotype getTrekkonto() {
-        return trekkonto;
+    public Stønadskontotype getStønadskontotype() {
+        return stønadskontotype;
     }
 
     public AktivitetIdentifikator getAktivitetIdentifikator() {

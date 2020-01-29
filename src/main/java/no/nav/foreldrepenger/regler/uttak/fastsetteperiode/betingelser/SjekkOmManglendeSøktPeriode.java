@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -18,7 +17,7 @@ public class SjekkOmManglendeSøktPeriode extends LeafSpecification<FastsettePer
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
-        return aktuellPeriode instanceof ManglendeSøktPeriode ? ja() : nei();
+        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
+        return aktuellPeriode.isManglendeSøktPeriode() ? ja() : nei();
     }
 }

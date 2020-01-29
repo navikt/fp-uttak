@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -17,11 +16,8 @@ public class SjekkOmPeriodeErUtsettelse extends LeafSpecification<FastsettePerio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        if (uttakPeriode instanceof UtsettelsePeriode) {
-            return ja();
-        }
-        return nei();
+        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        return oppgittPeriode.isUtsettelse() ? ja() : nei();
     }
 
 }

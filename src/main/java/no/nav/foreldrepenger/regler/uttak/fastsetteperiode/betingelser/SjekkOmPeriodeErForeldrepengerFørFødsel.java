@@ -18,7 +18,8 @@ public class SjekkOmPeriodeErForeldrepengerFørFødsel extends LeafSpecification
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.getStønadskontotype() == Stønadskontotype.FORELDREPENGER_FØR_FØDSEL) {
+        var stønadskontotype = grunnlag.getAktuellPeriode().getStønadskontotype();
+        if (stønadskontotype == Stønadskontotype.FORELDREPENGER_FØR_FØDSEL) {
             return ja();
         }
         return nei();

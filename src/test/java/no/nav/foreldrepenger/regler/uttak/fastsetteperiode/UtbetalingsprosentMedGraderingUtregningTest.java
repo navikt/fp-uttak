@@ -4,16 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.UtbetalingsprosentMedGraderingUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class UtbetalingsprosentMedGraderingUtregningTest {
@@ -24,8 +22,8 @@ public class UtbetalingsprosentMedGraderingUtregningTest {
         var aktivitet2 = AktivitetIdentifikator.forFrilans();
         var arbeidstidsprosent = BigDecimal.valueOf(20);
 
-        var periode = StønadsPeriode.medGradering(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, LocalDate.now(), LocalDate.now().plusWeeks(1),
-                List.of(aktivitet1), arbeidstidsprosent, PeriodeVurderingType.PERIODE_OK);
+        var periode = OppgittPeriode.forGradering(Stønadskontotype.FEDREKVOTE, LocalDate.now(), LocalDate.now().plusWeeks(1),
+                PeriodeKilde.SØKNAD, arbeidstidsprosent, null, false, Set.of(aktivitet1), PeriodeVurderingType.IKKE_VURDERT);
 
         var utregningForAktivitet1 = utregning(aktivitet1, periode);
         var utregningForAktivitet2 = utregning(aktivitet2, periode);
@@ -35,7 +33,7 @@ public class UtbetalingsprosentMedGraderingUtregningTest {
     }
 
     private UtbetalingsprosentMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator,
-                                                              UttakPeriode periode) {
+                                                              OppgittPeriode periode) {
         return new UtbetalingsprosentMedGraderingUtregning(periode, aktivitetIdentifikator);
     }
 }

@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -19,13 +17,7 @@ public class SjekkOmUtsettelsePgaSykdomSkade extends LeafSpecification<Fastsette
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        if (uttakPeriode instanceof UtsettelsePeriode) {
-            UtsettelsePeriode utsettelsePeriode = (UtsettelsePeriode)uttakPeriode;
-            if (Utsettelseårsaktype.SYKDOM_SKADE.equals(utsettelsePeriode.getUtsettelseårsaktype())) {
-                return ja();
-            }
-        }
-        return nei();
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        return oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.SYKDOM_SKADE) ? ja() : nei();
     }
 }

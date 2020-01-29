@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
@@ -18,14 +18,14 @@ final class ManglendeSøktPeriodeUtil {
 
     }
 
-    static List<ManglendeSøktPeriode> finnManglendeSøktePerioder(List<LukketPeriode> perioder, LukketPeriode periode) {
+    static List<OppgittPeriode> finnManglendeSøktePerioder(List<LukketPeriode> perioder, LukketPeriode periode) {
         Objects.requireNonNull(periode, "periode");
         List<LukketPeriode> sortertePerioder = perioder.stream()
                 .filter(p -> !p.getTom().isBefore(periode.getFom()) && !p.getFom().isAfter(periode.getTom()))
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
 
-        List<ManglendeSøktPeriode> msp = new ArrayList<>();
+        List<OppgittPeriode> msp = new ArrayList<>();
         LocalDate hullFom = periode.getFom();
         for (LukketPeriode lukketPeriode : sortertePerioder) {
             if (hullFom.isBefore(lukketPeriode.getFom())) {
@@ -49,12 +49,12 @@ final class ManglendeSøktPeriodeUtil {
         return msp;
     }
 
-    static ManglendeSøktPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom) {
-        return lagManglendeSøktPeriode(hullFom, hullTom, Stønadskontotype.UKJENT);
+    static OppgittPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom) {
+        return lagManglendeSøktPeriode(hullFom, hullTom, null);
     }
 
-    static ManglendeSøktPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom, Stønadskontotype type) {
-        return new ManglendeSøktPeriode(type, hullFom, hullTom);
+    static OppgittPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom, Stønadskontotype type) {
+        return OppgittPeriode.forManglendeSøkt(type, hullFom, hullTom);
     }
 
 }

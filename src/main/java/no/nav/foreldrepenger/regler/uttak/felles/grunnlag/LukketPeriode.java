@@ -19,5 +19,4 @@ public class LukketPeriode extends Periode {
     public int virkedager() {
         return Virkedager.beregnAntallVirkedager(this);
     }
-
 }

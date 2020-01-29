@@ -1,17 +1,17 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.overføringsperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -22,15 +22,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnP
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -45,29 +44,33 @@ public class FedrekvoteDelregelTest {
     public void fedrekvote_etter_6_uker_blir_innvilget() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(fedrekvoteKonto(10 * 5))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
+    }
+
+    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom) {
+        return DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fom, tom);
     }
 
     @Test
     public void UT1020_fedrekvote_før_fødsel_blir_avslått() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(1));
         var kontoer = fedrekvoteKonto(10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
@@ -77,7 +80,7 @@ public class FedrekvoteDelregelTest {
     public void UT1292_fedrekvote_uten_at_mor_har_rett_blir_avslått() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1));
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
@@ -86,11 +89,11 @@ public class FedrekvoteDelregelTest {
                         .medMorHarRett(false)
                         .medFarHarRett(true)
                         .medSamtykke(true))
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_IKKE_RETT_FK);
@@ -106,14 +109,14 @@ public class FedrekvoteDelregelTest {
     public void fedrekvote_bli_avslått_når_søker_ikke_har_omsorg() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         var kontoer = fedrekvoteKonto(10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100))))
+                .medSøknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100))))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
@@ -122,16 +125,16 @@ public class FedrekvoteDelregelTest {
     public void UT1025_far_førUke7_etterTermin_utenGyldigGrunn_ikkeOmsorg_flerbarnsdager() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), null, true);
-        søknadsperiode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4),
+                PeriodeKilde.SØKNAD, null, true, PeriodeVurderingType.UAVKLART_PERIODE);
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
+                .medSøknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .medKontoer(fedrekvoteOgFlerbarnsdagerKonto(1000, 85))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -147,16 +150,16 @@ public class FedrekvoteDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        StønadsPeriode søknadsperiode = new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fom, tom, null, false);
+        var oppgittPeriode = oppgittPeriode(fom, tom);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
+                .medSøknad(søknad(oppgittPeriode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -172,16 +175,16 @@ public class FedrekvoteDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        StønadsPeriode søknadsperiode = overføringsperiode(fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -197,16 +200,16 @@ public class FedrekvoteDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        StønadsPeriode søknadsperiode = overføringsperiode(fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -222,16 +225,16 @@ public class FedrekvoteDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        StønadsPeriode søknadsperiode = overføringsperiode(fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -247,16 +250,16 @@ public class FedrekvoteDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        StønadsPeriode søknadsperiode = overføringsperiode(fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -270,14 +273,13 @@ public class FedrekvoteDelregelTest {
     public void UT1026_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
-        søknadsperiode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
+                .medSøknad(søknad(oppgittPeriode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
                 .medKontoer(fedrekvoteKonto(1000))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE);
     }
@@ -286,28 +288,36 @@ public class FedrekvoteDelregelTest {
     public void UT1217_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
+                .medSøknad(søknad(oppgittPeriode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
                 .medKontoer(fedrekvoteKonto(1000))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
+    }
+
+    private OppgittPeriode gradertPeriode(LocalDate fom, LocalDate tom) {
+        return gradertPeriode(fom, tom, PeriodeVurderingType.IKKE_VURDERT);
+    }
+
+    private OppgittPeriode gradertPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType) {
+        return DelRegelTestUtil.gradertPeriode(FEDREKVOTE, fom, tom, Set.of(AktivitetIdentifikator.forFrilans()), vurderingType);
     }
 
     @Test
     public void UT1031_far_etterUke7_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
+                .medSøknad(søknad(oppgittPeriode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
                 .medKontoer(fedrekvoteKonto(1000))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE);
     }
@@ -316,13 +326,13 @@ public class FedrekvoteDelregelTest {
     public void fom_akkurat_6_uker_etter_fødsel() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = søknadsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6).plusDays(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6).plusDays(1));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode))
+                .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(fedrekvoteKonto(1000))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE);
     }
@@ -331,13 +341,13 @@ public class FedrekvoteDelregelTest {
     public void UT1218_far_etterUke7_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        StønadsPeriode søknadsperiode = gradertSøknadsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15), PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15));
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
+                .medSøknad(søknad(oppgittPeriode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
                 .medKontoer(fedrekvoteKonto(1000))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
     }
@@ -346,19 +356,19 @@ public class FedrekvoteDelregelTest {
     public void opphold_fedrekvote_annenforelder() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        OppholdPeriode periode = new OppholdPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER,
-                fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
+        var periode = OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
+                PeriodeKilde.SØKNAD, OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .medSøknadsperioder(List.of(periode)))
+                        .medOppgittePerioder(List.of(periode)))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(periode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(periode, grunnlag);
 
         assertInnvilgetOpphold(regelresultat);
     }
@@ -367,19 +377,19 @@ public class FedrekvoteDelregelTest {
     public void opphold_fedrekvote_annenforelder_tom_for_konto() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
-        OppholdPeriode periode = new OppholdPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER,
-                fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15), null, false);
+        var periode = OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
+                PeriodeKilde.SØKNAD, OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER);
         Kontoer.Builder kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(0).medType(Stønadskontotype.FEDREKVOTE));
         RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .medSøknadsperioder(List.of(periode)))
+                        .medOppgittePerioder(List.of(periode)))
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(periode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(periode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -388,31 +398,22 @@ public class FedrekvoteDelregelTest {
     }
 
 
-    private void assertInnvilgetOpphold(Regelresultat regelresultat) {
+    private void assertInnvilgetOpphold(FastsettePerioderRegelresultat regelresultat) {
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
-        assertThat(regelresultat.getInnvilgetÅrsak()).isNull();
+        assertThat(regelresultat.getAvklaringÅrsak()).isNull();
     }
 
-    private StønadsPeriode søknadsperiode(LocalDate fom, LocalDate tom) {
-        return new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fom, tom, null, false);
+    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode) {
+        return fødselssøknadMedEnPeriode(oppgittPeriode);
     }
 
-    private Søknad.Builder søknad(StønadsPeriode søknadsperiode) {
-        return fødselssøknadMedEnPeriode(søknadsperiode);
-    }
-
-    private Søknad.Builder fødselssøknadMedEnPeriode(StønadsPeriode søknadsperiode) {
+    private Søknad.Builder fødselssøknadMedEnPeriode(OppgittPeriode oppgittPeriode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
-                .medMottattDato(søknadsperiode.getFom().minusWeeks(1))
-                .leggTilSøknadsperiode(søknadsperiode);
-    }
-
-    private StønadsPeriode gradertSøknadsperiode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType) {
-        return StønadsPeriode.medGradering(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fom, tom,
-                List.of(AktivitetIdentifikator.forFrilans()), BigDecimal.TEN, vurderingType);
+                .medMottattDato(oppgittPeriode.getFom().minusWeeks(1))
+                .leggTilOppgittPeriode(oppgittPeriode);
     }
 
     private Kontoer.Builder fedrekvoteKonto(int trekkdager) {
@@ -432,21 +433,21 @@ public class FedrekvoteDelregelTest {
                         .medTrekkdager(flerbarnsdagerTrekkdager));
     }
 
-    private Søknad.Builder søknad(StønadsPeriode søknadsperiode, GyldigGrunnPeriode gyldigGrunnPeriode) {
-        return fødselssøknadMedEnPeriode(søknadsperiode)
+    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, GyldigGrunnPeriode gyldigGrunnPeriode) {
+        return fødselssøknadMedEnPeriode(oppgittPeriode)
                 .medDokumentasjon(new Dokumentasjon.Builder()
                         .leggGyldigGrunnPerioder(gyldigGrunnPeriode));
     }
 
-    private Søknad.Builder søknad(StønadsPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
-        return fødselssøknadMedEnPeriode(søknadsperiode)
+    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, PeriodeUtenOmsorg periodeUtenOmsorg) {
+        return fødselssøknadMedEnPeriode(oppgittPeriode)
                 .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg));
     }
 
-    private void assertInnvilget(Regelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {
+    private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isTrue();
-        assertThat(regelresultat.getInnvilgetÅrsak()).isEqualTo(innvilgetÅrsak);
+        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(innvilgetÅrsak);
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
@@ -474,10 +475,5 @@ public class FedrekvoteDelregelTest {
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
         return basicGrunnlag(fødselsdato)
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true));
-    }
-
-    private StønadsPeriode overføringsperiode(LocalDate fom, LocalDate tom, OverføringÅrsak årsak, PeriodeVurderingType vurderingType) {
-        return StønadsPeriode.medOverføringAvKvote(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fom, tom, årsak,
-                vurderingType, null, false);
     }
 }

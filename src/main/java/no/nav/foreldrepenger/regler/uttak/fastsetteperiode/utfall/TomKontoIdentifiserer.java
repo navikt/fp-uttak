@@ -12,7 +12,7 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -23,17 +23,18 @@ public class TomKontoIdentifiserer {
         //hindrer instansiering
     }
 
-    public static Optional<TomKontoKnekkpunkt> identifiser(UttakPeriode uttakPeriode,
+    public static Optional<TomKontoKnekkpunkt> identifiser(OppgittPeriode uttakPeriode,
                                                            List<AktivitetIdentifikator> aktiviteter,
                                                            SaldoUtregning saldoUtregning,
-                                                           Stønadskontotype stønadskontotype) {
+                                                           Stønadskontotype stønadskontotype,
+                                                           boolean skalTrekkeDager) {
 
         Map<LocalDate, TomKontoKnekkpunkt> knekkpunkter = new HashMap<>();
         for (AktivitetIdentifikator aktivitet : aktiviteter) {
-            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype);
+            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager);
             datoKontoGårTomIPeriode.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             if (uttakPeriode.isFlerbarnsdager()) {
-                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, Stønadskontotype.FLERBARNSDAGER);
+                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, Stønadskontotype.FLERBARNSDAGER, skalTrekkeDager);
                 knekkpunktFlerbarnsdager.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
         }
@@ -45,19 +46,20 @@ public class TomKontoIdentifiserer {
         return Optional.of(knekkpunkter.get(tidligstDato));
     }
 
-    private static Optional<LocalDate> finnDatoKontoGårTomIPeriode(UttakPeriode uttakPeriode,
+    private static Optional<LocalDate> finnDatoKontoGårTomIPeriode(OppgittPeriode oppgittPeriode,
                                                                    AktivitetIdentifikator aktivitet,
                                                                    SaldoUtregning saldoUtregning,
-                                                                   Stønadskontotype stønadskontotype) {
-        if (!uttakPeriode.getSluttpunktTrekkerDager(aktivitet)) {
+                                                                   Stønadskontotype stønadskontotype,
+                                                                   boolean skalTrekkeDager) {
+        if (!skalTrekkeDager) {
             return Optional.empty();
         }
 
         Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
-        int saldoTilVirkedager = saldoTilVirkedager(uttakPeriode, aktivitet, saldo);
+        int saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
 
-        LocalDate datoKontoGårTom = Virkedager.plusVirkedager(uttakPeriode.getFom(), saldoTilVirkedager);
-        if (datoKontoGårTom.isAfter(uttakPeriode.getFom()) && !datoKontoGårTom.isAfter(uttakPeriode.getTom())) {
+        LocalDate datoKontoGårTom = Virkedager.plusVirkedager(oppgittPeriode.getFom(), saldoTilVirkedager);
+        if (datoKontoGårTom.isAfter(oppgittPeriode.getFom()) && !datoKontoGårTom.isAfter(oppgittPeriode.getTom())) {
             return Optional.of(datoKontoGårTom);
         }
 
@@ -68,28 +70,28 @@ public class TomKontoIdentifiserer {
         return knekkpunkter.stream().min(Comparator.comparing(date -> date)).orElseThrow();
     }
 
-    private static int saldoTilVirkedager(UttakPeriode periode, AktivitetIdentifikator aktivitet, Trekkdager saldo) {
+    private static int saldoTilVirkedager(OppgittPeriode periode, AktivitetIdentifikator aktivitet, Trekkdager saldo) {
         if (saldo.mindreEnn0()) {
             return 0;
         }
-        if (periode.isGradering(aktivitet)) {
+        if (periode.erSøktGradering(aktivitet)) {
             return saldoTilVirkedagerGradering(periode, saldo);
         }
-        if (periode.isSamtidigUttak()) {
+        if (periode.erSøktSamtidigUttak()) {
             return saldoTilVirkedagerSamtidigUttak(periode, saldo);
         }
         return saldo.decimalValue().setScale(0, RoundingMode.UP).intValue();
     }
 
-    private static int saldoTilVirkedagerSamtidigUttak(UttakPeriode periode, Trekkdager saldo) {
-        return saldoTilVirkedagerVedRedusertUttak(saldo, periode.getSamtidigUttaksprosent().orElseThrow());
+    private static int saldoTilVirkedagerSamtidigUttak(OppgittPeriode periode, Trekkdager saldo) {
+        return saldoTilVirkedagerVedRedusertUttak(saldo, periode.getSamtidigUttaksprosent());
     }
 
-    private static int saldoTilVirkedagerGradering(UttakPeriode periode, Trekkdager saldo) {
+    private static int saldoTilVirkedagerGradering(OppgittPeriode periode, Trekkdager saldo) {
         if (graderer100EllerMer(periode)) {
             return saldo.rundOpp();
         }
-        return saldoTilVirkedagerVedRedusertUttak(saldo, BigDecimal.valueOf(100).subtract(periode.getGradertArbeidsprosent()));
+        return saldoTilVirkedagerVedRedusertUttak(saldo, BigDecimal.valueOf(100).subtract(periode.getArbeidsprosent()));
     }
 
     private static int saldoTilVirkedagerVedRedusertUttak(Trekkdager saldo, BigDecimal uttaksprosent) {
@@ -104,7 +106,7 @@ public class TomKontoIdentifiserer {
         return virkedager.intValue();
     }
 
-    private static boolean graderer100EllerMer(UttakPeriode periode) {
-        return periode.getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(100)) >= 0;
+    private static boolean graderer100EllerMer(OppgittPeriode periode) {
+        return periode.getArbeidsprosent().compareTo(BigDecimal.valueOf(100)) >= 0;
     }
 }

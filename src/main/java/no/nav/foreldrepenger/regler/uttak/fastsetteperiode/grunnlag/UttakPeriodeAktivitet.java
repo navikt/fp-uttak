@@ -4,64 +4,63 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class UttakPeriodeAktivitet {
-    private Stønadskontotype stønadskontotype;
-    private AktivitetIdentifikator aktivitetIdentifikator;
-    private BigDecimal gradertArbeidsprosent = BigDecimal.ZERO;
-    private Trekkdager trekkdager;
-    private BigDecimal utbetalingsgrad;
 
-    public UttakPeriodeAktivitet(AktivitetIdentifikator aktivitetIdentifikator,
-                                 Stønadskontotype stønadskontotype,
+    private final AktivitetIdentifikator identifikator;
+    private final BigDecimal utbetalingsprosent;
+    private final Trekkdager trekkdager;
+    private final boolean søktGradering;
+
+    public UttakPeriodeAktivitet(AktivitetIdentifikator identifikator,
+                                 BigDecimal utbetalingsprosent,
                                  Trekkdager trekkdager,
-                                 BigDecimal utbetalingsgrad) {
-        Objects.requireNonNull(aktivitetIdentifikator);
-        Objects.requireNonNull(stønadskontotype);
-        Objects.requireNonNull(utbetalingsgrad);
-
-        this.aktivitetIdentifikator = aktivitetIdentifikator;
-        this.stønadskontotype = stønadskontotype;
+                                 boolean søktGradering) {
+        this.identifikator = identifikator;
+        this.utbetalingsprosent = utbetalingsprosent;
         this.trekkdager = trekkdager;
-        this.utbetalingsgrad = utbetalingsgrad;
+        this.søktGradering = søktGradering;
     }
 
-    public UttakPeriodeAktivitet(AktivitetIdentifikator aktivitetIdentifikator,
-                                 Stønadskontotype stønadskontotype,
-                                 Trekkdager trekkdager,
-                                 BigDecimal utbetalingsgrad,
-                                 BigDecimal gradertArbeidsprosent) {
-        Objects.requireNonNull(aktivitetIdentifikator);
-        Objects.requireNonNull(stønadskontotype);
-        Objects.requireNonNull(utbetalingsgrad);
-        Objects.requireNonNull(gradertArbeidsprosent);
-
-        this.aktivitetIdentifikator = aktivitetIdentifikator;
-        this.stønadskontotype = stønadskontotype;
-        this.trekkdager = trekkdager;
-        this.utbetalingsgrad = utbetalingsgrad;
-        this.gradertArbeidsprosent = gradertArbeidsprosent;
+    public AktivitetIdentifikator getIdentifikator() {
+        return identifikator;
     }
 
-    public AktivitetIdentifikator getAktivitetIdentifikator() {
-        return aktivitetIdentifikator;
-    }
-
-    public BigDecimal getGradertArbeidsprosent() {
-        return gradertArbeidsprosent;
+    public BigDecimal getUtbetalingsprosent() {
+        return utbetalingsprosent;
     }
 
     public Trekkdager getTrekkdager() {
         return trekkdager;
     }
 
-    public Stønadskontotype getStønadskontotype() {
-        return stønadskontotype;
+    public boolean isSøktGradering() {
+        return søktGradering;
     }
 
-    public BigDecimal getUtbetalingsgrad() {
-        return utbetalingsgrad;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UttakPeriodeAktivitet that = (UttakPeriodeAktivitet) o;
+        return søktGradering == that.søktGradering &&
+                Objects.equals(identifikator, that.identifikator) &&
+                Objects.equals(utbetalingsprosent, that.utbetalingsprosent) &&
+                Objects.equals(trekkdager, that.trekkdager);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifikator, utbetalingsprosent, trekkdager, søktGradering);
+    }
+
+    @Override
+    public String toString() {
+        return "UttakPeriodeAktivitet{" +
+                "identifikator=" + identifikator +
+                ", utbetalingsprosent=" + utbetalingsprosent +
+                ", trekkdager=" + trekkdager +
+                ", gradering=" + søktGradering +
+                '}';
+    }
 }

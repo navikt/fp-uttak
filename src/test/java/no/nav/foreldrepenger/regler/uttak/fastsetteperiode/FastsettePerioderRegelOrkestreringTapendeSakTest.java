@@ -15,17 +15,14 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
@@ -57,12 +54,12 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        UttakPeriode resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isZero();
         assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isZero();
@@ -83,30 +80,26 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
-        UttakPeriode resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isZero();
         assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isNotZero();
     }
 
-    private UttakPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return new StønadsPeriode(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, null, false);
-    }
-
-    static AnnenpartUttaksperiode annenpartsPeriode(Stønadskontotype stønadskontotype,
-                                                       LocalDate fom,
-                                                       LocalDate tom,
-                                                       AktivitetIdentifikator aktivitet,
-                                                       boolean innvilget) {
-        return AnnenpartUttaksperiode.Builder.uttak(fom, tom)
+    static AnnenpartUttakPeriode annenpartsPeriode(Stønadskontotype stønadskontotype,
+                                                   LocalDate fom,
+                                                   LocalDate tom,
+                                                   AktivitetIdentifikator aktivitet,
+                                                   boolean innvilget) {
+        return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(true)
-                .medUttakPeriodeAktivitet(new UttakPeriodeAktivitet(aktivitet, stønadskontotype,
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype,
                         new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), BigDecimal.TEN))
                 .medInnvilget(innvilget)
                 .build();

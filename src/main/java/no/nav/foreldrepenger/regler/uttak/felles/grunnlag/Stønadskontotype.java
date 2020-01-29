@@ -6,6 +6,5 @@ public enum Stønadskontotype {
     FELLESPERIODE,
     FORELDREPENGER,
     FORELDREPENGER_FØR_FØDSEL,
-    FLERBARNSDAGER,
-    UKJENT
+    FLERBARNSDAGER
 }

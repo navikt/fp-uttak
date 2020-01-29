@@ -4,19 +4,19 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 
 public class OrkestreringTillegg {
 
-    private final List<ManglendeSøktPeriode> manglendeSøktPerioder;
+    private final List<OppgittPeriode> manglendeSøktPerioder;
     private final Set<LocalDate> knekkpunkter;
 
-    public OrkestreringTillegg(List<ManglendeSøktPeriode> manglendeSøktPerioder, Set<LocalDate> knekkpunkter) {
+    public OrkestreringTillegg(List<OppgittPeriode> manglendeSøktPerioder, Set<LocalDate> knekkpunkter) {
         this.manglendeSøktPerioder = manglendeSøktPerioder;
         this.knekkpunkter = knekkpunkter;
     }
 
-    public List<ManglendeSøktPeriode> getManglendeSøktPerioder() {
+    public List<OppgittPeriode> getManglendeSøktPerioder() {
         return manglendeSøktPerioder;
     }
 

@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -15,7 +15,7 @@ public class SaldoUtregningGrunnlag {
     private List<FastsattUttakPeriode> søkersFastsattePerioder;
     private LocalDate utregningsdato;
     private boolean tapendeBehandling;
-    private List<AnnenpartUttaksperiode> annenpartsPerioder;
+    private List<AnnenpartUttakPeriode> annenpartsPerioder;
     private List<LukketPeriode> søktePerioder;
     private Kontoer kontoer;
     private Set<AktivitetIdentifikator> aktiviteter;
@@ -23,7 +23,7 @@ public class SaldoUtregningGrunnlag {
     private SaldoUtregningGrunnlag(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                    LocalDate utregningsdato,
                                    boolean tapendeBehandling,
-                                   List<AnnenpartUttaksperiode> annenpartsPerioder,
+                                   List<AnnenpartUttakPeriode> annenpartsPerioder,
                                    List<LukketPeriode> søktePerioder,
                                    Kontoer kontoer,
                                    Set<AktivitetIdentifikator> aktiviteter) {
@@ -38,7 +38,7 @@ public class SaldoUtregningGrunnlag {
 
     public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                                                    boolean tapendeBehandling,
-                                                                   List<AnnenpartUttaksperiode> annenpartsPerioder,
+                                                                   List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                    Kontoer kontoer) {
         var aktiviteter = søkersFastsattePerioder.stream()
                 .flatMap(p -> p.getAktiviteter().stream()).map(a -> a.getAktivitetIdentifikator())
@@ -48,7 +48,7 @@ public class SaldoUtregningGrunnlag {
     }
 
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttak(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                    List<AnnenpartUttaksperiode> annenpartsPerioder,
+                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                     Kontoer kontoer,
                                                                     LocalDate utregningsdato,
                                                                     Set<AktivitetIdentifikator> aktiviteter) {
@@ -56,7 +56,7 @@ public class SaldoUtregningGrunnlag {
     }
 
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakTapendeBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                                     List<AnnenpartUttaksperiode> annenpartsPerioder,
+                                                                                     List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                                      Kontoer kontoer,
                                                                                      LocalDate utregningsdato,
                                                                                      List<LukketPeriode> søktePerioder,
@@ -77,7 +77,7 @@ public class SaldoUtregningGrunnlag {
         return tapendeBehandling;
     }
 
-    List<AnnenpartUttaksperiode> getAnnenpartsPerioder() {
+    List<AnnenpartUttakPeriode> getAnnenpartsPerioder() {
         return annenpartsPerioder;
     }
 

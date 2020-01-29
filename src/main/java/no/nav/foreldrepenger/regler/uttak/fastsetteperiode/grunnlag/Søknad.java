@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public final class Søknad {
 
-    private List<UttakPeriode> uttaksperioder = new ArrayList<>();
+    private List<OppgittPeriode> oppgittePerioder = new ArrayList<>();
     private Dokumentasjon dokumentasjon = new Dokumentasjon.Builder().build();
     private Søknadstype type = Søknadstype.FØDSEL;
     private LocalDate mottattDato;
@@ -16,8 +16,8 @@ public final class Søknad {
     private Søknad() {
     }
 
-    public List<UttakPeriode> getUttaksperioder() {
-        return uttaksperioder.stream().sorted(Comparator.comparing(UttakPeriode::getFom)).collect(Collectors.toList());
+    public List<OppgittPeriode> getOppgittePerioder() {
+        return oppgittePerioder.stream().sorted(Comparator.comparing(OppgittPeriode::getFom)).collect(Collectors.toList());
     }
 
     public Dokumentasjon getDokumentasjon() {
@@ -36,12 +36,12 @@ public final class Søknad {
 
         private final Søknad kladd = new Søknad();
 
-        public Builder leggTilSøknadsperiode(UttakPeriode uttakPeriode) {
-            kladd.uttaksperioder.add(uttakPeriode);
+        public Builder leggTilOppgittPeriode(OppgittPeriode oppgittPeriode) {
+            kladd.oppgittePerioder.add(oppgittPeriode);
             return this;
         }
-        public Builder medSøknadsperioder(List<UttakPeriode> uttakPerioder) {
-            kladd.uttaksperioder = uttakPerioder;
+        public Builder medOppgittePerioder(List<OppgittPeriode> oppgittPerioder) {
+            kladd.oppgittePerioder = oppgittPerioder;
             return this;
         }
         public Builder medDokumentasjon(Dokumentasjon.Builder dokumentasjon) {
@@ -63,9 +63,9 @@ public final class Søknad {
         }
 
         private void validerOverlapp() {
-            for (int i = 0; i < kladd.uttaksperioder.size(); i++) {
-                for (int j = i + 1; j < kladd.uttaksperioder.size(); j++) {
-                    if (kladd.uttaksperioder.get(i).overlapper(kladd.uttaksperioder.get(j))) {
+            for (int i = 0; i < kladd.oppgittePerioder.size(); i++) {
+                for (int j = i + 1; j < kladd.oppgittePerioder.size(); j++) {
+                    if (kladd.oppgittePerioder.get(i).overlapper(kladd.oppgittePerioder.get(j))) {
                         throw new IllegalStateException("Overlapp i søknad");
                     }
                 }

@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenO
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -33,18 +33,18 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final SaldoUtregning saldoUtregning;
 
-    private final UttakPeriode aktuellPeriode;
+    private final OppgittPeriode aktuellPeriode;
 
     public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag,
                                         SaldoUtregning saldoUtregning,
-                                        UttakPeriode aktuellPeriode) {
+                                        OppgittPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;
         this.saldoUtregning = saldoUtregning;
         this.aktuellPeriode = aktuellPeriode;
     }
 
     @Override
-    public UttakPeriode getAktuellPeriode() {
+    public OppgittPeriode getAktuellPeriode() {
         return aktuellPeriode;
     }
 
@@ -81,34 +81,28 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public List<UttakPeriode> getPerioderMedAnnenForelderInnlagt() {
+    public List<OppgittPeriode> getPerioderMedAnnenForelderInnlagt() {
         return getPerioderMedOverføringÅrsak(OverføringÅrsak.INNLEGGELSE);
     }
 
     @Override
-    public List<UttakPeriode> getPerioderMedAnnenForelderSykdomEllerSkade() {
+    public List<OppgittPeriode> getPerioderMedAnnenForelderSykdomEllerSkade() {
         return getPerioderMedOverføringÅrsak(OverføringÅrsak.SYKDOM_ELLER_SKADE);
     }
 
     @Override
-    public List<UttakPeriode> getPerioderMedAnnenForelderIkkeRett() {
+    public List<OppgittPeriode> getPerioderMedAnnenForelderIkkeRett() {
         return getPerioderMedOverføringÅrsak(OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
     }
 
     @Override
-    public List<UttakPeriode> getPerioderMedAleneomsorg() {
+    public List<OppgittPeriode> getPerioderMedAleneomsorg() {
         return getPerioderMedOverføringÅrsak(OverføringÅrsak.ALENEOMSORG);
     }
 
-    private List<UttakPeriode> getPerioderMedOverføringÅrsak(OverføringÅrsak årsak) {
-        return regelGrunnlag.getSøknad().getUttaksperioder().stream().filter(periode -> Objects.equals(periode.getOverføringÅrsak(), årsak)
+    private List<OppgittPeriode> getPerioderMedOverføringÅrsak(OverføringÅrsak årsak) {
+        return regelGrunnlag.getSøknad().getOppgittePerioder().stream().filter(periode -> Objects.equals(periode.getOverføringÅrsak(), årsak)
                 && PeriodeVurderingType.avklart(periode.getPeriodeVurderingType())).collect(Collectors.toList());
-    }
-
-
-    @Override
-    public Stønadskontotype getStønadskontotype() {
-        return aktuellPeriode.getStønadskontotype();
     }
 
     @Override
@@ -171,7 +165,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public List<AnnenpartUttaksperiode> getAnnenPartUttaksperioder() {
+    public List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder() {
         return regelGrunnlag.getAnnenPart() != null ? regelGrunnlag.getAnnenPart().getUttaksperioder() : Collections.emptyList();
     }
 

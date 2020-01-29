@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -18,8 +18,8 @@ public class SjekkOmOverføringPgaSykdomSkade extends LeafSpecification<Fastsett
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        if (OverføringÅrsak.SYKDOM_ELLER_SKADE.equals(uttakPeriode.getOverføringÅrsak())) {
+        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        if (OverføringÅrsak.SYKDOM_ELLER_SKADE.equals(oppgittPeriode.getOverføringÅrsak())) {
             return ja();
         }
         return nei();

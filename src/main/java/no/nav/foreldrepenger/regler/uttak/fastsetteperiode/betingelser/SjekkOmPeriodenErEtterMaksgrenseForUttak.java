@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -24,9 +24,9 @@ public class SjekkOmPeriodenErEtterMaksgrenseForUttak extends LeafSpecification<
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
+        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
         LocalDate grense = regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getFamiliehendelse(), konfigurasjon);
-        if (uttakPeriode.getFom().isAfter(grense) || uttakPeriode.getFom().equals(grense)) {
+        if (oppgittPeriode.getFom().isAfter(grense) || oppgittPeriode.getFom().equals(grense)) {
             return ja();
         }
         return nei();

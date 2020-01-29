@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
@@ -323,7 +323,7 @@ public class SaldoUtregningTest {
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 15))
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode periodeSøker2 = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
@@ -347,7 +347,7 @@ public class SaldoUtregningTest {
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 22))
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode periodeAnnenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_ANNENPART)))
@@ -367,7 +367,7 @@ public class SaldoUtregningTest {
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
-                .medOppholdÅrsak(Oppholdårsaktype.MØDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode periodeSøker = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_SØKER)))
@@ -424,13 +424,13 @@ public class SaldoUtregningTest {
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 15))
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode oppholdsperiodeAnnenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 15))
-                .medOppholdÅrsak(Oppholdårsaktype.MØDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode periodeAnnenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
@@ -479,13 +479,13 @@ public class SaldoUtregningTest {
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 15))
-                .medOppholdÅrsak(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode oppholdsperiodeAnnenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
-                .medOppholdÅrsak(Oppholdårsaktype.MØDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)
                 .build();
         FastsattUttakPeriode periodeAnnenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
@@ -708,7 +708,7 @@ public class SaldoUtregningTest {
                 .build();
         FastsattUttakPeriode periode2Annenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .medTidsperiode(LocalDate.of(2019, 3, 3), LocalDate.of(2019, 3, 25))
                 .build();
 
@@ -795,13 +795,13 @@ public class SaldoUtregningTest {
 
         FastsattUttakPeriode opphold1 = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 10, 7))
                 .build();
         FastsattUttakPeriode opphold2 = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 8), LocalDate.of(2019, 10, 8))
                 .build();
@@ -836,7 +836,7 @@ public class SaldoUtregningTest {
 
         FastsattUttakPeriode opphold = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 10, 9))
                 .build();
@@ -873,7 +873,7 @@ public class SaldoUtregningTest {
                 .build();
         FastsattUttakPeriode oppholdAnnenpart = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.AVSLÅTT)
                 .medTidsperiode(LocalDate.of(2020, 1, 2), LocalDate.of(2020, 3, 12))
                 .build();
@@ -900,7 +900,7 @@ public class SaldoUtregningTest {
                 .build();
         FastsattUttakPeriode oppholdSøker = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 24), LocalDate.of(2019, 10, 25))
                 .build();
@@ -937,13 +937,13 @@ public class SaldoUtregningTest {
                 .build();
         FastsattUttakPeriode oppholdAnnenpart1 = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 30), LocalDate.of(2019, 10, 30))
                 .build();
         FastsattUttakPeriode oppholdAnnenpart2 = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of())
-                .medOppholdÅrsak(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 31), LocalDate.of(2019, 10, 31))
                 .build();
@@ -1073,7 +1073,7 @@ public class SaldoUtregningTest {
                 .medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
-                .medOppholdÅrsak(Oppholdårsaktype.FEDREKVOTE_ANNEN_FORELDER)
+                .medOppholdÅrsak(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)
                 .build();
         var periodeMedNyttArbeidsforhold = new FastsattUttakPeriode.Builder()
                 .medAktiviteter(List.of(

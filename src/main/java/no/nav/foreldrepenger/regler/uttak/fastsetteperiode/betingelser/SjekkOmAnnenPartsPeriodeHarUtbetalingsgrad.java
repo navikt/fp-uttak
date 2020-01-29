@@ -3,10 +3,10 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import java.math.BigDecimal;
 
 import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -22,9 +22,9 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        for (AnnenpartUttaksperiode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(uttakPeriode, periodeAnnenPart) &&
+        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (AnnenpartUttakPeriode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
+            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(oppgittPeriode, periodeAnnenPart) &&
                     finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(periodeAnnenPart)) {
                 return ja();
             }
@@ -32,8 +32,8 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
         return nei();
     }
 
-    private boolean finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(AnnenpartUttaksperiode periodeAnnenPart) {
-        for (UttakPeriodeAktivitet periodeAktivitet : periodeAnnenPart.getAktiviteter()) {
+    private boolean finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(AnnenpartUttakPeriode periodeAnnenPart) {
+        for (AnnenpartUttakPeriodeAktivitet periodeAktivitet : periodeAnnenPart.getAktiviteter()) {
             if (periodeAktivitet.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0) {
                 return true;
             }

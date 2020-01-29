@@ -4,7 +4,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -20,18 +20,18 @@ public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<Fa
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        for (UttakPeriode perioderMedAleneomsorg : grunnlag.getPerioderMedAleneomsorg()) {
-            if (uttakPeriode.erOmsluttetAv(perioderMedAleneomsorg) && harGyldigGrunn(uttakPeriode, grunnlag.getGyldigGrunnPerioder())) {
+        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (OppgittPeriode perioderMedAleneomsorg : grunnlag.getPerioderMedAleneomsorg()) {
+            if (oppgittPeriode.erOmsluttetAv(perioderMedAleneomsorg) && harGyldigGrunn(oppgittPeriode, grunnlag.getGyldigGrunnPerioder())) {
                 return ja();
             }
         }
         return nei();
     }
 
-    private boolean harGyldigGrunn(UttakPeriode uttakPeriode, List<GyldigGrunnPeriode> gyldigGrunnPerioder) {
+    private boolean harGyldigGrunn(OppgittPeriode oppgittPeriode, List<GyldigGrunnPeriode> gyldigGrunnPerioder) {
         for (GyldigGrunnPeriode gyldigGrunnPeriode : gyldigGrunnPerioder) {
-            if (uttakPeriode.erOmsluttetAv(gyldigGrunnPeriode)) {
+            if (oppgittPeriode.erOmsluttetAv(gyldigGrunnPeriode)) {
                 return true;
             }
         }

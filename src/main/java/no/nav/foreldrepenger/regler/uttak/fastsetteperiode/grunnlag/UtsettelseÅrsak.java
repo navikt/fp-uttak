@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-public enum Utsettelseårsaktype {
+public enum UtsettelseÅrsak {
     FERIE,
     ARBEID,
     SYKDOM_SKADE,
-    INNLAGT_HELSEINSTITUSJON,
+    INNLAGT_SØKER,
     INNLAGT_BARN
 }

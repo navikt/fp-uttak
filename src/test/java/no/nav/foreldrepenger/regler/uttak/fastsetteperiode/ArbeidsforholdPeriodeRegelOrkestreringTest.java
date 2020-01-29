@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -15,9 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 
 public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -35,7 +32,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, omsorgsovertakelse.plusWeeks(8)))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold4, omsorgsovertakelse.plusWeeks(35)));
-        var mødrekvote = søknadsperiode(MØDREKVOTE, omsorgsovertakelse, omsorgsovertakelse.plusWeeks(40));
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, omsorgsovertakelse, omsorgsovertakelse.plusWeeks(40));
         grunnlag.medArbeid(arbeid)
                 .medSøknad(søknad(Søknadstype.ADOPSJON, mødrekvote))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(omsorgsovertakelse))
@@ -46,10 +43,10 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
-        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
-        assertThat(resultat.get(3).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3, arbeidsforhold4);
+        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
+        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
+        assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3, arbeidsforhold4);
     }
 
     @Test
@@ -60,11 +57,11 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var arbeid = new Arbeid.Builder()
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2, fødselsdato.plusWeeks(8)));
-        var fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        var mødrekvote1 = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        var gradertMødrekvote = StønadsPeriode.medGradering(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
-                List.of(arbeidsforhold1), BigDecimal.valueOf(50), PeriodeVurderingType.IKKE_VURDERT);
-        var mødrekvote2 = søknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11).minusDays(1));
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertMødrekvote = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+                BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
+        var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11).minusDays(1));
         grunnlag.medArbeid(arbeid)
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote, mødrekvote2))
                 .medDatoer(new Datoer.Builder()
@@ -74,10 +71,10 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1);
-        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1);
-        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1);
-        assertThat(resultat.get(3).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
+        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
+        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
+        assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
         assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualByComparingTo(BigDecimal.valueOf(100));
         assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualByComparingTo(BigDecimal.valueOf(100));
     }
@@ -92,10 +89,10 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
-        var fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        var mødrekvote1 = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1));
-        var gradertMødrekvote = StønadsPeriode.medGradering(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(12).minusDays(1),
-                List.of(arbeidsforhold1), BigDecimal.valueOf(50), PeriodeVurderingType.IKKE_VURDERT);
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1));
+        var gradertMødrekvote = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(12).minusDays(1),
+                BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
         grunnlag.medArbeid(arbeid)
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote))
                 .medDatoer(new Datoer.Builder()
@@ -105,18 +102,18 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(6);
-        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(resultat.get(3).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
         //NYtt arbeidsforhold arver saldo fra arbeidsforhold 1 pga arbeidsforhold 1 har gradert i perioden før
-        assertThat(resultat.get(4).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
+        assertThat(aktiviteterIPeriode(resultat.get(4).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
         assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualByComparingTo(BigDecimal.valueOf(50));
         assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.valueOf(100));
 
         //Nytt arbeidsforhold går tomt for dager, arbeidsforhold holder 1 uke til pga gradering
-        assertThat(resultat.get(5).getUttakPeriode().getAktiviteter()).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
+        assertThat(aktiviteterIPeriode(resultat.get(5).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
         assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualByComparingTo(BigDecimal.valueOf(50));
         assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.ZERO);
@@ -133,12 +130,12 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
                 .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
-        var mødrekvote1 = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        var gradertMødrekvote1 = StønadsPeriode.medGradering(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
-                List.of(arbeidsforhold1), BigDecimal.valueOf(50), PeriodeVurderingType.IKKE_VURDERT);
-        var gradertMødrekvote2 = StønadsPeriode.medGradering(MØDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1),
-                List.of(arbeidsforhold2), BigDecimal.valueOf(50), PeriodeVurderingType.IKKE_VURDERT);
-        var mødrekvote2 = søknadsperiode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
+        var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertMødrekvote1 = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+                BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
+        var gradertMødrekvote2 = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1),
+                BigDecimal.valueOf(50), Set.of(arbeidsforhold2));
+        var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
         grunnlag.medArbeid(arbeid)
                 .medSøknad(søknad(Søknadstype.FØDSEL, mødrekvote1, gradertMødrekvote1, gradertMødrekvote2, mødrekvote2))
                 .medDatoer(new Datoer.Builder()
@@ -158,8 +155,8 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold = AktivitetIdentifikator.annenAktivitet();
         var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold, fødselsdato.plusWeeks(4)));
-        var fpff = søknadsperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        var mødrekvote = søknadsperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
         grunnlag.medArbeid(arbeid)
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote))
                 .medDatoer(new Datoer.Builder()
@@ -169,8 +166,8 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter()).containsExactly(arbeidsforhold);
-        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter()).containsExactly(arbeidsforhold);
-        assertThat(resultat.get(2).getUttakPeriode().getAktiviteter()).containsExactly(arbeidsforhold);
+        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactly(arbeidsforhold);
+        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactly(arbeidsforhold);
+        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactly(arbeidsforhold);
     }
 }

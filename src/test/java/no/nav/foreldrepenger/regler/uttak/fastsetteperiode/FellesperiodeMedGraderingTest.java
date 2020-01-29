@@ -6,11 +6,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Set;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
@@ -18,11 +17,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
@@ -37,8 +36,8 @@ public class FellesperiodeMedGraderingTest {
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {
         LocalDate graderingFom = fødselsdato.plusWeeks(10);
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
-        StønadsPeriode aktuellPeriode = StønadsPeriode.medGradering(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, graderingFom, graderingTom,
-                Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.valueOf(50), PeriodeVurderingType.PERIODE_OK, null, false);
+        var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom, PeriodeKilde.SØKNAD,
+                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
@@ -46,12 +45,12 @@ public class FellesperiodeMedGraderingTest {
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(aktuellPeriode)
+                        .leggTilOppgittPeriode(aktuellPeriode)
                         .medMottattDato(graderingFom.minusWeeks(1)))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }
@@ -60,8 +59,8 @@ public class FellesperiodeMedGraderingTest {
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_4_uker_igjen_på_saldo() {
         LocalDate graderingFom = fødselsdato.plusWeeks(10);
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
-        StønadsPeriode aktuellPeriode = StønadsPeriode.medGradering(Stønadskontotype.FELLESPERIODE, PeriodeKilde.SØKNAD, graderingFom, graderingTom,
-                Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.valueOf(50), PeriodeVurderingType.PERIODE_OK, null, false);
+        var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom, PeriodeKilde.SØKNAD,
+                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
@@ -69,12 +68,12 @@ public class FellesperiodeMedGraderingTest {
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(aktuellPeriode)
+                        .leggTilOppgittPeriode(aktuellPeriode)
                         .medMottattDato(graderingFom.minusWeeks(1)))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }
