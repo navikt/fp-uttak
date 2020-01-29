@@ -10,7 +10,7 @@ fp-uttak
 ================
 
 Uttaksregler for foreldrepenger.
-Denne modulene inneholder tre tjenester for foreldrepenger:
+Inneholder tre tjenester for foreldrepenger:
 * Opprett stønadskontoer
 * Fastsett uttaksperioder
 * Søknadsfrist
