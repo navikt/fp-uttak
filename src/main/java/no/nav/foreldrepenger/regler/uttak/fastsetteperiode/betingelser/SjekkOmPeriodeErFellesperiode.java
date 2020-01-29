@@ -17,7 +17,8 @@ public class SjekkOmPeriodeErFellesperiode extends LeafSpecification<FastsettePe
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.getStønadskontotype() == Stønadskontotype.FELLESPERIODE) {
+        var stønadskontotype = grunnlag.getAktuellPeriode().getStønadskontotype();
+        if (stønadskontotype == Stønadskontotype.FELLESPERIODE) {
             return ja();
         }
         return nei();

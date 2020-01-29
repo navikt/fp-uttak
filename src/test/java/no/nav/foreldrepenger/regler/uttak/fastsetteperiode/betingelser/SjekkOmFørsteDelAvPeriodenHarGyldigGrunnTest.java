@@ -9,10 +9,9 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -25,10 +24,10 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        var msp = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var msp = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(msp)
+                        .leggTilOppgittPeriode(msp)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(1)))))
                 .build();
@@ -41,10 +40,10 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        var msp = new ManglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var msp = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(msp)
+                        .leggTilOppgittPeriode(msp)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.minusDays(2), periodeSlutt))))
                 .build();
@@ -52,7 +51,7 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
         assertThat(evaluer(grunnlag, msp)).isEqualTo(Resultat.NEI);
     }
 
-    private Resultat evaluer(RegelGrunnlag grunnlag, UttakPeriode søknadsperiode) {
+    private Resultat evaluer(RegelGrunnlag grunnlag, OppgittPeriode søknadsperiode) {
         SjekkOmFørsteDelAvPeriodenHarGyldigGrunn sjekkOmFørsteDelHarGyldigGrunn = new SjekkOmFørsteDelAvPeriodenHarGyldigGrunn();
         Evaluation evaluation = sjekkOmFørsteDelHarGyldigGrunn.evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag, null, søknadsperiode));
         return evaluation.result();

@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -19,7 +19,7 @@ public class SjekkOmPeriodenSlutterFørFamiliehendelse extends LeafSpecification
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
+        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
         LocalDate familiehendelse = grunnlag.getFamiliehendelse();
         if (aktuellPeriode.getTom().isBefore(familiehendelse)) {
             return ja();

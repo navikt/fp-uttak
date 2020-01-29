@@ -237,7 +237,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDagerIgjenPåAlleAktiviteter() {
         return rs.hvisRegel(SjekkOmDagerIgjenPåAlleAktiviteter.ID, SjekkOmDagerIgjenPåAlleAktiviteter.BESKRIVELSE)
                 .hvis(new SjekkOmDagerIgjenPåAlleAktiviteter(), IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false))
-                .ellers(Manuellbehandling.opprett("UT1291", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
+                .ellers(Manuellbehandling.opprett("UT1291", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriode() {

@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
@@ -17,13 +15,7 @@ public class SjekkOmOppholdFellesperiodeAnnenForelder extends LeafSpecification<
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        if (uttakPeriode instanceof OppholdPeriode) {
-            OppholdPeriode oppholdPeriode = (OppholdPeriode)uttakPeriode;
-            if (Oppholdårsaktype.FELLESPERIODE_ANNEN_FORELDER.equals(oppholdPeriode.getOppholdårsaktype())) {
-                return ja();
-            }
-        }
-        return nei();
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        return oppgittPeriode.isOppholdPga(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER) ? ja() : nei();
     }
 }

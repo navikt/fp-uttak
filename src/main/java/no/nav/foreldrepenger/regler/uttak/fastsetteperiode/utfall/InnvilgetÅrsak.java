@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
-public enum InnvilgetÅrsak implements Årsak {
+public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
 
     // Uttak årsaker
     FELLESPERIODE_ELLER_FORELDREPENGER(2002, "Fellesperiode/foreldrepenger"),

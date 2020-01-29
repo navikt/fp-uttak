@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -151,7 +151,7 @@ public class SaldoUtregning {
     private Optional<FastsattUttakPeriodeAktivitet> aktivitetMedStønadskonto(Stønadskontotype stønadskonto, FastsattUttakPeriode periode) {
         FastsattUttakPeriodeAktivitet aktivitetMedMinstTrekkdager = null;
         for (FastsattUttakPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            if ((aktivitet.getTrekkonto().equals(stønadskonto) || (periode.isFlerbarnsdager() && stønadskonto.equals(Stønadskontotype.FLERBARNSDAGER)))
+            if (Objects.equals(aktivitet.getStønadskontotype(), stønadskonto) || (periode.isFlerbarnsdager() && Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER))
                     && (aktivitetMedMinstTrekkdager == null || aktivitet.getTrekkdager().compareTo(aktivitetMedMinstTrekkdager.getTrekkdager()) < 0)) {
                 aktivitetMedMinstTrekkdager = aktivitet;
             }
@@ -378,7 +378,7 @@ public class SaldoUtregning {
     private BigDecimal trekkdagerForUttaksperiode(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
         for (FastsattUttakPeriodeAktivitet periodeAktivitet : periode.getAktiviteter()) {
             if (periodeAktivitet.getAktivitetIdentifikator().equals(aktivitet)) {
-                if (periodeAktivitet.getTrekkonto().equals(stønadskonto) || (stønadskonto.equals(Stønadskontotype.FLERBARNSDAGER) && periode.isFlerbarnsdager())) {
+                if (Objects.equals(periodeAktivitet.getStønadskontotype(), stønadskonto) || (Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER) && periode.isFlerbarnsdager())) {
                     return periodeAktivitet.getTrekkdager().decimalValue();
                 }
             }
@@ -390,8 +390,8 @@ public class SaldoUtregning {
         return periodeSøker.getOppholdÅrsak() != null;
     }
 
-    private BigDecimal trekkdagerForOppholdsperiode(Stønadskontotype stønadskonto, Oppholdårsaktype årsak, LocalDate delFom, LocalDate delTom) {
-        Stønadskontotype stønadskontoTypeOpt = Oppholdårsaktype.map(årsak);
+    private BigDecimal trekkdagerForOppholdsperiode(Stønadskontotype stønadskonto, OppholdÅrsak årsak, LocalDate delFom, LocalDate delTom) {
+        Stønadskontotype stønadskontoTypeOpt = OppholdÅrsak.map(årsak);
         if (Objects.equals(stønadskontoTypeOpt, stønadskonto)) {
             return BigDecimal.valueOf(Virkedager.beregnAntallVirkedager(delFom, delTom));
         }
@@ -414,7 +414,7 @@ public class SaldoUtregning {
     }
 
     private boolean søktSamtidigUttak(Stønadskontotype stønadskontoType, FastsattUttakPeriode periode) {
-        return periode.getAktiviteter().stream().anyMatch(a -> a.getTrekkonto().equals(stønadskontoType));
+        return periode.getAktiviteter().stream().anyMatch(a -> Objects.equals(a.getStønadskontotype(), stønadskontoType));
     }
 
     private Trekkdager antallDagerAnnenpartKanFrigi(Stønadskontotype stønadskontoType) {
@@ -460,7 +460,7 @@ public class SaldoUtregning {
         }
         Trekkdager minForbrukt = null;
         for (FastsattUttakPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            if (Objects.equals(stønadskontoType, aktivitet.getTrekkonto()) && (minForbrukt == null || minForbrukt.compareTo(aktivitet.getTrekkdager()) > 0)) {
+            if (Objects.equals(stønadskontoType, aktivitet.getStønadskontotype()) && (minForbrukt == null || minForbrukt.compareTo(aktivitet.getTrekkdager()) > 0)) {
                 minForbrukt = aktivitet.getTrekkdager();
             }
         }

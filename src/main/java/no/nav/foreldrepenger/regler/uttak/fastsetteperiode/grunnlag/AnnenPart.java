@@ -7,18 +7,18 @@ import java.util.stream.Collectors;
 
 public final class AnnenPart {
 
-    private List<AnnenpartUttaksperiode> uttaksperioder = new ArrayList<>();
+    private List<AnnenpartUttakPeriode> uttaksperioder = new ArrayList<>();
 
     private AnnenPart() {
     }
 
-    public List<AnnenpartUttaksperiode> getUttaksperioder() {
+    public List<AnnenpartUttakPeriode> getUttaksperioder() {
         return uttaksperioder;
     }
 
     public Set<AktivitetIdentifikator> getAktiviteter() {
         return uttaksperioder.stream().flatMap(periode -> periode.getAktiviteter().stream())
-                .map(UttakPeriodeAktivitet::getAktivitetIdentifikator)
+                .map(AnnenpartUttakPeriodeAktivitet::getAktivitetIdentifikator)
                 .collect(Collectors.toSet());
     }
 
@@ -26,12 +26,12 @@ public final class AnnenPart {
 
         private final AnnenPart kladd = new AnnenPart();
 
-        public Builder leggTilUttaksperiode(AnnenpartUttaksperiode uttaksperiode) {
+        public Builder leggTilUttaksperiode(AnnenpartUttakPeriode uttaksperiode) {
             kladd.uttaksperioder.add(uttaksperiode);
             return this;
         }
 
-        public Builder medUttaksperioder(List<AnnenpartUttaksperiode> uttaksperioder) {
+        public Builder medUttaksperioder(List<AnnenpartUttakPeriode> uttaksperioder) {
             kladd.uttaksperioder = uttaksperioder;
             return this;
         }

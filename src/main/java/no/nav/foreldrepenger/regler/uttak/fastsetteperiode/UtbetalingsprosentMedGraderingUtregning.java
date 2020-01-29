@@ -3,14 +3,14 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 
 class UtbetalingsprosentMedGraderingUtregning implements UtbetalingsprosentUtregning {
 
-    private final UttakPeriode uttakPeriode;
+    private final OppgittPeriode uttakPeriode;
     private final AktivitetIdentifikator aktivitet;
 
-    UtbetalingsprosentMedGraderingUtregning(UttakPeriode uttakPeriode,
+    UtbetalingsprosentMedGraderingUtregning(OppgittPeriode uttakPeriode,
                                             AktivitetIdentifikator aktivitet) {
         this.uttakPeriode = uttakPeriode;
         this.aktivitet = aktivitet;
@@ -18,11 +18,11 @@ class UtbetalingsprosentMedGraderingUtregning implements UtbetalingsprosentUtreg
 
     @Override
     public BigDecimal resultat() {
-        if (uttakPeriode.søktGradering(aktivitet)) {
-            if (uttakPeriode.getGradertArbeidsprosent() == null) {
+        if (uttakPeriode.erSøktGradering(aktivitet)) {
+            if (uttakPeriode.getArbeidsprosent() == null) {
                 throw new IllegalArgumentException("arbeidstidsprosent kan ikke være null");
             }
-            return new BigDecimal("100.00").subtract(uttakPeriode.getGradertArbeidsprosent());
+            return new BigDecimal("100.00").subtract(uttakPeriode.getArbeidsprosent());
         }
         return new BigDecimal("100.00");
     }

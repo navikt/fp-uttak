@@ -7,22 +7,22 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
-public class AnnenpartUttaksperiode extends LukketPeriode {
+public class AnnenpartUttakPeriode extends LukketPeriode {
 
-    private Set<UttakPeriodeAktivitet> aktiviteter = new HashSet<>();
+    private Set<AnnenpartUttakPeriodeAktivitet> aktiviteter = new HashSet<>();
 
     private boolean samtidigUttak;
     private boolean flerbarnsdager;
     private boolean utsettelse;
     private boolean oppholdsperiode;
-    private Oppholdårsaktype oppholdårsaktype;
+    private OppholdÅrsak oppholdÅrsak;
     private boolean innvilget;
 
-    private AnnenpartUttaksperiode(LocalDate fom, LocalDate tom) {
+    private AnnenpartUttakPeriode(LocalDate fom, LocalDate tom) {
         super(fom, tom);
     }
 
-    public Set<UttakPeriodeAktivitet> getAktiviteter() {
+    public Set<AnnenpartUttakPeriodeAktivitet> getAktiviteter() {
         return new HashSet<>(aktiviteter);
     }
 
@@ -46,30 +46,30 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
         return oppholdsperiode;
     }
 
-    public Oppholdårsaktype getOppholdårsaktype() {
-        return oppholdårsaktype;
+    public OppholdÅrsak getOppholdÅrsak() {
+        return oppholdÅrsak;
     }
 
-    public AnnenpartUttaksperiode kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
-        return AnnenpartUttaksperiode.Builder.uttak(fom, tom)
+    public AnnenpartUttakPeriode kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+        return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(this.samtidigUttak)
                 .medFlerbarnsdager(this.flerbarnsdager)
                 .medUtsettelse(this.innvilget)
                 .medOppholdsperiode(this.oppholdsperiode)
                 .medInnvilget(this.innvilget)
-                .medOppholdsårsak(this.oppholdårsaktype)
-                .medUttakPeriodeAktiviteter(uttakPeriodeAktiviteter).build();
+                .medOppholdsårsak(this.oppholdÅrsak)
+                .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter).build();
     }
 
     public static class Builder {
-        private AnnenpartUttaksperiode kladd;
+        private AnnenpartUttakPeriode kladd;
 
         public static Builder utsettelse(LocalDate fom, LocalDate tom) {
             return new Builder(fom, tom).medUtsettelse(true);
         }
 
-        public static Builder opphold(LocalDate fom, LocalDate tom, Oppholdårsaktype oppholdårsaktype) {
-            return new Builder(fom, tom).medOppholdsperiode(true).medOppholdsårsak(oppholdårsaktype);
+        public static Builder opphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak) {
+            return new Builder(fom, tom).medOppholdsperiode(true).medOppholdsårsak(oppholdÅrsak);
         }
 
         public static Builder uttak(LocalDate fom, LocalDate tom) {
@@ -77,17 +77,17 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
         }
 
         private Builder(LocalDate fom, LocalDate tom) {
-            kladd = new AnnenpartUttaksperiode(fom, tom);
+            kladd = new AnnenpartUttakPeriode(fom, tom);
             kladd.innvilget = true;
         }
 
-        public Builder medUttakPeriodeAktivitet(UttakPeriodeAktivitet uttakPeriodeAktivitet) {
-            kladd.aktiviteter.add(uttakPeriodeAktivitet);
+        public Builder medUttakPeriodeAktivitet(AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
+            kladd.aktiviteter.add(annenpartUttakPeriodeAktivitet);
             return this;
         }
 
-        public Builder medUttakPeriodeAktiviteter(List<UttakPeriodeAktivitet> uttakPeriodeAktiviteter) {
-            kladd.aktiviteter.addAll(uttakPeriodeAktiviteter);
+        public Builder medUttakPeriodeAktiviteter(List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+            kladd.aktiviteter.addAll(annenpartUttakPeriodeAktiviteter);
             return this;
         }
 
@@ -111,8 +111,8 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
             return this;
         }
 
-        public Builder medOppholdsårsak(Oppholdårsaktype oppholdårsaktype) {
-            kladd.oppholdårsaktype = oppholdårsaktype;
+        public Builder medOppholdsårsak(OppholdÅrsak oppholdÅrsak) {
+            kladd.oppholdÅrsak = oppholdÅrsak;
             return this;
         }
 
@@ -121,7 +121,7 @@ public class AnnenpartUttaksperiode extends LukketPeriode {
             return this;
         }
 
-        public AnnenpartUttaksperiode build() {
+        public AnnenpartUttakPeriode build() {
             return kladd;
         }
 

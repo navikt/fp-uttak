@@ -4,7 +4,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -21,7 +21,7 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunn extends LeafSpecification
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
+        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
         List<GyldigGrunnPeriode> aktuelleGyldigGrunnPeriode = grunnlag.getAktuelleGyldigeGrunnPerioder();
 
         if (aktuelleGyldigGrunnPeriode.isEmpty()) {

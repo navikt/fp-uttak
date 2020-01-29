@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 public enum GraderingIkkeInnvilgetÅrsak {
 
     AVSLAG_PGA_SEN_SØKNAD(4501, "For sen søknad"),
-    AVSLAG_PGA_MANGLENDE_GRADERINGSAVTALE(4502, "Manglende graderingsavtale"),
     AVSLAG_PGA_FOR_TIDLIG_GRADERING(4504, "Gradering før uke 7");
 
     private int id;

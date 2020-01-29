@@ -1,19 +1,17 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Set;
 
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TrekkdagerUtregningUtilTest {
 
@@ -24,8 +22,8 @@ public class TrekkdagerUtregningUtilTest {
         LocalDate tom = LocalDate.of(2019, 3, 15);
         //periode på 2 dager, 1% gradering
         BigDecimal arbeidstidsprosent = BigDecimal.valueOf(1);
-        UttakPeriode periode = StønadsPeriode.medGradering(Stønadskontotype.FORELDREPENGER, PeriodeKilde.SØKNAD, fom, tom,
-                Collections.emptyList(), arbeidstidsprosent, PeriodeVurderingType.PERIODE_OK);
+        OppgittPeriode periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
+                arbeidstidsprosent, null, false, Set.of(), PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(BigDecimal.valueOf(1.9)));
@@ -39,7 +37,8 @@ public class TrekkdagerUtregningUtilTest {
         LocalDate tom = LocalDate.of(2019, 4, 12);
 
         BigDecimal samtidigUttaksprosent = BigDecimal.valueOf(50);
-        UttakPeriode periode = new StønadsPeriode(Stønadskontotype.FORELDREPENGER, PeriodeKilde.SØKNAD, fom, tom, new SamtidigUttak(samtidigUttaksprosent), false);
+        OppgittPeriode periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
+                samtidigUttaksprosent, false, PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(BigDecimal.valueOf(5)));

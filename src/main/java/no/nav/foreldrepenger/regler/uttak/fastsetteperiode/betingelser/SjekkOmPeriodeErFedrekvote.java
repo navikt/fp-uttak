@@ -17,7 +17,8 @@ public class SjekkOmPeriodeErFedrekvote extends LeafSpecification<FastsettePerio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.getStønadskontotype() == Stønadskontotype.FEDREKVOTE) {
+        var stønadskontotype = grunnlag.getAktuellPeriode().getStønadskontotype();
+        if (stønadskontotype == Stønadskontotype.FEDREKVOTE) {
             return ja();
         }
         return nei();

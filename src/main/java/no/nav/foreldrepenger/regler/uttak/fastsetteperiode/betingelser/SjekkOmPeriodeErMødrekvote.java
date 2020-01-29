@@ -17,7 +17,8 @@ public class SjekkOmPeriodeErMødrekvote extends LeafSpecification<FastsettePeri
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.getStønadskontotype() == Stønadskontotype.MØDREKVOTE) {
+        var stønadskontotype = grunnlag.getAktuellPeriode().getStønadskontotype();
+        if (stønadskontotype == Stønadskontotype.MØDREKVOTE) {
             return ja();
         }
         return nei();

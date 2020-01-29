@@ -13,26 +13,21 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttaksperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Oppholdårsaktype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -80,25 +75,25 @@ public class FastsettePerioderRegelOrkestrering {
         return sortByFom(resultatPerioder);
     }
 
-    private UttakPeriode oppdaterMedAktiviteter(UttakPeriode periode, Arbeid arbeid) {
+    private OppgittPeriode oppdaterMedAktiviteter(OppgittPeriode periode, Arbeid arbeid) {
         var aktiviteter = aktiviteterIPeriode(periode, arbeid);
         periode.setAktiviteter(aktiviteter);
         return periode;
     }
 
-    private Set<AktivitetIdentifikator> aktiviteterIPeriode(UttakPeriode periode, Arbeid arbeid) {
+    private Set<AktivitetIdentifikator> aktiviteterIPeriode(OppgittPeriode periode, Arbeid arbeid) {
         return arbeid.getArbeidsforhold().stream()
                 .filter(arbeidsforhold -> arbeid.getArbeidsforhold().size() == 1 || arbeidsforhold.erAktivtPåDato(periode.getFom()))
                 .map(Arbeidsforhold::getIdentifikator)
                 .collect(Collectors.toSet());
     }
 
-    private boolean erHelg(UttakPeriode periode) {
+    private boolean erHelg(OppgittPeriode periode) {
         return periode.virkedager() == 0;
     }
 
-    private boolean oppholdSomFyllesAvAnnenpart(UttakPeriode periode, List<AnnenpartUttaksperiode> annenpartUttak) {
-        if (!(periode instanceof OppholdPeriode)) {
+    private boolean oppholdSomFyllesAvAnnenpart(OppgittPeriode periode, List<AnnenpartUttakPeriode> annenpartUttak) {
+        if (!periode.isOpphold()) {
             return false;
         }
         return annenpartUttak.stream()
@@ -106,11 +101,11 @@ public class FastsettePerioderRegelOrkestrering {
                 .anyMatch(ap -> harTrekkdager(ap) || innvilgetUtsettelse(ap));
     }
 
-    private boolean innvilgetUtsettelse(AnnenpartUttaksperiode ap) {
+    private boolean innvilgetUtsettelse(AnnenpartUttakPeriode ap) {
         return ap.isInnvilget() && ap.isUtsettelse();
     }
 
-    private boolean harTrekkdager(AnnenpartUttaksperiode ap) {
+    private boolean harTrekkdager(AnnenpartUttakPeriode ap) {
         return ap.getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
     }
 
@@ -121,10 +116,10 @@ public class FastsettePerioderRegelOrkestrering {
     private FastsettePeriodeResultat fastsettPeriode(FastsettePeriodeRegel fastsettePeriodeRegel,
                                                      Konfigurasjon konfigurasjon,
                                                      RegelGrunnlag grunnlag,
-                                                     UttakPeriode aktuellPeriode,
+                                                     OppgittPeriode aktuellPeriode,
                                                      SaldoUtregning saldoUtregning) {
         var fastsettePeriodeGrunnlag = new FastsettePeriodeGrunnlagImpl(grunnlag, saldoUtregning, aktuellPeriode);
-        var regelResultatBehandler = new RegelResultatBehandlerImpl(saldoUtregning, grunnlag, konfigurasjon);
+        var regelResultatBehandler = new RegelResultatBehandler(saldoUtregning, grunnlag, konfigurasjon);
 
         var evaluering = fastsettePeriodeRegel.evaluer(fastsettePeriodeGrunnlag);
         var inputJson = toJson(fastsettePeriodeGrunnlag);
@@ -135,8 +130,8 @@ public class FastsettePerioderRegelOrkestrering {
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson, regelResultatBehandlerResultat.getEtterKnekkPeriode());
     }
 
-    private List<UttakPeriode> samletUttaksperioder(RegelGrunnlag grunnlag, OrkestreringTillegg orkestreringTillegg) {
-        List<UttakPeriode> samlet = new ArrayList<>(grunnlag.getSøknad().getUttaksperioder());
+    private List<OppgittPeriode> samletUttaksperioder(RegelGrunnlag grunnlag, OrkestreringTillegg orkestreringTillegg) {
+        List<OppgittPeriode> samlet = new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder());
         samlet.addAll(orkestreringTillegg.getManglendeSøktPerioder());
 
         for (LocalDate knekkpunkt : orkestreringTillegg.getKnekkpunkter()) {
@@ -146,14 +141,14 @@ public class FastsettePerioderRegelOrkestrering {
         return samlet.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
     }
 
-    private List<UttakPeriode> knekk(List<UttakPeriode> førKnekk, LocalDate knekkpunkt) {
-        List<UttakPeriode> etterKnekk = new ArrayList<>();
-        for (UttakPeriode uttakPeriode : førKnekk) {
-            if (uttakPeriode.overlapper(knekkpunkt) && !uttakPeriode.getFom().equals(knekkpunkt)) {
-                etterKnekk.add(uttakPeriode.kopiMedNyPeriode(uttakPeriode.getFom(), knekkpunkt.minusDays(1)));
-                etterKnekk.add(uttakPeriode.kopiMedNyPeriode(knekkpunkt, uttakPeriode.getTom()));
+    private List<OppgittPeriode> knekk(List<OppgittPeriode> førKnekk, LocalDate knekkpunkt) {
+        List<OppgittPeriode> etterKnekk = new ArrayList<>();
+        for (OppgittPeriode oppgittPeriode : førKnekk) {
+            if (oppgittPeriode.overlapper(knekkpunkt) && !oppgittPeriode.getFom().equals(knekkpunkt)) {
+                etterKnekk.add(oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkpunkt.minusDays(1)));
+                etterKnekk.add(oppgittPeriode.kopiMedNyPeriode(knekkpunkt, oppgittPeriode.getTom()));
             } else {
-                etterKnekk.add(uttakPeriode);
+                etterKnekk.add(oppgittPeriode);
             }
         }
 
@@ -167,34 +162,28 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,
-                                                                 UttakPeriode aktuellPeriode,
+                                                                 OppgittPeriode aktuellPeriode,
                                                                  RegelResultatBehandler behandler,
                                                                  RegelGrunnlag regelGrunnlag,
                                                                  Konfigurasjon konfig,
                                                                  SaldoUtregning saldoUtregning) {
+        var regelresultat = new FastsettePerioderRegelresultat(evaluering);
+        var utfallType = regelresultat.getUtfallType();
+
+        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, saldoUtregning, regelresultat);
+
         final RegelResultatBehandlerResultat regelResultatBehandlerResultat;
-        Regelresultat regelresultat = new Regelresultat(evaluering);
-        settSluttpunktTrekkerDagerPåAlleAktiviteter(aktuellPeriode, regelresultat);
-        UtfallType utfallType = regelresultat.getUtfallType();
-
-        UtfallType graderingUtfall = regelresultat.getGradering();
-        boolean avslåGradering = UtfallType.AVSLÅTT.equals(graderingUtfall);
-        GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak = regelresultat.getGraderingIkkeInnvilgetÅrsak();
-        Optional<TomKontoKnekkpunkt> knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, saldoUtregning);
-
         switch (utfallType) {
             case AVSLÅTT:
-                List<AnnenpartUttaksperiode> annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
-                regelResultatBehandlerResultat = behandler.avslåAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getAvklaringÅrsak(),
-                        regelresultat.skalUtbetale(), overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
+                var annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
+                regelResultatBehandlerResultat = behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
+                        overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
                 break;
             case INNVILGET:
-                regelResultatBehandlerResultat = behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat.getInnvilgetÅrsak(), avslåGradering,
-                        graderingIkkeInnvilgetÅrsak, regelresultat.skalUtbetale());
+                regelResultatBehandlerResultat = behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat);
                 break;
             case MANUELL_BEHANDLING:
-                regelResultatBehandlerResultat = behandler.manuellBehandling(aktuellPeriode, regelresultat.getManuellbehandlingårsak(), regelresultat.getAvklaringÅrsak(),
-                        regelresultat.skalUtbetale(), avslåGradering, graderingIkkeInnvilgetÅrsak);
+                regelResultatBehandlerResultat = behandler.manuellBehandling(aktuellPeriode, regelresultat);
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("Ukjent utfalltype: %s", utfallType.name()));
@@ -203,40 +192,35 @@ public class FastsettePerioderRegelOrkestrering {
         return regelResultatBehandlerResultat;
     }
 
-    private void settSluttpunktTrekkerDagerPåAlleAktiviteter(UttakPeriode aktuellPeriode,
-                                                             Regelresultat regelresultat) {
-        var aktiviteter = aktuellPeriode.getAktiviteter();
-        aktiviteter.forEach(aktivitet -> aktuellPeriode.setSluttpunktTrekkerDager(aktivitet, regelresultat.trekkDagerFraSaldo()));
-    }
-
-    private List<AnnenpartUttaksperiode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
+    private List<AnnenpartUttakPeriode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
         return regelGrunnlag.getAnnenPart() == null ? Collections.emptyList() : regelGrunnlag.getAnnenPart().getUttaksperioder();
     }
 
-    private boolean overlapperMedInnvilgetAnnenpartsPeriode(UttakPeriode aktuellPeriode, List<AnnenpartUttaksperiode> annenPartUttaksperioder) {
+    private boolean overlapperMedInnvilgetAnnenpartsPeriode(OppgittPeriode aktuellPeriode, List<AnnenpartUttakPeriode> annenPartUttaksperioder) {
         return annenPartUttaksperioder.stream().anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget());
     }
 
-    private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(UttakPeriode aktuellPeriode,
+    private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(OppgittPeriode aktuellPeriode,
                                                         RegelGrunnlag regelGrunnlag,
                                                         Konfigurasjon konfig,
-                                                        SaldoUtregning saldoUtregning) {
-        if (aktuellPeriode instanceof UtsettelsePeriode || erFPFF(aktuellPeriode)) {
+                                                        SaldoUtregning saldoUtregning,
+                                                        FastsettePerioderRegelresultat regelresultat) {
+        if (aktuellPeriode.isUtsettelse() || erFPFF(aktuellPeriode)) {
             return Optional.empty();
         }
         var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig);
         return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(aktuellPeriode.getAktiviteter()),
-                saldoUtregning, stønadskontotype);
+                saldoUtregning, stønadskontotype.orElse(null), regelresultat.trekkDagerFraSaldo());
     }
 
-    private Stønadskontotype utledKonto(UttakPeriode aktuellPeriode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning, Konfigurasjon konfig) {
-        if (Stønadskontotype.UKJENT.equals(aktuellPeriode.getStønadskontotype())) {
-            return ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig).orElse(Stønadskontotype.UKJENT);
+    private Optional<Stønadskontotype> utledKonto(OppgittPeriode aktuellPeriode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning, Konfigurasjon konfig) {
+        if (aktuellPeriode.getStønadskontotype() == null) {
+            return ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig);
         }
-        return aktuellPeriode.getStønadskontotype();
+        return Optional.of(aktuellPeriode.getStønadskontotype());
     }
 
-    private boolean erFPFF(UttakPeriode aktuellPeriode) {
+    private boolean erFPFF(OppgittPeriode aktuellPeriode) {
         return Stønadskontotype.FORELDREPENGER_FØR_FØDSEL.equals(aktuellPeriode.getStønadskontotype());
     }
 
@@ -250,9 +234,9 @@ public class FastsettePerioderRegelOrkestrering {
 
     private SaldoUtregningGrunnlag saldoGrunnlag(RegelGrunnlag grunnlag,
                                                  List<FastsettePeriodeResultat> resultatPerioder,
-                                                 UttakPeriode aktuellPeriode,
-                                                 List<UttakPeriode> allePerioderSomSkalFastsettes) {
-        List<AnnenpartUttaksperiode> annenpartPerioder = grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder();
+                                                 OppgittPeriode aktuellPeriode,
+                                                 List<OppgittPeriode> allePerioderSomSkalFastsettes) {
+        List<AnnenpartUttakPeriode> annenpartPerioder = grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder();
 
         var vedtaksperioder = vedtaksperioder(grunnlag);
         var søkersFastsattePerioder = map(resultatPerioder, vedtaksperioder);
@@ -280,8 +264,8 @@ public class FastsettePerioderRegelOrkestrering {
                 .medTidsperiode(periode.getFom(), periode.getTom())
                 .medAktiviteter(mapAktiviteter(periode))
                 .medFlerbarnsdager(periode.isFlerbarnsdager())
-                .medOppholdÅrsak(oppholdsårsak(periode))
-                .medSamtidigUttak(periode.isSamtidigUttak())
+                .medOppholdÅrsak(periode.getOppholdÅrsak())
+                .medSamtidigUttak(periode.erSamtidigUttak())
                 .medPeriodeResultatType(periode.getPerioderesultattype())
                 .build();
     }
@@ -298,16 +282,9 @@ public class FastsettePerioderRegelOrkestrering {
         return map(periode);
     }
 
-    private Oppholdårsaktype oppholdsårsak(UttakPeriode periode) {
-        if (periode instanceof OppholdPeriode) {
-            return ((OppholdPeriode) periode).getOppholdårsaktype();
-        }
-        return null;
-    }
-
     private List<FastsattUttakPeriodeAktivitet> mapAktiviteter(UttakPeriode periode) {
         return periode.getAktiviteter().stream()
-                .map(aktivitetIdentifikator -> new FastsattUttakPeriodeAktivitet(periode.getTrekkdager(aktivitetIdentifikator), periode.getStønadskontotype(), aktivitetIdentifikator))
+                .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), periode.getStønadskontotype(), aktivitet.getIdentifikator()))
                 .collect(Collectors.toList());
     }
 

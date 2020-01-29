@@ -37,7 +37,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                         .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
-                .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato)))
+                .medSøknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato)))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer)
                 .build();
@@ -71,7 +71,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true))
-                .medSøknad(søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(4))))
+                .medSøknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(4))))
                 .medKontoer(kontoer)
                 .build();
 
@@ -106,9 +106,9 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
-                        Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                        søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, LocalDate.of(2018, 6, 30)),
-                        søknadsperiode(Stønadskontotype.MØDREKVOTE, LocalDate.of(2018, 7, 1), LocalDate.of(2018, 12, 21))
+                        Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                        oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, LocalDate.of(2018, 6, 30)),
+                        oppgittPeriode(Stønadskontotype.MØDREKVOTE, LocalDate.of(2018, 7, 1), LocalDate.of(2018, 12, 21))
                 ))
                 .medKontoer(kontoer)
                 .build();
@@ -134,7 +134,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
         assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2018, 8, 27));
 
         assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(4).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         assertThat(perioder.get(4).getUttakPeriode().getFom()).isEqualTo(LocalDate.of(2018, 8, 28));
         assertThat(perioder.get(4).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2018, 12, 21));
     }
@@ -159,9 +159,9 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
-                        Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                        søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15)),
-                        søknadsperiode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(15).plusDays(1), fødselsdato.plusWeeks(15).plusDays(2))
+                        Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                        oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15)),
+                        oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(15).plusDays(1), fødselsdato.plusWeeks(15).plusDays(2))
                 ))
                 .medKontoer(kontoer)
                 .build();
@@ -194,7 +194,7 @@ public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePe
                         .medAleneomsorg(false))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(søknadsperiode(Stønadskontotype.FORELDREPENGER, LocalDate.of(2019, 3, 20), LocalDate.of(2019, 12, 24))))
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER, LocalDate.of(2019, 3, 20), LocalDate.of(2019, 12, 24))))
                 .medKontoer(kontoer);
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);

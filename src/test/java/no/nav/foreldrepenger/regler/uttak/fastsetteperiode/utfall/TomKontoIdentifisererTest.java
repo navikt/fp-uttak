@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -14,9 +14,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuil
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
@@ -58,24 +58,24 @@ public class TomKontoIdentifisererTest {
     private void verifiserKnekkpunktVedGradering(int søktOmDag, int saldo, BigDecimal arbeidsprosent, int virkedagerVarighet) {
         var idag = LocalDate.of(2019, 3, 14);
 
-        var uttakPeriode = StønadsPeriode.medGradering(Stønadskontotype.MØDREKVOTE, PeriodeKilde.SØKNAD, idag, idag.plusDays(søktOmDag - 1),
-                Collections.singletonList(ARBEIDSFORHOLD_1), arbeidsprosent, PeriodeVurderingType.PERIODE_OK);
-        uttakPeriode.setSluttpunktTrekkerDager(ARBEIDSFORHOLD_1, true);
+        var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, idag, idag.plusDays(søktOmDag - 1), PeriodeKilde.SØKNAD,
+                arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder()
                         .medType(Stønadskontotype.MØDREKVOTE)
                         .medTrekkdager(saldo));
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(oppgittPeriode))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medKontoer(kontoer)
                 .build();
 
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getKontoer(), uttakPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
+                List.of(), grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
         var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
-        var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(uttakPeriode, Collections.singletonList(ARBEIDSFORHOLD_1), saldoUtregning, Stønadskontotype.MØDREKVOTE);
+        var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(oppgittPeriode, List.of(ARBEIDSFORHOLD_1),
+                saldoUtregning, Stønadskontotype.MØDREKVOTE, true);
         assertThat(tomKontoKnekkpunkt.get().getDato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
     }
 }

@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -24,7 +24,7 @@ public class SjekkOmUttakSkjerEtterDeFørsteUkene extends LeafSpecification<Fast
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
+        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
         int minsteKravTilMødrekvoteEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, grunnlag.getFamiliehendelse());
         LocalDate tidligsteStartDatoForFedrekvote = grunnlag.getFamiliehendelse().plusWeeks(minsteKravTilMødrekvoteEtterFødsel);
         if (!aktuellPeriode.getFom().isBefore(tidligsteStartDatoForFedrekvote)) {

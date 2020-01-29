@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.util.Objects;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 
@@ -9,12 +10,12 @@ public class FastsettePeriodeResultat {
     private final UttakPeriode uttakPeriode;
     private final String evalueringResultat;
     private final String innsendtGrunnlag;
-    private final UttakPeriode periodeEtterKnekk;
+    private final OppgittPeriode periodeEtterKnekk;
 
     public FastsettePeriodeResultat(UttakPeriode uttakPeriode,
                                     String evalueringResultat,
                                     String innsendtGrunnlag,
-                                    UttakPeriode periodeEtterKnekk) {
+                                    OppgittPeriode periodeEtterKnekk) {
         this.periodeEtterKnekk = periodeEtterKnekk;
         Objects.requireNonNull(uttakPeriode);
         this.uttakPeriode = uttakPeriode;
@@ -42,7 +43,7 @@ public class FastsettePeriodeResultat {
         return periodeEtterKnekk != null;
     }
 
-    UttakPeriode getPeriodeEtterKnekk() {
+    OppgittPeriode getPeriodeEtterKnekk() {
         return periodeEtterKnekk;
     }
 

@@ -38,7 +38,7 @@ public class FastsettePerioderRegelOrkestreringEndringssøknadTest extends Fasts
         var revurdering = new Revurdering.Builder()
                 .medEndringsdato(endringsdato)
                 .medGjeldendeVedtak(vedtak);
-        var søknadOm10UkerMødrekvote = søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.MØDREKVOTE, endringsdato, endringsdato.plusWeeks(10).minusDays(1)));
+        var søknadOm10UkerMødrekvote = søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.MØDREKVOTE, endringsdato, endringsdato.plusWeeks(10).minusDays(1)));
         grunnlag.medRevurdering(revurdering)
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato).medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
                 .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
@@ -50,7 +50,7 @@ public class FastsettePerioderRegelOrkestreringEndringssøknadTest extends Fasts
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class FastsettePerioderRegelOrkestreringEndringssøknadTest extends Fasts
         var revurdering = new Revurdering.Builder()
                 .medEndringsdato(fødselsdato.plusWeeks(6))
                 .medGjeldendeVedtak(vedtak);
-        var søknadOm12UkerMødrekvote = søknad(Søknadstype.FØDSEL, søknadsperiode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(18).minusDays(1)));
+        var søknadOm12UkerMødrekvote = søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(18).minusDays(1)));
         grunnlag.medRevurdering(revurdering)
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato).medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
                 .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))

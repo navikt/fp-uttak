@@ -7,7 +7,7 @@ public class FastsattUttakPeriode {
     private Perioderesultattype perioderesultattype;
     private List<FastsattUttakPeriodeAktivitet> aktiviteter;
     private boolean flerbarnsdager;
-    private Oppholdårsaktype oppholdÅrsak;
+    private OppholdÅrsak oppholdÅrsak;
     private LocalDate fom;
     private LocalDate tom;
     private boolean samtidigUttak;
@@ -36,7 +36,7 @@ public class FastsattUttakPeriode {
         return flerbarnsdager;
     }
 
-    public Oppholdårsaktype getOppholdÅrsak() {
+    public OppholdÅrsak getOppholdÅrsak() {
         return oppholdÅrsak;
     }
 
@@ -79,8 +79,8 @@ public class FastsattUttakPeriode {
             return this;
         }
 
-        public Builder medOppholdÅrsak(Oppholdårsaktype oppholdårsaktype) {
-            kladd.oppholdÅrsak = oppholdårsaktype;
+        public Builder medOppholdÅrsak(OppholdÅrsak oppholdÅrsak) {
+            kladd.oppholdÅrsak = oppholdÅrsak;
             return this;
         }
 

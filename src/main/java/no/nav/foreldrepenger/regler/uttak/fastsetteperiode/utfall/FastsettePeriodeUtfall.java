@@ -79,7 +79,7 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
             this.hovedUtfall = UtfallType.INNVILGET;
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
                 singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.UTFALL, UtfallType.INNVILGET);
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.INNVILGET_ÅRSAK, innvilgetÅrsak);
+                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, innvilgetÅrsak);
             });
             return this;
         }
@@ -98,25 +98,20 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
 
         public Builder medAvslåttGradering(GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak) {
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.GRADERING, UtfallType.AVSLÅTT);
                 singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak);
             });
             return this;
         }
 
-        public Builder manuellBehandling(Årsak årsak, Manuellbehandlingårsak manuellbehandlingårsak) {
+        public Builder manuellBehandling(PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellbehandlingårsak) {
             this.hovedUtfall = UtfallType.MANUELL_BEHANDLING;
-            if (årsak!=null) {
-                this.ruleReasonRef = new RuleReasonRefImpl(String.valueOf(årsak.getId()), årsak.getBeskrivelse());
+            if (periodeResultatÅrsak !=null) {
+                this.ruleReasonRef = new RuleReasonRefImpl(String.valueOf(periodeResultatÅrsak.getId()), periodeResultatÅrsak.getBeskrivelse());
             }
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
                 singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.UTFALL, UtfallType.MANUELL_BEHANDLING);
                 singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.MANUELL_BEHANDLING_ÅRSAK, manuellbehandlingårsak);
-                if (årsak instanceof IkkeOppfyltÅrsak) {
-                    singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, årsak);
-                } else {
-                    singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.INNVILGET_ÅRSAK, årsak);
-                }
+                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, periodeResultatÅrsak);
             });
             return this;
         }

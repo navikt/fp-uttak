@@ -23,9 +23,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
@@ -36,22 +36,20 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     //TODO PFP-8743 endre til å sjekke på GyldigGrunnPerioder og ikke om periodeverudering er OK
 
     @Test
-    @SuppressWarnings("Duplicates")
     public void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_blir_innvilget() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(6), null, false);
-        uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6), PeriodeVurderingType.PERIODE_OK);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(oppgittPeriode))
                 .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
         assertThat(periodeResultater).hasSize(2);
-        List<UttakPeriode> perioder = periodeResultater.stream()
+        var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom))
                 .collect(toList());
@@ -60,16 +58,14 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    @SuppressWarnings("Duplicates")
     public void fellesperiode_med_tidlig_oppstart_og_gyldig_grunn_hele_perioden_blir_innvilget() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode = new StønadsPeriode(FELLESPERIODE, PeriodeKilde.SØKNAD, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false);
-        uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var uttakPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), PeriodeVurderingType.PERIODE_OK);
         var kontoer = enKonto(FELLESPERIODE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(uttakPeriode))
                 .medKontoer(kontoer)
                 .build();
 
@@ -82,29 +78,28 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     public void fedrekvote_med_tidlig_oppstart_uten_gyldig_grunn_deler_av_perioden_skal_behandles_manuelt() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10), null, false);
-        uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.UAVKLART_PERIODE);
+        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10), PeriodeVurderingType.UAVKLART_PERIODE);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(uttakPeriode))
                 .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
         assertThat(periodeResultater).hasSize(2);
-        List<UttakPeriode> perioder = periodeResultater.stream()
+        var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom))
                 .collect(toList());
 
-        UttakPeriode ugyldigPeriode = perioder.get(0);
+        var ugyldigPeriode = perioder.get(0);
         assertThat(ugyldigPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
         assertThat(ugyldigPeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
         assertThat(ugyldigPeriode.getStønadskontotype()).isEqualTo(FEDREKVOTE);
 
-        UttakPeriode gyldigPeriode = perioder.get(1);
+        var gyldigPeriode = perioder.get(1);
         assertThat(gyldigPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(gyldigPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(gyldigPeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
@@ -114,19 +109,18 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     public void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), null, false);
-        uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), PeriodeVurderingType.PERIODE_OK);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(uttakPeriode))
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
         assertThat(periodeResultater).hasSize(2);
-        List<UttakPeriode> perioder = periodeResultater.stream()
+        var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom))
                 .collect(toList());
@@ -138,20 +132,18 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     public void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
-                null, false);
-        uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
+        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), PeriodeVurderingType.PERIODE_OK);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(uttakPeriode))
                 .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
         assertThat(periodeResultater).hasSize(1);
-        List<UttakPeriode> perioder = periodeResultater.stream()
+        var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom))
                 .collect(toList());
@@ -159,23 +151,26 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), INNVILGET, FEDREKVOTE);
     }
 
+    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurdering) {
+        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom,
+                PeriodeKilde.SØKNAD, null, false, vurdering);
+    }
+
     @Test
     public void fedrekvote_med_tidlig_oppstart_og_vurdert_uavklart_av_saksbehandler_går_til_manuell_behandling() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
-                null, false);
-        uttakPeriode.setPeriodeVurderingType(PeriodeVurderingType.UAVKLART_PERIODE);
+        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode))
+                        .leggTilOppgittPeriode(uttakPeriode))
                 .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
         assertThat(periodeResultater).hasSize(1);
-        List<UttakPeriode> perioder = periodeResultater.stream()
+        var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom))
                 .collect(toList());
@@ -186,28 +181,22 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     public void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk_som_saksbehandler_har_registrert() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        StønadsPeriode uttakPeriode1 = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
-                null, false);
-        uttakPeriode1.setPeriodeVurderingType(PeriodeVurderingType.ENDRE_PERIODE);
-        StønadsPeriode uttakPeriode2 = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1),
-                null, false);
-        uttakPeriode2.setPeriodeVurderingType(PeriodeVurderingType.PERIODE_OK);
-        StønadsPeriode uttakPeriode3 = new StønadsPeriode(FEDREKVOTE, PeriodeKilde.SØKNAD, fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1),
-                null, false);
-        uttakPeriode3.setPeriodeVurderingType(PeriodeVurderingType.UAVKLART_PERIODE);
+        var uttakPeriode1 = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), PeriodeVurderingType.ENDRE_PERIODE);
+        var uttakPeriode2 = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1), PeriodeVurderingType.PERIODE_OK);
+        var uttakPeriode3 = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         RegelGrunnlag grunnlag = basicGrunnlag(fødselsdato)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilSøknadsperiode(uttakPeriode1)
-                        .leggTilSøknadsperiode(uttakPeriode2)
-                        .leggTilSøknadsperiode(uttakPeriode3))
+                        .leggTilOppgittPeriode(uttakPeriode1)
+                        .leggTilOppgittPeriode(uttakPeriode2)
+                        .leggTilOppgittPeriode(uttakPeriode3))
                 .medKontoer(kontoer)
                 .build();
 
         List<FastsettePeriodeResultat> periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag, new FeatureTogglesForTester());
         assertThat(periodeResultater).hasSize(3);
-        List<UttakPeriode> perioder = periodeResultater.stream()
+        var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom))
                 .collect(toList());
@@ -218,7 +207,11 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
 
-    private void verifiserPeriode(UttakPeriode periode, LocalDate forventetFom, LocalDate forventetTom, Perioderesultattype forventetResultat, Stønadskontotype stønadskontotype) {
+    private void verifiserPeriode(UttakPeriode periode,
+                                  LocalDate forventetFom,
+                                  LocalDate forventetTom,
+                                  Perioderesultattype forventetResultat,
+                                  Stønadskontotype stønadskontotype) {
         assertThat(periode.getFom()).isEqualTo(forventetFom);
         assertThat(periode.getTom()).isEqualTo(forventetTom);
         assertThat(periode.getPerioderesultattype()).isEqualTo(forventetResultat);

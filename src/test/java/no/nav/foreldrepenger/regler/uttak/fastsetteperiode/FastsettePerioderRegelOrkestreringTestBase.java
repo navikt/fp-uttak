@@ -7,14 +7,18 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -25,13 +29,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelsePeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utsettelseårsaktype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
@@ -81,37 +82,66 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
         assertThat(periode.getTom()).isEqualTo(forventetTom);
         assertThat(periode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(periode.getStønadskontotype()).isEqualTo(stønadskontotype);
-        assertThat(periode.getÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
+        assertThat(periode.getPeriodeResultatÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
     }
 
 
-    void verifiserManuellBehandlingPeriode(UttakPeriode periode, LocalDate forventetFom, LocalDate forventetTom, Stønadskontotype stønadskontotype, IkkeOppfyltÅrsak ikkeOppfyltÅrsak, Manuellbehandlingårsak manuellbehandlingårsak) {
+    void verifiserManuellBehandlingPeriode(UttakPeriode periode,
+                                           LocalDate forventetFom,
+                                           LocalDate forventetTom,
+                                           Stønadskontotype stønadskontotype,
+                                           IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
+                                           Manuellbehandlingårsak manuellbehandlingårsak) {
         assertThat(periode.getFom()).isEqualTo(forventetFom);
         assertThat(periode.getTom()).isEqualTo(forventetTom);
         assertThat(periode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(periode.getStønadskontotype()).isEqualTo(stønadskontotype);
         assertThat(periode.getManuellbehandlingårsak()).isEqualTo(manuellbehandlingårsak);
-        assertThat(periode.getÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
+        assertThat(periode.getPeriodeResultatÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
     }
 
-    Søknad.Builder søknad(Søknadstype søknadstype, UttakPeriode... perioder) {
+    Søknad.Builder søknad(Søknadstype søknadstype, OppgittPeriode... perioder) {
         Søknad.Builder builder = new Søknad.Builder()
                 .medMottattDato(perioder[0].getFom().minusWeeks(1))
                 .medType(søknadstype);
-        for (UttakPeriode uttakPeriode : perioder) {
-            builder.leggTilSøknadsperiode(uttakPeriode);
+        for (OppgittPeriode oppgittPeriode : perioder) {
+            builder.leggTilOppgittPeriode(oppgittPeriode);
         }
         return builder;
     }
 
-    UttakPeriode søknadsperiode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return søknadsperiode(stønadskontotype, fom, tom, false, PeriodeVurderingType.PERIODE_OK, null);
+    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
+        return oppgittPeriode(stønadskontotype, fom, tom, false, null);
     }
 
-    UttakPeriode søknadsperiode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, boolean flerbarnsdager, PeriodeVurderingType periodeVurderingType, SamtidigUttak samtidigUttak) {
-        StønadsPeriode stønadsPeriode = new StønadsPeriode(stønadskontotype, PeriodeKilde.SØKNAD, fom, tom, samtidigUttak, flerbarnsdager);
-        stønadsPeriode.setPeriodeVurderingType(periodeVurderingType);
-        return stønadsPeriode;
+    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
+                                  LocalDate fom,
+                                  LocalDate tom,
+                                  boolean flerbarnsdager,
+                                  BigDecimal samtidigUttaksprosent) {
+        return oppgittPeriode(stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, PeriodeVurderingType.IKKE_VURDERT);
+    }
+
+    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
+                                  LocalDate fom,
+                                  LocalDate tom,
+                                  boolean flerbarnsdager,
+                                  BigDecimal samtidigUttaksprosent,
+                                  PeriodeVurderingType vurderingType) {
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent, flerbarnsdager, vurderingType);
+    }
+
+    OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
+        return gradertoppgittPeriode(stønadskontotype, fom, tom, arbeidsprosent, Set.of(ARBEIDSFORHOLD_1));
+    }
+
+    OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype,
+                                         LocalDate fom,
+                                         LocalDate tom,
+                                         BigDecimal arbeidsprosent,
+                                         Set<AktivitetIdentifikator> gradertAktiviteter) {
+        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, arbeidsprosent, null,
+                false, gradertAktiviteter, PeriodeVurderingType.IKKE_VURDERT);
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
@@ -149,10 +179,10 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                 .medFarHarRett(true);
     }
 
-    UtsettelsePeriode utsettelsePeriode(LocalDate fom,
-                                        LocalDate tom,
-                                        Utsettelseårsaktype utsettelseårsaktype) {
-        return new UtsettelsePeriode(PeriodeKilde.SØKNAD, fom, tom, utsettelseårsaktype, PeriodeVurderingType.IKKE_VURDERT);
+    OppgittPeriode utsettelsePeriode(LocalDate fom,
+                                     LocalDate tom,
+                                     UtsettelseÅrsak utsettelseÅrsak) {
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak);
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {
@@ -173,5 +203,9 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
 
     List<FastsettePeriodeResultat> fastsettPerioder(RegelGrunnlag.Builder grunnlag) {
         return fastsettPerioder(grunnlag.build());
+    }
+
+    Set<AktivitetIdentifikator> aktiviteterIPeriode(UttakPeriode uttakPeriode) {
+        return uttakPeriode.getAktiviteter().stream().map(a -> a.getIdentifikator()).collect(Collectors.toSet());
     }
 }

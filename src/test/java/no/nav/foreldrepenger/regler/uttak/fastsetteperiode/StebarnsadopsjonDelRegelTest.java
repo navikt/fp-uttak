@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.gradertPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
@@ -7,13 +8,11 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Set;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -23,15 +22,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.StønadsPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -41,17 +37,17 @@ public class StebarnsadopsjonDelRegelTest {
     @Test
     public void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
-        StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
+        var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.ADOPSJON)
-                        .leggTilSøknadsperiode(uttakPeriode)
+                        .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -60,16 +56,20 @@ public class StebarnsadopsjonDelRegelTest {
 
     }
 
+    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom) {
+        return DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fom, tom);
+    }
+
     @Test
     public void UT1241_stebarnsadopsjon_far_omsorg_disponible_dager_og_ingen_gradering() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
-        StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
+        var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
 
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -81,13 +81,12 @@ public class StebarnsadopsjonDelRegelTest {
     @Test
     public void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
-        StønadsPeriode uttakPeriode = StønadsPeriode.medGradering(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2),
-                Collections.singletonList(ARBEIDSFORHOLD_1), BigDecimal.TEN, PeriodeVurderingType.PERIODE_OK);
+        var uttakPeriode = gradertPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2), Set.of(ARBEIDSFORHOLD_1));
 
         RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -99,7 +98,7 @@ public class StebarnsadopsjonDelRegelTest {
     @Test
     public void UT1244_stebarnsadopsjon_far_omsorg_ikke_disponible_stønadsdager() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
-        StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
+        var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
@@ -110,7 +109,7 @@ public class StebarnsadopsjonDelRegelTest {
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -122,7 +121,7 @@ public class StebarnsadopsjonDelRegelTest {
     @Test
     public void UT1285_stebarnsadopsjon_uttak_før_omsorgsovertakelse() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
-        StønadsPeriode uttakPeriode = stønadsperiode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
+        var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
@@ -133,7 +132,7 @@ public class StebarnsadopsjonDelRegelTest {
                 .medKontoer(kontoer)
                 .build();
 
-        Regelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
@@ -141,7 +140,7 @@ public class StebarnsadopsjonDelRegelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
-    private RegelGrunnlag.Builder grunnlagFar(LocalDate familiehendelseDato, UttakPeriode uttakPeriode) {
+    private RegelGrunnlag.Builder grunnlagFar(LocalDate familiehendelseDato, OppgittPeriode oppgittPeriode) {
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
@@ -149,8 +148,8 @@ public class StebarnsadopsjonDelRegelTest {
         return RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.ADOPSJON)
-                        .leggTilSøknadsperiode(uttakPeriode)
-                        .medMottattDato(uttakPeriode.getFom().minusWeeks(1)))
+                        .leggTilOppgittPeriode(oppgittPeriode)
+                        .medMottattDato(oppgittPeriode.getFom().minusWeeks(1)))
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))
                         .medOmsorgsovertakelse(familiehendelseDato))
@@ -170,9 +169,5 @@ public class StebarnsadopsjonDelRegelTest {
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));
-    }
-
-    private StønadsPeriode stønadsperiode(LocalDate fom, LocalDate tom) {
-        return new StønadsPeriode(Stønadskontotype.FEDREKVOTE, PeriodeKilde.SØKNAD, fom, tom, null, false);
     }
 }

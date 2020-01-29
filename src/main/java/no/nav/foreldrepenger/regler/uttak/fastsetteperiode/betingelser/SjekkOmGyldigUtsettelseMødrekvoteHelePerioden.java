@@ -5,7 +5,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -23,7 +23,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePerioden extends LeafSpecific
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
         List<GyldigGrunnPeriode> gyldigePerioder = fastsettePeriodeGrunnlag.getAktuelleGyldigeGrunnPerioder();
 
-        UttakPeriode aktuellPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
+        OppgittPeriode aktuellPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
         LocalDate dato = aktuellPeriode.getFom();
         for (GyldigGrunnPeriode periode : gyldigePerioder) {
             if (periode.overlapper(dato)) {

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
-public enum IkkeOppfyltÅrsak implements Årsak {
+public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
 
     // Uttak årsaker
     IKKE_STØNADSDAGER_IGJEN(4002, "Ikke Stønadsdager igjen"),

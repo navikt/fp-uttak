@@ -6,13 +6,13 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.foreldrepenger.regler.Regelresultat;
+import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
+import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
-import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
-import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -39,9 +39,9 @@ public class StønadskontoRegelOrkestrering {
     }
 
     private Map<Stønadskontotype, Integer> hentStønadskontoer(Evaluation evaluation) {
-        Regelresultat resultat = new Regelresultat(evaluation);
+        var resultat = new Regelresultat(evaluation);
         if (resultat.oppfylt()) {
-            Map<Stønadskontotype, Integer> kontoer = resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);
+            var kontoer = resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);
             if (kontoer != null) {
                 return kontoer;
             } else {

@@ -2,279 +2,180 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Årsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public abstract class UttakPeriode extends LukketPeriode {
+public final class UttakPeriode extends LukketPeriode {
 
-    private Stønadskontotype stønadskontotype;
-    private BigDecimal gradertArbeidsprosent;
-    private List<AktivitetIdentifikator> gradertAktiviteter = List.of();
-    private OverføringÅrsak overføringÅrsak;
-    private PeriodeVurderingType periodeVurderingType;
-    private PeriodeKilde periodeKilde;
+    private final Perioderesultattype perioderesultattype;
+    private final Manuellbehandlingårsak manuellbehandlingårsak;
+    private final PeriodeResultatÅrsak periodeResultatÅrsak;
+    private final GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
+    private final Set<UttakPeriodeAktivitet> aktiviteter;
     private final boolean flerbarnsdager;
-    private final SamtidigUttak samtidigUttak;
+    private final BigDecimal samtidigUttaksprosent;
+    private final OppholdÅrsak oppholdÅrsak;
+    private final Stønadskontotype stønadskontotype;
+    private final BigDecimal arbeidsprosent;
+    private final UtsettelseÅrsak utsettelseÅrsak;
+    private final OverføringÅrsak overføringÅrsak;
 
-    //TODO PFP-8744 dele opp klassen. En input-periode og en output
-    private Perioderesultattype perioderesultattype = Perioderesultattype.IKKE_FASTSATT;
-    private Manuellbehandlingårsak manuellbehandlingårsak;
-    private Årsak årsak;
-    private GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
-    private Map<AktivitetIdentifikator, BigDecimal> utbetalingsgrader = new HashMap<>();
-    private Map<AktivitetIdentifikator, Boolean> skalTrekkedager = new HashMap<>();
-    private Set<AktivitetIdentifikator> aktiviteter = new HashSet<>();
-
-    public UttakPeriode(Stønadskontotype stønadskontotype,
-                        PeriodeKilde periodeKilde,
-                        LocalDate fom,
+    public UttakPeriode(LocalDate fom,
                         LocalDate tom,
-                        SamtidigUttak samtidigUttak,
-                        boolean flerbarnsdager) {
+                        Perioderesultattype perioderesultattype,
+                        Manuellbehandlingårsak manuellbehandlingårsak,
+                        PeriodeResultatÅrsak periodeResultatÅrsak,
+                        GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak,
+                        Set<UttakPeriodeAktivitet> aktiviteter,
+                        boolean flerbarnsdager,
+                        BigDecimal samtidigUttaksprosent,
+                        OppholdÅrsak oppholdÅrsak,
+                        Stønadskontotype stønadskontotype,
+                        BigDecimal arbeidsprosent,
+                        UtsettelseÅrsak utsettelseÅrsak,
+                        OverføringÅrsak overføringÅrsak) {
         super(fom, tom);
-        this.samtidigUttak = samtidigUttak;
+        this.perioderesultattype = perioderesultattype;
+        this.manuellbehandlingårsak = manuellbehandlingårsak;
+        this.periodeResultatÅrsak = periodeResultatÅrsak;
+        this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
+        this.aktiviteter = aktiviteter;
         this.flerbarnsdager = flerbarnsdager;
-        Objects.requireNonNull(stønadskontotype);
-        Objects.requireNonNull(periodeKilde);
+        this.samtidigUttaksprosent = samtidigUttaksprosent;
+        this.oppholdÅrsak = oppholdÅrsak;
         this.stønadskontotype = stønadskontotype;
-        this.periodeKilde = periodeKilde;
-    }
-
-    protected UttakPeriode(UttakPeriode kilde, LocalDate fom, LocalDate tom) {
-        this(kilde.stønadskontotype, kilde.periodeKilde, fom, tom, kilde.getSamtidigUttak().orElse(null), kilde.isFlerbarnsdager());
-        perioderesultattype = kilde.perioderesultattype;
-        årsak = kilde.årsak;
-        manuellbehandlingårsak = kilde.manuellbehandlingårsak;
-        gradertArbeidsprosent = kilde.gradertArbeidsprosent;
-        gradertAktiviteter = kilde.gradertAktiviteter;
-        overføringÅrsak = kilde.overføringÅrsak;
-        periodeVurderingType = kilde.periodeVurderingType;
-        skalTrekkedager = new HashMap<>(kilde.skalTrekkedager);
-        aktiviteter = new HashSet<>(kilde.aktiviteter);
-    }
-
-    public Optional<SamtidigUttak> getSamtidigUttak() {
-        return Optional.ofNullable(samtidigUttak);
-    }
-
-    public Optional<BigDecimal> getSamtidigUttaksprosent() {
-        if (samtidigUttak == null) {
-            return Optional.empty();
-        }
-        if (isGradering()) {
-            return Optional.of(BigDecimal.valueOf(100).subtract(getGradertArbeidsprosent()));
-        }
-        return Optional.of(samtidigUttak.getProsent());
-    }
-
-    public PeriodeVurderingType getPeriodeVurderingType() {
-        return periodeVurderingType;
-    }
-
-    public BigDecimal getUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator) {
-        return utbetalingsgrader.get(aktivitetIdentifikator);
-    }
-
-    public void setUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator, BigDecimal utbetalingsgrad) {
-        this.utbetalingsgrader.put(aktivitetIdentifikator, utbetalingsgrad);
-    }
-
-    void setGradertAktivitet(List<AktivitetIdentifikator> gradertAktivitet, BigDecimal prosentArbeid) {
-        Objects.requireNonNull(gradertAktivitet);
-        Objects.requireNonNull(prosentArbeid);
-        this.gradertAktiviteter = gradertAktivitet;
-        this.gradertArbeidsprosent = prosentArbeid;
-    }
-
-    public List<AktivitetIdentifikator> getGradertAktiviteter() {
-        return gradertAktiviteter;
-    }
-
-    public boolean isGradering() {
-        return !gradertAktiviteter.isEmpty() && graderingIkkeInnvilgetÅrsak == null;
-    }
-
-    public boolean isGradering(AktivitetIdentifikator aktivitetIdentifikator) {
-        if (graderingIkkeInnvilgetÅrsak != null) {
-            return false;
-        }
-        return søktGradering(aktivitetIdentifikator);
-    }
-
-    public boolean søktGradering(AktivitetIdentifikator aktivitetIdentifikator) {
-        for (AktivitetIdentifikator gradertAktivitet : gradertAktiviteter) {
-            if (Objects.equals(gradertAktivitet, aktivitetIdentifikator)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean harSøktOmOverføringAvKvote() {
-        return overføringÅrsak != null;
-    }
-
-    public OverføringÅrsak getOverføringÅrsak() {
-        return overføringÅrsak;
-    }
-
-    public void setOverføringÅrsak(OverføringÅrsak overføringÅrsak) {
+        this.arbeidsprosent = arbeidsprosent;
+        this.utsettelseÅrsak = utsettelseÅrsak;
         this.overføringÅrsak = overføringÅrsak;
+        validerKontoVedTrekkdager();
     }
 
-    public abstract <T extends UttakPeriode> T kopiMedNyPeriode(LocalDate fom, LocalDate tom);
-
-    public PeriodeKilde getPeriodeKilde() {
-        return periodeKilde;
-    }
-
-    public Stønadskontotype getStønadskontotype() {
-        return stønadskontotype;
+    private void validerKontoVedTrekkdager() {
+        if (stønadskontotype == null && getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().compareTo(Trekkdager.ZERO) > 0)) {
+            throw new IllegalStateException("Kan ikke trekke dager ved ukjent stønadskonto");
+        }
     }
 
     public Perioderesultattype getPerioderesultattype() {
         return perioderesultattype;
     }
 
-    public Årsak getÅrsak() {
-        return årsak;
-    }
-
     public Manuellbehandlingårsak getManuellbehandlingårsak() {
         return manuellbehandlingårsak;
     }
 
-    public Trekkdager getTrekkdager(AktivitetIdentifikator aktivitetIdentifikator) {
-        return getTrekkdagerFraSluttpunkt(aktivitetIdentifikator);
-    }
-
-    abstract Trekkdager getTrekkdagerFraSluttpunkt(AktivitetIdentifikator aktivitetIdentifikator);
-
-    public BigDecimal getGradertArbeidsprosent() {
-        return gradertArbeidsprosent;
-    }
-
-    public void opphevGradering(GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
-        this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
+    public PeriodeResultatÅrsak getPeriodeResultatÅrsak() {
+        return periodeResultatÅrsak;
     }
 
     public GraderingIkkeInnvilgetÅrsak getGraderingIkkeInnvilgetÅrsak() {
         return graderingIkkeInnvilgetÅrsak;
     }
 
+    public Set<UttakPeriodeAktivitet> getAktiviteter() {
+        return aktiviteter;
+    }
+
+    public BigDecimal getUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator) {
+        return finnAktivitet(aktivitetIdentifikator).getUtbetalingsprosent();
+    }
+
+    public boolean erGraderingInnvilget() {
+        return getAktiviteter().stream().anyMatch(a -> erGraderingInnvilget(a.getIdentifikator()));
+    }
+
+    public boolean erGraderingInnvilget(AktivitetIdentifikator aktivitetIdentifikator) {
+        if (graderingIkkeInnvilgetÅrsak != null) {
+            return false;
+        }
+        return finnAktivitet(aktivitetIdentifikator).isSøktGradering();
+    }
+
+    public Trekkdager getTrekkdager(AktivitetIdentifikator aktivitetIdentifikator) {
+        return finnAktivitet(aktivitetIdentifikator).getTrekkdager();
+    }
+
+    private UttakPeriodeAktivitet finnAktivitet(AktivitetIdentifikator aktivitetIdentifikator) {
+        return getAktiviteter().stream().filter(a -> a.getIdentifikator().equals(aktivitetIdentifikator)).findFirst().orElseThrow();
+    }
+
     public boolean isFlerbarnsdager() {
         return flerbarnsdager;
     }
 
-    public void setPeriodeVurderingType(PeriodeVurderingType periodeVurderingType) {
-        this.periodeVurderingType = periodeVurderingType;
+    public BigDecimal getSamtidigUttaksprosent() {
+        return samtidigUttaksprosent;
     }
 
-    public void setSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator, boolean sluttpunktTrekkerDager) {
-        this.skalTrekkedager.put(aktivitetIdentifikator, sluttpunktTrekkerDager);
+    public boolean erSamtidigUttak() {
+        return getSamtidigUttaksprosent() != null;
     }
 
-    public boolean getSluttpunktTrekkerDager(AktivitetIdentifikator aktivitetIdentifikator) {
-        var trekkerDager = skalTrekkedager.get(aktivitetIdentifikator);
-        if (trekkerDager != null) {
-            return trekkerDager;
-        }
-        throw new IllegalArgumentException("Ukjent aktivitet: " + aktivitetIdentifikator);
+    public OppholdÅrsak getOppholdÅrsak() {
+        return oppholdÅrsak;
     }
 
-
-    public boolean getSkalTrekkedager() {
-        return skalTrekkedager.values().stream().anyMatch(b -> b);
+    public Stønadskontotype getStønadskontotype() {
+        return stønadskontotype;
     }
 
-    public void setStønadskontotype(Stønadskontotype stønadskontotype) {
-        this.stønadskontotype = stønadskontotype;
+    public BigDecimal getArbeidsprosent() {
+        return arbeidsprosent;
     }
 
-    public void setPerioderesultattype(Perioderesultattype perioderesultattype) {
-        this.perioderesultattype = perioderesultattype;
+    public UtsettelseÅrsak getUtsettelseÅrsak() {
+        return utsettelseÅrsak;
     }
 
-    public void setÅrsak(Årsak årsak) {
-        this.årsak = årsak;
-    }
-
-    public void setManuellbehandlingårsak(Manuellbehandlingårsak manuellbehandlingårsak) {
-        this.manuellbehandlingårsak = manuellbehandlingårsak;
-    }
-
-    public boolean isSamtidigUttak() {
-        return getSamtidigUttak().isPresent();
-    }
-
-    public abstract boolean isUtsettelsePgaFerie();
-
-    public Set<AktivitetIdentifikator> getAktiviteter() {
-        return new HashSet<>(aktiviteter);
-    }
-
-    public void setAktiviteter(Set<AktivitetIdentifikator> aktiviteter) {
-        this.aktiviteter = new HashSet<>(aktiviteter);
+    public OverføringÅrsak getOverføringÅrsak() {
+        return overføringÅrsak;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         UttakPeriode that = (UttakPeriode) o;
-        return stønadskontotype == that.stønadskontotype &&
+        return flerbarnsdager == that.flerbarnsdager &&
                 perioderesultattype == that.perioderesultattype &&
-                periodeKilde == that.periodeKilde &&
                 manuellbehandlingårsak == that.manuellbehandlingårsak &&
-                Objects.equals(årsak, that.årsak) &&
-                Objects.equals(gradertArbeidsprosent, that.gradertArbeidsprosent);
+                Objects.equals(periodeResultatÅrsak, that.periodeResultatÅrsak) &&
+                graderingIkkeInnvilgetÅrsak == that.graderingIkkeInnvilgetÅrsak &&
+                Objects.equals(aktiviteter, that.aktiviteter) &&
+                Objects.equals(samtidigUttaksprosent, that.samtidigUttaksprosent) &&
+                oppholdÅrsak == that.oppholdÅrsak &&
+                stønadskontotype == that.stønadskontotype &&
+                Objects.equals(arbeidsprosent, that.arbeidsprosent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), stønadskontotype, perioderesultattype, periodeKilde,
-                manuellbehandlingårsak, årsak, gradertArbeidsprosent);
+        return Objects.hash(perioderesultattype, manuellbehandlingårsak, periodeResultatÅrsak, graderingIkkeInnvilgetÅrsak,
+                aktiviteter, flerbarnsdager, samtidigUttaksprosent, oppholdÅrsak, stønadskontotype, arbeidsprosent);
     }
 
     @Override
     public String toString() {
         return "UttakPeriode{" +
-                "stønadskontotype=" + stønadskontotype +
+                "perioderesultattype=" + perioderesultattype +
                 ", fom=" + getFom() +
                 ", tom=" + getTom() +
-                ", gradertArbeidsprosent=" + gradertArbeidsprosent +
-                ", gradertAktiviteter=" + gradertAktiviteter +
-                ", overføringÅrsak=" + overføringÅrsak +
-                ", periodeVurderingType=" + periodeVurderingType +
-                ", periodeKilde=" + periodeKilde +
-                ", flerbarnsdager=" + flerbarnsdager +
-                ", samtidigUttak=" + samtidigUttak +
-                ", perioderesultattype=" + perioderesultattype +
                 ", manuellbehandlingårsak=" + manuellbehandlingårsak +
-                ", årsak=" + årsak +
+                ", periodeResultatÅrsak=" + periodeResultatÅrsak +
                 ", graderingIkkeInnvilgetÅrsak=" + graderingIkkeInnvilgetÅrsak +
-                ", utbetalingsgrader=" + utbetalingsgrader +
-                ", skalTrekkedager=" + skalTrekkedager +
                 ", aktiviteter=" + aktiviteter +
+                ", flerbarnsdager=" + flerbarnsdager +
+                ", samtidigUttak=" + samtidigUttaksprosent +
+                ", oppholdÅrsak=" + oppholdÅrsak +
+                ", stønadskontotype=" + stønadskontotype +
+                ", arbeidsprosent=" + arbeidsprosent +
                 '}';
     }
 }

@@ -11,10 +11,9 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder;
@@ -31,10 +30,10 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate gyldigGrunnStart = periodeStart;
         LocalDate gyldigGrunnSlutt = periodeStart.plusDays(1);
 
-        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(søknadsperiode)
+                        .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
@@ -50,10 +49,10 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate gyldigGrunnStart = periodeStart.plusWeeks(3);
         LocalDate gyldigGrunnSlutt = periodeStart.plusWeeks(4);
 
-        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(søknadsperiode)
+                        .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
@@ -68,10 +67,10 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate gyldigGrunnStart = periodeStart.plusWeeks(5);
         LocalDate gyldigGrunnSlutt = periodeSlutt;
 
-        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(søknadsperiode)
+                        .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
@@ -85,10 +84,10 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
-                        .leggTilSøknadsperiode(søknadsperiode)
+                        .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
                                 .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
@@ -103,24 +102,24 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         LocalDate periodeStart = LocalDate.now().plusMonths(1);
         LocalDate periodeSlutt = periodeStart.plusWeeks(6);
 
-        UttakPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilSøknadsperiode(søknadsperiode))
+                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
     }
 
-    private Evaluation evaluer(UttakPeriode søknadsperiode, RegelGrunnlag grunnlag) {
+    private Evaluation evaluer(OppgittPeriode søknadsperiode, RegelGrunnlag grunnlag) {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
                 List.of(), grunnlag.getKontoer(), søknadsperiode.getFom(), grunnlag.getArbeid().getAktiviteter());
         return new SjekkOmDelerAvPeriodenHarGyldigGrunn().evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
                 SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), søknadsperiode));
     }
 
-    private UttakPeriode manglendeSøktPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return new ManglendeSøktPeriode(stønadskontotype, fom, tom);
+    private OppgittPeriode manglendeSøktPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
+        return OppgittPeriode.forManglendeSøkt(stønadskontotype, fom, tom);
     }
 
 }

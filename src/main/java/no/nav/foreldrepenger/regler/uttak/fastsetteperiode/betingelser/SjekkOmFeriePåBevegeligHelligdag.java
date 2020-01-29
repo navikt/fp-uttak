@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
@@ -18,9 +18,9 @@ public class SjekkOmFeriePåBevegeligHelligdag extends LeafSpecification<Fastset
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        UttakPeriode uttakPeriode = grunnlag.getAktuellPeriode();
-        for (LocalDate bevegeligHelligdag : BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(uttakPeriode)) {
-            if (uttakPeriode.overlapper(bevegeligHelligdag)) {
+        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (LocalDate bevegeligHelligdag : BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(oppgittPeriode)) {
+            if (oppgittPeriode.overlapper(bevegeligHelligdag)) {
                 return ja();
             }
         }
