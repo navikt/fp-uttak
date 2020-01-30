@@ -151,7 +151,7 @@ public class SaldoUtregning {
     private Optional<FastsattUttakPeriodeAktivitet> aktivitetMedStønadskonto(Stønadskontotype stønadskonto, FastsattUttakPeriode periode) {
         FastsattUttakPeriodeAktivitet aktivitetMedMinstTrekkdager = null;
         for (FastsattUttakPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            if (Objects.equals(aktivitet.getStønadskontotype(), stønadskonto) || (periode.isFlerbarnsdager() && Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER))
+            if ((Objects.equals(aktivitet.getStønadskontotype(), stønadskonto) || (periode.isFlerbarnsdager() && Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER)))
                     && (aktivitetMedMinstTrekkdager == null || aktivitet.getTrekkdager().compareTo(aktivitetMedMinstTrekkdager.getTrekkdager()) < 0)) {
                 aktivitetMedMinstTrekkdager = aktivitet;
             }

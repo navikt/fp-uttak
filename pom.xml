@@ -65,11 +65,6 @@
             <version>${fpsak.nare.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.fpsak.tidsserie</groupId>
-            <artifactId>fpsak-tidsserie</artifactId>
-            <version>${fpsak.tidsserie.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>

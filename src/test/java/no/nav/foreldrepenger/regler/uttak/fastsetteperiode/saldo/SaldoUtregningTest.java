@@ -959,6 +959,29 @@ public class SaldoUtregningTest {
     }
 
     @Test
+    public void riktig_saldo_ved_delvis_overlapp_og_gradering_på_annenpart_der_annenpart_har_flere_arbeidsforhold() {
+        var periodeSøker = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 1, 27), LocalDate.of(2020, 1, 31))
+                .build();
+        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET2_ANNENPART),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(8), FELLESPERIODE, AKTIVITET1_ANNENPART))
+                )
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 1, 29))
+                .build();
+
+        List<FastsattUttakPeriode> perioderSøker = List.of(periodeSøker);
+        List<FastsattUttakPeriode> perioderAnnenpart = List.of(innvilgetPeriodeAnnenpart);
+        SaldoUtregning saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 100)),
+                perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER));
+        assertThat(saldoUtregning.saldoITrekkdager(FELLESPERIODE)).isEqualTo(new Trekkdager(BigDecimal.valueOf(92)));
+    }
+
+    @Test
     public void skal_ikke_finnes_nok_dager_å_frigi_ved_flere_arbeidsforhold_der_bare_det_ene_arbeidsforholdet_har_nok_dager() {
         var aktivitet1 = new FastsattUttakPeriodeAktivitet(new Trekkdager(8), FELLESPERIODE, AKTIVITET1_SØKER);
         var aktivitet2 = new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET2_SØKER);
