@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +16,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 
 public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -169,5 +172,28 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactly(arbeidsforhold);
         assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactly(arbeidsforhold);
         assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactly(arbeidsforhold);
+    }
+
+    @Test
+    public void skal_kunne_lage_manglende_søkt_periode_i_periode_uten_at_søker_har_aktive_arbeidsforhold() {
+        var fødsel = LocalDate.of(2018, 10, 26);
+        var tilkommetArbeidsforhold1 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
+        var tilkommetArbeidsforhold2 = AktivitetIdentifikator.forFrilans();
+        var arbeid = new Arbeid.Builder()
+                .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold1, LocalDate.of(2019, 5, 1)))
+                .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold2, LocalDate.of(2019, 6, 10)));
+        var utsettelseArbeid = utsettelsePeriode(LocalDate.of(2019, 11, 4), LocalDate.of(2019, 12, 6), UtsettelseÅrsak.ARBEID);
+        var fpPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 12, 16), LocalDate.of(2020, 1, 3));
+        grunnlag.medArbeid(arbeid)
+                .medSøknad(søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(false).medFarHarRett(true).medSamtykke(true))
+                .medBehandling(farBehandling())
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødsel)
+                        .medFørsteLovligeUttaksdag(fødsel.minusYears(3)));
+
+        var resultat = fastsettPerioder(grunnlag);
+        //Skal legge inn aktivitet med tidligst startdato hvis alle arbeidsforhold starter etter manglende søkt
+        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getIdentifikator()).isEqualTo(tilkommetArbeidsforhold1);
     }
 }

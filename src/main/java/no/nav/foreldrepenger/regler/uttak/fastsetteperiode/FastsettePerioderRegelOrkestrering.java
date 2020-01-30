@@ -82,10 +82,19 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private Set<AktivitetIdentifikator> aktiviteterIPeriode(OppgittPeriode periode, Arbeid arbeid) {
-        return arbeid.getArbeidsforhold().stream()
+        var aktiviteter = arbeid.getArbeidsforhold().stream()
                 .filter(arbeidsforhold -> arbeid.getArbeidsforhold().size() == 1 || arbeidsforhold.erAktivtPåDato(periode.getFom()))
                 .map(Arbeidsforhold::getIdentifikator)
                 .collect(Collectors.toSet());
+        //Vi kan opprette manglende søkt i en periode som ikke har noe arbeid. Typisk bare far rett og søker ikke fra uke 7
+        if (aktiviteter.isEmpty()) {
+            var aktivitetMedTidligstStartdato = arbeid.getArbeidsforhold().stream()
+                    .min(Comparator.comparing(Arbeidsforhold::getStartdato))
+                    .map(a -> a.getIdentifikator())
+                    .orElseThrow();
+            aktiviteter.add(aktivitetMedTidligstStartdato);
+        }
+        return aktiviteter;
     }
 
     private boolean erHelg(OppgittPeriode periode) {
