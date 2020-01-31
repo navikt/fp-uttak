@@ -109,7 +109,8 @@ public final class SaldoUtregningTjeneste {
     }
 
     private static List<AnnenpartUttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(AnnenpartUttakPeriode periode,
-                                                                                           LocalDate nyFom, LocalDate nyTom) {
+                                                                                           LocalDate nyFom,
+                                                                                           LocalDate nyTom) {
         int virkedagerInnenfor = Virkedager.beregnAntallVirkedager(nyFom, nyTom);
         int virkedagerHele = periode.virkedager();
 
@@ -124,8 +125,7 @@ public final class SaldoUtregningTjeneste {
                         .add(new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
                                 annenpartUttakPeriodeAktivitet.getStønadskontotype(),
                                 new Trekkdager(vektetTrekkdager),
-                                annenpartUttakPeriodeAktivitet.getUtbetalingsgrad(),
-                                annenpartUttakPeriodeAktivitet.getGradertArbeidsprosent()));
+                                annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
             }
         }
 
