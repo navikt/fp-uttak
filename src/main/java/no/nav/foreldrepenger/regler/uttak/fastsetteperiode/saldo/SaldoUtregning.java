@@ -219,7 +219,7 @@ public class SaldoUtregning {
                 if (erOpphold(periode) && innvilgetMedTrekkdager(overlappendePeriode)) {
                     sum += trekkdagerForOppholdsperiode(stønadskonto, periode).intValue();
                 } else if (!tapendeBehandling && innvilgetMedTrekkdager(periode)) {
-                    if (stønadskonto.equals(Stønadskontotype.FLERBARNSDAGER)) {
+                    if (Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER)) {
                         sum += frigitteDagerFlerbarnsdager(stønadskonto, periode, overlappendePeriode);
                     } else {
                         sum += frigitteDagerVanligeStønadskontoer(stønadskonto, periode, overlappendePeriode);
