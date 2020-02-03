@@ -1113,4 +1113,24 @@ public class SaldoUtregningTest {
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET1_SØKER)).isZero();
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET2_SØKER)).isZero();
     }
+
+    @Test
+    public void innvilget_utsettelse_overlapper_med_annenpart() {
+        var periode = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), null, AKTIVITET1_SØKER)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
+                .build();
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
+                .build();
+        var søkersPerioder = List.of(periode);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 75)),
+                søkersPerioder, List.of(periodeAnnenpart), false, Set.of(AKTIVITET1_SØKER));
+
+        assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(75);
+        assertThat(saldoUtregning.saldo(null)).isZero();
+    }
 }

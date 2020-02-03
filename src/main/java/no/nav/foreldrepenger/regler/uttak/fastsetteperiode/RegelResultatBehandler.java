@@ -171,7 +171,8 @@ class RegelResultatBehandler {
                                                                   FastsettePerioderRegelresultat regelresultat) {
         //Må sjekke saldo her, ved flere arbeidsforhold kan det reglene ha gått til sluttpunkt som trekkes dager selv om ett av arbeidsforholdene er tom
         //På arbeidsforholdet som er tom på konto skal det settes 0 trekkdager
-        var harIgjenTrekkdager = saldoUtregning.saldoITrekkdager(konto(oppgittPeriode).orElse(null), identifikator).merEnn0();
+        var stønadskonto = konto(oppgittPeriode);
+        var harIgjenTrekkdager = saldoUtregning.saldoITrekkdager(stønadskonto.orElse(null), identifikator).merEnn0();
         if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling(regelresultat) && !harIgjenTrekkdager)) {
             return new PeriodeAktivitetResultat(BigDecimal.ZERO, Trekkdager.ZERO);
         }
