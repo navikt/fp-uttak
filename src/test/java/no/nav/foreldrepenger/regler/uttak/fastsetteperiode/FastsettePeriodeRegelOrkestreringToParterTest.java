@@ -623,7 +623,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
 
     //FAGSYSTEM-85385
     @Test
-    public void tapende_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perrioden() {
+    public void tapende_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perioden() {
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)

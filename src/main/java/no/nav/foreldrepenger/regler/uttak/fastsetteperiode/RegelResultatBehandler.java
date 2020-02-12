@@ -173,7 +173,8 @@ class RegelResultatBehandler {
         //På arbeidsforholdet som er tom på konto skal det settes 0 trekkdager
         var stønadskonto = konto(oppgittPeriode);
         var harIgjenTrekkdager = saldoUtregning.saldoITrekkdager(stønadskonto.orElse(null), identifikator).merEnn0();
-        if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling(regelresultat) && !harIgjenTrekkdager)) {
+        var manuellBehandling = manuellBehandling(regelresultat);
+        if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling && !harIgjenTrekkdager)) {
             return new PeriodeAktivitetResultat(BigDecimal.ZERO, Trekkdager.ZERO);
         }
 
@@ -184,9 +185,13 @@ class RegelResultatBehandler {
         }
         var trekkdager = Trekkdager.ZERO;
         if (regelresultat.trekkDagerFraSaldo()) {
-            var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(identifikator);
-            trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget,
-                    oppgittPeriode.getArbeidsprosent(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode));
+            if (manuellBehandling && stønadskonto.isEmpty()) {
+                trekkdager = Trekkdager.ZERO;
+            } else {
+                var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(identifikator);
+                trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget,
+                        oppgittPeriode.getArbeidsprosent(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode));
+            }
         }
         return new PeriodeAktivitetResultat(utbetalingsprosent, trekkdager);
     }
