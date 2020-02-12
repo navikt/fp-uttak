@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
@@ -30,6 +31,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvStilling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
@@ -980,5 +982,32 @@ public class FastsettePerioderRegelOrkestreringTest extends FastsettePerioderReg
         //første søkte
         assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
         assertThat(resultat.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    public void utsettelse_som_går_til_manuell_behandling_skal_ikke_trekke_dager_hvis_dager_igjen_på_bare_ett_av_to_arbeidsforhold_selv_om_sluttpunkt_trekker_dager() {
+        var fødselsdato = LocalDate.of(2018, 6, 14);
+        var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1).leggTilEndringIStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(50)));
+        var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2).leggTilEndringIStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(25)));
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .medRettOgOmsorg(aleneomsorg())
+                //50% prosent stilling, men søker utsettelse. Går til manuell behandling
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold1).leggTilArbeidsforhold(arbeidsforhold2))
+                .medSøknad(new Søknad.Builder()
+                        .medMottattDato(fødselsdato.minusWeeks(2))
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
+                        .leggTilOppgittPeriode(gradertoppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1),
+                                BigDecimal.valueOf(50), Set.of(arbeidsforhold1.getIdentifikator())))
+                        .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(100), UtsettelseÅrsak.ARBEID))
+                )
+                .medKontoer(new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 35)));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(2).getUttakPeriode().getManuellbehandlingårsak()).isNotNull();
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isNull();
     }
 }
