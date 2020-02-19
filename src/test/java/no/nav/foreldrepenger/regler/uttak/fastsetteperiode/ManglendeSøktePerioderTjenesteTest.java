@@ -7,13 +7,16 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
@@ -264,6 +267,36 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
+    public void finnerHullMellomSøktePerioderOgAnnenPartsUttakperioderAvslåttPeriodeUtenTrekkdagerOgUtbetaling() {
+        var familiehendelse = LocalDate.of(2018, 12, 4);
+
+        var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), BigDecimal.TEN))
+                .build();
+        var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(6), familiehendelse.plusWeeks(7))
+                .medInnvilget(false)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO))
+                .build();
+        var grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false))
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(familiehendelse.plusWeeks(10)))
+                .medDatoer(new Datoer.Builder().medFødsel(familiehendelse))
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(annenpartInnvilgetMødrekvote)
+                        .leggTilUttaksperiode(annenpartAvslåttMødrekvote))
+                .build();
+
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(annenpartAvslåttMødrekvote.getFom());
+        assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(8).minusDays(1));
+    }
+
+    @Test
     public void finnerIkkeHullFørRevurderingEndringsdato() {
         LocalDate fødselsdato = LocalDate.of(2018, 6, 6);
         LocalDate hullDato = fødselsdato.plusWeeks(6);
@@ -402,6 +435,96 @@ public class ManglendeSøktePerioderTjenesteTest {
         var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         assertThat(msp.get(0).getFom()).isNotEqualTo(familiehendelse.plusWeeks(7));
+    }
+
+    @Test
+    public void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjeningAnnenpartAvslåttSistePeriode() {
+        var familiehendelse = LocalDate.of(2018, 12, 4);
+
+        var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), BigDecimal.TEN))
+                .build();
+        var annenpartInnvilgetUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(familiehendelse.plusWeeks(6), familiehendelse.plusWeeks(7).minusDays(1))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO))
+                .build();
+        var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(7).plusDays(2))
+                .medInnvilget(false)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO))
+                .build();
+        var grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false))
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(familiehendelse.plusWeeks(10)))
+                .medDatoer(new Datoer.Builder().medFødsel(familiehendelse))
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(annenpartInnvilgetMødrekvote)
+                        .leggTilUttaksperiode(annenpartInnvilgetUtsettelse)
+                        .leggTilUttaksperiode(annenpartAvslåttMødrekvote))
+                .build();
+
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(annenpartAvslåttMødrekvote.getFom());
+    }
+
+    @Test
+    public void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjeningAnnenpartInnvilgetUtsettelseSistePeriode() {
+        var familiehendelse = LocalDate.of(2018, 12, 4);
+
+        var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), BigDecimal.TEN))
+                .build();
+        var annenpartInnvilgetUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(familiehendelse.plusWeeks(6), familiehendelse.plusWeeks(7).minusDays(1))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO))
+                .build();
+        var grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false))
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(familiehendelse.plusWeeks(10)))
+                .medDatoer(new Datoer.Builder().medFødsel(familiehendelse))
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(annenpartInnvilgetMødrekvote)
+                        .leggTilUttaksperiode(annenpartInnvilgetUtsettelse))
+                .build();
+
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(annenpartInnvilgetUtsettelse.getTom().plusDays(1));
+    }
+
+    @Test
+    public void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjening() {
+        var familiehendelse = LocalDate.of(2018, 12, 4);
+
+        var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
+                .medInnvilget(true)
+                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), BigDecimal.TEN))
+                .build();
+        var grunnlag = grunnlagMedKontoer()
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false))
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(familiehendelse.plusWeeks(10)))
+                .medDatoer(new Datoer.Builder().medFødsel(familiehendelse))
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(annenpartInnvilgetMødrekvote))
+                .build();
+
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(annenpartInnvilgetMødrekvote.getTom().plusDays(1));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -59,6 +60,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                 .medInnvilget(this.innvilget)
                 .medOppholdsårsak(this.oppholdÅrsak)
                 .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter).build();
+    }
+
+    public boolean harTrekkdager() {
+        return getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
+    }
+
+    public boolean harUtbetaling() {
+        return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0);
     }
 
     public static class Builder {
