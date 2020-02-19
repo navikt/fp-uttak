@@ -181,7 +181,22 @@ class ManglendeSøktePerioderTjeneste {
                 && skjæringstidspunkt.isAfter(grunnlag.getDatoer().getFamiliehendelse()))) {
             return Optional.of(msp);
         }
+        if (mspFyllerHullMellomForeldrene(msp, grunnlag)) {
+            return Optional.of(msp);
+        }
         return fjernPerioderFørDato(msp, skjæringstidspunkt);
+    }
+
+    private static boolean mspFyllerHullMellomForeldrene(OppgittPeriode msp, RegelGrunnlag grunnlag) {
+        if (grunnlag.getAnnenPart() == null) {
+            return false;
+        }
+        var sisteDagAnnenpart = grunnlag.getAnnenPart().sisteUttaksdag();
+        var førsteDagSøknad = grunnlag.getSøknad().getOppgittePerioder().get(0).getFom();
+        if (sisteDagAnnenpart.isPresent() && sisteDagAnnenpart.get().isBefore(førsteDagSøknad)) {
+            return msp.overlapper(new LukketPeriode(sisteDagAnnenpart.get(), førsteDagSøknad));
+        }
+        return false;
     }
 
     private static Optional<OppgittPeriode> fjernPerioderFørDato(OppgittPeriode msp, LocalDate dato) {
@@ -211,7 +226,8 @@ class ManglendeSøktePerioderTjeneste {
 
     private static List<OppgittPeriode> finnPerioderIPerioderEtterUkerForbeholdtMorEtterFødsel(List<LukketPeriode> perioder) {
         List<LukketPeriode> sortertePerioder = perioder.stream()
-                .sorted(Comparator.comparing(LukketPeriode::getFom)).collect(Collectors.toList());
+                .sorted(Comparator.comparing(LukketPeriode::getFom))
+                .collect(Collectors.toList());
 
         List<OppgittPeriode> manglendeSøktePerioder = new ArrayList<>();
         LocalDate mspFom = null;
@@ -234,7 +250,7 @@ class ManglendeSøktePerioderTjeneste {
     private static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
         List<LukketPeriode> allePerioder = new ArrayList<>();
         if (grunnlag.getAnnenPart() != null) {
-            allePerioder.addAll(grunnlag.getAnnenPart().getUttaksperioder());
+            allePerioder.addAll(grunnlag.getAnnenPart().getUttaksperioder().stream().filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling()).collect(Collectors.toList()));
         }
         allePerioder.addAll(grunnlag.getSøknad().getOppgittePerioder());
         return allePerioder;

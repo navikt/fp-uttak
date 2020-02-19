@@ -1,7 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,12 @@ public final class AnnenPart {
         return uttaksperioder.stream().flatMap(periode -> periode.getAktiviteter().stream())
                 .map(AnnenpartUttakPeriodeAktivitet::getAktivitetIdentifikator)
                 .collect(Collectors.toSet());
+    }
+
+    public Optional<LocalDate> sisteUttaksdag() {
+        var sisteInnvilgetPeriode = uttaksperioder.stream().filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
+                .min((o1, o2) -> o2.getTom().compareTo(o1.getTom()));
+        return sisteInnvilgetPeriode.map(p -> p.getTom());
     }
 
     public static class Builder {
