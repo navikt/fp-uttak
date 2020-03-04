@@ -98,7 +98,6 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                                                    AktivitetIdentifikator aktivitet,
                                                    boolean innvilget) {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
-                .medSamtidigUttak(true)
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype,
                         new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), BigDecimal.TEN))
                 .medInnvilget(innvilget)

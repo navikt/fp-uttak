@@ -229,7 +229,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1220_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
+    public void UT1255_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
         OppgittPeriode søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
         RegelGrunnlag grunnlag = basicGrunnlagFar()
@@ -259,7 +259,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1055_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
+    public void UT1256_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
         OppgittPeriode søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null,
                 false, PeriodeVurderingType.PERIODE_OK);
         var kontoer = enFellesperiodeKonto(100);
