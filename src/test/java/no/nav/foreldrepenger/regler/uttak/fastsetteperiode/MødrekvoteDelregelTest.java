@@ -97,7 +97,7 @@ public class MødrekvoteDelregelTest {
         return new Søknad.Builder()
                 .leggTilOppgittPeriode(oppgittPeriode)
                 .medType(Søknadstype.FØDSEL)
-                .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg));
+                .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg));
     }
 
     @Test

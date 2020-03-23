@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerFørDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaketStarterFørLovligUttakFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
@@ -131,7 +130,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerEtterDeFørsteUkene() {
-        return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, "Er perioden tidligst fra uke 7 etter termin/fødsel?")
+        return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
             .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkSaldoForMor())
             .ellers(Manuellbehandling.opprett("UT1048", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
     }
@@ -153,9 +152,9 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
-        return rs.hvisRegel(SjekkOmUttakSkjerFørDeFørsteUkene.ID, "Starter perioden før uke 7 etter termin/fødsel?")
-            .hvis(new SjekkOmUttakSkjerFørDeFørsteUkene(konfigurasjon), sjekkOmPeriodenSlutterFørFamiliehendelse())
-            .ellers(delFlytForVanligUttak());
+        return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
+            .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), delFlytForVanligUttak())
+            .ellers(sjekkOmPeriodenSlutterFørFamiliehendelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenGjelderFlerbarnsdager() {

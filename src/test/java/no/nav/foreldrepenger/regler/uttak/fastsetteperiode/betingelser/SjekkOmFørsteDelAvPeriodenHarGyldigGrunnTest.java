@@ -29,7 +29,7 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(msp)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(1)))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(1)))))
                 .build();
 
         assertThat(evaluer(grunnlag, msp)).isEqualTo(Resultat.JA);
@@ -45,7 +45,7 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(msp)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.minusDays(2), periodeSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.minusDays(2), periodeSlutt))))
                 .build();
 
         assertThat(evaluer(grunnlag, msp)).isEqualTo(Resultat.NEI);

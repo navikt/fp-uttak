@@ -11,8 +11,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnP
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
@@ -130,6 +132,8 @@ public interface FastsettePeriodeGrunnlag {
      */
     List<OppgittPeriode> getPerioderMedAnnenForelderSykdomEllerSkade();
 
+    List<PeriodeMedTiltakIRegiAvNav> getPerioderMedTiltakIRegiAvNav();
+
     /**
      * Finn alle perioder der søkers annen forelder har bekreftet ikke rett.
      *
@@ -221,4 +225,6 @@ public interface FastsettePeriodeGrunnlag {
     LocalDate getTermindato();
 
     boolean isTapendeBehandling();
+
+    List<PeriodeMedHV> getPerioderHV();
 }

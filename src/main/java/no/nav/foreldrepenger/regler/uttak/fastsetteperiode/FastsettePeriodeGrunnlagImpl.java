@@ -16,8 +16,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnP
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -88,6 +90,16 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public List<OppgittPeriode> getPerioderMedAnnenForelderSykdomEllerSkade() {
         return getPerioderMedOverføringÅrsak(OverføringÅrsak.SYKDOM_ELLER_SKADE);
+    }
+
+    @Override
+    public List<PeriodeMedHV> getPerioderHV() {
+        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedHv();
+    }
+
+    @Override
+    public List<PeriodeMedTiltakIRegiAvNav> getPerioderMedTiltakIRegiAvNav() {
+        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedTiltakViaNav();
     }
 
     @Override

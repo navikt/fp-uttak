@@ -26,8 +26,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvSti
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -47,7 +49,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), UtsettelseÅrsak.INNLAGT_BARN))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
+                                .leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -72,7 +74,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), UtsettelseÅrsak.INNLAGT_SØKER))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderMedInnleggelse(new PeriodeMedInnleggelse(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
+                                .leggPeriodeMedInnleggelse(new PeriodeMedInnleggelse(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -97,7 +99,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), UtsettelseÅrsak.SYKDOM_SKADE))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderMedSykdomEllerSkade(new PeriodeMedSykdomEllerSkade(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
+                                .leggPeriodeMedSykdomEllerSkade(new PeriodeMedSykdomEllerSkade(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -463,7 +465,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
                 .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusWeeks(2).minusDays(1))))
+                                .leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusWeeks(2).minusDays(1))))
                         //Starter med pleiepenger
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), UtsettelseÅrsak.INNLAGT_BARN))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), termindato)));
@@ -492,7 +494,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                         .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
                 .medSøknad(fødselSøknad(fødselsdato.minusWeeks(1))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusWeeks(2).minusDays(1))))
+                                .leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusWeeks(2).minusDays(1))))
                         //Starter med pleiepenger
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), UtsettelseÅrsak.INNLAGT_BARN))
                         .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), termindato)));
@@ -640,6 +642,116 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
         assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         //1
         assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+    }
+
+    @Test
+    public void utsettelse_pga_heimevernet_skal_gå_til_manuell_hvis_ikke_dokumentert() {
+        var fødselsdato = LocalDate.of(2019, 10, 10);
+        var hvFom = fødselsdato.plusWeeks(6);
+        var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFødsel(fødselsdato)
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                .medBehandling(farBehandling())
+                .medRettOgOmsorg(beggeRett())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
+                                .medInnvilget(true)
+                                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO)).build()))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(utsettelsePeriode(hvFom, hvTom, UtsettelseÅrsak.HV_OVELSE))
+                        .medMottattDato(fødselsdato));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(1);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    public void utsettelse_pga_heimevernet_skal_innvilges_hvis_dokumentert() {
+        var fødselsdato = LocalDate.of(2019, 10, 10);
+        var hvFom = fødselsdato.plusWeeks(6);
+        var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFødsel(fødselsdato)
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                .medBehandling(farBehandling())
+                .medRettOgOmsorg(beggeRett())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
+                                .medInnvilget(true)
+                                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO)).build()))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(utsettelsePeriode(hvFom, hvTom, UtsettelseÅrsak.HV_OVELSE))
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedHV(new PeriodeMedHV(hvFom, hvTom)))
+                        .medMottattDato(fødselsdato));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(1);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    public void utsettelse_pga_tiltak_i_regi_av_nav_skal_gå_til_manuell_hvis_ikke_dokumentert() {
+        var fødselsdato = LocalDate.of(2019, 10, 10);
+        var tiltakFom = fødselsdato.plusWeeks(6);
+        var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFødsel(fødselsdato)
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                .medBehandling(farBehandling())
+                .medRettOgOmsorg(beggeRett())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
+                                .medInnvilget(true)
+                                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO)).build()))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, UtsettelseÅrsak.TILTAK_NAV))
+                        .medMottattDato(fødselsdato));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(1);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    public void utsettelse_pga_tiltak_i_regi_av_nav_skal_innvilges_hvis_dokumentert() {
+        var fødselsdato = LocalDate.of(2019, 10, 10);
+        var tiltakFom = fødselsdato.plusWeeks(6);
+        var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFødsel(fødselsdato)
+                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                .medBehandling(farBehandling())
+                .medRettOgOmsorg(beggeRett())
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
+                                .medInnvilget(true)
+                                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO)).build()))
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, UtsettelseÅrsak.TILTAK_NAV))
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedTiltakViaNav(new PeriodeMedTiltakIRegiAvNav(tiltakFom, tiltakTom)))
+                        .medMottattDato(fødselsdato));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(1);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
     }
 
     private void assertDeTreFørstePeriodene(List<FastsettePeriodeResultat> resultat, LocalDate fødselsdato) {

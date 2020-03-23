@@ -276,7 +276,7 @@ public class OverføringDelregelTest {
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, GyldigGrunnPeriode gyldigGrunnPeriode) {
         return fødselssøknadMedEnPeriode(oppgittPeriode)
                 .medDokumentasjon(new Dokumentasjon.Builder()
-                        .leggGyldigGrunnPerioder(gyldigGrunnPeriode));
+                        .leggGyldigGrunnPeriode(gyldigGrunnPeriode));
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {

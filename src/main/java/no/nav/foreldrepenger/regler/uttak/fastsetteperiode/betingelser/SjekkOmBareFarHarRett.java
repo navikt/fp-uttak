@@ -8,6 +8,8 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmBareFarHarRett.ID)
 public class SjekkOmBareFarHarRett extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "FP_VK 18.3.2";
+    public static final String BESKRIVELSE = "Er det bare far som har rett?";
+
 
     public SjekkOmBareFarHarRett() {
         super(ID);

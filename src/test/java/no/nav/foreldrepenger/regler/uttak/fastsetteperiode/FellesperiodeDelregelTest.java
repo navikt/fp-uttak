@@ -411,7 +411,7 @@ public class FellesperiodeDelregelTest {
                 .medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(søknadsperiode)
                 .medDokumentasjon(new Dokumentasjon.Builder()
-                        .leggPerioderUtenOmsorg(periodeUtenOmsorg));
+                        .leggPeriodeUtenOmsorg(periodeUtenOmsorg));
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {

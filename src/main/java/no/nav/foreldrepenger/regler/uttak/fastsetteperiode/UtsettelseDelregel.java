@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDokumentertHV;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDokumentertTiltakViaNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErUtsettelseFørSøknadMottattdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFeriePåBevegeligHelligdag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFulltArbeidForUtsettelse;
@@ -15,9 +17,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaArbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaFerie;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSøkerInnleggelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerFørDeFørsteUkene;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaTiltakViaNav;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -34,8 +38,6 @@ import no.nav.fpsak.nare.specification.Specification;
 public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 18";
-    public static final String BARE_FAR_RETT = "Er det bare far som har rett?";
-    public static final String FØDSEL = "Er det fødsel?";
     private Konfigurasjon konfigurasjon;
     private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
@@ -61,7 +63,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> delRegelForFerie() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, BARE_FAR_RETT)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
             .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1106", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
             .ellers(Oppfylt.opprett("UT1108", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE, false,false));
 
@@ -73,15 +75,15 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
             .hvis(new SjekkOmSøkerErArbeidstaker(), sjekkOmFeriePåBevegeligHelligdag)
             .ellers(Manuellbehandling.opprett("UT1102", IkkeOppfyltÅrsak.FERIE_SELVSTENDIG_NÆRINGSDRIVENDSE_FRILANSER, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerFørDeFørsteUkene.ID, "Er perioden i de første ukene etter fødsel?")
-            .hvis(new SjekkOmUttakSkjerFørDeFørsteUkene(konfigurasjon), IkkeOppfylt.opprett("UT1101", IkkeOppfyltÅrsak.FERIE_INNENFOR_DE_FØRSTE_6_UKENE, true, true))
-            .ellers(sjekkOmSøkerErArbeidstaker);
+        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
+            .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkOmSøkerErArbeidstaker)
+            .ellers(IkkeOppfylt.opprett("UT1101", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE, true, true));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, SjekkOmSøknadGjelderFødsel.BESKRIVELSE)
             .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUtsettelseEtterUke6)
             .ellers(sjekkOmSøkerErArbeidstaker);
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, "Er perioden utsettelse etter mottattdato?")
+        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
                 .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(), Manuellbehandling.opprett("UT1126", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT, Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmSøknadGjelderFødsel);
 
@@ -97,15 +99,16 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForArbeid() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, BARE_FAR_RETT)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
             .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1112", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
             .ellers(Oppfylt.opprett("UT1114", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID, false, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmUttakSkjerFørDeFørsteUkene(konfigurasjon), Manuellbehandling.opprett("UT1111", IkkeOppfyltÅrsak.FERIE_INNENFOR_DE_FØRSTE_6_UKENE, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
-            .ellers(sjekkOmBareFarHarRettNode);
+        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
+            .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkOmBareFarHarRettNode)
+            .ellers(Manuellbehandling.opprett("UT1111", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
+                    Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, SjekkOmSøknadGjelderFødsel.BESKRIVELSE)
             .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUtsettelseEtterUke6)
             .ellers(sjekkOmBareFarHarRettNode);
 
@@ -114,7 +117,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
             .hvis(new SjekkOmFulltArbeidForUtsettelse(), sjekkOmSøknadGjelderFødsel)
             .ellers(Manuellbehandling.opprett("UT1110", IkkeOppfyltÅrsak.IKKE_HELTIDSARBEID, Manuellbehandlingårsak.IKKE_HELTIDSARBEID, true, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, "Er perioden utsettelse etter mottattdato?")
+        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
                 .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(), Manuellbehandling.opprett("UT1127", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT, Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmSøkerErIArbeidPåHeltid);
 
@@ -132,11 +135,23 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaSøkerInnleggelse() {
         return rs.hvisRegel(SjekkOmUtsettelsePgaSøkerInnleggelse.ID, "Er det utsettelse pga søkers innleggelse i helseinstitusjon?")
                 .hvis(new SjekkOmUtsettelsePgaSøkerInnleggelse(), delregelForSøkerInnlagt())
+                .ellers(sjekkOmUtsettelsePgaHV());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaHV() {
+        return rs.hvisRegel(SjekkOmUtsettelsePgaHV.ID, SjekkOmUtsettelsePgaHV.BESKRIVELSE)
+                .hvis(new SjekkOmUtsettelsePgaHV(), delregelForHV())
+                .ellers(sjekkOmUtsettelsePgaTiltakViaNav());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaTiltakViaNav() {
+        return rs.hvisRegel(SjekkOmUtsettelsePgaTiltakViaNav.ID, SjekkOmUtsettelsePgaTiltakViaNav.BESKRIVELSE)
+                .hvis(new SjekkOmUtsettelsePgaTiltakViaNav(), delregelForTiltakViaNav())
                 .ellers(delregelForBarnInnlagt());
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForSøkerSykdomEllerSkade() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, BARE_FAR_RETT)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
             .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1121", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
             .ellers(Oppfylt.opprett("UT1116", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false));
 
@@ -146,7 +161,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForSøkerInnlagt() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, BARE_FAR_RETT)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
             .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1122", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
             .ellers(Oppfylt.opprett("UT1118", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false));
 
@@ -156,7 +171,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForBarnInnlagt() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, BARE_FAR_RETT)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
                 .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1123", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
                 .ellers(Oppfylt.opprett("UT1120", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false));
 
@@ -171,5 +186,37 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
         return rs.hvisRegel(SjekkOmBarnInnlagt.ID, "Var barnet innlagt på helseinstitusjon i perioden?")
                 .hvis(new SjekkOmBarnInnlagt(), sjekkOmUttakFørUke33)
                 .ellers(Manuellbehandling.opprett("UT1119", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_IKKE_OPPFYLT, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> delregelForHV() {
+        var sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), Oppfylt.opprett("UT1131", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID,
+                        false, false))
+                .ellers(Manuellbehandling.opprett("UT1130", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
+                        true, false));
+        var sjekkOmUtsettelseFørMottattDato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(), Manuellbehandling.opprett("UT1129", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT,
+                        Manuellbehandlingårsak.SØKNADSFRIST, true, false))
+                .ellers(sjekkOmUtsettelseEtterUke6);
+        return rs.hvisRegel(SjekkOmDokumentertHV.ID, SjekkOmDokumentertHV.BESKRIVELSE)
+                .hvis(new SjekkOmDokumentertHV(), sjekkOmUtsettelseFørMottattDato)
+                .ellers(Manuellbehandling.opprett("UT1128", IkkeOppfyltÅrsak.ARBEID_HUNDRE_PROSENT_ELLER_MER, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
+                        true, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> delregelForTiltakViaNav() {
+        var sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), Oppfylt.opprett("UT1135", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID,
+                        false, false))
+                .ellers(Manuellbehandling.opprett("UT1134", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
+                        true, false));
+        var sjekkOmUtsettelseFørMottattDato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(), Manuellbehandling.opprett("UT1133", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT,
+                        Manuellbehandlingårsak.SØKNADSFRIST, true, false))
+                .ellers(sjekkOmUtsettelseEtterUke6);
+        return rs.hvisRegel(SjekkOmDokumentertTiltakViaNav.ID, SjekkOmDokumentertTiltakViaNav.BESKRIVELSE)
+                .hvis(new SjekkOmDokumentertTiltakViaNav(), sjekkOmUtsettelseFørMottattDato)
+                .ellers(Manuellbehandling.opprett("UT1132", IkkeOppfyltÅrsak.ARBEID_HUNDRE_PROSENT_ELLER_MER, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
+                        true, false));
     }
 }

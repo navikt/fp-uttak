@@ -74,7 +74,7 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE))
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
@@ -176,8 +176,8 @@ public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsetteP
                                 PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE))
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
+                                .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
