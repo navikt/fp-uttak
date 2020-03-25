@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 
-class UtbetalingsprosentMedGraderingUtregning implements UtbetalingsprosentUtregning {
+class UtbetalingsgradMedGraderingUtregning implements UtbetalingsgradUtregning {
 
     private final OppgittPeriode uttakPeriode;
     private final AktivitetIdentifikator aktivitet;
 
-    UtbetalingsprosentMedGraderingUtregning(OppgittPeriode uttakPeriode,
-                                            AktivitetIdentifikator aktivitet) {
+    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode,
+                                         AktivitetIdentifikator aktivitet) {
         this.uttakPeriode = uttakPeriode;
         this.aktivitet = aktivitet;
     }

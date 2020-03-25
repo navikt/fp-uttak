@@ -161,7 +161,7 @@ class RegelResultatBehandler {
         var søktGradering = oppgittPeriode.erSøktGradering(identifikator);
         var periodeAktivitetResultat = finnPeriodeAktivitetResultat(oppgittPeriode, overlapperMedInnvilgetPeriodeHosAnnenpart,
                 identifikator, regelresultat);
-        return new UttakPeriodeAktivitet(identifikator, periodeAktivitetResultat.getUtbetalingsprosent(),
+        return new UttakPeriodeAktivitet(identifikator, periodeAktivitetResultat.getUtbetalingsgrad(),
                 periodeAktivitetResultat.getTrekkdager(), søktGradering);
     }
 
@@ -178,10 +178,10 @@ class RegelResultatBehandler {
             return new PeriodeAktivitetResultat(BigDecimal.ZERO, Trekkdager.ZERO);
         }
 
-        var utbetalingsprosent = BigDecimal.ZERO;
+        var utbetalingsgrad = BigDecimal.ZERO;
         if (regelresultat.skalUtbetale()) {
-            var utbetalingsprosentUtregning = bestemUtbetalingsprosentUtregning(oppgittPeriode, identifikator);
-            utbetalingsprosent = utbetalingsprosentUtregning.resultat();
+            var utbetalingsgradUtregning = bestemUtbetalingsgradUtregning(oppgittPeriode, identifikator);
+            utbetalingsgrad = utbetalingsgradUtregning.resultat();
         }
         var trekkdager = Trekkdager.ZERO;
         if (regelresultat.trekkDagerFraSaldo()) {
@@ -193,7 +193,7 @@ class RegelResultatBehandler {
                         oppgittPeriode.getArbeidsprosent(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode));
             }
         }
-        return new PeriodeAktivitetResultat(utbetalingsprosent, trekkdager);
+        return new PeriodeAktivitetResultat(utbetalingsgrad, trekkdager);
     }
 
     private boolean manuellBehandling(FastsettePerioderRegelresultat regelresultat) {
@@ -206,31 +206,31 @@ class RegelResultatBehandler {
         }
     }
 
-    private UtbetalingsprosentUtregning bestemUtbetalingsprosentUtregning(OppgittPeriode oppgittPeriode,
-                                                                          AktivitetIdentifikator aktivitet) {
+    private UtbetalingsgradUtregning bestemUtbetalingsgradUtregning(OppgittPeriode oppgittPeriode,
+                                                                       AktivitetIdentifikator aktivitet) {
         if (oppgittPeriode.erSøktGradering(aktivitet)) {
-            return new UtbetalingsprosentMedGraderingUtregning(oppgittPeriode, aktivitet);
+            return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet);
         } else {
             var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(oppgittPeriode);
             if (samtidigUttaksprosent != null) {
-                return new UtbetalingsprosentSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent());
+                return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent());
             }
         }
-        return new UtbetalingsprosentUtenGraderingUtregning();
+        return new UtbetalingsgradUtenGraderingUtregning();
     }
 
     private static class PeriodeAktivitetResultat {
 
-        private final BigDecimal utbetalingsprosent;
+        private final BigDecimal utbetalingsgrad;
         private final Trekkdager trekkdager;
 
-        private PeriodeAktivitetResultat(BigDecimal utbetalingsprosent, Trekkdager trekkdager) {
-            this.utbetalingsprosent = utbetalingsprosent;
+        private PeriodeAktivitetResultat(BigDecimal utbetalingsgrad, Trekkdager trekkdager) {
+            this.utbetalingsgrad = utbetalingsgrad;
             this.trekkdager = trekkdager;
         }
 
-        public BigDecimal getUtbetalingsprosent() {
-            return utbetalingsprosent;
+        public BigDecimal getUtbetalingsgrad() {
+            return utbetalingsgrad;
         }
 
         public Trekkdager getTrekkdager() {

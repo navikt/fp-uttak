@@ -3,12 +3,12 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-class UtbetalingsprosentSamtidigUttakUtregning implements UtbetalingsprosentUtregning {
+class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning {
 
     private final BigDecimal samtidigUttaksprosent;
     private final BigDecimal graderingArbeidstidsprosent;
 
-    UtbetalingsprosentSamtidigUttakUtregning(BigDecimal samtidigUttaksprosent, BigDecimal graderingArbeidstidsprosent) {
+    UtbetalingsgradSamtidigUttakUtregning(BigDecimal samtidigUttaksprosent, BigDecimal graderingArbeidstidsprosent) {
         Objects.requireNonNull(samtidigUttaksprosent);
         this.graderingArbeidstidsprosent = graderingArbeidstidsprosent;
         this.samtidigUttaksprosent = samtidigUttaksprosent;

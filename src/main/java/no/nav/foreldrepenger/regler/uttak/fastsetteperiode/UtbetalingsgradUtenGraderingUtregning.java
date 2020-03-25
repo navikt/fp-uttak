@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.math.BigDecimal;
 
-class UtbetalingsprosentUtenGraderingUtregning implements UtbetalingsprosentUtregning {
+class UtbetalingsgradUtenGraderingUtregning implements UtbetalingsgradUtregning {
 
     @Override
     public BigDecimal resultat() {

@@ -8,16 +8,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 public class UttakPeriodeAktivitet {
 
     private final AktivitetIdentifikator identifikator;
-    private final BigDecimal utbetalingsprosent;
+    private final BigDecimal utbetalingsgrad;
     private final Trekkdager trekkdager;
     private final boolean søktGradering;
 
     public UttakPeriodeAktivitet(AktivitetIdentifikator identifikator,
-                                 BigDecimal utbetalingsprosent,
+                                 BigDecimal Utbetalingsgrad,
                                  Trekkdager trekkdager,
                                  boolean søktGradering) {
         this.identifikator = identifikator;
-        this.utbetalingsprosent = utbetalingsprosent;
+        this.utbetalingsgrad = Utbetalingsgrad;
         this.trekkdager = trekkdager;
         this.søktGradering = søktGradering;
     }
@@ -26,8 +26,8 @@ public class UttakPeriodeAktivitet {
         return identifikator;
     }
 
-    public BigDecimal getUtbetalingsprosent() {
-        return utbetalingsprosent;
+    public BigDecimal getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public Trekkdager getTrekkdager() {
@@ -45,20 +45,20 @@ public class UttakPeriodeAktivitet {
         UttakPeriodeAktivitet that = (UttakPeriodeAktivitet) o;
         return søktGradering == that.søktGradering &&
                 Objects.equals(identifikator, that.identifikator) &&
-                Objects.equals(utbetalingsprosent, that.utbetalingsprosent) &&
+                Objects.equals(utbetalingsgrad, that.utbetalingsgrad) &&
                 Objects.equals(trekkdager, that.trekkdager);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identifikator, utbetalingsprosent, trekkdager, søktGradering);
+        return Objects.hash(identifikator, utbetalingsgrad, trekkdager, søktGradering);
     }
 
     @Override
     public String toString() {
         return "UttakPeriodeAktivitet{" +
                 "identifikator=" + identifikator +
-                ", utbetalingsprosent=" + utbetalingsprosent +
+                ", utbetalingsgrad=" + utbetalingsgrad +
                 ", trekkdager=" + trekkdager +
                 ", gradering=" + søktGradering +
                 '}';

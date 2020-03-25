@@ -14,10 +14,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class UtbetalingsprosentMedGraderingUtregningTest {
+public class UtbetalingsgradMedGraderingUtregningTest {
 
     @Test
-    public void toArbeidsforholdMedEnGradertGirRedusertUtbetalingsprosent() {
+    public void toArbeidsforholdMedEnGradertGirRedusertUtbetalingsgrad() {
         var aktivitet1 = AktivitetIdentifikator.annenAktivitet();
         var aktivitet2 = AktivitetIdentifikator.forFrilans();
         var arbeidstidsprosent = BigDecimal.valueOf(20);
@@ -32,8 +32,8 @@ public class UtbetalingsprosentMedGraderingUtregningTest {
         assertThat(utregningForAktivitet2.resultat()).isEqualByComparingTo(BigDecimal.valueOf(100));
     }
 
-    private UtbetalingsprosentMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator,
-                                                              OppgittPeriode periode) {
-        return new UtbetalingsprosentMedGraderingUtregning(periode, aktivitetIdentifikator);
+    private UtbetalingsgradMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator,
+                                                           OppgittPeriode periode) {
+        return new UtbetalingsgradMedGraderingUtregning(periode, aktivitetIdentifikator);
     }
 }

@@ -7,9 +7,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.UtbetalingsprosentUtenGraderingUtregning;
-
-public class UtbetalingsprosentUtenGraderingUtregningTest {
+public class UtbetalingsgradUtenGraderingUtregningTest {
 
     @Test
     public void utbetaling_skal_være_100_prosent() {
@@ -17,7 +15,7 @@ public class UtbetalingsprosentUtenGraderingUtregningTest {
         assertThat(utregning.resultat()).isEqualByComparingTo(BigDecimal.valueOf(100));
     }
 
-    private UtbetalingsprosentUtenGraderingUtregning utregning() {
-        return new UtbetalingsprosentUtenGraderingUtregning();
+    private UtbetalingsgradUtenGraderingUtregning utregning() {
+        return new UtbetalingsgradUtenGraderingUtregning();
     }
 }

@@ -84,7 +84,7 @@ public final class UttakPeriode extends LukketPeriode {
     }
 
     public BigDecimal getUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator) {
-        return finnAktivitet(aktivitetIdentifikator).getUtbetalingsprosent();
+        return finnAktivitet(aktivitetIdentifikator).getUtbetalingsgrad();
     }
 
     public boolean erGraderingInnvilget() {
