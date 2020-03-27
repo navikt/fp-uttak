@@ -54,6 +54,7 @@
 
         <junit5.version>5.6.1</junit5.version>
         <assertj.version>3.15.0</assertj.version>
+        <fp-kontrakter.version>5.1-20200319151632-d72fd00</fp-kontrakter.version>
     </properties>
 
 
@@ -74,6 +75,20 @@
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>fp-kontrakter-root</artifactId>
+            <version>${fp-kontrakter.version}</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
+            <artifactId>fp-topics</artifactId>
+            <version>${fp-kontrakter.version}</version>
+            <scope>import</scope>
+            <type>pom</type>
         </dependency>
     </dependencies>
 
