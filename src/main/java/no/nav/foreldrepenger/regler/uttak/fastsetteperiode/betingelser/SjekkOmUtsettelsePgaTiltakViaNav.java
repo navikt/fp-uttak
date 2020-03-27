@@ -18,6 +18,6 @@ public class SjekkOmUtsettelsePgaTiltakViaNav extends LeafSpecification<Fastsett
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.TILTAK_NAV) ? ja() : nei();
+        return oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.NAV_TILTAK) ? ja() : nei();
     }
 }

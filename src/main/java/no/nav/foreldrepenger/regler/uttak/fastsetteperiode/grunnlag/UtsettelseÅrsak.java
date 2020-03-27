@@ -6,6 +6,6 @@ public enum UtsettelseÅrsak {
     SYKDOM_SKADE,
     INNLAGT_SØKER,
     INNLAGT_BARN,
-    TILTAK_NAV,
+    NAV_TILTAK,
     HV_OVELSE
 }

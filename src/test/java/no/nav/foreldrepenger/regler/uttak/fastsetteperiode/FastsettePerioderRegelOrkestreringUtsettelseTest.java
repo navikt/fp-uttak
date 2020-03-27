@@ -715,7 +715,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO)).build()))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, UtsettelseÅrsak.TILTAK_NAV))
+                        .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, UtsettelseÅrsak.NAV_TILTAK))
                         .medMottattDato(fødselsdato));
 
         var perioder = fastsettPerioder(grunnlag);
@@ -742,7 +742,7 @@ public class FastsettePerioderRegelOrkestreringUtsettelseTest extends FastsetteP
                                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, BigDecimal.ZERO)).build()))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, UtsettelseÅrsak.TILTAK_NAV))
+                        .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, UtsettelseÅrsak.NAV_TILTAK))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedTiltakViaNav(new PeriodeMedTiltakIRegiAvNav(tiltakFom, tiltakTom)))
                         .medMottattDato(fødselsdato));
 
