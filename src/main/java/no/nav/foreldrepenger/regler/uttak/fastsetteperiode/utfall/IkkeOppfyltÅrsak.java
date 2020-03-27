@@ -31,7 +31,7 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
 
     // Utsettelse årsaker
     UTSETTELSE_FØR_TERMIN_FØDSEL(4030, "Avslag utsettelse før termin/fødsel"),
-    FERIE_INNENFOR_DE_FØRSTE_6_UKENE(4031, "Ferie/arbeid innenfor de første 6 ukene"),
+    UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE(4031, "Utsettelse innenfor de første 6 ukene"),
     FERIE_SELVSTENDIG_NÆRINGSDRIVENDSE_FRILANSER(4032, "Ferie - selvstendig næringsdrivende/frilanser"),
     INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE(4034, "Avslag utsettelse - ingen stønadsdager igjen"),
     IKKE_HELTIDSARBEID(4037, "Ikke heltidsarbeid"),
@@ -42,7 +42,7 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
 
     SØKT_GRADERING_ETTER_PERIODEN_HAR_BEGYNT(4080 , "Søker har søkt om gradert uttak etter at perioden med delvis arbeid er påbegynt"),
     SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT(4081, "Søker har søkt om utsettelse pga ferie etter ferien er begynt"),
-    SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT(4082, "Søker har søkt om utsettelse pga arbeid etter ferien er begynt"),
+    SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT(4082, "Søker har søkt om utsettelse pga arbeid etter arbeid er begynt"),
 
     //Medlem
     SØKER_IKKE_MEDLEM(4087, "Søker ikke medlem"),

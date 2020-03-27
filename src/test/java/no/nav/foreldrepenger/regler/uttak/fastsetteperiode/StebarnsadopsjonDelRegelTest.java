@@ -44,7 +44,7 @@ public class StebarnsadopsjonDelRegelTest {
                         .medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);

@@ -436,12 +436,12 @@ public class FedrekvoteDelregelTest {
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, GyldigGrunnPeriode gyldigGrunnPeriode) {
         return fødselssøknadMedEnPeriode(oppgittPeriode)
                 .medDokumentasjon(new Dokumentasjon.Builder()
-                        .leggGyldigGrunnPerioder(gyldigGrunnPeriode));
+                        .leggGyldigGrunnPeriode(gyldigGrunnPeriode));
     }
 
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, PeriodeUtenOmsorg periodeUtenOmsorg) {
         return fødselssøknadMedEnPeriode(oppgittPeriode)
-                .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg));
+                .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg));
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

@@ -9,6 +9,8 @@ public class Dokumentasjon {
     private List<PeriodeMedSykdomEllerSkade> perioderMedSykdomEllerSkade = new ArrayList<>();
     private List<PeriodeMedInnleggelse> perioderMedInnleggelse = new ArrayList<>();
     private List<PeriodeMedBarnInnlagt> perioderMedBarnInnlagt = new ArrayList<>();
+    private List<PeriodeMedHV> perioderMedHv = new ArrayList<>();
+    private List<PeriodeMedTiltakIRegiAvNav> perioderMedTiltakViaNav = new ArrayList<>();
 
     private Dokumentasjon() {
 
@@ -34,28 +36,46 @@ public class Dokumentasjon {
         return perioderMedBarnInnlagt;
     }
 
+    public List<PeriodeMedHV> getPerioderMedHv() {
+        return perioderMedHv;
+    }
+
+    public List<PeriodeMedTiltakIRegiAvNav> getPerioderMedTiltakViaNav() {
+        return perioderMedTiltakViaNav;
+    }
+
     public static class Builder {
 
         private final Dokumentasjon kladd = new Dokumentasjon();
 
-        public Builder leggGyldigGrunnPerioder(GyldigGrunnPeriode gyldigGrunnPeriode) {
+        public Builder leggGyldigGrunnPeriode(GyldigGrunnPeriode gyldigGrunnPeriode) {
             kladd.gyldigGrunnPerioder.add(gyldigGrunnPeriode);
             return this;
         }
-        public Builder leggPerioderUtenOmsorg(PeriodeUtenOmsorg periodeUtenOmsorg) {
+        public Builder leggPeriodeUtenOmsorg(PeriodeUtenOmsorg periodeUtenOmsorg) {
             kladd.perioderUtenOmsorg.add(periodeUtenOmsorg);
             return this;
         }
-        public Builder leggPerioderMedSykdomEllerSkade(PeriodeMedSykdomEllerSkade periodeMedSykdomEllerSkade) {
+        public Builder leggPeriodeMedSykdomEllerSkade(PeriodeMedSykdomEllerSkade periodeMedSykdomEllerSkade) {
             kladd.perioderMedSykdomEllerSkade.add(periodeMedSykdomEllerSkade);
             return this;
         }
-        public Builder leggPerioderMedInnleggelse(PeriodeMedInnleggelse periodeMedInnleggelse) {
+        public Builder leggPeriodeMedInnleggelse(PeriodeMedInnleggelse periodeMedInnleggelse) {
             kladd.perioderMedInnleggelse.add(periodeMedInnleggelse);
             return this;
         }
-        public Builder leggPerioderMedBarnInnlagt(PeriodeMedBarnInnlagt periodeMedBarnInnlagt) {
+        public Builder leggPeriodeMedBarnInnlagt(PeriodeMedBarnInnlagt periodeMedBarnInnlagt) {
             kladd.perioderMedBarnInnlagt.add(periodeMedBarnInnlagt);
+            return this;
+        }
+
+        public Builder leggTilPeriodeMedHV(PeriodeMedHV periodeMedHV) {
+            kladd.perioderMedHv.add(periodeMedHV);
+            return this;
+        }
+
+        public Builder leggTilPeriodeMedTiltakViaNav(PeriodeMedTiltakIRegiAvNav periodeMedTiltakIRegiAvNav) {
+            kladd.perioderMedTiltakViaNav.add(periodeMedTiltakIRegiAvNav);
             return this;
         }
 

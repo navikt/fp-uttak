@@ -14,6 +14,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmUttakSkjerEtterDeFørsteUkene extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 19.2";
+    public static final String BESKRIVELSE = "Er perioden etter uke 6 etter termin/fødsel?";
 
     private Konfigurasjon konfigurasjon;
 

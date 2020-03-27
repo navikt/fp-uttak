@@ -35,7 +35,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
@@ -53,7 +53,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
@@ -72,7 +72,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
@@ -89,8 +89,8 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);

@@ -55,7 +55,7 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPerioderUtenOmsorg(periodeUtenOmsorg)));
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
@@ -82,7 +82,7 @@ public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsetteP
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPerioderUtenOmsorg(periodeUtenOmsorg)));
+                                .leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 

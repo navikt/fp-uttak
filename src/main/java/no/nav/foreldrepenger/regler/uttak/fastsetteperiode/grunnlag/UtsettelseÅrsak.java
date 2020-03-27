@@ -5,5 +5,7 @@ public enum UtsettelseÅrsak {
     ARBEID,
     SYKDOM_SKADE,
     INNLAGT_SØKER,
-    INNLAGT_BARN
+    INNLAGT_BARN,
+    TILTAK_NAV,
+    HV_OVELSE
 }

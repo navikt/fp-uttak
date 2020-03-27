@@ -10,6 +10,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmErUtsettelseFørSøknadMottattdato extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 18.1.8";
+    public static final String BESKRIVELSE = "Er utsettelsen før mottattdato?";
 
     public SjekkOmErUtsettelseFørSøknadMottattdato() {
         super(ID);

@@ -50,7 +50,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -71,7 +71,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -91,7 +91,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -111,7 +111,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -131,7 +131,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -149,8 +149,8 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.minusDays(1), periodeStart.plusDays(7)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeSlutt.minusDays(5), periodeSlutt.plusDays(1)))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.minusDays(1), periodeStart.plusDays(7)))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.minusDays(5), periodeSlutt.plusDays(1)))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -170,7 +170,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -188,8 +188,8 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(7)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.plusDays(8), periodeSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(7)))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.plusDays(8), periodeSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
@@ -207,8 +207,8 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(10)))
-                                .leggGyldigGrunnPerioder(new GyldigGrunnPeriode(periodeStart.plusDays(7), periodeSlutt))))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(10)))
+                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.plusDays(7), periodeSlutt))))
                 .build();
 
         Resultat resultat = evaluer(uttakPeriode, grunnlag);
