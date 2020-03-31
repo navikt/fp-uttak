@@ -200,7 +200,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
                 .ellers(sjekkOmUtsettelseEtterUke6);
         return rs.hvisRegel(SjekkOmDokumentertHV.ID, SjekkOmDokumentertHV.BESKRIVELSE)
                 .hvis(new SjekkOmDokumentertHV(), sjekkOmUtsettelseFørMottattDato)
-                .ellers(Manuellbehandling.opprett("UT1128", IkkeOppfyltÅrsak.ARBEID_HUNDRE_PROSENT_ELLER_MER, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
+                .ellers(Manuellbehandling.opprett("UT1128", IkkeOppfyltÅrsak.IKKE_HELTIDSARBEID, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
                         true, false));
     }
 
@@ -216,7 +216,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
                 .ellers(sjekkOmUtsettelseEtterUke6);
         return rs.hvisRegel(SjekkOmDokumentertTiltakViaNav.ID, SjekkOmDokumentertTiltakViaNav.BESKRIVELSE)
                 .hvis(new SjekkOmDokumentertTiltakViaNav(), sjekkOmUtsettelseFørMottattDato)
-                .ellers(Manuellbehandling.opprett("UT1132", IkkeOppfyltÅrsak.ARBEID_HUNDRE_PROSENT_ELLER_MER, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
+                .ellers(Manuellbehandling.opprett("UT1132", IkkeOppfyltÅrsak.IKKE_HELTIDSARBEID, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE,
                         true, false));
     }
 }
