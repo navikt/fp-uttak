@@ -117,6 +117,8 @@ class KnekkpunktIdentifiserer {
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getDokumentasjon().getPerioderMedSykdomEllerSkade());
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getDokumentasjon().getPerioderMedInnleggelse());
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getDokumentasjon().getPerioderMedBarnInnlagt());
+        leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getDokumentasjon().getPerioderMedHv());
+        leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getDokumentasjon().getPerioderMedTiltakViaNav());
     }
 
     private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {

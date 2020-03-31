@@ -22,6 +22,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -484,6 +486,40 @@ public class KnekkpunktIdentifisererTest {
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         assertThat(knekkpunkter).doesNotContain(startdato);
+    }
+
+    @Test
+    public void skal_knekke_på_dokument_hv() {
+        var fødselsdato = LocalDate.of(2020, 10, 1);
+        var dokFom = LocalDate.of(2020, 10, 10);
+        var dokTom = LocalDate.of(2020, 10, 15);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medSøknad(new Søknad.Builder()
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedHV(new PeriodeMedHV(dokFom, dokTom)))
+                        .medType(Søknadstype.FØDSEL))
+                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).contains(dokFom, dokTom.plusDays(1));
+    }
+
+    @Test
+    public void skal_knekke_på_tiltak_nav() {
+        var fødselsdato = LocalDate.of(2020, 10, 1);
+        var dokFom = LocalDate.of(2020, 10, 10);
+        var dokTom = LocalDate.of(2020, 10, 15);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medSøknad(new Søknad.Builder()
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedTiltakViaNav(new PeriodeMedTiltakIRegiAvNav(dokFom, dokTom)))
+                        .medType(Søknadstype.FØDSEL))
+                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).contains(dokFom, dokTom.plusDays(1));
     }
 
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
