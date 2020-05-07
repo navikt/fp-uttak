@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -401,8 +400,7 @@ public class FellesperiodeDelregelTest {
     }
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType, BigDecimal samtidigUttaksprosent, boolean flerbarnsdager) {
-        return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom,
-                PeriodeKilde.SØKNAD, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
+        return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
                 Set.of(AktivitetIdentifikator.forFrilans()), vurderingType);
     }
 
@@ -446,7 +444,7 @@ public class FellesperiodeDelregelTest {
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, BigDecimal samtidigUttaksprosent, boolean flerbarnsdager, PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent, flerbarnsdager, vurderingType);
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

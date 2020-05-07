@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSamtidigUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadsperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGradering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
@@ -83,9 +82,9 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
-        return rs.hvisRegel(SjekkOmSøknadsperiode.ID, "Er perioden en søknadsperiode?")
-                .hvis(new SjekkOmSøknadsperiode(), sjekkOmPeriodeFørGyldigDato())
-                .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());
+        return rs.hvisRegel(SjekkOmPeriodenErFørGyldigDato.ID, "Er uttaksperiode før \"gyldig dato\"?")
+                .hvis(new SjekkOmPeriodenErFørGyldigDato(), sjekkOmManglendePeriode())
+                .ellers(sjekkPeriodeInnenforMaksgrense());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtterSøkersDødsdato() {
@@ -110,12 +109,6 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
         return rs.hvisRegel(SjekkOmOpphørsdatoTrefferPerioden.ID, "Inneholder perioden opphørsdato for medlemskap")
                 .hvis(new SjekkOmOpphørsdatoTrefferPerioden(), IkkeOppfylt.opprett("UT1250", IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM, false, false))
                 .ellers(sjekkOmFødselsvilkåretErOppfylt());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeFørGyldigDato() {
-        return rs.hvisRegel(SjekkOmPeriodenErFørGyldigDato.ID, "Er uttaksperiode før \"gyldig dato\"?")
-                .hvis(new SjekkOmPeriodenErFørGyldigDato(), sjekkOmManglendePeriode())
-                .ellers(sjekkPeriodeInnenforMaksgrense());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse() {

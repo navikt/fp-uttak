@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnP
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
@@ -53,8 +52,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, PeriodeKilde.SØKNAD,
-                null, false, vurderingType);
+        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurderingType);
     }
 
     @Test
@@ -282,7 +280,7 @@ public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePe
     }
 
     private OppgittPeriode overføringPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, OverføringÅrsak årsak, PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, vurderingType, årsak);
+        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, vurderingType, årsak);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {
