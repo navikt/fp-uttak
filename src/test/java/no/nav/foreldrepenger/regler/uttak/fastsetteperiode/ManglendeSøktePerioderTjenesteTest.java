@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -167,7 +168,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT);
     }
 
     @Test
@@ -389,7 +390,7 @@ public class ManglendeSøktePerioderTjenesteTest {
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse,
                                 familiehendelse.plusWeeks(3)))
                         .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(familiehendelse.plusWeeks(6).plusDays(1),
-                                familiehendelse.plusWeeks(8), PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.ARBEID)))
+                                familiehendelse.plusWeeks(8), PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.ARBEID)))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medFarHarRett(true)

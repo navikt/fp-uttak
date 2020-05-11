@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -129,7 +130,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     private OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak);
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak);
     }
 
     private RegelGrunnlag.Builder basicBuilder() {
@@ -156,7 +157,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, BigDecimal.TEN,
+        return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, PeriodeKilde.SØKNAD, BigDecimal.TEN,
                 null, false, Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), PeriodeVurderingType.IKKE_VURDERT);
     }
 }

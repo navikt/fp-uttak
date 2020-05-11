@@ -17,6 +17,7 @@ public class SjekkGyldigGrunnForTidligOppstartHelePerioden extends LeafSpecifica
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
         if (PeriodeVurderingType.PERIODE_OK.equals(aktuellPeriode.getPeriodeVurderingType()) || PeriodeVurderingType.ENDRE_PERIODE.equals(aktuellPeriode.getPeriodeVurderingType())) {

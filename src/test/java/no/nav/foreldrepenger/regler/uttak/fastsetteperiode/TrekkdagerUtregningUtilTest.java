@@ -9,6 +9,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
@@ -21,7 +22,7 @@ public class TrekkdagerUtregningUtilTest {
         LocalDate tom = LocalDate.of(2019, 3, 15);
         //periode på 2 dager, 1% gradering
         BigDecimal arbeidstidsprosent = BigDecimal.valueOf(1);
-        OppgittPeriode periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom,
+        OppgittPeriode periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
                 arbeidstidsprosent, null, false, Set.of(), PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
 
@@ -36,7 +37,7 @@ public class TrekkdagerUtregningUtilTest {
         LocalDate tom = LocalDate.of(2019, 4, 12);
 
         BigDecimal samtidigUttaksprosent = BigDecimal.valueOf(50);
-        OppgittPeriode periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
+        OppgittPeriode periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
                 samtidigUttaksprosent, false, PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
 

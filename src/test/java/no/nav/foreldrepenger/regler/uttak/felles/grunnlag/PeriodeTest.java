@@ -10,6 +10,13 @@ import org.junit.Test;
 
 public class PeriodeTest {
 
+    @Test(expected = NullPointerException.class)
+    public void input_lik_null_er_ikke_lov() {
+        Periode testPeriode = new Periode(LocalDate.of(2016, 1, 1), LocalDate.of(2018, 1, 1));
+
+        testPeriode.overlapper((LocalDate) null);
+    }
+
     @Test
     public void periode_med_start_og_slutt_og_dato_utenfor_skal_ikke_overlappe() {
         Periode testPeriode = new Periode(LocalDate.of(2016, 1, 1), LocalDate.of(2018, 1, 1));

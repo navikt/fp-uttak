@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
@@ -36,7 +37,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     private OppgittPeriode periode(LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT);
+        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT);
     }
 
     @Test

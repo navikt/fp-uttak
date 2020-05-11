@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -127,7 +128,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   boolean flerbarnsdager,
                                   BigDecimal samtidigUttaksprosent,
                                   PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent, flerbarnsdager, vurderingType);
     }
 
     OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
@@ -139,7 +140,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                                          LocalDate tom,
                                          BigDecimal arbeidsprosent,
                                          Set<AktivitetIdentifikator> gradertAktiviteter) {
-        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, arbeidsprosent, null,
+        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, arbeidsprosent, null,
                 false, gradertAktiviteter, PeriodeVurderingType.IKKE_VURDERT);
     }
 
@@ -181,7 +182,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     OppgittPeriode utsettelsePeriode(LocalDate fom,
                                      LocalDate tom,
                                      UtsettelseÅrsak utsettelseÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak);
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak);
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {

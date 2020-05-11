@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -552,8 +553,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(15).minusDays(1)))
-                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1), OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER))
-                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(20), OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)));
+                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1), PeriodeKilde.SØKNAD, OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER))
+                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(20), PeriodeKilde.SØKNAD, OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
@@ -583,7 +584,7 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(15).minusDays(1)))
-                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(annenpartPeriodeUtenTrekkdager.getFom(), annenpartPeriodeUtenTrekkdager.getTom(), OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)));
+                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(annenpartPeriodeUtenTrekkdager.getFom(), annenpartPeriodeUtenTrekkdager.getTom(), PeriodeKilde.SØKNAD, OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
@@ -611,7 +612,8 @@ public class FastsettePeriodeRegelOrkestreringToParterTest extends FastsettePeri
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(15).minusDays(1)))
-                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(annenpartPeriodeUtsettelse.getFom(), annenpartPeriodeUtsettelse.getTom(), OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)));
+                        .leggTilOppgittPeriode(OppgittPeriode.forOpphold(annenpartPeriodeUtsettelse.getFom(), annenpartPeriodeUtsettelse.getTom(),
+                                PeriodeKilde.SØKNAD, OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
