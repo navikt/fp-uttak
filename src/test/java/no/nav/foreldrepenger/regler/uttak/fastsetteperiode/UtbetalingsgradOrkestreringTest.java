@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
-public class FastsettePeriodeRegelOrkestreringUtbetalingsgradTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void tom_for_dager_skal_gi_null_utbetaling() {

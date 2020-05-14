@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePeriodeRegelOrkestreringForeldrepengerFørFødselTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void foreldrepengerFørFødsel_happy_case() {

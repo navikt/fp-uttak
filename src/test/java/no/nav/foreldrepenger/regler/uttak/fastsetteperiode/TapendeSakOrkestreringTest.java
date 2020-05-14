@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePerioderRegelOrkestreringTapendeSakTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private static final AktivitetIdentifikator MOR_ARBEIDSFORHOLD = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 

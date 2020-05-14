@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePerioderRegelOrkestreringEndringssøknadTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void skal_trekke_dager_for_perioder_i_vedtak() {

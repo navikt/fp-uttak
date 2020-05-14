@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePeriodeRegelOrkestreringKnekkpunktTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void foreldrepengerFørFødssel_søknad_fra_3_uker_før_fødsel_til_og_med_fødsel_blir_knekt_ved_fødsel() {

@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePeriodeRegelOrkestreringFellesperiodeTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
     private LocalDate førsteLovligeUttaksdag = førsteLovligeUttaksdag(fødselsdato);

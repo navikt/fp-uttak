@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePeriodeRegelOrkestreringFedrekvoteTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
 
     @Test

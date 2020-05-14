@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 
-public class FastsettePerioderRegelOrkestreringSporingTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() {

@@ -49,7 +49,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class FastsettePeriodeRegelOrkestreringGraderingTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 

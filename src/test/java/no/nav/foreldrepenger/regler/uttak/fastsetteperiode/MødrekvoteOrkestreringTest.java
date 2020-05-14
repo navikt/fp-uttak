@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePeriodeRegelOrkestreringMødrekvoteTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void mødrekvoteperiode_før_familiehendelse() {

@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePeriodeRegelOrkestreringAdopsjonTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     // MØDREKVOTE
     @Test

@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FastsettePerioderRegelOrkestreringManglendeSøktTest extends FastsettePerioderRegelOrkestreringTestBase {
+public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     public void skal_avslå_og_trekke_mødrekvote_for_mor_hvis_dager_igjen() {
