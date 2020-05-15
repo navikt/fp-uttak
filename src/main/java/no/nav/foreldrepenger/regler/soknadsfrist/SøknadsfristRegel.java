@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.soknadsfrist;
 
 import no.nav.foreldrepenger.regler.KanIkkeVurdere;
 import no.nav.foreldrepenger.regler.Oppfylt;
-import no.nav.foreldrepenger.regler.soknadsfrist.betingelser.SjekkOmDetSøkesOmUttak;
 import no.nav.foreldrepenger.regler.soknadsfrist.betingelser.SjekkOmFørsteUttakErInnenforSøknadsfrist;
 import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.fpsak.nare.RuleService;
@@ -25,14 +24,8 @@ public class SøknadsfristRegel implements RuleService<SøknadsfristGrunnlag> {
     @Override
     public Specification<SøknadsfristGrunnlag> getSpecification() {
         Ruleset<SøknadsfristGrunnlag> rs = new Ruleset<>();
-
-        Specification<SøknadsfristGrunnlag> sjekkOmUttakInnenforSøknadsfristNode =
-            rs.hvisRegel(SjekkOmFørsteUttakErInnenforSøknadsfrist.ID, "Er første uttaksdag innenfor søknadsfristen?")
-                .hvis(new SjekkOmFørsteUttakErInnenforSøknadsfrist(), new Oppfylt())
-                .ellers(new KanIkkeVurdere(SjekkOmFørsteUttakErInnenforSøknadsfrist.KAN_IKKE_VURDERE_PASSERT_SØKNADSFRIST_FOR_FØRSTE_UTTAK));
-
-        return rs.hvisRegel(SjekkOmDetSøkesOmUttak.ID, "Er det søkt om uttak?")
-            .hvis(new SjekkOmDetSøkesOmUttak(), sjekkOmUttakInnenforSøknadsfristNode)
-            .ellers(new Oppfylt());
+        return rs.hvisRegel(SjekkOmFørsteUttakErInnenforSøknadsfrist.ID, "Er første uttaksdag innenfor søknadsfristen?")
+                .hvis(new SjekkOmFørsteUttakErInnenforSøknadsfrist(), new Oppfylt<>())
+                .ellers(new KanIkkeVurdere<>(SjekkOmFørsteUttakErInnenforSøknadsfrist.KAN_IKKE_VURDERE_PASSERT_SØKNADSFRIST_FOR_FØRSTE_UTTAK));
     }
 }

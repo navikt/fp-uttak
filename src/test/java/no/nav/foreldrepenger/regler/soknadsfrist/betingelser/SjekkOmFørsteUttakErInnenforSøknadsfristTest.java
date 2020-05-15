@@ -17,7 +17,6 @@ public class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
     @Test
     public void startAvUttakErInnenforSøknadsfrist() {
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medErSøknadOmUttak(true)
             .medFørsteUttaksdato(LocalDate.of(2017, Month.FEBRUARY, 1))
             .medSøknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
             .medAntallMånederSøknadsfrist(3)
@@ -31,7 +30,6 @@ public class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
     @Test
     public void startAvUttakErIkkeInnenforSøknadsfrist() {
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medErSøknadOmUttak(true)
             .medFørsteUttaksdato(LocalDate.of(2017, Month.JANUARY, 31))
             .medSøknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
             .medAntallMånederSøknadsfrist(3)

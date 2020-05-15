@@ -17,29 +17,12 @@ import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 public class SøknadsfristRegelOrkestreringTest {
 
     @Test
-    public void erIkkeSøknadOmUttakSkalGiOppfyltResultat() {
-        LocalDate nå = LocalDate.now();
-        SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medAntallMånederSøknadsfrist(3)
-            .medSøknadMottattDato(nå)
-            .medFørsteUttaksdato(nå.plusDays(2))
-            .medErSøknadOmUttak(false)
-            .build();
-
-        SøknadsfristRegelOrkestrering regelOrkestrering = new SøknadsfristRegelOrkestrering();
-        SøknadsfristResultat resultat = regelOrkestrering.vurderSøknadsfrist(grunnlag);
-        assertThat(resultat.isRegelOppfylt()).isTrue();
-
-    }
-
-    @Test
     public void søknadOmUttakInnenforSøknadsfristSkalGiOppfyltResultat() {
         LocalDate nå = LocalDate.now();
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
             .medAntallMånederSøknadsfrist(3)
             .medSøknadMottattDato(nå.with(lastDayOfMonth()))
             .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
-            .medErSøknadOmUttak(true)
             .build();
 
         SøknadsfristRegelOrkestrering regelOrkestrering = new SøknadsfristRegelOrkestrering();
@@ -55,7 +38,6 @@ public class SøknadsfristRegelOrkestreringTest {
                 .medAntallMånederSøknadsfrist(3)
                 .medSøknadMottattDato(nå.with(lastDayOfMonth()))
                 .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
-                .medErSøknadOmUttak(true)
                 .build();
 
         SøknadsfristRegelOrkestrering regelOrkestrering = new SøknadsfristRegelOrkestrering();
@@ -72,7 +54,6 @@ public class SøknadsfristRegelOrkestreringTest {
             .medAntallMånederSøknadsfrist(3)
             .medSøknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
             .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
-            .medErSøknadOmUttak(true)
             .build();
 
         SøknadsfristRegelOrkestrering regelOrkestrering = new SøknadsfristRegelOrkestrering();
