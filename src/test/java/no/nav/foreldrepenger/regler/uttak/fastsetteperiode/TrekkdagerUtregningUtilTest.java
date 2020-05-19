@@ -26,7 +26,7 @@ public class TrekkdagerUtregningUtilTest {
                 arbeidstidsprosent, null, false, Set.of(), PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
 
-        assertThat(trekkdager).isEqualTo(new Trekkdager(BigDecimal.valueOf(1.9)));
+        assertThat(trekkdager).isEqualTo(new Trekkdager(1.9));
     }
 
     @Test
@@ -41,6 +41,6 @@ public class TrekkdagerUtregningUtilTest {
                 samtidigUttaksprosent, false, PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
 
-        assertThat(trekkdager).isEqualTo(new Trekkdager(BigDecimal.valueOf(5)));
+        assertThat(trekkdager).isEqualTo(new Trekkdager(5));
     }
 }

@@ -337,7 +337,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(1);
         //Runder ned fra 0.25 til 0.2
-        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(0.2)));
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(0.2));
     }
 
     @Test
@@ -581,8 +581,8 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(2.5)));
-        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(0.9)));
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(2.5));
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(0.9));
     }
 
     @Test
@@ -628,8 +628,8 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
 
         assertThat(resultat).hasSize(4);
         //Resten av dagene 4 - 2.5 - 0.9.
-        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(1.5)));
-        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(new Trekkdager(BigDecimal.valueOf(1.5)));
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(1.5));
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(new Trekkdager(1.5));
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_3)).isEqualTo(new Trekkdager(6));
         assertThat(resultat.get(2).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2019, 4, 23));
     }
@@ -701,8 +701,8 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(1.5)));
-        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(BigDecimal.valueOf(99)));
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(1.5));
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(99));
     }
 
     @Test
@@ -739,9 +739,9 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         Trekkdager trekkdager2 = resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1);
         Trekkdager trekkdager3 = resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1);
         assertThat(resultat.get(3).isManuellBehandling()).isTrue();
-        assertThat(trekkdager1).isEqualTo(new Trekkdager(BigDecimal.valueOf(18.4)));
-        assertThat(trekkdager2).isEqualTo(new Trekkdager(BigDecimal.ZERO));
-        assertThat(trekkdager3).isEqualTo(new Trekkdager(BigDecimal.valueOf(57.2)));
+        assertThat(trekkdager1).isEqualTo(new Trekkdager(18.4));
+        assertThat(trekkdager2).isEqualTo(Trekkdager.ZERO);
+        assertThat(trekkdager3).isEqualTo(new Trekkdager(57.2));
     }
 
     @Test

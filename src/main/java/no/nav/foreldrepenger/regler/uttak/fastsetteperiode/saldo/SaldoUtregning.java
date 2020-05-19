@@ -42,42 +42,6 @@ public class SaldoUtregning {
         this.tapendeBehandling = tapendeBehandling;
     }
 
-    private List<FastsattUttakPeriode> fjernOppholdsperioderEtterSisteUttaksdato(List<FastsattUttakPeriode> perioderSøker,
-                                                                                 List<FastsattUttakPeriode> perioderAnnenpart) {
-        var sisteUttaksdatoSøker = sisteUttaksdato(perioderSøker);
-        var sisteUttaksdatoAnnenpart = sisteUttaksdato(perioderAnnenpart);
-        if (sisteUttaksdatoSøker.isEmpty() || sisteUttaksdatoAnnenpart.isEmpty()) {
-            return perioderAnnenpart;
-        }
-        var sisteUttaksdatoFelles = sisteUttaksdatoSøker.get().isAfter(sisteUttaksdatoAnnenpart.get()) ? sisteUttaksdatoSøker.get() : sisteUttaksdatoAnnenpart.get();
-
-        var resultat = new ArrayList<FastsattUttakPeriode>();
-        for (var periode : perioderAnnenpart) {
-            if (erOpphold(periode)) {
-                if (!periode.getFom().isAfter(sisteUttaksdatoFelles)) {
-                    var nyFom = periode.getFom();
-                    //Hvis oppholdsperioder delvis overlapper med annenpart skal deler av oppholdet brukes
-                    var nyTom = periode.getTom().isAfter(sisteUttaksdatoFelles) ? sisteUttaksdatoFelles : periode.getTom();
-                    resultat.add(kopier(periode, nyFom, nyTom));
-                }
-            } else {
-                resultat.add(periode);
-            }
-        }
-        return resultat;
-    }
-
-    private FastsattUttakPeriode kopier(FastsattUttakPeriode periode, LocalDate nyFom, LocalDate nyTom) {
-        return new FastsattUttakPeriode.Builder(periode).medTidsperiode(nyFom, nyTom).build();
-    }
-
-    private Optional<LocalDate> sisteUttaksdato(List<FastsattUttakPeriode> perioder) {
-        return perioder.stream()
-                .filter(periode -> !erOpphold(periode))
-                .min(Comparator.comparing(FastsattUttakPeriode::getTom))
-                .map(FastsattUttakPeriode::getTom);
-    }
-
     /**
      * Saldo for angitt stønadskonto og aktivitet.
      *
@@ -181,6 +145,9 @@ public class SaldoUtregning {
         int saldo = minSaldo(stønadskontoType);
         if (saldo >= 0) {
             return true;
+        }
+        if (annenpartsPerioder.isEmpty()) {
+            return false;
         }
 
         Trekkdager antallDagerAnnenpartKanFrigi = antallDagerAnnenpartKanFrigi(stønadskontoType);
@@ -417,12 +384,12 @@ public class SaldoUtregning {
     }
 
     private Trekkdager antallDagerAnnenpartKanFrigi(Stønadskontotype stønadskontoType) {
-        FastsattUttakPeriode søkersSistePeriodeMedTrekkdager = søkersSistePeriodeMedTrekkdager();
-        List<FastsattUttakPeriode> annenpartPerioderEtterSøkersSistePeriodeMedTrekkdager = finnAnnenpartPerioderEtterPeriode(søkersSistePeriodeMedTrekkdager);
+        var søkersSistePeriodeMedTrekkdager = søkersSistePeriodeMedTrekkdagerSomIkkeOverlapper();
+        var annenpartPerioderEtterSøkersSistePeriodeMedTrekkdager = finnAnnenpartPerioderEtterPeriode(søkersSistePeriodeMedTrekkdager);
 
-        Trekkdager forbrukteDager = Trekkdager.ZERO;
+        var forbrukteDager = Trekkdager.ZERO;
         for (FastsattUttakPeriode annenpartPeriode : annenpartPerioderEtterSøkersSistePeriodeMedTrekkdager) {
-            final Trekkdager trekkdager = antallDagerFrigitt(stønadskontoType, søkersSistePeriodeMedTrekkdager, annenpartPeriode);
+            var trekkdager = antallDagerFrigitt(stønadskontoType, søkersSistePeriodeMedTrekkdager, annenpartPeriode);
             forbrukteDager = forbrukteDager.add(trekkdager);
         }
         return forbrukteDager;
@@ -472,8 +439,13 @@ public class SaldoUtregning {
                 .collect(Collectors.toList());
     }
 
-    private FastsattUttakPeriode søkersSistePeriodeMedTrekkdager() {
-        return sortByReversedTom(søkersPerioder).stream().filter(this::harTrekkdager).findFirst().orElseThrow();
+    private FastsattUttakPeriode søkersSistePeriodeMedTrekkdagerSomIkkeOverlapper() {
+        var sorted = sortByReversedTom(søkersPerioder);
+        var periode = sorted.stream()
+                .filter(this::harTrekkdager)
+                .filter(p -> overlappendeAnnenpartPeriode(p).isEmpty())
+                .findFirst();
+        return periode.orElse(sorted.get(sorted.size() - 1));
     }
 
     private boolean harTrekkdager(FastsattUttakPeriode periode) {
@@ -498,5 +470,41 @@ public class SaldoUtregning {
             }
         }
         return min == null ? 0 : min;
+    }
+
+    private List<FastsattUttakPeriode> fjernOppholdsperioderEtterSisteUttaksdato(List<FastsattUttakPeriode> perioderSøker,
+                                                                                 List<FastsattUttakPeriode> perioderAnnenpart) {
+        var sisteUttaksdatoSøker = sisteUttaksdato(perioderSøker);
+        var sisteUttaksdatoAnnenpart = sisteUttaksdato(perioderAnnenpart);
+        if (sisteUttaksdatoSøker.isEmpty() || sisteUttaksdatoAnnenpart.isEmpty()) {
+            return perioderAnnenpart;
+        }
+        var sisteUttaksdatoFelles = sisteUttaksdatoSøker.get().isAfter(sisteUttaksdatoAnnenpart.get()) ? sisteUttaksdatoSøker.get() : sisteUttaksdatoAnnenpart.get();
+
+        var resultat = new ArrayList<FastsattUttakPeriode>();
+        for (var periode : perioderAnnenpart) {
+            if (erOpphold(periode)) {
+                if (!periode.getFom().isAfter(sisteUttaksdatoFelles)) {
+                    var nyFom = periode.getFom();
+                    //Hvis oppholdsperioder delvis overlapper med annenpart skal deler av oppholdet brukes
+                    var nyTom = periode.getTom().isAfter(sisteUttaksdatoFelles) ? sisteUttaksdatoFelles : periode.getTom();
+                    resultat.add(kopier(periode, nyFom, nyTom));
+                }
+            } else {
+                resultat.add(periode);
+            }
+        }
+        return resultat;
+    }
+
+    private FastsattUttakPeriode kopier(FastsattUttakPeriode periode, LocalDate nyFom, LocalDate nyTom) {
+        return new FastsattUttakPeriode.Builder(periode).medTidsperiode(nyFom, nyTom).build();
+    }
+
+    private Optional<LocalDate> sisteUttaksdato(List<FastsattUttakPeriode> perioder) {
+        return perioder.stream()
+                .filter(periode -> !erOpphold(periode))
+                .min(Comparator.comparing(FastsattUttakPeriode::getTom))
+                .map(FastsattUttakPeriode::getTom);
     }
 }

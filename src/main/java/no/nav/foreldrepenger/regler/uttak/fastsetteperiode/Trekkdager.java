@@ -13,6 +13,10 @@ public class Trekkdager {
         this.value = value.setScale(1, RoundingMode.DOWN);
     }
 
+    public Trekkdager(double value) {
+        this(BigDecimal.valueOf(value));
+    }
+
     public Trekkdager(int value) {
         this(BigDecimal.valueOf(value));
     }

@@ -257,14 +257,14 @@ public class SaldoUtregningTjenesteTest {
         var fastsattPeriode = new FastsattUttakPeriode.Builder()
                 .medTidsperiode(utregningsdato.minusWeeks(1), utregningsdato.minusDays(1))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(2.5)), Stønadskontotype.FELLESPERIODE, identifikator)))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2.5), Stønadskontotype.FELLESPERIODE, identifikator)))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(),
                 kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold));
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
-        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(BigDecimal.valueOf(97.5)));
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(97.5));
+        assertThat(resultat.saldoITrekkdager(Stønadskontotype.FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(97.5));
     }
 
     @Test

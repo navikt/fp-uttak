@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +83,7 @@ public class SaldoUtregningTest {
     @Test
     public void skal_runde_opp_hvis_ikke_brukt_mer_enn_maks() {
         FastsattUttakPeriode fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder()
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(10.5)), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10.5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -97,7 +96,7 @@ public class SaldoUtregningTest {
     @Test
     public void skal_runde_opp_hvis_brukt_mer_enn_maks() {
         FastsattUttakPeriode fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder()
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(13.5)), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(13.5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -978,7 +977,7 @@ public class SaldoUtregningTest {
         List<FastsattUttakPeriode> perioderAnnenpart = List.of(innvilgetPeriodeAnnenpart);
         SaldoUtregning saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 100)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER));
-        assertThat(saldoUtregning.saldoITrekkdager(FELLESPERIODE)).isEqualTo(new Trekkdager(BigDecimal.valueOf(92)));
+        assertThat(saldoUtregning.saldoITrekkdager(FELLESPERIODE)).isEqualTo(new Trekkdager(92));
     }
 
     @Test
@@ -1030,7 +1029,7 @@ public class SaldoUtregningTest {
                 .medTidsperiode(LocalDate.of(2019, 10, 17), LocalDate.of(2019, 11, 29))
                 .build();
         FastsattUttakPeriode annenpartsPeriode = new FastsattUttakPeriode.Builder()
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(75.2)), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75.2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
                 .build();
@@ -1050,7 +1049,7 @@ public class SaldoUtregningTest {
                 .medTidsperiode(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 2, 10))
                 .build();
         FastsattUttakPeriode annenpartsPeriode = new FastsattUttakPeriode.Builder()
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(BigDecimal.valueOf(75.2)), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75.2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
                 .build();
@@ -1132,5 +1131,40 @@ public class SaldoUtregningTest {
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(75);
         assertThat(saldoUtregning.saldo(null)).isZero();
+    }
+
+    @Test
+    public void skal_ta_med_overlappende_perioder_i_utregningen_av_dager_å_frigi_på_annenpart() {
+        var periode1 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 5, 17), LocalDate.of(2020, 5, 17))
+                .build();
+        var periode2 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 5, 18), LocalDate.of(2020, 5, 22))
+                .build();
+        var periodeAnnenpart1 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 5, 18), LocalDate.of(2020, 5, 20))
+                .build();
+        var periodeAnnenpart2 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 5, 21), LocalDate.of(2020, 5, 22))
+                .build();
+        var periodeAnnenpart3 = new FastsattUttakPeriode.Builder()
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+                .medTidsperiode(LocalDate.of(2020, 5, 23), LocalDate.of(2020, 5, 23))
+                .build();
+        var søkersPerioder = List.of(periode1, periode2);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 5)),
+                søkersPerioder, List.of(periodeAnnenpart1, periodeAnnenpart2, periodeAnnenpart3), false, Set.of(AKTIVITET1_SØKER));
+
+        assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(-10);
+        assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
     }
 }
