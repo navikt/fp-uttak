@@ -426,7 +426,9 @@ public class SaldoUtregning {
         }
         Trekkdager minForbrukt = null;
         for (FastsattUttakPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            if (Objects.equals(stønadskontoType, aktivitet.getStønadskontotype()) && (minForbrukt == null || minForbrukt.compareTo(aktivitet.getTrekkdager()) > 0)) {
+            if (Objects.equals(stønadskontoType, aktivitet.getStønadskontotype())
+                    && (minForbrukt == null || minForbrukt.compareTo(aktivitet.getTrekkdager()) > 0)
+                    || periode.isFlerbarnsdager() && Stønadskontotype.FLERBARNSDAGER.equals(stønadskontoType)) {
                 minForbrukt = aktivitet.getTrekkdager();
             }
         }
