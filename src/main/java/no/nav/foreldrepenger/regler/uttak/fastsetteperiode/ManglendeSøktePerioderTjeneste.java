@@ -1,6 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,15 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
 
 class ManglendeSøktePerioderTjeneste {
 
@@ -68,7 +68,7 @@ class ManglendeSøktePerioderTjeneste {
     }
 
     private static List<OppgittPeriode> finnManglendeSøktIUkerForbeholdtMor(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        if (grunnlag.getBehandling().isSøkerMor() && Søknadstype.FØDSEL.equals(grunnlag.getSøknad().getType())) {
+        if (grunnlag.getBehandling().isSøkerMor() && grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             return utledManglendeForMorFraOppgittePerioder(grunnlag, konfigurasjon);
         }
         if (farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) && !grunnlag.getRettOgOmsorg().getAleneomsorg()) {
@@ -146,7 +146,7 @@ class ManglendeSøktePerioderTjeneste {
     }
 
     private static boolean erFødselEllerTermin(RegelGrunnlag grunnlag) {
-        return Søknadstype.FØDSEL.equals(grunnlag.getSøknad().getType());
+        return grunnlag.getSøknad().getType().gjelderTerminFødsel();
     }
 
     private static boolean bareFarRett(RegelGrunnlag grunnlag) {
@@ -263,7 +263,7 @@ class ManglendeSøktePerioderTjeneste {
                                                                    Set<Stønadskontotype> gyldigeStønadskontotyper,
                                                                    Konfigurasjon konfigurasjon) {
         if (Søknadstype.ADOPSJON.equals(søknadstype)) {
-            return new ArrayList<>();
+            return List.of();
         }
         var antallUkerFpffFørFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato);
         var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
