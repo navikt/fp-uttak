@@ -59,12 +59,12 @@ public class BeregnKontoerGrunnlag {
     }
 
     public LocalDate getFamiliehendelsesdato() {
-        if (erFødsel()) {
-            Optional<LocalDate> fd = getFødselsdato();
-            LocalDate td = getTermindato().orElse(null);
-            return fd.orElse(td);
+        if (omsorgsovertakelseDato != null) {
+            return omsorgsovertakelseDato;
         }
-        return omsorgsovertakelseDato;
+        Optional<LocalDate> fd = getFødselsdato();
+        LocalDate td = getTermindato().orElse(null);
+        return fd.orElse(td);
     }
 
     public static Builder builder() {
