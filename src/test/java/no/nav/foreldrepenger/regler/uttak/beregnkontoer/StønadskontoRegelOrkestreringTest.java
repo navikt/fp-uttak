@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -1023,6 +1024,23 @@ public class StønadskontoRegelOrkestreringTest {
         assertThat(new ObjectMapper().readValue(stønadskontoResultat.getInnsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
         assertThat(new ObjectMapper().readValue(stønadskontoResultat.getEvalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
 
+    }
+
+    @Test
+    public void skal_bruke_omsorgsovertakelse_og_ikke_fødselsdato_som_konfig_parameter() {
+        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+                //Så tidlig at det vil skape exception hvis bruk ettersom vi ikke har noe konfig for 2016
+                .medFødselsdato(LocalDate.of(2016, 1, 1))
+                .medOmsorgsovertakelseDato(LocalDate.of(2020, 2, 10))
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
+
+        assertThatCode(() -> stønadskontoRegelOrkestrering.beregnKontoer(grunnlag)).doesNotThrowAnyException();
     }
 
 }
