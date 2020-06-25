@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.util.Optional;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAdopsjonsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
@@ -25,6 +23,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSamtidigUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadsperiode;
@@ -33,7 +32,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTapendeBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaketStarterFørLovligUttakFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtterSøkersDødsdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
@@ -48,6 +46,8 @@ import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.Specification;
+
+import java.util.Optional;
 
 /**
  * Regeltjeneste som fastsetter uttaksperioder som er søkt om for foreldrepenger.
@@ -143,8 +143,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
-        return rs.hvisRegel(SjekkOmUttaketStarterFørLovligUttakFørFødsel.ID, "Gjelder det periode tidligere enn 12 uker før fødsel/termin?")
-                .hvis(new SjekkOmUttaketStarterFørLovligUttakFørFødsel(konfigurasjon), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(konfigurasjon), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
                 .ellers(sjekkOmTomPåKontoVedSøktPeriode());
     }
 

@@ -1,27 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.junit.Test;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
@@ -35,6 +13,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvSti
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
@@ -56,6 +35,27 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -1009,5 +1009,37 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(Trekkdager.ZERO);
         assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isNull();
+    }
+
+    @Test
+    public void innvilge_foreldrepenger_14_uker_før_fødsel_men_ikke_12_uker_før_termin_ved_terminsøknad() {
+        var termin = LocalDate.of(2020, 6, 10);
+        var testGrunnlag =
+                grunnlag.medDatoer(new Datoer.Builder()
+                            .medFørsteLovligeUttaksdag(termin.minusYears(1))
+                            .medTermin(termin)
+                            .medFødsel(termin.plusWeeks(2)))
+                        .medRettOgOmsorg(aleneomsorg())
+                        .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(1000)))
+                        .medSøknad(new Søknad.Builder()
+                                .medType(Søknadstype.TERMIN)
+                                .medOppgittePerioder(List.of(
+                                        OppgittPeriode.forVanligPeriode(FORELDREPENGER, termin.minusWeeks(15), termin.minusWeeks(3).minusDays(1),
+                                                PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT),
+                                        OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
+                                                PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT),
+                                        OppgittPeriode.forVanligPeriode(FORELDREPENGER, termin, termin.plusWeeks(4),
+                                                PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT)
+                                )));
+
+        List<FastsettePeriodeResultat> resultater = fastsettPerioder(testGrunnlag);
+
+        assertThat(resultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultater.get(0).getUttakPeriode().getFom()).isEqualTo(termin.minusWeeks(15));
+        assertThat(resultater.get(0).getUttakPeriode().getTom()).isEqualTo(termin.minusWeeks(12).minusDays(1));
+        assertThat(resultater.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(resultater.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(resultater.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 }

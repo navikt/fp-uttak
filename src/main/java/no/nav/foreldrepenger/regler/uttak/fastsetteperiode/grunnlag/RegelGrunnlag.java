@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class RegelGrunnlag {
 
@@ -148,11 +148,15 @@ public class RegelGrunnlag {
         }
 
         private void validerDatoerOppMotSøknad() {
-            if (Søknadstype.FØDSEL.equals(kladd.getSøknad().getType()) && kladd.getDatoer().getFødsel() == null && kladd.getDatoer().getTermin() == null) {
-                throw new IllegalStateException("Forventer enten fødselsdato eller termindato eller begge ved fødselssøknad");
-            }
-            if (Søknadstype.ADOPSJON.equals(kladd.getSøknad().getType()) && kladd.getDatoer().getOmsorgsovertakelse() == null) {
-                throw new IllegalStateException("Forventer omsorgsovertakelsedato ved adopsjonssøknad");
+            var type = kladd.getSøknad().getType();
+            var datoer = kladd.getDatoer();
+
+            if (type == Søknadstype.TERMIN && datoer.getTermin() == null) {
+                throw new IllegalStateException("Forventer termindato ved terminsøknad");
+            } else if (type == Søknadstype.FØDSEL && datoer.getFødsel() == null && datoer.getTermin() == null) {
+                throw new IllegalStateException("Forventer fødselsdato eller termindato eller begge ved fødselsøknad");
+            } else if (type == Søknadstype.ADOPSJON && datoer.getOmsorgsovertakelse() == null) {
+                throw new IllegalStateException("Forventer omsorgsovertakelsesdato ved adopsjonssøknad");
             }
         }
     }

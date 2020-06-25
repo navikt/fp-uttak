@@ -1,17 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
@@ -19,6 +12,13 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 class KnekkpunktIdentifiserer {
 
@@ -28,7 +28,13 @@ class KnekkpunktIdentifiserer {
 
     static Set<LocalDate> finnKnekkpunkter(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
         LocalDate familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
-        LocalDate minimumsgrenseForLovligUttak = familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
+        LocalDate minimumsgrenseForLovligUttak;
+        if (grunnlag.getSøknad().getType() == Søknadstype.TERMIN) {
+            var termin = grunnlag.getDatoer().getTermin();
+            minimumsgrenseForLovligUttak = termin.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, termin));
+        } else {
+            minimumsgrenseForLovligUttak = familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
+        }
         LocalDate maksimumsgrenseForLovligeUttak = finnMaksgrenseForLovligUttak(grunnlag, konfigurasjon);
 
         Set<LocalDate> knekkpunkter = new TreeSet<>();
@@ -57,8 +63,8 @@ class KnekkpunktIdentifiserer {
         leggTilKnekkpunkterForUtsettelsePgaFerie(grunnlag, minimumsgrenseForLovligUttak, maksimumsgrenseForLovligeUttak, knekkpunkter);
 
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getOppgittePerioder());
-        if (grunnlag.getSøknad().getType() == Søknadstype.FØDSEL) {
-            leggTilKnekkpunkterForFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
+        if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
+            leggTilKnekkpunkterForTerminFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
 
@@ -170,7 +176,7 @@ class KnekkpunktIdentifiserer {
         return knekkpunkter;
     }
 
-    private static void leggTilKnekkpunkterForFødsel(Set<LocalDate> knekkpunkter, LocalDate familiehendelseDato, Konfigurasjon konfigurasjon) {
+    private static void leggTilKnekkpunkterForTerminFødsel(Set<LocalDate> knekkpunkter, LocalDate familiehendelseDato, Konfigurasjon konfigurasjon) {
         knekkpunkter.add(familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
         knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
     }
