@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -118,7 +119,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   LocalDate fom,
                                   LocalDate tom,
                                   boolean flerbarnsdager,
-                                  BigDecimal samtidigUttaksprosent) {
+                                  SamtidigUttaksprosent samtidigUttaksprosent) {
         return oppgittPeriode(stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, PeriodeVurderingType.IKKE_VURDERT);
     }
 
@@ -126,9 +127,10 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   LocalDate fom,
                                   LocalDate tom,
                                   boolean flerbarnsdager,
-                                  BigDecimal samtidigUttaksprosent,
+                                  SamtidigUttaksprosent samtidigUttaksprosent,
                                   PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent, flerbarnsdager, vurderingType);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent,
+                flerbarnsdager, vurderingType);
     }
 
     OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {

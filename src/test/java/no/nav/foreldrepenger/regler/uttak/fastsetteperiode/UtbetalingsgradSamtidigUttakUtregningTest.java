@@ -7,22 +7,25 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+
 public class UtbetalingsgradSamtidigUttakUtregningTest {
 
     @Test
     public void hvis_ugradert_periode_skal_utbetalingsgrad_være_lik_samtidig_uttaksprosent() {
-        BigDecimal samtidigUttaksprosent = BigDecimal.TEN;
-        BigDecimal resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, null).resultat();
+        var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
+        var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, null).resultat();
 
-        assertThat(resultat).isEqualTo(samtidigUttaksprosent);
+        assertThat(resultat.decimalValue()).isEqualTo(samtidigUttaksprosent.decimalValue());
     }
 
     @Test
     public void hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
-        BigDecimal samtidigUttaksprosent = BigDecimal.TEN;
-        BigDecimal graderingArbeidstidsprosent = BigDecimal.ONE;
-        BigDecimal resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, graderingArbeidstidsprosent).resultat();
+        var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
+        var graderingArbeidstidsprosent = BigDecimal.ONE;
+        var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, graderingArbeidstidsprosent).resultat();
 
-        assertThat(resultat).isEqualTo(new BigDecimal("100.00").subtract(graderingArbeidstidsprosent));
+        assertThat(resultat).isEqualByComparingTo(Utbetalingsgrad.HUNDRED.subtract(graderingArbeidstidsprosent));
     }
 }

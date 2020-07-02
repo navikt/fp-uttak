@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 
 public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -78,8 +79,8 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
         assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
         assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualByComparingTo(BigDecimal.valueOf(100));
-        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualByComparingTo(BigDecimal.valueOf(100));
+        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -111,15 +112,15 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
         //NYtt arbeidsforhold arver saldo fra arbeidsforhold 1 pga arbeidsforhold 1 har gradert i perioden før
         assertThat(aktiviteterIPeriode(resultat.get(4).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualByComparingTo(BigDecimal.valueOf(50));
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.valueOf(100));
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         //Nytt arbeidsforhold går tomt for dager, arbeidsforhold holder 1 uke til pga gradering
         assertThat(aktiviteterIPeriode(resultat.get(5).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualByComparingTo(BigDecimal.valueOf(50));
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
     @Test
@@ -150,7 +151,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         assertThat(resultat).hasSize(5);
 
         //Arver 45 dager, har igjen 50. Nok til en uke. Siste uken skal avslås for tom for dager
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
     @Test

@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.math.BigDecimal;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
 class UtbetalingsgradUtenGraderingUtregning implements UtbetalingsgradUtregning {
 
     @Override
-    public BigDecimal resultat() {
-        return new BigDecimal("100.00");
+    public Utbetalingsgrad resultat() {
+        return Utbetalingsgrad.FULL;
     }
 }

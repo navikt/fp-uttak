@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.math.BigDecimal;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
 public interface UtbetalingsgradUtregning {
-    BigDecimal resultat();
+    Utbetalingsgrad resultat();
 }

@@ -11,6 +11,7 @@ import org.junit.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class TrekkdagerUtregningUtilTest {
@@ -36,7 +37,7 @@ public class TrekkdagerUtregningUtilTest {
         LocalDate fom = LocalDate.of(2019, 4, 1);
         LocalDate tom = LocalDate.of(2019, 4, 12);
 
-        BigDecimal samtidigUttaksprosent = BigDecimal.valueOf(50);
+        var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         OppgittPeriode periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
                 samtidigUttaksprosent, false, PeriodeVurderingType.IKKE_VURDERT);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);

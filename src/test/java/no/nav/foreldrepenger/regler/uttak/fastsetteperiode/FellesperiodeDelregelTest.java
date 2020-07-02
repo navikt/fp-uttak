@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenO
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
@@ -400,7 +401,11 @@ public class FellesperiodeDelregelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_IKKE_RETT_FP);
     }
 
-    private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType, BigDecimal samtidigUttaksprosent, boolean flerbarnsdager) {
+    private OppgittPeriode gradertoppgittPeriode(LocalDate fom,
+                                                 LocalDate tom,
+                                                 PeriodeVurderingType vurderingType,
+                                                 SamtidigUttaksprosent samtidigUttaksprosent,
+                                                 boolean flerbarnsdager) {
         return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom,
                 PeriodeKilde.SØKNAD, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
                 Set.of(AktivitetIdentifikator.forFrilans()), vurderingType);
@@ -441,11 +446,15 @@ public class FellesperiodeDelregelTest {
                 .medTrekkdager(trekkdager);
     }
 
-    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, BigDecimal samtidigUttaksprosent, boolean flerbarnsdager) {
+    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, SamtidigUttaksprosent samtidigUttaksprosent, boolean flerbarnsdager) {
         return oppgittPeriode(fom, tom, samtidigUttaksprosent, flerbarnsdager, PeriodeVurderingType.IKKE_VURDERT);
     }
 
-    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, BigDecimal samtidigUttaksprosent, boolean flerbarnsdager, PeriodeVurderingType vurderingType) {
+    private OppgittPeriode oppgittPeriode(LocalDate fom,
+                                          LocalDate tom,
+                                          SamtidigUttaksprosent samtidigUttaksprosent,
+                                          boolean flerbarnsdager,
+                                          PeriodeVurderingType vurderingType) {
         return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent, flerbarnsdager, vurderingType);
     }
 
@@ -455,7 +464,9 @@ public class FellesperiodeDelregelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(innvilgetÅrsak);
     }
 
-    private void assertInnvilgetAvslåttGradering(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak, GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
+    private void assertInnvilgetAvslåttGradering(FastsettePerioderRegelresultat regelresultat,
+                                                 InnvilgetÅrsak innvilgetÅrsak,
+                                                 GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         assertInnvilget(regelresultat, innvilgetÅrsak);
         assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(graderingIkkeInnvilgetÅrsak);
     }

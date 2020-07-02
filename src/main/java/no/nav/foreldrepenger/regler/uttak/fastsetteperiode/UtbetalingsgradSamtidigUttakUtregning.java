@@ -3,23 +3,26 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+
 class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning {
 
-    private final BigDecimal samtidigUttaksprosent;
+    private final SamtidigUttaksprosent samtidigUttaksprosent;
     private final BigDecimal graderingArbeidstidsprosent;
 
-    UtbetalingsgradSamtidigUttakUtregning(BigDecimal samtidigUttaksprosent, BigDecimal graderingArbeidstidsprosent) {
+    UtbetalingsgradSamtidigUttakUtregning(SamtidigUttaksprosent samtidigUttaksprosent, BigDecimal graderingArbeidstidsprosent) {
         Objects.requireNonNull(samtidigUttaksprosent);
         this.graderingArbeidstidsprosent = graderingArbeidstidsprosent;
         this.samtidigUttaksprosent = samtidigUttaksprosent;
     }
 
     @Override
-    public BigDecimal resultat() {
+    public Utbetalingsgrad resultat() {
         //Ikke gradering på noen aktiviteter i perioden
         if (graderingArbeidstidsprosent == null) {
-            return samtidigUttaksprosent;
+            return new Utbetalingsgrad(samtidigUttaksprosent.decimalValue());
         }
-        return new BigDecimal("100.00").subtract(graderingArbeidstidsprosent);
+        return Utbetalingsgrad.HUNDRED.subtract(graderingArbeidstidsprosent);
     }
 }

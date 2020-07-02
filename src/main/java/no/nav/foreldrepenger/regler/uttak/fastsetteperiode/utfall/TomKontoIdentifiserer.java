@@ -84,7 +84,7 @@ public class TomKontoIdentifiserer {
     }
 
     private static int saldoTilVirkedagerSamtidigUttak(OppgittPeriode periode, Trekkdager saldo) {
-        return saldoTilVirkedagerVedRedusertUttak(saldo, periode.getSamtidigUttaksprosent());
+        return saldoTilVirkedagerVedRedusertUttak(saldo, periode.getSamtidigUttaksprosent().decimalValue());
     }
 
     private static int saldoTilVirkedagerGradering(OppgittPeriode periode, Trekkdager saldo) {
