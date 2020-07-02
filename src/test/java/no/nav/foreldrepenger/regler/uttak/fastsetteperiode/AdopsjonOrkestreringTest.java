@@ -484,6 +484,35 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
                 FORELDREPENGER, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
     }
 
+    @Test
+    public void UT1082_adopsjon_avslag_perioder_forut_for_førsteLovligeUttaksdag() {
+        var omsorgsovertakelseDato = LocalDate.of(2020, 1, 1);
+
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(100));
+        var testGrunnlag = grunnlagAdopsjon
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .medKontoer(kontoer)
+                .medDatoer(new Datoer.Builder()
+                        .medOmsorgsovertakelse(omsorgsovertakelseDato)
+                        .medFørsteLovligeUttaksdag(omsorgsovertakelseDato.plusMonths(1)))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder()
+                        .medFarHarRett(true)
+                        .medMorHarRett(true)
+                        .medSamtykke(true))
+                .medBehandling(morBehandling())
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.ADOPSJON)
+                        .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(1).minusDays(1))))
+                .medAdopsjon(new Adopsjon.Builder()
+                        .medAnkomstNorge(omsorgsovertakelseDato))
+                .build();
+
+        List<FastsettePeriodeResultat> resultater = fastsettPerioder(testGrunnlag);
+        assertThat(resultater).hasSize(1);
+        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(1).minusDays(1), FORELDREPENGER, IkkeOppfyltÅrsak.SØKNADSFRIST);
+    }
+
     // STEBARNSADOPSJON
     @Test
     public void UT1240_stebarnsadopsjon_far_ikke_omsorg() {

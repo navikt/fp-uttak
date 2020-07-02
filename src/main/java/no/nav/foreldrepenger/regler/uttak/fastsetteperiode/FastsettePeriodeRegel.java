@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSamtidigUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadsperiode;
@@ -143,8 +143,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
-        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(konfigurasjon), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse(konfigurasjon), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
                 .ellers(sjekkOmTomPåKontoVedSøktPeriode());
     }
 

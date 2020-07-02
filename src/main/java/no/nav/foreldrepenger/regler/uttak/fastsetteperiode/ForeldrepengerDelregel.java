@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenSlutterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
@@ -58,7 +58,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødselMor() {
         return rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUttaketStarterFørLovligUttakFørFødselTermin())
+            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse())
             .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseMor());
     }
 
@@ -81,9 +81,9 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaketStarterFørLovligUttakFørFødselTermin() {
-        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(konfigurasjon), IkkeOppfylt.opprett("UT1185", IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL, false, false))
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse() {
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse(konfigurasjon), IkkeOppfylt.opprett("UT1185", IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL, false, false))
                 .ellers(sjekkErDetAleneomsorgMor());
     }
 

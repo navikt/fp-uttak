@@ -10,15 +10,15 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.time.LocalDate;
 
-@RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID)
-public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.ID)
+public class SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 27.2";
-    public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før fødsel/termin";
+    public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før familiehendelse";
     private Konfigurasjon konfigurasjon;
 
 
-    public SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse(Konfigurasjon konfigurasjon) {
         super(ID);
         this.konfigurasjon = konfigurasjon;
     }
@@ -28,16 +28,21 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
         var hendelseDato = hendelseDato(grunnlag);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        int ukerFørFødselUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
-        if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFødselUttaksgrense))) {
+        int ukerFørFamiliehendelseUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
+        if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFamiliehendelseUttaksgrense))) {
             return ja();
         }
         return nei();
     }
 
     private LocalDate hendelseDato(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getSøknadstype() == Søknadstype.TERMIN
-                ? grunnlag.getTermindato()
-                : grunnlag.getFødselsdato();
+        var søknadType = grunnlag.getSøknadstype();
+        if (søknadType == Søknadstype.ADOPSJON) {
+            return grunnlag.getFamiliehendelse();
+        } else if (søknadType == Søknadstype.TERMIN) {
+            // søknadsfrist regnes fra termindato ved terminsøknad
+            return grunnlag.getTermindato();
+        }
+        return grunnlag.getFødselsdato();
     }
 }

@@ -27,15 +27,9 @@ class KnekkpunktIdentifiserer {
     }
 
     static Set<LocalDate> finnKnekkpunkter(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        LocalDate familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
-        LocalDate minimumsgrenseForLovligUttak;
-        if (grunnlag.getSøknad().getType() == Søknadstype.TERMIN) {
-            var termin = grunnlag.getDatoer().getTermin();
-            minimumsgrenseForLovligUttak = termin.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, termin));
-        } else {
-            minimumsgrenseForLovligUttak = familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
-        }
+        LocalDate minimumsgrenseForLovligUttak = finnMinimumgrenseLovligUttak(grunnlag, konfigurasjon);
         LocalDate maksimumsgrenseForLovligeUttak = finnMaksgrenseForLovligUttak(grunnlag, konfigurasjon);
+        LocalDate familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
 
         Set<LocalDate> knekkpunkter = new TreeSet<>();
         knekkpunkter.add(minimumsgrenseForLovligUttak);
@@ -78,6 +72,15 @@ class KnekkpunktIdentifiserer {
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
                 .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
                 .collect(Collectors.toSet());
+    }
+
+    private static LocalDate finnMinimumgrenseLovligUttak(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+        if (grunnlag.getSøknad().getType() == Søknadstype.TERMIN) {
+            var termin = grunnlag.getDatoer().getTermin();
+            return termin.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, termin));
+        }
+        var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
+        return familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
     }
 
     private static Set<LocalDate> knekkpunkterPåArbeid(Arbeid arbeid) {
