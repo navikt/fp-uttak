@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
@@ -44,19 +45,20 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
         var up0 = perioder.get(0).getUttakPeriode();
         verifiserPeriode(up0, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET, FORELDREPENGER_FØR_FØDSEL);
-        assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new BigDecimal("100.00"));
+        assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up1 = perioder.get(1).getUttakPeriode();
         verifiserPeriode(up1, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, MØDREKVOTE);
-        assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new BigDecimal("100.00"));
+        assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up2 = perioder.get(2).getUttakPeriode();
         verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET, MØDREKVOTE);
-        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new BigDecimal("100.00"));
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up3 = perioder.get(3).getUttakPeriode();
-        verifiserManuellBehandlingPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1), MØDREKVOTE, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
-        assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        verifiserManuellBehandlingPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1), MØDREKVOTE,
+                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
 
     }
 
@@ -81,25 +83,25 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
         var up0 = perioder.get(0).getUttakPeriode();
         verifiserPeriode(up0, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET, FORELDREPENGER_FØR_FØDSEL);
-        assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualByComparingTo(new BigDecimal("100.00"));
+        assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up1 = perioder.get(1).getUttakPeriode();
         verifiserPeriode(up1, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, MØDREKVOTE);
-        assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualByComparingTo(new BigDecimal("100.00"));
+        assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up2 = perioder.get(2).getUttakPeriode();
         verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET, MØDREKVOTE);
-        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualByComparingTo(new BigDecimal("100.00"));
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up3 = perioder.get(3).getUttakPeriode();
         assertThat(up3.getUtsettelseÅrsak()).isEqualTo(UtsettelseÅrsak.FERIE);
         verifiserPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), INNVILGET, null);
         assertThat(up3.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
-        assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(BigDecimal.ZERO);
+        assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
 
         var up4 = perioder.get(4).getUttakPeriode();
         verifiserPeriode(up4, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1), INNVILGET, FELLESPERIODE);
-        assertThat(up4.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualByComparingTo(new BigDecimal("100.00"));
+        assertThat(up4.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -128,15 +130,15 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
         var up0 = perioder.get(0).getUttakPeriode();
         verifiserPeriode(up0, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET, FORELDREPENGER_FØR_FØDSEL);
-        assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualByComparingTo(new BigDecimal("100.00"));
+        assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up1 = perioder.get(1).getUttakPeriode();
         verifiserPeriode(up1, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, MØDREKVOTE);
-        assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualByComparingTo(new BigDecimal("100.00"));
+        assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         var up2 = perioder.get(2).getUttakPeriode();
         verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), INNVILGET, FELLESPERIODE);
-        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualByComparingTo(new BigDecimal("80.00"));
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(80));
     }
 
     @Test
@@ -162,8 +164,8 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
         var uttakPeriode = perioder.get(2).getUttakPeriode();
-        assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new BigDecimal("82.45"));
-        assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(new BigDecimal("82.45"));
+        assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(82.45));
+        assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(new Utbetalingsgrad(82.45));
     }
 
     private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {

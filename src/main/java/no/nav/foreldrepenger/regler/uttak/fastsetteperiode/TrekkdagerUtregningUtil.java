@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
@@ -14,13 +15,13 @@ public final class TrekkdagerUtregningUtil {
     public static Trekkdager trekkdagerFor(Periode periode,
                                            boolean gradert,
                                            BigDecimal gradertArbeidstidsprosent,
-                                           BigDecimal samtidigUttaksprosent) {
+                                           SamtidigUttaksprosent samtidigUttaksprosent) {
         int trekkdagerUtenGradering = Virkedager.beregnAntallVirkedager(periode);
         if (gradert) {
             return trekkdagerMedGradering(trekkdagerUtenGradering, gradertArbeidstidsprosent);
         } else if (samtidigUttaksprosent != null) {
             //Samme utregning som med gradering
-            return trekkdagerMedGradering(trekkdagerUtenGradering, BigDecimal.valueOf(100).subtract(samtidigUttaksprosent));
+            return trekkdagerMedGradering(trekkdagerUtenGradering, BigDecimal.valueOf(100).subtract(samtidigUttaksprosent.decimalValue()));
         } else {
             return new Trekkdager(trekkdagerUtenGradering);
         }

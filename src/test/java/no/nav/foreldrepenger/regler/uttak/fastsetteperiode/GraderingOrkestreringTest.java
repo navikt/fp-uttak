@@ -39,8 +39,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
@@ -143,7 +145,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);
         BigDecimal arbeidstidsprosent = BigDecimal.TEN;
-        BigDecimal samtidigUttaksprosent = BigDecimal.valueOf(50);
+        var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         OppgittPeriode gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), PeriodeKilde.SØKNAD, arbeidstidsprosent, samtidigUttaksprosent,
                 false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT);
@@ -170,7 +172,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(fastsettePeriodeGrunnlag);
 
         assertThat(resultat.get(2).getUttakPeriode().erSamtidigUttak()).isTrue();
-        assertThat(resultat.get(2).getUttakPeriode().getSamtidigUttaksprosent()).isEqualTo(BigDecimal.valueOf(100).subtract(arbeidstidsprosent));
+        assertThat(resultat.get(2).getUttakPeriode().getSamtidigUttaksprosent()).isEqualTo(SamtidigUttaksprosent.HUNDRED.subtract(arbeidstidsprosent));
     }
 
     @Test
@@ -217,7 +219,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         assertTrekkdager(resultat.get(3), ARBEIDSFORHOLD_2, new Trekkdager(16 * 5));
         assertKontoOgResultat(resultat.get(4), FELLESPERIODE, INNVILGET);
         assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_1, new Trekkdager((2 * 5) / 2));
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(BigDecimal.ZERO);
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(Utbetalingsgrad.ZERO);
         assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_2, Trekkdager.ZERO);
     }
 
@@ -265,7 +267,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         assertTrekkdager(resultat.get(3), ARBEIDSFORHOLD_2, Trekkdager.ZERO);
         assertKontoOgResultat(resultat.get(4), MØDREKVOTE, MANUELL_BEHANDLING);
         assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_1, new Trekkdager(new BigDecimal("22.50")));
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(BigDecimal.ZERO);
+        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(Utbetalingsgrad.ZERO);
         assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_2, new Trekkdager(45));
     }
 
@@ -284,7 +286,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create();
         BigDecimal arbeidstidsprosent = BigDecimal.TEN;
-        BigDecimal samtidigUttaksprosent = BigDecimal.valueOf(50);
+        var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         //10 virkedager
         OppgittPeriode gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                 PeriodeKilde.SØKNAD, arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT
@@ -312,7 +314,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(fastsettePeriodeGrunnlag);
 
         assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(new Trekkdager(9));
-        assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2))
+        assertThat(resultat.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2).decimalValue())
                 .isEqualTo(BigDecimal.valueOf(100).subtract(arbeidstidsprosent).setScale(2, RoundingMode.DOWN));
     }
 

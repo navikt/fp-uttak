@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
@@ -114,7 +115,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     private OppgittPeriode gradertPeriode(LocalDate fom, LocalDate tom, AktivitetIdentifikator aktivitetIdentifikator, PeriodeVurderingType vurderingType,
-                                          BigDecimal samtidigUttaksprosent, boolean flerbarnsdager) {
+                                          SamtidigUttaksprosent samtidigUttaksprosent, boolean flerbarnsdager) {
         return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD, BigDecimal.TEN,
                 samtidigUttaksprosent, flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType);
     }

@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ValgAvStønadskontoTjeneste.velgStønadskonto;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,6 +10,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
@@ -113,11 +114,12 @@ class RegelResultatBehandler {
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
 
-    private BigDecimal regnSamtidigUttaksprosentMotGradering(OppgittPeriode oppgittPeriode) {
+    private SamtidigUttaksprosent regnSamtidigUttaksprosentMotGradering(OppgittPeriode oppgittPeriode) {
         if (!oppgittPeriode.erSøktSamtidigUttak()) {
             return null;
         }
-        return oppgittPeriode.erSøktGradering() ? BigDecimal.valueOf(100).subtract(oppgittPeriode.getArbeidsprosent()) : oppgittPeriode.getSamtidigUttaksprosent();
+        return oppgittPeriode.erSøktGradering() ? SamtidigUttaksprosent.HUNDRED.subtract(oppgittPeriode.getArbeidsprosent()) :
+                oppgittPeriode.getSamtidigUttaksprosent();
     }
 
     private Optional<Stønadskontotype> konto(OppgittPeriode oppgittPeriode) {
@@ -148,7 +150,9 @@ class RegelResultatBehandler {
         return velgStønadskonto(oppgittPeriode, regelGrunnlag, saldoUtregning, konfigurasjon);
     }
 
-    private Set<UttakPeriodeAktivitet> lagAktiviteter(OppgittPeriode oppgittPeriode, FastsettePerioderRegelresultat regelresultat, boolean overlapperMedInnvilgetPeriodeHosAnnenpart) {
+    private Set<UttakPeriodeAktivitet> lagAktiviteter(OppgittPeriode oppgittPeriode,
+                                                      FastsettePerioderRegelresultat regelresultat,
+                                                      boolean overlapperMedInnvilgetPeriodeHosAnnenpart) {
         return oppgittPeriode.getAktiviteter().stream()
                 .map(a -> lagAktivitet(a, regelresultat, overlapperMedInnvilgetPeriodeHosAnnenpart, oppgittPeriode))
                 .collect(Collectors.toSet());
@@ -175,10 +179,10 @@ class RegelResultatBehandler {
         var harIgjenTrekkdager = saldoUtregning.saldoITrekkdager(stønadskonto.orElse(null), identifikator).merEnn0();
         var manuellBehandling = manuellBehandling(regelresultat);
         if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling && !harIgjenTrekkdager)) {
-            return new PeriodeAktivitetResultat(BigDecimal.ZERO, Trekkdager.ZERO);
+            return new PeriodeAktivitetResultat(Utbetalingsgrad.ZERO, Trekkdager.ZERO);
         }
 
-        var utbetalingsgrad = BigDecimal.ZERO;
+        var utbetalingsgrad = Utbetalingsgrad.ZERO;
         if (regelresultat.skalUtbetale()) {
             var utbetalingsgradUtregning = bestemUtbetalingsgradUtregning(oppgittPeriode, identifikator);
             utbetalingsgrad = utbetalingsgradUtregning.resultat();
@@ -221,15 +225,15 @@ class RegelResultatBehandler {
 
     private static class PeriodeAktivitetResultat {
 
-        private final BigDecimal utbetalingsgrad;
+        private final Utbetalingsgrad utbetalingsgrad;
         private final Trekkdager trekkdager;
 
-        private PeriodeAktivitetResultat(BigDecimal utbetalingsgrad, Trekkdager trekkdager) {
+        private PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {
             this.utbetalingsgrad = utbetalingsgrad;
             this.trekkdager = trekkdager;
         }
 
-        public BigDecimal getUtbetalingsgrad() {
+        public Utbetalingsgrad getUtbetalingsgrad() {
             return utbetalingsgrad;
         }
 

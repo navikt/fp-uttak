@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenO
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
@@ -166,8 +167,8 @@ public class KnekkpunktIdentifisererTest {
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(uttakStartdato, uttakStartdato.plusDays(10)).build()))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, knekkdato, uttakStartdato.plusDays(10), PeriodeKilde.SØKNAD,
-                                BigDecimal.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, knekkdato,
+                                uttakStartdato.plusDays(10), PeriodeKilde.SØKNAD, SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medFødsel(fødselsdato))
@@ -189,7 +190,7 @@ public class KnekkpunktIdentifisererTest {
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(uttakStartdato.plusDays(1), uttakStartdato.plusDays(10)).build()))
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, uttakStartdato, knekkdato, PeriodeKilde.SØKNAD,
-                                BigDecimal.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode))
@@ -210,7 +211,7 @@ public class KnekkpunktIdentifisererTest {
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(uttakStartdato.plusDays(1), uttakStartdato.plusDays(5)).build()))
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, uttakStartdato, uttakStartdato.plusDays(6),
-                                PeriodeKilde.SØKNAD, BigDecimal.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                                PeriodeKilde.SØKNAD, SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
                 .medDatoer(new Datoer.Builder()
                         .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medFødsel(fødselsdato))
@@ -236,7 +237,7 @@ public class KnekkpunktIdentifisererTest {
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(annenPartPeriodeFom, annenPartPeriodeTom).build()))
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, stønadsperiodeFom, stønadsperiodeTom, PeriodeKilde.SØKNAD,
-                                BigDecimal.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
                         .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode))

@@ -20,7 +20,7 @@ public final class UttakPeriode extends LukketPeriode {
     private final GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
     private final Set<UttakPeriodeAktivitet> aktiviteter;
     private final boolean flerbarnsdager;
-    private final BigDecimal samtidigUttaksprosent;
+    private final SamtidigUttaksprosent samtidigUttaksprosent;
     private final OppholdÅrsak oppholdÅrsak;
     private final Stønadskontotype stønadskontotype;
     private final BigDecimal arbeidsprosent;
@@ -35,7 +35,7 @@ public final class UttakPeriode extends LukketPeriode {
                         GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak,
                         Set<UttakPeriodeAktivitet> aktiviteter,
                         boolean flerbarnsdager,
-                        BigDecimal samtidigUttaksprosent,
+                        SamtidigUttaksprosent samtidigUttaksprosent,
                         OppholdÅrsak oppholdÅrsak,
                         Stønadskontotype stønadskontotype,
                         BigDecimal arbeidsprosent,
@@ -83,7 +83,7 @@ public final class UttakPeriode extends LukketPeriode {
         return aktiviteter;
     }
 
-    public BigDecimal getUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator) {
+    public Utbetalingsgrad getUtbetalingsgrad(AktivitetIdentifikator aktivitetIdentifikator) {
         return finnAktivitet(aktivitetIdentifikator).getUtbetalingsgrad();
     }
 
@@ -110,7 +110,7 @@ public final class UttakPeriode extends LukketPeriode {
         return flerbarnsdager;
     }
 
-    public BigDecimal getSamtidigUttaksprosent() {
+    public SamtidigUttaksprosent getSamtidigUttaksprosent() {
         return samtidigUttaksprosent;
     }
 

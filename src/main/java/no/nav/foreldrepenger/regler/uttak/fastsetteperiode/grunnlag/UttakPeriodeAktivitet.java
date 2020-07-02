@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
@@ -8,16 +7,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 public class UttakPeriodeAktivitet {
 
     private final AktivitetIdentifikator identifikator;
-    private final BigDecimal utbetalingsgrad;
+    private final Utbetalingsgrad utbetalingsgrad;
     private final Trekkdager trekkdager;
     private final boolean søktGradering;
 
     public UttakPeriodeAktivitet(AktivitetIdentifikator identifikator,
-                                 BigDecimal Utbetalingsgrad,
+                                 Utbetalingsgrad utbetalingsgrad,
                                  Trekkdager trekkdager,
                                  boolean søktGradering) {
         this.identifikator = identifikator;
-        this.utbetalingsgrad = Utbetalingsgrad;
+        this.utbetalingsgrad = utbetalingsgrad;
         this.trekkdager = trekkdager;
         this.søktGradering = søktGradering;
     }
@@ -26,7 +25,7 @@ public class UttakPeriodeAktivitet {
         return identifikator;
     }
 
-    public BigDecimal getUtbetalingsgrad() {
+    public Utbetalingsgrad getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
 

@@ -19,7 +19,7 @@ public final class OppgittPeriode extends LukketPeriode {
     private final PeriodeVurderingType periodeVurderingType;
     private final PeriodeKilde periodeKilde;
     private final boolean flerbarnsdager;
-    private final BigDecimal samtidigUttaksprosent;
+    private final SamtidigUttaksprosent samtidigUttaksprosent;
     private final UtsettelseÅrsak utsettelseÅrsak;
     private final OppholdÅrsak oppholdÅrsak;
     //TODO fjerne
@@ -33,7 +33,7 @@ public final class OppgittPeriode extends LukketPeriode {
                            Set<AktivitetIdentifikator> gradertAktiviteter,
                            OverføringÅrsak overføringÅrsak,
                            PeriodeVurderingType periodeVurderingType,
-                           BigDecimal samtidigUttaksprosent,
+                           SamtidigUttaksprosent samtidigUttaksprosent,
                            boolean flerbarnsdager,
                            UtsettelseÅrsak utsettelseÅrsak,
                            OppholdÅrsak oppholdÅrsak) {
@@ -106,7 +106,7 @@ public final class OppgittPeriode extends LukketPeriode {
         return flerbarnsdager;
     }
 
-    public BigDecimal getSamtidigUttaksprosent() {
+    public SamtidigUttaksprosent getSamtidigUttaksprosent() {
         return samtidigUttaksprosent;
     }
 
@@ -186,7 +186,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                               LocalDate tom,
                                               PeriodeKilde periodeKilde,
                                               BigDecimal arbeidsprosent,
-                                              BigDecimal samtidigUttaksprosent,
+                                              SamtidigUttaksprosent samtidigUttaksprosent,
                                               boolean flerbarnsdager,
                                               Set<AktivitetIdentifikator> gradertAktiviteter,
                                               PeriodeVurderingType vurderingType) {
@@ -198,7 +198,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                                   LocalDate fom,
                                                   LocalDate tom,
                                                   PeriodeKilde periodeKilde,
-                                                  BigDecimal samtidigUttaksprosent,
+                                                  SamtidigUttaksprosent samtidigUttaksprosent,
                                                   boolean flerbarnsdager,
                                                   PeriodeVurderingType periodeVurderingType) {
         return new OppgittPeriode(stønadskontotype, fom, tom, periodeKilde, null, Set.of(), null,
