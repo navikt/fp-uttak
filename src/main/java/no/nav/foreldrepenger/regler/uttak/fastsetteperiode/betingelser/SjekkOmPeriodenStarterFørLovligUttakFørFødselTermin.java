@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -12,15 +11,15 @@ import java.time.LocalDate;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.*;
 
-@RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.ID)
-public class SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID)
+public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 27.2";
     public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før familiehendelse";
     private Konfigurasjon konfigurasjon;
 
 
-    public SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(Konfigurasjon konfigurasjon) {
         super(ID);
         this.konfigurasjon = konfigurasjon;
     }
