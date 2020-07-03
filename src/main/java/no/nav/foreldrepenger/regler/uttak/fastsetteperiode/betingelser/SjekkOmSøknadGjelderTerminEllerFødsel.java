@@ -5,13 +5,13 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkOmSøknadGjelderFødsel.ID)
-public class SjekkOmSøknadGjelderFødsel extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmSøknadGjelderTerminEllerFødsel.ID)
+public class SjekkOmSøknadGjelderTerminEllerFødsel extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.1";
-    public static final String BESKRIVELSE = "Er det fødsel?";
+    public static final String BESKRIVELSE = "Er søknaden en terminsøknad/fødselsøknad?";
 
-    public SjekkOmSøknadGjelderFødsel() {
+    public SjekkOmSøknadGjelderTerminEllerFødsel() {
         super(ID);
     }
 

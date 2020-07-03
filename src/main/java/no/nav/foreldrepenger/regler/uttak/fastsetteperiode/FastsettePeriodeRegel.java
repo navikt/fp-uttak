@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSamtidigUttak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadsperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGradering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
@@ -139,7 +139,19 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
         return rs.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
                 .hvis(new SjekkOmManglendeSøktPeriode(), sjekkOmTomPåKontoVedManglendeSøktPeriode())
-                .ellers(sjekkOmPeriodeErForTidlig());
+                .ellers(sjekkOmSøknadGjelderTerminFødsel());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderTerminFødsel() {
+        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmPeriodeErForTidlig())
+                .ellers(sjekkOmAdopsjonPeriodeErForTidlig());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAdopsjonPeriodeErForTidlig() {
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
+                .ellers(sjekkOmTomPåKontoVedSøktPeriode());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
@@ -313,8 +325,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFPFFGjelderFødsel() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, GJELDER_FPFF_PERIODE_FØDSEL)
-                .hvis(new SjekkOmSøknadGjelderFødsel(), new ForeldrepengerFørFødselDelregel(konfigurasjon).getSpecification())
+        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, GJELDER_FPFF_PERIODE_FØDSEL)
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), new ForeldrepengerFørFødselDelregel(konfigurasjon).getSpecification())
                 .ellers(Manuellbehandling.opprett("UT1092", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 }

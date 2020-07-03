@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -9,6 +8,9 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.time.LocalDate;
+
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.TERMIN;
 
 @RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID)
 public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends LeafSpecification<FastsettePeriodeGrunnlag> {
@@ -28,16 +30,20 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
         var hendelseDato = hendelseDato(grunnlag);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        int ukerFørFødselUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
-        if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFødselUttaksgrense))) {
+        int ukerFørFamiliehendelseUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
+        if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFamiliehendelseUttaksgrense))) {
             return ja();
         }
         return nei();
     }
 
     private LocalDate hendelseDato(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getSøknadstype() == Søknadstype.TERMIN
-                ? grunnlag.getTermindato()
+        var søknadType = grunnlag.getSøknadstype();
+        if (søknadType != TERMIN && søknadType != FØDSEL) {
+            throw new IllegalArgumentException("Forventer Søknadstype termin eller fødsel, fikk " + søknadType);
+        }
+        return søknadType == TERMIN
+                ? grunnlag.getTermindato() // søknadsfrist regnes fra termindato ved terminsøknad
                 : grunnlag.getFødselsdato();
     }
 }
