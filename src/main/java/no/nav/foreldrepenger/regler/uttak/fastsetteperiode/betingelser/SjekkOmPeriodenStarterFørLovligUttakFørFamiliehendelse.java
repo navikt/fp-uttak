@@ -37,12 +37,11 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse extends Le
 
     private LocalDate hendelseDato(FastsettePeriodeGrunnlag grunnlag) {
         var søknadType = grunnlag.getSøknadstype();
-        if (søknadType == Søknadstype.ADOPSJON) {
-            return grunnlag.getFamiliehendelse();
-        } else if (søknadType == Søknadstype.TERMIN) {
-            // søknadsfrist regnes fra termindato ved terminsøknad
-            return grunnlag.getTermindato();
+        if (!søknadType.gjelderTerminFødsel()) {
+            throw new IllegalArgumentException("Må være type SøknadType termin eller fødsel, fikk " + søknadType);
         }
-        return grunnlag.getFødselsdato();
+        return søknadType == Søknadstype.TERMIN
+                ? grunnlag.getTermindato() // søknadsfrist regnes fra termindato ved terminsøknad
+                : grunnlag.getFødselsdato();
     }
 }
