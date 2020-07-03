@@ -9,13 +9,14 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.time.LocalDate;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.*;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.TERMIN;
 
 @RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID)
 public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 27.2";
-    public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før familiehendelse";
+    public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før fødsel/termin";
     private Konfigurasjon konfigurasjon;
 
 
@@ -39,7 +40,7 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
     private LocalDate hendelseDato(FastsettePeriodeGrunnlag grunnlag) {
         var søknadType = grunnlag.getSøknadstype();
         if (søknadType != TERMIN && søknadType != FØDSEL) {
-            throw new IllegalArgumentException("Forventer SøknadType termin eller fødsel, fikk " + søknadType);
+            throw new IllegalArgumentException("Forventer Søknadstype termin eller fødsel, fikk " + søknadType);
         }
         return søknadType == TERMIN
                 ? grunnlag.getTermindato() // søknadsfrist regnes fra termindato ved terminsøknad
