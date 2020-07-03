@@ -10,6 +10,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmPeriodenStarterFørFamiliehendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.2";
+    public static final String BESKRIVELSE = "Starter perioden før familiehendelsen?";
 
     public SjekkOmPeriodenStarterFørFamiliehendelse() {
         super(ID);

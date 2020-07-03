@@ -10,6 +10,8 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.*;
+
 @RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse.ID)
 public class SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
@@ -37,10 +39,10 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse extends Le
 
     private LocalDate hendelseDato(FastsettePeriodeGrunnlag grunnlag) {
         var søknadType = grunnlag.getSøknadstype();
-        if (!søknadType.gjelderTerminFødsel()) {
-            throw new IllegalArgumentException("Må være type SøknadType termin eller fødsel, fikk " + søknadType);
+        if (søknadType != TERMIN && søknadType != FØDSEL) {
+            throw new IllegalArgumentException("Forventer SøknadType termin eller fødsel, fikk " + søknadType);
         }
-        return søknadType == Søknadstype.TERMIN
+        return søknadType == TERMIN
                 ? grunnlag.getTermindato() // søknadsfrist regnes fra termindato ved terminsøknad
                 : grunnlag.getFødselsdato();
     }

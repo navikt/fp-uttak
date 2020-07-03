@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
@@ -87,8 +87,8 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFødsel() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, "Er det fødsel?")
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmPeriodeStarterFørFamiliehendelse())
+        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
+            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmPeriodeStarterFørFamiliehendelse())
             .ellers(sjekkOmPeriodeStarterFørOmsorgsovertakelse());
     }
 

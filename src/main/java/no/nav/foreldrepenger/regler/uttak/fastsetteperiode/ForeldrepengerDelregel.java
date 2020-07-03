@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
@@ -57,8 +57,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødselMor() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse())
+        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, FØDSEL)
+            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse())
             .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseMor());
     }
 
@@ -69,8 +69,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødselFar() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUttakSkalVæreFørFamileHendelse())
+        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, FØDSEL)
+            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttakSkalVæreFørFamileHendelse())
             .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseFar());
     }
 
@@ -225,8 +225,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødsel() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUttakSkjerFørDeFørsteUkene())
+        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, FØDSEL)
+            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttakSkjerFørDeFørsteUkene())
             .ellers(sjekkFarUtenAleneomsorgHarDisponibleDager());
     }
 

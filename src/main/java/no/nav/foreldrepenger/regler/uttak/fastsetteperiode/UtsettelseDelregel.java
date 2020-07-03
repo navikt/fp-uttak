@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErArbeidstaker;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerInnlagt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaArbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaFerie;
@@ -79,8 +79,8 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
             .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkOmSøkerErArbeidstaker)
             .ellers(IkkeOppfylt.opprett("UT1101", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE, true, true));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, SjekkOmSøknadGjelderFødsel.BESKRIVELSE)
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUtsettelseEtterUke6)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
+            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUtsettelseEtterUke6)
             .ellers(sjekkOmSøkerErArbeidstaker);
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID, SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
@@ -108,8 +108,8 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
             .ellers(Manuellbehandling.opprett("UT1111", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
                     Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderFødsel.ID, SjekkOmSøknadGjelderFødsel.BESKRIVELSE)
-            .hvis(new SjekkOmSøknadGjelderFødsel(), sjekkOmUtsettelseEtterUke6)
+        Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
+            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUtsettelseEtterUke6)
             .ellers(sjekkOmBareFarHarRettNode);
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErIArbeidPåHeltid = rs.hvisRegel(SjekkOmFulltArbeidForUtsettelse.ID,
