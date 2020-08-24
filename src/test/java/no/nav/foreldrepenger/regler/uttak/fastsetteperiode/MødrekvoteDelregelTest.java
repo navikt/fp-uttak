@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagT
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -336,7 +337,7 @@ public class MødrekvoteDelregelTest {
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(fødselsdato.plusDays(3))
-                    .medErAlleBarnDøde(true)))
+                    .medGjenlevedeBarn(Optional.of(0))))
             .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -359,7 +360,7 @@ public class MødrekvoteDelregelTest {
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(barnsDødsdato)
-                    .medErAlleBarnDøde(true)))
+                    .medGjenlevedeBarn(Optional.of(0))))
             .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -381,7 +382,7 @@ public class MødrekvoteDelregelTest {
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(fødselsdato.plusDays(3))
-                    .medErAlleBarnDøde(false)))
+                    .medGjenlevedeBarn(Optional.of(1))))
             .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);

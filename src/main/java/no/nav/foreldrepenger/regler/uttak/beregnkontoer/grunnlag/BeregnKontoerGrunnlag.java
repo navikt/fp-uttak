@@ -8,7 +8,7 @@ import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 @RuleDocumentationGrunnlag
 public class BeregnKontoerGrunnlag {
 
-    private int antallBarn;
+    private Optional<Integer> antallBarn;
     private boolean morRett;
     private boolean farRett;
     private Dekningsgrad dekningsgrad;
@@ -22,7 +22,7 @@ public class BeregnKontoerGrunnlag {
     private BeregnKontoerGrunnlag() {
     }
 
-    public int getAntallBarn() {
+    public Optional<Integer> getAntallBarn() {
         return antallBarn;
     }
 
@@ -74,7 +74,7 @@ public class BeregnKontoerGrunnlag {
     public static class Builder {
         private BeregnKontoerGrunnlag kladd = new BeregnKontoerGrunnlag();
 
-        public Builder medAntallBarn(int antallBarn) {
+        public Builder medAntallBarn(Optional<Integer> antallBarn) {
             kladd.antallBarn = antallBarn;
             return this;
         }

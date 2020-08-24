@@ -203,7 +203,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public boolean erAlleBarnDøde() {
-        return regelGrunnlag.getDatoer().getDødsdatoer() != null && regelGrunnlag.getDatoer().getDødsdatoer().erAlleBarnDøde();
+        return regelGrunnlag.getDatoer().getDødsdatoer() != null && regelGrunnlag.getDatoer().getDødsdatoer().getGjenlevendeBarn().isPresent() && regelGrunnlag.getDatoer().getDødsdatoer().getGjenlevendeBarn().get() == 0;
     }
 
     @Override

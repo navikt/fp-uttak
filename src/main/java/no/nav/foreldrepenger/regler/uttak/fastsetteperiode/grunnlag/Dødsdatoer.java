@@ -1,12 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public final class Dødsdatoer {
 
     private LocalDate søkersDødsdato;
     private LocalDate barnsDødsdato;
-    private boolean alleBarnDøde;
+
+    private Optional<Integer> gjenlevendeBarn;
 
     private Dødsdatoer() {
     }
@@ -19,8 +21,8 @@ public final class Dødsdatoer {
         return barnsDødsdato;
     }
 
-    public boolean erAlleBarnDøde(){
-        return alleBarnDøde;
+    public Optional<Integer> getGjenlevendeBarn() {
+        return gjenlevendeBarn;
     }
 
     public static class Builder {
@@ -36,11 +38,10 @@ public final class Dødsdatoer {
             return this;
         }
 
-        public Builder medErAlleBarnDøde(boolean alleBarnDøde) {
-            kladd.alleBarnDøde = alleBarnDøde;
+        public Builder medGjenlevedeBarn(Optional<Integer> gjenlevendeBarn) {
+            kladd.gjenlevendeBarn = gjenlevendeBarn;
             return this;
         }
-
         public Dødsdatoer build() {
             return kladd;
         }

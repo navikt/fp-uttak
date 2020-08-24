@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -59,7 +60,7 @@ public class StønadskontoRegelOrkestreringTest {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
                 .medTermindato(fødselsdato.plusWeeks(7).plusDays(4))
-                .medAntallBarn(1)
+                .medAntallBarn(Optional.of(1))
                 .farRett(true)
                 .morRett(true)
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
@@ -81,7 +82,7 @@ public class StønadskontoRegelOrkestreringTest {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
                 .medTermindato(fødselsdato.plusWeeks(8))
-                .medAntallBarn(1)
+                .medAntallBarn(Optional.of(1))
                 .farAleneomsorg(true)
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
@@ -99,7 +100,7 @@ public class StønadskontoRegelOrkestreringTest {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
                 .medTermindato(fødselsdato.plusWeeks(7).plusDays(1))
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -123,7 +124,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -151,7 +152,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -180,7 +181,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -209,7 +210,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -239,7 +240,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -269,7 +270,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medTermindato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -299,7 +300,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(true)
             .farAleneomsorg(false)
@@ -329,7 +330,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -359,7 +360,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -389,7 +390,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -419,7 +420,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -445,7 +446,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -468,7 +469,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -491,7 +492,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -514,7 +515,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -537,7 +538,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(2)
+            .medAntallBarn(Optional.of(2))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -560,7 +561,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(2)
+            .medAntallBarn(Optional.of(2))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -583,7 +584,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_mor_rett_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medTermindato(DATO)
-            .medAntallBarn(2)
+            .medAntallBarn(Optional.of(2))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -606,7 +607,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(2)
+            .medAntallBarn(Optional.of(2))
             .farRett(false)
             .morRett(true)
             .farAleneomsorg(false)
@@ -629,7 +630,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
-                .medAntallBarn(3)
+                .medAntallBarn(Optional.of(3))
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -652,7 +653,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(3)
+                .medAntallBarn(Optional.of(3))
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -675,7 +676,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_mor_rett_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(3)
+                .medAntallBarn(Optional.of(3))
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -698,7 +699,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(3)
+                .medAntallBarn(Optional.of(3))
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -720,7 +721,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(true)
@@ -742,7 +743,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medTermindato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(true)
@@ -764,7 +765,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(true)
@@ -786,7 +787,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(true)
@@ -808,7 +809,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
@@ -830,7 +831,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
@@ -852,7 +853,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medTermindato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(false)
@@ -874,7 +875,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(false)
@@ -898,7 +899,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medTermindato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(false)
@@ -923,7 +924,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medFødselsdato(DATO)
-            .medAntallBarn(3)
+            .medAntallBarn(Optional.of(3))
             .farRett(true)
             .morRett(false)
             .farAleneomsorg(false)
@@ -947,7 +948,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
@@ -972,7 +973,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .medAntallBarn(Optional.of(2))
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
@@ -994,7 +995,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void hverken_mor_eller_far_har_rett() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
             .medTermindato(DATO)
-            .medAntallBarn(1)
+            .medAntallBarn(Optional.of(1))
             .farRett(false)
             .morRett(false)
             .farAleneomsorg(false)
@@ -1011,7 +1012,7 @@ public class StønadskontoRegelOrkestreringTest {
     public void bergegn_kontoer_regel_skal_produsere_sporing_med_json() throws IOException {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .medAntallBarn(Optional.of(1))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
@@ -1032,7 +1033,7 @@ public class StønadskontoRegelOrkestreringTest {
                 //Så tidlig at det vil skape exception hvis bruk ettersom vi ikke har noe konfig for 2016
                 .medFødselsdato(LocalDate.of(2016, 1, 1))
                 .medOmsorgsovertakelseDato(LocalDate.of(2020, 2, 10))
-                .medAntallBarn(1)
+                .medAntallBarn(Optional.of(1))
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)

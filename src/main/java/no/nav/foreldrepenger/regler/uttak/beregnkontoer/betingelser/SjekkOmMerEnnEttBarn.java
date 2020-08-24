@@ -16,7 +16,7 @@ public class SjekkOmMerEnnEttBarn extends LeafSpecification<BeregnKontoerGrunnla
 
     @Override
     public Evaluation evaluate(BeregnKontoerGrunnlag grunnlag) {
-        if (grunnlag.getAntallBarn() > 1) {
+        if (grunnlag.getAntallBarn().isPresent() && grunnlag.getAntallBarn().get() > 1) {
             return ja();
         }
         return nei();

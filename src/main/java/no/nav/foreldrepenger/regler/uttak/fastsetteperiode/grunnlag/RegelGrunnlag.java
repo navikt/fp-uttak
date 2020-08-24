@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class RegelGrunnlag {
     private Opptjening opptjening;
     private Adopsjon adopsjon;
     private Kontoer kontoer;
+    private Optional<Integer> totaltAntallBarnForFødsel;
 
     private RegelGrunnlag() {
 
@@ -80,6 +82,8 @@ public class RegelGrunnlag {
         return kontoer;
     }
 
+    public Optional<Integer> getTotaltAntallBarnForFødsel() { return totaltAntallBarnForFødsel; }
+
     public static class Builder  {
 
         private RegelGrunnlag kladd = new RegelGrunnlag();
@@ -134,6 +138,11 @@ public class RegelGrunnlag {
 
         public Builder medKontoer(Kontoer.Builder kontoer) {
             kladd.kontoer = kontoer == null ? null : kontoer.build();
+            return this;
+        }
+
+        public Builder medTotaltAntallBarnForFødsel(Optional<Integer> totaltAntallBarnForFødsel) {
+            kladd.totaltAntallBarnForFødsel = totaltAntallBarnForFødsel;
             return this;
         }
 
