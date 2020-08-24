@@ -80,24 +80,23 @@ class KnekkpunktIdentifiserer {
     private static Optional<LocalDate> finnKnekkpunktVedDød(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon, LocalDate familiehendelseDato) {
         if (barnsDødsdatoFinnes(grunnlag) ) {
             Optional<Integer> gjenlevendeBarn = gjenlevendeBarn(grunnlag);
-            if (gjenlevendeBarn.isPresent()) {
-                LocalDate sisteDødsdato = grunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato();
+            LocalDate sisteDødsdato = grunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato();
 
-                if (gjenlevendeBarn.get() == 0) {
-                    return Optional.of(sisteDødsdato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
-                } else {
-                    List<OppgittPeriode> fellesperioder = grunnlag.getSøknad().getOppgittePerioder().stream()
-                            .filter(p -> p.getStønadskontotype() == Stønadskontotype.FELLESPERIODE)
-                            .sorted(Comparator.comparing(OppgittPeriode::getTom)).collect(Collectors.toList());
+            if (gjenlevendeBarn.isEmpty() || gjenlevendeBarn.get() == 0) {
+                return Optional.of(sisteDødsdato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
+            } else {
+                List<OppgittPeriode> fellesperioder = grunnlag.getSøknad().getOppgittePerioder().stream()
+                        .filter(p -> p.getStønadskontotype() == Stønadskontotype.FELLESPERIODE)
+                        .sorted(Comparator.comparing(OppgittPeriode::getTom)).collect(Collectors.toList());
 
-                    List<OppgittPeriode> fellesperioderForLevendeBarn = fellesperioder.subList(0,gjenlevendeBarn.get());
-                    Optional<LocalDate> sisteUtbetalingForLevendeBarn = fellesperioderForLevendeBarn.stream()
-                        .map(OppgittPeriode::getTom)
-                        .max(LocalDate::compareTo);
-                    LocalDate innslagspunktForDødstillegg = (sisteUtbetalingForLevendeBarn.isPresent() && sisteUtbetalingForLevendeBarn.get().isAfter(sisteDødsdato))?sisteUtbetalingForLevendeBarn.get():sisteDødsdato;
-                    return Optional.of(innslagspunktForDødstillegg.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
-                }
+                List<OppgittPeriode> fellesperioderForLevendeBarn = fellesperioder.subList(0,gjenlevendeBarn.get());
+                Optional<LocalDate> sisteUtbetalingForLevendeBarn = fellesperioderForLevendeBarn.stream()
+                    .map(OppgittPeriode::getTom)
+                    .max(LocalDate::compareTo);
+                LocalDate innslagspunktForDødstillegg = (sisteUtbetalingForLevendeBarn.isPresent() && sisteUtbetalingForLevendeBarn.get().isAfter(sisteDødsdato))?sisteUtbetalingForLevendeBarn.get():sisteDødsdato;
+                return Optional.of(innslagspunktForDødstillegg.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
             }
+
         }
         return Optional.empty();
     }
