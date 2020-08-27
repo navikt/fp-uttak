@@ -701,8 +701,8 @@ public class ForeldrepengerDelregelTest {
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1266");
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1269");
+        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

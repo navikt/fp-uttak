@@ -25,12 +25,13 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto e
 
         for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
             Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
-            if (saldo.compareTo(Trekkdager.ZERO) > 0) {
-                return ja();
-            }
-            if (aktuellPeriode.isFlerbarnsdager()) {
-                Trekkdager saldoFlerbarnsdager = grunnlag.getSaldoUtregning().saldoITrekkdager(Stønadskontotype.FLERBARNSDAGER, aktivitet);
-                if (saldoFlerbarnsdager.compareTo(Trekkdager.ZERO) > 0) {
+            if (saldo.merEnn0()) {
+                if (aktuellPeriode.isFlerbarnsdager()) {
+                    Trekkdager saldoFlerbarnsdager = grunnlag.getSaldoUtregning().saldoITrekkdager(Stønadskontotype.FLERBARNSDAGER, aktivitet);
+                    if (saldoFlerbarnsdager.merEnn0()) {
+                        return ja();
+                    }
+                } else {
                     return ja();
                 }
             }
