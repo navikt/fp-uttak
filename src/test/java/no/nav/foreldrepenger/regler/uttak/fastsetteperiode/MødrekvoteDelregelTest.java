@@ -337,7 +337,7 @@ public class MødrekvoteDelregelTest {
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(fødselsdato.plusDays(3))
-                    .medGjenlevedeBarn(Optional.of(0))))
+                    .medGjenlevedeBarn(0)))
             .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -360,7 +360,7 @@ public class MødrekvoteDelregelTest {
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(barnsDødsdato)
-                    .medGjenlevedeBarn(Optional.of(0))))
+                    .medGjenlevedeBarn(0)))
             .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -382,7 +382,7 @@ public class MødrekvoteDelregelTest {
                 .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(fødselsdato.plusDays(3))
-                    .medGjenlevedeBarn(Optional.of(1))))
+                    .medGjenlevedeBarn(1)))
             .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);

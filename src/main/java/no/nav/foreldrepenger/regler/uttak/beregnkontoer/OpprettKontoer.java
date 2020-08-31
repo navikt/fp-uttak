@@ -94,7 +94,7 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
     }
 
     private boolean kunFarRettIkkeAleneomsorgFlerbarnsdager(BeregnKontoerGrunnlag grunnlag) {
-        return grunnlag.isFarRett() && !grunnlag.isMorRett() && !grunnlag.isFarAleneomsorg() && grunnlag.getAntallBarn().isPresent() && grunnlag.getAntallBarn().get() > 0;
+        return grunnlag.isFarRett() && !grunnlag.isMorRett() && !grunnlag.isFarAleneomsorg() && grunnlag.getAntallLevendeBarn().isPresent() && grunnlag.getAntallLevendeBarn().get() > 0;
     }
 
     private Evaluation beregnetMedResultat(Map<Stønadskontotype, Integer> kontoer, Integer antallExtraBarnDager, Integer antallPrematurDager) {

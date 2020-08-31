@@ -37,6 +37,7 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, d_2017_01_01, null, 12)
                 .leggTilParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, d_2017_01_01, null, 3)
                 .leggTilParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, d_2017_01_01, null, 6)
+                .leggTilParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_DAGER, d_2017_01_01, null, 30)
                 //grenser
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO, d_2017_01_01, null, Period.ofYears(3))
                 .leggTilParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, LocalDate.of(2019, 7, 1), null, 52)
@@ -90,6 +91,7 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, d_2010_01_01, d_2018_12_31, 12)
                 .leggTilParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, d_2010_01_01, d_2018_12_31, 3)
                 .leggTilParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, d_2017_01_01, null, 6)
+                .leggTilParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_DAGER, d_2017_01_01, null, 30)
                 //grenser
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO, d_2019_01_01, null, Period.ofYears(3))
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO, d_2010_01_01, d_2018_12_31, Period.ofYears(3))

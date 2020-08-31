@@ -8,7 +8,7 @@ public final class Dødsdatoer {
     private LocalDate søkersDødsdato;
     private LocalDate barnsDødsdato;
 
-    private Optional<Integer> gjenlevendeBarn;
+    private Integer gjenlevendeBarn;
 
     private Dødsdatoer() {
     }
@@ -22,7 +22,7 @@ public final class Dødsdatoer {
     }
 
     public Optional<Integer> getGjenlevendeBarn() {
-        return gjenlevendeBarn;
+        return Optional.ofNullable(gjenlevendeBarn);
     }
 
     public static class Builder {
@@ -38,7 +38,7 @@ public final class Dødsdatoer {
             return this;
         }
 
-        public Builder medGjenlevedeBarn(Optional<Integer> gjenlevendeBarn) {
+        public Builder medGjenlevedeBarn(Integer gjenlevendeBarn) {
             kladd.gjenlevendeBarn = gjenlevendeBarn;
             return this;
         }

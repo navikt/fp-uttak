@@ -14,7 +14,7 @@ public class SjekkOmToBarn extends LeafSpecification<BeregnKontoerGrunnlag> {
 
     @Override
     public Evaluation evaluate(BeregnKontoerGrunnlag grunnlag) {
-        if (grunnlag.getAntallBarn().isPresent() && grunnlag.getAntallBarn().get() == 2) {
+        if (grunnlag.getAntallLevendeBarn().isPresent() && grunnlag.getAntallLevendeBarn().get() == 2) {
             return ja();
         }
         return nei();

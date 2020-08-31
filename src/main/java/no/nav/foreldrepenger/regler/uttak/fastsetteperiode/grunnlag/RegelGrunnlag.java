@@ -20,7 +20,7 @@ public class RegelGrunnlag {
     private Opptjening opptjening;
     private Adopsjon adopsjon;
     private Kontoer kontoer;
-    private Optional<Integer> totaltAntallBarnForFødsel;
+    private Integer totaltAntallBarnForFødsel;
 
     private RegelGrunnlag() {
 
@@ -82,7 +82,7 @@ public class RegelGrunnlag {
         return kontoer;
     }
 
-    public Optional<Integer> getTotaltAntallBarnForFødsel() { return totaltAntallBarnForFødsel; }
+    public Optional<Integer> getTotaltAntallBarnForFødsel() { return Optional.ofNullable(totaltAntallBarnForFødsel); }
 
     public static class Builder  {
 
@@ -141,7 +141,7 @@ public class RegelGrunnlag {
             return this;
         }
 
-        public Builder medTotaltAntallBarnForFødsel(Optional<Integer> totaltAntallBarnForFødsel) {
+        public Builder medTotaltAntallBarnForFødsel(Integer totaltAntallBarnForFødsel) {
             kladd.totaltAntallBarnForFødsel = totaltAntallBarnForFødsel;
             return this;
         }

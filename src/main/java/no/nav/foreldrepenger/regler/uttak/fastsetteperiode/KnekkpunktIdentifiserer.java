@@ -10,13 +10,11 @@ import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,6 +46,13 @@ class KnekkpunktIdentifiserer {
             knekkpunkter.add(grunnlag.getDatoer().getDødsdatoer().getSøkersDødsdato().plusDays(1));
         }
 
+        if (barnsDødsdatoFinnes(grunnlag)) {
+            Optional<Integer> gjenlevendeBarn = gjenlevendeBarn(grunnlag);
+            if (gjenlevendeBarn.isEmpty() || gjenlevendeBarn.get() == 0) {
+                knekkpunkter.add(grunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato().plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
+            }
+        }
+
         if (medlemskapOpphørsdatoFinnes(grunnlag)) {
             knekkpunkter.add(grunnlag.getMedlemskap().getOpphørsdato());
         }
@@ -56,10 +61,6 @@ class KnekkpunktIdentifiserer {
         leggTilKnekkpunkterForUtsettelsePgaFerie(grunnlag, minimumsgrenseForLovligUttak, maksimumsgrenseForLovligeUttak, knekkpunkter);
 
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getOppgittePerioder());
-
-        Optional<LocalDate> knekkpunktVedDød = finnKnekkpunktVedDød(grunnlag, konfigurasjon, familiehendelseDato);
-        if(knekkpunktVedDød.isPresent())knekkpunkter.add(knekkpunktVedDød.get());
-
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             leggTilKnekkpunkterForTerminFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
         }
@@ -75,30 +76,6 @@ class KnekkpunktIdentifiserer {
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
                 .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
                 .collect(Collectors.toSet());
-    }
-
-    private static Optional<LocalDate> finnKnekkpunktVedDød(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon, LocalDate familiehendelseDato) {
-        if (barnsDødsdatoFinnes(grunnlag) ) {
-            Optional<Integer> gjenlevendeBarn = gjenlevendeBarn(grunnlag);
-            LocalDate sisteDødsdato = grunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato();
-
-            if (gjenlevendeBarn.isEmpty() || gjenlevendeBarn.get() == 0) {
-                return Optional.of(sisteDødsdato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
-            } else {
-                List<OppgittPeriode> fellesperioder = grunnlag.getSøknad().getOppgittePerioder().stream()
-                        .filter(p -> p.getStønadskontotype() == Stønadskontotype.FELLESPERIODE)
-                        .sorted(Comparator.comparing(OppgittPeriode::getTom)).collect(Collectors.toList());
-
-                List<OppgittPeriode> fellesperioderForLevendeBarn = fellesperioder.subList(0,gjenlevendeBarn.get());
-                Optional<LocalDate> sisteUtbetalingForLevendeBarn = fellesperioderForLevendeBarn.stream()
-                    .map(OppgittPeriode::getTom)
-                    .max(LocalDate::compareTo);
-                LocalDate innslagspunktForDødstillegg = (sisteUtbetalingForLevendeBarn.isPresent() && sisteUtbetalingForLevendeBarn.get().isAfter(sisteDødsdato))?sisteUtbetalingForLevendeBarn.get():sisteDødsdato;
-                return Optional.of(innslagspunktForDødstillegg.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
-            }
-
-        }
-        return Optional.empty();
     }
 
     private static LocalDate finnMinimumgrenseLovligUttak(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {

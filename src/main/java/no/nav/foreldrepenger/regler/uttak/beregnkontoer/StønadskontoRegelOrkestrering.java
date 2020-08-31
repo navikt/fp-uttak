@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGr
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
@@ -32,6 +33,11 @@ public class StønadskontoRegelOrkestrering {
         String evaluationJson = EvaluationSerializer.asJson(evaluation);
 
         Map<Stønadskontotype, Integer> stønadskontoer = hentStønadskontoer(evaluation);
+        if(grunnlag.getDødsdato().isPresent()) {
+            Integer uttaksdagerEtterDød = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_DAGER, grunnlag.getFamiliehendelsesdato());
+            stønadskontoer.put(Stønadskontotype.DØDBARNSDAGER, uttaksdagerEtterDød);
+            stønadskontoer.put(Stønadskontotype.FELLESPERIODE, ((stønadskontoer.containsKey(Stønadskontotype.FELLESPERIODE))?stønadskontoer.get(Stønadskontotype.FELLESPERIODE).intValue():0) + uttaksdagerEtterDød);
+        }
         Integer antallFlerbarnsdager = hentAntallFlerbarnsdager(evaluation);
         Integer antallPrematurDager = hentAntallPrematurDager(evaluation);
 

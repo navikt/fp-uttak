@@ -8,13 +8,14 @@ import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 @RuleDocumentationGrunnlag
 public class BeregnKontoerGrunnlag {
 
-    private Optional<Integer> antallBarn;
+    private Integer antallLevendeBarn;
     private boolean morRett;
     private boolean farRett;
     private Dekningsgrad dekningsgrad;
     private boolean farAleneomsorg;
     private boolean morAleneomsorg;
     private LocalDate fødselsdato;
+    private LocalDate dødsdato;
     private LocalDate termindato;
     //adopsjon
     private LocalDate omsorgsovertakelseDato;
@@ -22,8 +23,8 @@ public class BeregnKontoerGrunnlag {
     private BeregnKontoerGrunnlag() {
     }
 
-    public Optional<Integer> getAntallBarn() {
-        return antallBarn;
+    public Optional<Integer> getAntallLevendeBarn() {
+        return Optional.ofNullable(antallLevendeBarn);
     }
 
     public boolean isMorRett() {
@@ -54,6 +55,10 @@ public class BeregnKontoerGrunnlag {
         return Optional.ofNullable(fødselsdato);
     }
 
+    public Optional<LocalDate> getDødsdato() {
+        return Optional.ofNullable(dødsdato);
+    }
+
     public Optional<LocalDate> getTermindato() {
         return Optional.ofNullable(termindato);
     }
@@ -74,8 +79,8 @@ public class BeregnKontoerGrunnlag {
     public static class Builder {
         private BeregnKontoerGrunnlag kladd = new BeregnKontoerGrunnlag();
 
-        public Builder medAntallBarn(Optional<Integer> antallBarn) {
-            kladd.antallBarn = antallBarn;
+        public Builder medAntallLevendeBarn(Integer antallLevendeBarn) {
+            kladd.antallLevendeBarn = antallLevendeBarn;
             return this;
         }
 
@@ -106,6 +111,11 @@ public class BeregnKontoerGrunnlag {
 
         public Builder medFødselsdato(LocalDate dato) {
             kladd.fødselsdato = dato;
+            return this;
+        }
+
+        public Builder medDødsdato(LocalDate dato) {
+            kladd.dødsdato = dato;
             return this;
         }
 
