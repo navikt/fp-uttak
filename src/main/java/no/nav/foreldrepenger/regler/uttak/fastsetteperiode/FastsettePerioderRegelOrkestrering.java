@@ -277,7 +277,7 @@ public class FastsettePerioderRegelOrkestrering {
     private Kontoer filtrerForDødsfall(Kontoer kontoer, Integer gjenlevendeBarn, LocalDate barnsDødsdato, Konfigurasjon konfigurasjon, LocalDate hendelsesdato, Optional<Integer> dekningsgrad) {
         if(gjenlevendeBarn == 0) return kontoer;
         boolean fulldekningsgrad = !(dekningsgrad.isPresent() && dekningsgrad.get() == 80);
-        int flerbarnsdager = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_DAGER, hendelsesdato);
+        int flerbarnsdager = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, hendelsesdato) * 5; // 5 trekkdager per uke
         int fellesperiodeUtenTillegg = (fulldekningsgrad)?
                 konfigurasjon.getParameter(Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER, hendelsesdato):
                 konfigurasjon.getParameter(Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER, hendelsesdato);
