@@ -21,6 +21,7 @@ public class RegelGrunnlag {
     private Adopsjon adopsjon;
     private Kontoer kontoer;
     private Integer totaltAntallBarnForFødsel;
+    private Integer dekningsgrad;
 
     private RegelGrunnlag() {
 
@@ -82,7 +83,13 @@ public class RegelGrunnlag {
         return kontoer;
     }
 
-    public Optional<Integer> getTotaltAntallBarnForFødsel() { return Optional.ofNullable(totaltAntallBarnForFødsel); }
+    public Optional<Integer> getTotaltAntallBarnForFødsel() {
+        return Optional.ofNullable(totaltAntallBarnForFødsel);
+    }
+
+    public Optional<Integer> getDekningsgrad() {
+        return Optional.ofNullable(dekningsgrad);
+    }
 
     public static class Builder  {
 
@@ -143,6 +150,11 @@ public class RegelGrunnlag {
 
         public Builder medTotaltAntallBarnForFødsel(Integer totaltAntallBarnForFødsel) {
             kladd.totaltAntallBarnForFødsel = totaltAntallBarnForFødsel;
+            return this;
+        }
+
+        public Builder medDekningsgrad(Integer dekningsgrad) {
+            kladd.dekningsgrad = dekningsgrad;
             return this;
         }
 

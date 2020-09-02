@@ -268,6 +268,9 @@ class ManglendeSøktePerioderTjeneste {
         var antallUkerFpffFørFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato);
         var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
 
+        if(sorterteSøktePerioder.isEmpty()){
+            return List.of();
+        }
         var førsteUttaksdagSøknad = sorterteSøktePerioder.get(0).getFom();
 
         if (!førsteUttaksdagSøknad.isBefore(familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel))) {

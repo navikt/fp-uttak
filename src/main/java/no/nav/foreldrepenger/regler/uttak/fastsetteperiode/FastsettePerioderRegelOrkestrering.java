@@ -19,8 +19,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dødsdatoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
@@ -33,6 +36,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
@@ -58,10 +62,18 @@ public class FastsettePerioderRegelOrkestrering {
                 .collect(Collectors.toList());
 
         var resultatPerioder = new ArrayList<FastsettePeriodeResultat>();
+
+        var kontoer = grunnlag.getKontoer();
+        Dødsdatoer dødsdatoer = grunnlag.getDatoer().getDødsdatoer();
+        if(dødsdatoer != null && dødsdatoer.getBarnsDødsdato() != null &&
+                dødsdatoer.getGjenlevendeBarn().isPresent()){
+            kontoer = filtrerForDødsfall(kontoer, dødsdatoer.getGjenlevendeBarn().orElseThrow(),dødsdatoer.getBarnsDødsdato(),konfigurasjon, grunnlag.getDatoer().getFamiliehendelse(), grunnlag.getDekningsgrad());
+        }
+
         for (var aktuellPeriode : allePerioderSomSkalFastsettes) {
             FastsettePeriodeResultat resultat;
             do {
-                var saldoUtregningGrunnlag = saldoGrunnlag(grunnlag, resultatPerioder, aktuellPeriode, allePerioderSomSkalFastsettes);
+                var saldoUtregningGrunnlag = saldoGrunnlag(grunnlag, kontoer, resultatPerioder, aktuellPeriode, allePerioderSomSkalFastsettes);
                 var saldoUtregning = lagUtregning(saldoUtregningGrunnlag);
                 resultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, aktuellPeriode, saldoUtregning);
                 resultatPerioder.add(resultat);
@@ -241,16 +253,17 @@ public class FastsettePerioderRegelOrkestrering {
         }
     }
 
-    private SaldoUtregningGrunnlag saldoGrunnlag(RegelGrunnlag grunnlag,
+    private SaldoUtregningGrunnlag saldoGrunnlag(RegelGrunnlag grunnlag, Kontoer kontoer,
                                                  List<FastsettePeriodeResultat> resultatPerioder,
                                                  OppgittPeriode aktuellPeriode,
                                                  List<OppgittPeriode> allePerioderSomSkalFastsettes) {
         List<AnnenpartUttakPeriode> annenpartPerioder = grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder();
 
         var vedtaksperioder = vedtaksperioder(grunnlag);
+
         var søkersFastsattePerioder = map(resultatPerioder, vedtaksperioder);
         var utregningsdato = aktuellPeriode.getFom();
-        var kontoer = grunnlag.getKontoer();
+
         var alleAktiviteter = grunnlag.getArbeid().getAktiviteter();
         if (grunnlag.getBehandling().isTapende()) {
             var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
@@ -259,6 +272,36 @@ public class FastsettePerioderRegelOrkestrering {
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder,
                 kontoer, utregningsdato, alleAktiviteter);
+    }
+
+    private Kontoer filtrerForDødsfall(Kontoer kontoer, Integer gjenlevendeBarn, LocalDate barnsDødsdato, Konfigurasjon konfigurasjon, LocalDate hendelsesdato, Optional<Integer> dekningsgrad) {
+        if(gjenlevendeBarn == 0) return kontoer;
+        boolean fulldekningsgrad = !(dekningsgrad.isPresent() && dekningsgrad.get() == 80);
+        int flerbarnsdager = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_DAGER, hendelsesdato);
+        int fellesperiodeUtenTillegg = (fulldekningsgrad)?
+                konfigurasjon.getParameter(Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER, hendelsesdato):
+                konfigurasjon.getParameter(Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER, hendelsesdato);
+
+        if(gjenlevendeBarn == 2){
+            flerbarnsdager += konfigurasjon.getParameter(
+                    fulldekningsgrad? Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100:
+                            Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, hendelsesdato);
+        } else if(gjenlevendeBarn > 2){
+            flerbarnsdager += konfigurasjon.getParameter(
+                    fulldekningsgrad?Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100:
+                            Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, hendelsesdato);
+        }
+        List<Konto.Builder> resultatListe = new ArrayList<>();
+        for(Konto konto: kontoer.getKontoList()){
+            if(konto.getType() == Stønadskontotype.FELLESPERIODE){
+                resultatListe.add(new Konto.Builder().medType(Stønadskontotype.FELLESPERIODE).medTrekkdager(fellesperiodeUtenTillegg + flerbarnsdager));
+            }
+            else if(konto.getType() == Stønadskontotype.FLERBARNSDAGER){
+                resultatListe.add(new Konto.Builder().medType(Stønadskontotype.FLERBARNSDAGER).medTrekkdager(flerbarnsdager));
+            }
+            else resultatListe.add(new Konto.Builder().medType(konto.getType()).medTrekkdager(konto.getTrekkdager()));
+        }
+        return new Kontoer.Builder().medKontoList(resultatListe).build();
     }
 
     private List<FastsattUttakPeriode> vedtaksperioder(RegelGrunnlag grunnlag) {
