@@ -89,12 +89,6 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
             .ellers(sjekkBeggeRettNode(rs));
     }
 
-    /**
-     * Delregel for å opprette kontoer dersom aleneomsorg eller bare mor har rett til foreldrepenger.
-     *
-     * @param rs regelsett som skal brukes.
-     * @return rot noden av denne delregelen.
-     */
     private Specification<BeregnKontoerGrunnlag> opprettKontoer(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
 
         return rs.hvisRegel(SjekkOmMerEnnEttBarn.ID, SJEKK_OM_MER_ENN_ETT_BARN)
