@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareF
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBådeMorOgFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmDekningsgradEr100;
+import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmDødtBarn;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmFarHarAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmFødsel;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmMerEnnEttBarn;
@@ -35,9 +36,9 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     public static final String ID = "FP_VK 17";
     private static final String SJEKK_OM_MER_ENN_ETT_BARN = "Sjekk om det er mer enn ett barn?";
     private static final String SJEKK_OM_DET_ER_FØDSEL = "Sjekk om det er fødsel?";
+    private static final String SJEKK_OM_DET_ER_DØDE_BARN = "Sjekk om der er døde barn?";
     private static final String SJEKK_OM_100_PROSENT_DEKNINGSGRAD = "Sjekk om det er 100% dekningsgrad?";
     private static final String SJEKK_OM_TO_BARN = "Sjekk om det er to barn?";
-
 
     private Konfigurasjon konfigurasjon;
 
@@ -114,65 +115,80 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         if(faktorer.erAleneomsorg().isEmpty()){
             throw new IllegalArgumentException("Det er ikke oppgitt hvorvidt det dreier seg om aleneomsorg");
         }
-        if(Konfigurasjonsfaktorer.Berettiget.MOR == faktorer.berettiget().orElseThrow()) {
-            if (faktorer.er100Prosent().orElseThrow()) {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER));
-            } else {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER));
-            }
-        } else if(Konfigurasjonsfaktorer.Berettiget.FAR == faktorer.berettiget().orElseThrow()) {
-            if(faktorer.erAleneomsorg().orElseThrow()) {
-                if (faktorer.er100Prosent().orElseThrow()) {
-                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER));
-                } else {
-                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER));
-                }
-            } else {
-                if (faktorer.er100Prosent().orElseThrow()) {
-                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER));
-                } else {
-                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER));
-                }
-            }
-        } else if(Konfigurasjonsfaktorer.Berettiget.BEGGE == faktorer.berettiget().orElseThrow()) {
-            if (faktorer.er100Prosent().orElseThrow()) {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER));
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT));
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT));
-            } else {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER));
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_80_PROSENT));
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT));
-            }
+        if(faktorer.medDødtBarn().isEmpty()){
+            throw new IllegalArgumentException("Det er ikke oppgitt hvorvidt der finnes døde barn i hendelsen");
         }
-
         int antallBarn = faktorer.antallLevendeBarn().orElseThrow();
-        if(antallBarn == 2){
-            if(faktorer.er100Prosent().orElseThrow()) {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100));
-            } else{
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80));
+
+        if(antallBarn > 0) {
+            if (Konfigurasjonsfaktorer.Berettiget.MOR == faktorer.berettiget().orElseThrow()) {
+                if (faktorer.er100Prosent().orElseThrow()) {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER));
+                } else {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER));
+                }
+            } else if (Konfigurasjonsfaktorer.Berettiget.FAR == faktorer.berettiget().orElseThrow()) {
+                if (faktorer.erAleneomsorg().orElseThrow()) {
+                    if (faktorer.er100Prosent().orElseThrow()) {
+                        konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER));
+                    } else {
+                        konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER));
+                    }
+                } else {
+                    if (faktorer.er100Prosent().orElseThrow()) {
+                        konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER));
+                    } else {
+                        konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER));
+                    }
+                }
+            } else if (Konfigurasjonsfaktorer.Berettiget.BEGGE == faktorer.berettiget().orElseThrow()) {
+                if (faktorer.er100Prosent().orElseThrow()) {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER));
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT));
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT));
+                } else {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER));
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_80_PROSENT));
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT));
+                }
             }
-        } else if(antallBarn >= 3){
-            if(faktorer.er100Prosent().orElseThrow()) {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100));
-            } else{
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80));
+
+            if (antallBarn == 2) {
+                if (faktorer.er100Prosent().orElseThrow()) {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100));
+                } else {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80));
+                }
+            } else if (antallBarn >= 3) {
+                if (faktorer.er100Prosent().orElseThrow()) {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100));
+                } else {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80));
+                }
             }
+
+            if (faktorer.erFødsel().orElseThrow()) {
+                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Parametertype.FORELDREPENGER_FØR_FØDSEL));
+            }
+        } else {
+            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.STØNADSDAGER_ETTER_BARNS_DØD));
         }
 
-        if(faktorer.erFødsel().orElseThrow()) {
-            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Parametertype.FORELDREPENGER_FØR_FØDSEL));
-        }
 
         return konfigurasjoner.toArray(Kontokonfigurasjon[]::new);
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkFødselNode(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
         return rs.hvisRegel(SjekkOmFødsel.ID, SJEKK_OM_DET_ER_FØDSEL)
-            .hvis(new SjekkOmFødsel(), new OpprettKontoer(konfigurasjon,
-                    byggKonfigurasjon(konfigfaktorBuilder.medErFødsel(true).build())))
-            .ellers(new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.medErFødsel(false).build())));
+            .hvis(new SjekkOmFødsel(), sjekkDødtBarnNode(rs,konfigfaktorBuilder.medErFødsel(true)))
+            .ellers(new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.medErFødsel(false).medDødtBarn(false).build())));
+    }
+
+    private Specification<BeregnKontoerGrunnlag> sjekkDødtBarnNode(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
+        return rs.hvisRegel(SjekkOmDødtBarn.ID, SJEKK_OM_DET_ER_DØDE_BARN)
+                .hvis(new SjekkOmDødtBarn(), new OpprettKontoer(konfigurasjon,
+                        byggKonfigurasjon(konfigfaktorBuilder.medDødtBarn(true).build())))
+                .ellers(new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.medDødtBarn(false).build())));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekk100ProsentNode(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {

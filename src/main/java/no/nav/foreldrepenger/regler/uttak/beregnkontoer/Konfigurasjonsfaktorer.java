@@ -15,6 +15,7 @@ public class Konfigurasjonsfaktorer {
     private Boolean erFødsel;
     private Berettiget berettiget;
     private Boolean erAleneomsorg;
+    private Boolean medDødtBarn;
 
     public Konfigurasjonsfaktorer() {
     }
@@ -37,6 +38,10 @@ public class Konfigurasjonsfaktorer {
 
     public Optional<Boolean> erAleneomsorg() {
         return Optional.ofNullable(erAleneomsorg);
+    }
+
+    public Optional<Boolean> medDødtBarn() {
+        return Optional.ofNullable(medDødtBarn);
     }
 
     public static class Builder {
@@ -70,6 +75,12 @@ public class Konfigurasjonsfaktorer {
             this.kladd.erAleneomsorg = erAleneomsorg;
             return this;
         }
+
+        public Konfigurasjonsfaktorer.Builder medDødtBarn(Boolean medDødtBarn) {
+            this.kladd.medDødtBarn = medDødtBarn;
+            return this;
+        }
+
         public Konfigurasjonsfaktorer build() {
             return this.kladd;
         }
