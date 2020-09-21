@@ -101,6 +101,19 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     }
 
     private Kontokonfigurasjon[] byggKonfigurasjon(Konfigurasjonsfaktorer faktorer){
+
+        if(faktorer.getAntallLevendeBarn() == null){
+            throw new IllegalArgumentException("Antall levende barn er ikke oppgitt");
+        }
+        if(faktorer.erFødsel() == null){
+            throw new IllegalArgumentException("Det er ikke oppgitt om dette gjelder fødsel");
+        }
+        if(faktorer.getBerettiget() == null){
+            throw new IllegalArgumentException("Berettigede parter er ikke oppgitt");
+        }
+        if(faktorer.er100Prosent() == null){
+            throw new IllegalArgumentException("dekningsgrad er ikke oppgitt");
+        }
         List<Kontokonfigurasjon> konfigurasjoner;
         final Map<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>> konfigurasjonerForBerettiget100prosent = Map.ofEntries(
                 new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
@@ -143,19 +156,6 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
                                 new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT))
                                 .collect(Collectors.toList()))
         );
-
-        if(faktorer.er100Prosent() == null){
-            throw new IllegalArgumentException("dekningsgrad er ikke oppgitt");
-        }
-        if(faktorer.getAntallLevendeBarn() == null){
-            throw new IllegalArgumentException("Antall levende barn er ikke oppgitt");
-        }
-        if(faktorer.erFødsel() == null){
-            throw new IllegalArgumentException("Det er ikke oppgitt om dette gjelder fødsel");
-        }
-        if(faktorer.getBerettiget() == null){
-            throw new IllegalArgumentException("Berettigede parter er ikke oppgitt");
-        }
 
         if (faktorer.er100Prosent()) {
             konfigurasjoner = konfigurasjonerForBerettiget100prosent.get(faktorer.getBerettiget());
