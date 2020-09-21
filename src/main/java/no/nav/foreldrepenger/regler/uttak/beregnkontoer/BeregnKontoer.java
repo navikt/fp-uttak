@@ -1,11 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareFarHarRett;
@@ -114,53 +111,12 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         if(faktorer.er100Prosent() == null){
             throw new IllegalArgumentException("dekningsgrad er ikke oppgitt");
         }
-        List<Kontokonfigurasjon> konfigurasjoner;
-        final Map<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>> konfigurasjonerForBerettiget100prosent = Map.ofEntries(
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.MOR,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER))
-                                .collect(Collectors.toList())),
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.FAR,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER))
-                                .collect(Collectors.toList())),
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.FAR_ALENE,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER))
-                                .collect(Collectors.toList())),
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.BEGGE,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER),
-                                new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT),
-                                new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT))
-                                .collect(Collectors.toList()))
-        );
-
-        final Map<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>> konfigurasjonerForBerettiget80prosent = Map.ofEntries(
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.MOR,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER))
-                                .collect(Collectors.toList())),
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.FAR,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER))
-                                .collect(Collectors.toList())),
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.FAR_ALENE,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER))
-                                .collect(Collectors.toList())),
-                new AbstractMap.SimpleEntry<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>>(
-                        Konfigurasjonsfaktorer.Berettiget.BEGGE,
-                        Stream.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER),
-                                new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_80_PROSENT),
-                                new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT))
-                                .collect(Collectors.toList()))
-        );
+        List<Kontokonfigurasjon> konfigurasjoner = new ArrayList<>();
 
         if (faktorer.er100Prosent()) {
-            konfigurasjoner = konfigurasjonerForBerettiget100prosent.get(faktorer.getBerettiget());
+            konfigurasjoner.addAll(Konfigurasjonsfaktorer.KONFIGURASJONER_100_PROSENT.get(faktorer.getBerettiget()));
         } else {
-            konfigurasjoner = konfigurasjonerForBerettiget80prosent.get(faktorer.getBerettiget());
+            konfigurasjoner.addAll(Konfigurasjonsfaktorer.KONFIGURASJONER_80_PROSENT.get(faktorer.getBerettiget()));
         }
 
         int antallBarn = faktorer.getAntallLevendeBarn();

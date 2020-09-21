@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class Konfigurasjonsfaktorer {
 
     enum Berettiget{
@@ -8,7 +17,7 @@ public class Konfigurasjonsfaktorer {
         FAR_ALENE,
         BEGGE
     }
-    /*
+
     static final Map<Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_100_PROSENT = Map.ofEntries(
             new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
                     Berettiget.MOR,
@@ -50,7 +59,7 @@ public class Konfigurasjonsfaktorer {
                             new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT))
                             .collect(Collectors.toList()))
     );
-*/
+
     private Boolean er100Prosent;
     private Integer antallLevendeBarn;
     private Boolean erFødsel;
