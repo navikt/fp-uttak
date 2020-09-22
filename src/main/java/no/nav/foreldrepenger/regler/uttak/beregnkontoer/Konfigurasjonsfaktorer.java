@@ -1,47 +1,92 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-import java.util.Optional;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Konfigurasjonsfaktorer {
 
     enum Berettiget{
         MOR,
         FAR,
+        FAR_ALENE,
         BEGGE
     }
+
+    static final Map<Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_100_PROSENT = Map.ofEntries(
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.MOR,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER))
+                            .collect(Collectors.toList())),
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.FAR,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER))
+                            .collect(Collectors.toList())),
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.FAR_ALENE,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER))
+                            .collect(Collectors.toList())),
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.BEGGE,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER),
+                            new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT),
+                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT))
+                            .collect(Collectors.toList()))
+    );
+
+    static final Map<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_80_PROSENT = Map.ofEntries(
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.MOR,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER))
+                            .collect(Collectors.toList())),
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.FAR,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER))
+                            .collect(Collectors.toList())),
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.FAR_ALENE,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER))
+                            .collect(Collectors.toList())),
+            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
+                    Berettiget.BEGGE,
+                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER),
+                            new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_80_PROSENT),
+                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT))
+                            .collect(Collectors.toList()))
+    );
 
     private Boolean er100Prosent;
     private Integer antallLevendeBarn;
     private Boolean erFødsel;
     private Berettiget berettiget;
-    private Boolean erAleneomsorg;
     private Boolean medDødtBarn;
 
     public Konfigurasjonsfaktorer() {
     }
 
-    public Optional<Boolean> er100Prosent() {
-        return Optional.ofNullable(er100Prosent);
+    public Boolean er100Prosent() {
+        return er100Prosent;
     }
 
-    public Optional<Integer> antallLevendeBarn() {
-        return Optional.ofNullable(antallLevendeBarn);
+    public Integer getAntallLevendeBarn() {
+        return antallLevendeBarn;
     }
 
-    public Optional<Boolean> erFødsel() {
-        return Optional.ofNullable(erFødsel);
+    public Boolean erFødsel() {
+        return erFødsel;
     }
 
-    public Optional<Berettiget> berettiget() {
-        return Optional.ofNullable(berettiget);
+    public Berettiget getBerettiget() {
+        return berettiget;
     }
 
-    public Optional<Boolean> erAleneomsorg() {
-        return Optional.ofNullable(erAleneomsorg);
-    }
-
-    public Optional<Boolean> medDødtBarn() {
-        return Optional.ofNullable(medDødtBarn);
+    public Boolean medDødtBarn() {
+        return medDødtBarn;
     }
 
     public static class Builder {
@@ -69,10 +114,6 @@ public class Konfigurasjonsfaktorer {
 
         public Konfigurasjonsfaktorer.Builder medBerettiget(Berettiget berettiget) {
             this.kladd.berettiget = berettiget;
-            return this;
-        }
-        public Konfigurasjonsfaktorer.Builder medErAleneomsorg(Boolean erAleneomsorg) {
-            this.kladd.erAleneomsorg = erAleneomsorg;
             return this;
         }
 
