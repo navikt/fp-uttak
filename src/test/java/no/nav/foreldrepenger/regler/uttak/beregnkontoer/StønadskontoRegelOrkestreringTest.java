@@ -1074,7 +1074,9 @@ public class StønadskontoRegelOrkestreringTest {
         assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(30);
         assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
-
+    /*
+       Totale stønadskonto: - 6 uker (30 stønadsdager)
+    */
     @Test
     public void død_ved_fødsel_der_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
@@ -1092,6 +1094,5 @@ public class StønadskontoRegelOrkestreringTest {
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(30);
-        //assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 }
