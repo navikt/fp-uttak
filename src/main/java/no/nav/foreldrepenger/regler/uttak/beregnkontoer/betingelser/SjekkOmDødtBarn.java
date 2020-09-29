@@ -15,7 +15,7 @@ public class SjekkOmDødtBarn extends LeafSpecification<BeregnKontoerGrunnlag> {
 
     @Override
     public Evaluation evaluate(BeregnKontoerGrunnlag grunnlag) {
-        if (grunnlag.getDødsdato() != null) {
+        if (grunnlag.getDødsdato().isPresent()) {
             return ja();
         }
         return nei();

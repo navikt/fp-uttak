@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.regler.IkkeOppfylt;
+import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBådeMorOgFarHarRett;
@@ -37,6 +38,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     private static final String SJEKK_OM_MER_ENN_ETT_BARN = "Sjekk om det er mer enn ett barn?";
     private static final String SJEKK_OM_DET_ER_FØDSEL = "Sjekk om det er fødsel?";
     private static final String SJEKK_OM_DET_ER_DØDE_BARN = "Sjekk om der er døde barn?";
+    private static final String SJEKK_OM_ALLE_BARN_ER_DØDE = "Sjekk om alle ban er døde?";
     private static final String SJEKK_OM_100_PROSENT_DEKNINGSGRAD = "Sjekk om det er 100% dekningsgrad?";
     private static final String SJEKK_OM_TO_BARN = "Sjekk om det er to barn?";
 
@@ -95,7 +97,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
 
         return rs.hvisRegel(SjekkOmMerEnnEttBarn.ID, SJEKK_OM_MER_ENN_ETT_BARN)
             .hvis(new SjekkOmMerEnnEttBarn(), sjekkOmToBarnNode(rs, konfigfaktorBuilder))
-            .ellers(sjekk100ProsentNode(rs, konfigfaktorBuilder.medAntallLevendeBarn(1)));
+            .ellers(sjekkOmAlleBarnErDødeNode(rs, konfigfaktorBuilder));
     }
 
     private Kontokonfigurasjon[] byggKonfigurasjon(Konfigurasjonsfaktorer faktorer){
@@ -120,6 +122,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         int antallBarn = faktorer.getAntallLevendeBarn();
 
         if(antallBarn > 0) {
+
             if (faktorer.er100Prosent()) {
                 konfigurasjoner.addAll(Konfigurasjonsfaktorer.KONFIGURASJONER_100_PROSENT.get(faktorer.getBerettiget()));
             } else {
@@ -142,9 +145,17 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
 
             if (faktorer.erFødsel()) {
                 konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Parametertype.FORELDREPENGER_FØR_FØDSEL));
+                if (faktorer.medDødtBarn() && antallBarn < 3) {
+                    konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.STØNADSDAGER_ETTER_BARNS_DØD));
+                }
             }
-        }else {
-            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.STØNADSDAGER_ETTER_BARNS_DØD));
+
+        } else if(faktorer.erFødsel() && faktorer.medDødtBarn()){
+            if(faktorer.getBerettiget() == Konfigurasjonsfaktorer.Berettiget.BEGGE) {
+                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.STØNADSDAGER_ETTER_BARNS_DØD));
+            } else {
+                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.STØNADSDAGER_ETTER_BARNS_DØD));
+            }
         }
 
         return konfigurasjoner.toArray(Kontokonfigurasjon[]::new);
@@ -167,6 +178,12 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         return rs.hvisRegel(SjekkOmDekningsgradEr100.ID, SJEKK_OM_100_PROSENT_DEKNINGSGRAD)
                 .hvis(new SjekkOmDekningsgradEr100(), sjekkFødselNode(rs, konfigfaktorBuilder.medEr100Prosent(true)))
                 .ellers(sjekkFødselNode(rs, konfigfaktorBuilder.medEr100Prosent(false)));
+    }
+
+    private Specification<BeregnKontoerGrunnlag> sjekkOmAlleBarnErDødeNode(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
+        return rs.hvisRegel(SjekkOmAlleBarnErDøde.ID, SJEKK_OM_ALLE_BARN_ER_DØDE)
+                .hvis(new SjekkOmAlleBarnErDøde(), sjekk100ProsentNode(rs, konfigfaktorBuilder.medAntallLevendeBarn(0)))
+                .ellers(sjekk100ProsentNode(rs, konfigfaktorBuilder.medAntallLevendeBarn(1)));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkOmToBarnNode(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
