@@ -46,6 +46,7 @@ class KnekkpunktIdentifiserer {
         }
 
         if (barnsDødsdatoFinnes(grunnlag)) {
+            knekkpunkter.add(grunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato());
             knekkpunkter.add(grunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato().plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
         }
 

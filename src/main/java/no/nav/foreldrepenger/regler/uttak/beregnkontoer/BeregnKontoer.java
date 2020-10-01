@@ -38,7 +38,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     private static final String SJEKK_OM_MER_ENN_ETT_BARN = "Sjekk om det er mer enn ett barn?";
     private static final String SJEKK_OM_DET_ER_FØDSEL = "Sjekk om det er fødsel?";
     private static final String SJEKK_OM_DET_ER_DØDE_BARN = "Sjekk om der er døde barn?";
-    private static final String SJEKK_OM_ALLE_BARN_ER_DØDE = "Sjekk om alle ban er døde?";
+    private static final String SJEKK_OM_ALLE_BARN_ER_DØDE = "Sjekk om alle barn er døde?";
     private static final String SJEKK_OM_100_PROSENT_DEKNINGSGRAD = "Sjekk om det er 100% dekningsgrad?";
     private static final String SJEKK_OM_TO_BARN = "Sjekk om det er to barn?";
 

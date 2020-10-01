@@ -26,13 +26,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
@@ -177,6 +180,22 @@ public class FastsettePerioderRegelOrkestrering {
                                                                  Konfigurasjon konfig,
                                                                  SaldoUtregning saldoUtregning) {
         var regelresultat = new FastsettePerioderRegelresultat(evaluering);
+        /*  Godkjenner perioder innen 6 uker etter død der kontoer er tomme som følge av at død har forekommet sent.
+            Dvs. der er uttak i dager som ikke er lenger er tilgjengelige ved ny beregning som har ført til tømming av konto*/
+        if(UtfallType.AVSLÅTT == regelresultat.getUtfallType() &&
+                regelGrunnlag.getDatoer().getDødsdatoer() != null &&
+                regelGrunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato() != null &&
+                aktuellPeriode.getFom().isAfter(regelGrunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato().minusDays(1)) &&
+                aktuellPeriode.getTom().isBefore(regelGrunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato().plusWeeks(konfig.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER,regelGrunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato())).plusDays(1))
+        ){
+            regelresultat = new FastsettePerioderRegelresultat(evaluering,
+                    regelresultat.skalUtbetale(),
+                    regelresultat.trekkDagerFraSaldo(),
+                    regelresultat.getGraderingIkkeInnvilgetÅrsak(),
+                    InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER,
+                    regelresultat.getManuellbehandlingårsak(),
+                    UtfallType.INNVILGET);
+        }
         var utfallType = regelresultat.getUtfallType();
 
         var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, saldoUtregning, regelresultat);
