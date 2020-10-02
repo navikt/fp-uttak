@@ -111,34 +111,40 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         if(faktorer.er100Prosent() == null){
             throw new IllegalArgumentException("dekningsgrad er ikke oppgitt");
         }
-        List<Kontokonfigurasjon> konfigurasjoner = new ArrayList<>();
 
-        if (faktorer.er100Prosent()) {
-            konfigurasjoner.addAll(Konfigurasjonsfaktorer.KONFIGURASJONER_100_PROSENT.get(faktorer.getBerettiget()));
-        } else {
-            konfigurasjoner.addAll(Konfigurasjonsfaktorer.KONFIGURASJONER_80_PROSENT.get(faktorer.getBerettiget()));
-        }
+        // Spesifikke for dekningsgrad
+        List<Kontokonfigurasjon> konfigurasjoner = faktorer.er100Prosent() ? byggKonfigurasjon100(faktorer) : byggKonfigurasjon80(faktorer);
 
-        int antallBarn = faktorer.getAntallLevendeBarn();
-        if(antallBarn == 2){
-            if(faktorer.er100Prosent()) {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100));
-            } else{
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80));
-            }
-        } else if(antallBarn >= 3){
-            if(faktorer.er100Prosent()) {
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100));
-            } else{
-                konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80));
-            }
-        }
-
+        // Uavhengig av dekningsgrad
         if(faktorer.erFødsel()) {
             konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Parametertype.FORELDREPENGER_FØR_FØDSEL));
         }
 
         return konfigurasjoner.toArray(Kontokonfigurasjon[]::new);
+    }
+
+    private List<Kontokonfigurasjon> byggKonfigurasjon100(Konfigurasjonsfaktorer faktorer){
+        List<Kontokonfigurasjon> konfigurasjoner = new ArrayList<>(Konfigurasjonsfaktorer.KONFIGURASJONER_100_PROSENT.get(faktorer.getBerettiget()));
+
+        int antallBarn = faktorer.getAntallLevendeBarn();
+        if(antallBarn == 2){
+            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100));
+        } else if(antallBarn >= 3){
+            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100));
+        }
+        return konfigurasjoner;
+    }
+
+    private List<Kontokonfigurasjon> byggKonfigurasjon80(Konfigurasjonsfaktorer faktorer){
+        List<Kontokonfigurasjon> konfigurasjoner = new ArrayList<>(Konfigurasjonsfaktorer.KONFIGURASJONER_80_PROSENT.get(faktorer.getBerettiget()));
+
+        int antallBarn = faktorer.getAntallLevendeBarn();
+        if(antallBarn == 2){
+            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80));
+        } else if(antallBarn >= 3){
+            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80));
+        }
+        return konfigurasjoner;
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkFødselNode(Ruleset<BeregnKontoerGrunnlag> rs, Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
