@@ -1,13 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
-
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 public class Konfigurasjonsfaktorer {
 
@@ -19,45 +16,21 @@ public class Konfigurasjonsfaktorer {
     }
 
     static final Map<Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_100_PROSENT = Map.ofEntries(
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.MOR,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER))
-                            .collect(Collectors.toList())),
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.FAR,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER))
-                            .collect(Collectors.toList())),
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.FAR_ALENE,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER))
-                            .collect(Collectors.toList())),
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.BEGGE,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER),
+            Map.entry(Berettiget.MOR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER))),
+            Map.entry(Berettiget.FAR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER))),
+            Map.entry(Berettiget.FAR_ALENE, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER))),
+            Map.entry(Berettiget.BEGGE, List.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER),
                             new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT),
-                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT))
-                            .collect(Collectors.toList()))
+                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT)))
     );
 
     static final Map<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_80_PROSENT = Map.ofEntries(
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.MOR,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER))
-                            .collect(Collectors.toList())),
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.FAR,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER))
-                            .collect(Collectors.toList())),
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.FAR_ALENE,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER))
-                            .collect(Collectors.toList())),
-            new AbstractMap.SimpleEntry<Berettiget, List<Kontokonfigurasjon>>(
-                    Berettiget.BEGGE,
-                    Stream.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER),
+            Map.entry(Berettiget.MOR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER))),
+            Map.entry(Berettiget.FAR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER))),
+            Map.entry(Berettiget.FAR_ALENE, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER))),
+            Map.entry(Berettiget.BEGGE, List.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER),
                             new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_80_PROSENT),
-                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT))
-                            .collect(Collectors.toList()))
+                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT)))
     );
 
     private Boolean er100Prosent;
