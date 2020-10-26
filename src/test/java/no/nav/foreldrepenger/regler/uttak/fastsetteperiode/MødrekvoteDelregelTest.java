@@ -312,7 +312,6 @@ public class MødrekvoteDelregelTest {
             .medSøknad(søknad(oppgittPeriode))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder().medSøkersDødsdato(fødselsdato.plusDays(3))))
             .build();
 
@@ -333,7 +332,6 @@ public class MødrekvoteDelregelTest {
             .medSøknad(søknad(oppgittPeriode))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(fødselsdato.plusDays(3))
                     .medErAlleBarnDøde(true)))
@@ -356,7 +354,6 @@ public class MødrekvoteDelregelTest {
             .medSøknad(søknad(oppgittPeriode))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(barnsDødsdato)
                     .medErAlleBarnDøde(true)))
@@ -378,7 +375,6 @@ public class MødrekvoteDelregelTest {
             .medSøknad(søknad(oppgittPeriode))
             .medDatoer(new Datoer.Builder()
                 .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3))
                 .medDødsdatoer(new Dødsdatoer.Builder()
                     .medBarnsDødsdato(fødselsdato.plusDays(3))
                     .medErAlleBarnDøde(false)))
@@ -526,8 +522,7 @@ public class MødrekvoteDelregelTest {
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
         return create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medMorHarRett(true)
@@ -544,8 +539,7 @@ public class MødrekvoteDelregelTest {
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode) {
         return new Søknad.Builder()
                 .leggTilOppgittPeriode(oppgittPeriode)
-                .medType(Søknadstype.FØDSEL)
-                .medMottattDato(oppgittPeriode.getFom().minusWeeks(1));
+                .medType(Søknadstype.FØDSEL);
     }
 
     private Kontoer.Builder enKonto(Stønadskontotype type, int trekkdager) {
@@ -561,8 +555,7 @@ public class MødrekvoteDelregelTest {
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
         return create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medMorHarRett(true)

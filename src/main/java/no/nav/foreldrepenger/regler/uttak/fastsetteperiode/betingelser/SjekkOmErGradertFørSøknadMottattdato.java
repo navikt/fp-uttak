@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErUtsettelseFørSøknadMottattdato.mottattFørSisteDag;
+
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -18,13 +20,9 @@ public class SjekkOmErGradertFørSøknadMottattdato extends LeafSpecification<Fa
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         OppgittPeriode periode = grunnlag.getAktuellPeriode();
-        if (periode.erSøktGradering() && førEllerLik(grunnlag, periode)) {
+        if (periode.erSøktGradering() && mottattFørSisteDag(periode)) {
             return ja();
         }
         return nei();
-    }
-
-    private boolean førEllerLik(FastsettePeriodeGrunnlag grunnlag, OppgittPeriode periode) {
-        return !periode.getTom().isAfter(grunnlag.getSøknadMottattdato());
     }
 }

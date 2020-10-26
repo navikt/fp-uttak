@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -40,18 +38,16 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void skal_finne_knekkpunkter_for_søknad_ved_fødsel() {
         LocalDate fødselsdato = LocalDate.of(2018, 2, 22);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, førsteLovligeSøknadsperiode))
+                .medDatoer(datoer(fødselsdato))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         assertThat(knekkpunkter).containsOnly(
                 fødselsdato.minusWeeks(12), //tidligste mulige uttak
-                førsteLovligeSøknadsperiode,//ifbm søknadsfrist
                 fødselsdato.minusWeeks(3),  //foreldrepenger før fødsel
                 fødselsdato,
                 fødselsdato.plusWeeks(6),   //slutt på periode reservert mor
@@ -62,12 +58,11 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void skal_finne_knekkpunkter_for_opphørsdato_for_medlemskap() {
         LocalDate fødselsdato = LocalDate.of(2018, 2, 22);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         LocalDate opphørsdato = fødselsdato.plusWeeks(1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, førsteLovligeSøknadsperiode))
+                .medDatoer(datoer(fødselsdato))
                 .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(opphørsdato))
                 .build();
 
@@ -79,12 +74,10 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void skal_finne_knekkpunkter_ved_adopsjon() {
         LocalDate adopsjonsdato = LocalDate.of(2018, 2, 22);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.ADOPSJON))
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medOmsorgsovertakelse(adopsjonsdato))
                 .build();
 
@@ -92,7 +85,6 @@ public class KnekkpunktIdentifisererTest {
 
         assertThat(knekkpunkter).containsOnly(
                 adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
-                førsteLovligeSøknadsperiode,  //ifbm søknadsfrist
                 adopsjonsdato,
                 adopsjonsdato.plusYears(3)    //siste mulige uttak for foreldrepenger
         );
@@ -101,14 +93,12 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_medslutt_av_() {
         LocalDate adopsjonsdato = LocalDate.of(2018, 2, 22);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.ADOPSJON)
                         .medDokumentasjon(new Dokumentasjon.Builder()
                                 .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(adopsjonsdato.plusDays(100), adopsjonsdato.plusDays(300)))))
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medOmsorgsovertakelse(adopsjonsdato))
                 .build();
 
@@ -116,7 +106,6 @@ public class KnekkpunktIdentifisererTest {
 
         assertThat(knekkpunkter).containsOnly(
                 adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
-                førsteLovligeSøknadsperiode,  //ifbm søknadsfrist
                 adopsjonsdato,
 
                 adopsjonsdato.plusDays(100), //første dag uten omsorg
@@ -129,7 +118,6 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_for_alle_perioder_som_ikke_er_sammenhengende() {
         LocalDate adopsjonsdato = LocalDate.of(2018, 2, 22);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.ADOPSJON)
@@ -137,7 +125,6 @@ public class KnekkpunktIdentifisererTest {
                                 .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(adopsjonsdato.plusDays(100), adopsjonsdato.plusDays(200)))
                                 .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(adopsjonsdato.plusDays(300), adopsjonsdato.plusDays(400)))))
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medOmsorgsovertakelse(adopsjonsdato))
                 .build();
 
@@ -145,7 +132,6 @@ public class KnekkpunktIdentifisererTest {
 
         assertThat(knekkpunkter).containsOnly(
                 adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
-                førsteLovligeSøknadsperiode,  //ifbm søknadsfrist
                 adopsjonsdato,
 
                 adopsjonsdato.plusDays(100), //første dag uten omsorg
@@ -167,10 +153,9 @@ public class KnekkpunktIdentifisererTest {
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(uttakStartdato, uttakStartdato.plusDays(10)).build()))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, knekkdato,
-                                uttakStartdato.plusDays(10), PeriodeKilde.SØKNAD, SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, knekkdato, uttakStartdato.plusDays(10),
+                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT, null)))
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medFødsel(fødselsdato))
                 .build();
 
@@ -189,11 +174,11 @@ public class KnekkpunktIdentifisererTest {
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(uttakStartdato.plusDays(1), uttakStartdato.plusDays(10)).build()))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, uttakStartdato, knekkdato, PeriodeKilde.SØKNAD,
-                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, uttakStartdato, knekkdato,
+                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT, null)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode))
+                )
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -211,9 +196,8 @@ public class KnekkpunktIdentifisererTest {
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(uttakStartdato.plusDays(1), uttakStartdato.plusDays(5)).build()))
                 .medSøknad(new Søknad.Builder()
                         .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, uttakStartdato, uttakStartdato.plusDays(6),
-                                PeriodeKilde.SØKNAD, SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT, null)))
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medFødsel(fødselsdato))
                 .build();
 
@@ -236,11 +220,11 @@ public class KnekkpunktIdentifisererTest {
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(annenPartPeriodeFom, annenPartPeriodeTom).build()))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, stønadsperiodeFom, stønadsperiodeTom, PeriodeKilde.SØKNAD,
-                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT)))
+                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, stønadsperiodeFom, stønadsperiodeTom,
+                                SamtidigUttaksprosent.TEN, true, PeriodeVurderingType.IKKE_VURDERT, null)))
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode))
+                )
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -253,18 +237,16 @@ public class KnekkpunktIdentifisererTest {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
         AktivitetIdentifikator gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var gradertStønadsperiode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, mottattdato.minusMonths(1),
-                mottattdato.minusWeeks(2), PeriodeKilde.SØKNAD,
-                BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT);
+                mottattdato.minusWeeks(2), BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold),
+                PeriodeVurderingType.IKKE_VURDERT, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(LocalDate.of(2018, 5, 5))
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5)))
+                        .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medBehandling(new Behandling.Builder())
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(gradertStønadsperiode)
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(gradertStønadsperiode))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -277,16 +259,14 @@ public class KnekkpunktIdentifisererTest {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
         AktivitetIdentifikator gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var gradertStønadsperiode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato.minusMonths(1),
-                mottattdato.minusWeeks(2), PeriodeKilde.SØKNAD,
-                BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT);
+                mottattdato.minusWeeks(2), BigDecimal.valueOf(30), null, false,
+                Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(LocalDate.of(2018, 5, 5))
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5)))
+                        .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medBehandling(new Behandling.Builder())
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(gradertStønadsperiode)
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(gradertStønadsperiode))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -298,16 +278,15 @@ public class KnekkpunktIdentifisererTest {
     public void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterPåMottattdato() {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
         AktivitetIdentifikator gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
+        var gradering = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato, mottattdato.plusWeeks(2),
+                BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(LocalDate.of(2018, 5, 5))
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5)))
+                        .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato, mottattdato.plusWeeks(2),
-                                PeriodeKilde.SØKNAD, BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT))
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(gradering))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -319,17 +298,16 @@ public class KnekkpunktIdentifisererTest {
     public void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisGraderingStarterEtterMottattdato() {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
         AktivitetIdentifikator gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
+        var gradering = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato.plusWeeks(1),
+                mottattdato.plusWeeks(2), BigDecimal.valueOf(30), null, false,
+                Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(LocalDate.of(2018, 5, 5))
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5)))
+                        .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato.plusWeeks(1),
-                                mottattdato.plusWeeks(2), PeriodeKilde.SØKNAD,
-                                BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold), PeriodeVurderingType.IKKE_VURDERT))
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(gradering))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -340,16 +318,15 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
+        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2),
+                mottattdato.minusWeeks(1), PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2),
-                                mottattdato.minusWeeks(1), PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE))
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(utsettelse))
                 .medBehandling(new Behandling.Builder())
                 .build();
 
@@ -361,14 +338,13 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void finnerKnekkPåFørstegangssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
+        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2),
+                mottattdato.minusWeeks(1), PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2),
-                                mottattdato.minusWeeks(1), PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE))
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(utsettelse))
                 .medBehandling(new Behandling.Builder())
                 .build();
 
@@ -380,16 +356,15 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterPåMottattdato() {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
+        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato, mottattdato.plusWeeks(2), PeriodeVurderingType.PERIODE_OK,
+                UtsettelseÅrsak.ARBEID, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(mottattdato, mottattdato.plusWeeks(2),
-                                PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.ARBEID))
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(utsettelse))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -400,16 +375,15 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterEtterMottattdato() {
         LocalDate mottattdato = LocalDate.of(2018, 10, 10);
+        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.plusWeeks(1), mottattdato.plusWeeks(2),
+                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2018, 5, 5))
                         .medFødsel(LocalDate.of(2018, 5, 5)))
                 .medRevurdering(new Revurdering.Builder()
                         .medEndringsdato(LocalDate.of(2018, 5, 5)))
                 .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(mottattdato.plusWeeks(1), mottattdato.plusWeeks(2),
-                                PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE))
-                        .medMottattDato(mottattdato))
+                        .leggTilOppgittPeriode(utsettelse))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -420,15 +394,13 @@ public class KnekkpunktIdentifisererTest {
     @Test
     public void skal_knekke_på_bevegelige_helligdager() {
         LocalDate fødselsdato = LocalDate.of(2019, 5, 1);
-        LocalDate førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
         LocalDate tom = LocalDate.of(2019, 5, 25);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .medMottattDato(fødselsdato.minusWeeks(4))
-                        .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(fødselsdato, tom, PeriodeKilde.SØKNAD,
-                                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE)))
-                .medDatoer(datoer(fødselsdato, førsteLovligeSøknadsperiode))
+                        .leggTilOppgittPeriode(OppgittPeriode.forUtsettelse(fødselsdato, tom,
+                                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE, null)))
+                .medDatoer(datoer(fødselsdato))
                 .build();
 
         Set<LocalDate> knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -445,7 +417,6 @@ public class KnekkpunktIdentifisererTest {
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL))
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
                         .medFødsel(fødselsdato)
                         .medTermin(termin))
                 .build();
@@ -462,7 +433,7 @@ public class KnekkpunktIdentifisererTest {
         var startdato2 = fødselsdato.plusWeeks(10);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .medDatoer(datoer(fødselsdato))
                 .medArbeid(new Arbeid.Builder()
                         .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans(), startdato1))
                         .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), startdato2)))
@@ -479,7 +450,7 @@ public class KnekkpunktIdentifisererTest {
         var startdato = fødselsdato.plusWeeks(8);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .medDatoer(datoer(fødselsdato))
                 .medArbeid(new Arbeid.Builder()
                         .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans(), startdato)))
                 .build();
@@ -498,7 +469,7 @@ public class KnekkpunktIdentifisererTest {
                 .medSøknad(new Søknad.Builder()
                         .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedHV(new PeriodeMedHV(dokFom, dokTom)))
                         .medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .medDatoer(datoer(fødselsdato))
                 .build();
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -515,7 +486,7 @@ public class KnekkpunktIdentifisererTest {
                 .medSøknad(new Søknad.Builder()
                         .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedTiltakViaNav(new PeriodeMedTiltakIRegiAvNav(dokFom, dokTom)))
                         .medType(Søknadstype.FØDSEL))
-                .medDatoer(datoer(fødselsdato, fødselsdato.minusYears(1)))
+                .medDatoer(datoer(fødselsdato))
                 .build();
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
@@ -523,8 +494,32 @@ public class KnekkpunktIdentifisererTest {
         assertThat(knekkpunkter).contains(dokFom, dokTom.plusDays(1));
     }
 
+    @Test
+    public void skal_knekke_på_første_lovlige_uttaksdag_for_hver_søknadsperiode_der_første_lovlige_uttaksdag_overlapper_med_periode() {
+        var fødselsdato = LocalDate.of(2020, 7, 20);
+        var mottattDatoPeriode1 = LocalDate.of(2020, 11, 1);
+        var mottattDatoPeriode2 = LocalDate.of(2021, 2, 1);
+        var periode1 = OppgittPeriode.forVanligPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, LocalDate.of(2020, 11, 15),
+                null, false, PeriodeVurderingType.IKKE_VURDERT, mottattDatoPeriode1);
+        var periode2 = OppgittPeriode.forVanligPeriode(Stønadskontotype.MØDREKVOTE, LocalDate.of(2020, 11, 16), LocalDate.of(2020, 12, 15),
+                null, false, PeriodeVurderingType.IKKE_VURDERT, mottattDatoPeriode2);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medSøknad(new Søknad.Builder()
+                        .medOppgittePerioder(List.of(periode1, periode2))
+                        .medType(Søknadstype.FØDSEL))
+                .medDatoer(datoer(fødselsdato))
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        //Første lovlige dato for første periode ligger midt i perioden. Skal derfor knekkes for å avlås
+        assertThat(knekkpunkter).contains(LocalDate.of(2020, 8, 1));
+        //Første lovlige dato for andre periode ligger før start på perioden
+        assertThat(knekkpunkter).doesNotContain(LocalDate.of(2020, 11, 1));
+    }
+
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
-        return Arrays.asList(
+        return List.of(
                 fødselsdato.minusWeeks(12), //tidligste mulige uttak
                 førsteLovligeSøknadsperiode,//ifbm søknadsfrist
                 fødselsdato.minusWeeks(3),  //foreldrepenger før fødsel
@@ -534,10 +529,8 @@ public class KnekkpunktIdentifisererTest {
     }
 
 
-    private Datoer.Builder datoer(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
-        return new Datoer.Builder()
-                .medFørsteLovligeUttaksdag(førsteLovligeSøknadsperiode)
-                .medFødsel(fødselsdato);
+    private Datoer.Builder datoer(LocalDate fødselsdato) {
+        return new Datoer.Builder().medFødsel(fødselsdato);
     }
 
 }

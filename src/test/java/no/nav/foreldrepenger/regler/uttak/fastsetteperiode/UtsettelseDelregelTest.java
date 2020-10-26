@@ -18,7 +18,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -33,7 +35,8 @@ public class UtsettelseDelregelTest {
     @Test
     public void UT1101_ferie_innenfor_seks_første_uker() {
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), UtsettelseÅrsak.FERIE); // innenfor seks uker etter fødsel
+        var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.IKKE_VURDERT,
+                UtsettelseÅrsak.FERIE, fødselsdato.minusWeeks(1)); // innenfor seks uker etter fødsel
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
@@ -42,14 +45,12 @@ public class UtsettelseDelregelTest {
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(periode)
-                        .medMottattDato(fødselsdato.minusWeeks(1)))
+                        .leggTilOppgittPeriode(periode))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
                         .medFødsel(fødselsdato)
-                        .medTermin(fødselsdato)
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
+                        .medTermin(fødselsdato))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -82,8 +83,7 @@ public class UtsettelseDelregelTest {
                 .medDatoer(new Datoer.Builder()
                         //Nok til å få prematuruker
                         .medFødsel(fom)
-                        .medTermin(fom.plusWeeks(8))
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
+                        .medTermin(fom.plusWeeks(8)))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -113,8 +113,7 @@ public class UtsettelseDelregelTest {
                 .medDatoer(new Datoer.Builder()
                         //Nok til å få prematuruker
                         .medFødsel(fom)
-                        .medTermin(fom.plusWeeks(8))
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
+                        .medTermin(fom.plusWeeks(8)))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -144,8 +143,7 @@ public class UtsettelseDelregelTest {
                 .medDatoer(new Datoer.Builder()
                         //Nok til å få prematuruker
                         .medFødsel(fom)
-                        .medTermin(fom)
-                        .medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
+                        .medTermin(fom))
                 .medInngangsvilkår(oppfylt())
                 .build();
 

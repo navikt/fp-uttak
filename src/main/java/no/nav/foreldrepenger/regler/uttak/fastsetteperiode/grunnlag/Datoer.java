@@ -7,7 +7,6 @@ public final class Datoer {
     private LocalDate omsorgsovertakelse;
     private LocalDate termin;
     private LocalDate fødsel;
-    private LocalDate førsteLovligeUttaksdag;
     private Dødsdatoer dødsdatoer;
     //Ikke sleng inn flere datoer her uten å prøve å plassere i andre mer passende klasser
 
@@ -39,10 +38,6 @@ public final class Datoer {
         return omsorgsovertakelse;
     }
 
-    public LocalDate getFørsteLovligeUttaksdag(){
-        return førsteLovligeUttaksdag;
-    }
-
     public Dødsdatoer getDødsdatoer() {
         return dødsdatoer;
     }
@@ -63,11 +58,6 @@ public final class Datoer {
 
         public Builder medOmsorgsovertakelse(LocalDate omsorgsovertakelse) {
             kladd.omsorgsovertakelse = omsorgsovertakelse;
-            return this;
-        }
-
-        public Builder medFørsteLovligeUttaksdag(LocalDate førsteLovligeUttaksdag) {
-            kladd.førsteLovligeUttaksdag = førsteLovligeUttaksdag;
             return this;
         }
 

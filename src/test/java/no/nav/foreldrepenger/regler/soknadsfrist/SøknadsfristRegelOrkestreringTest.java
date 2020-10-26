@@ -20,7 +20,6 @@ public class SøknadsfristRegelOrkestreringTest {
     public void søknadOmUttakInnenforSøknadsfristSkalGiOppfyltResultat() {
         LocalDate nå = LocalDate.now();
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medAntallMånederSøknadsfrist(3)
             .medSøknadMottattDato(nå.with(lastDayOfMonth()))
             .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
             .build();
@@ -35,7 +34,6 @@ public class SøknadsfristRegelOrkestreringTest {
     public void resultat_skal_inneholde_sporing_i_json() throws IOException {
         LocalDate nå = LocalDate.now();
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-                .medAntallMånederSøknadsfrist(3)
                 .medSøknadMottattDato(nå.with(lastDayOfMonth()))
                 .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
                 .build();
@@ -51,7 +49,6 @@ public class SøknadsfristRegelOrkestreringTest {
     public void søknadOmUttakUtenforSøknadsfristSkalGiIkkeOppfyltOgAksjonskode() {
         LocalDate nå = LocalDate.now();
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medAntallMånederSøknadsfrist(3)
             .medSøknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
             .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
             .build();

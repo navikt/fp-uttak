@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -31,15 +30,14 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class SøknadMottattDatoRegelTest {
 
-    private static final LocalDate FØRSTE_LOVLIGE_UTTAKSDAG = LocalDate.of(2018, 5, 5);
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
 
     @Test
-    public void søknadMottattdatoFørGradertPeriodeBlirSendtManuellBehandling() {
-        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = gradertoppgittPeriode(søknadMottattdato.minusWeeks(1), søknadMottattdato);
+    public void mottattDatoFørSluttAvGraderingBlirSendtManuellBehandling() {
+        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
+        OppgittPeriode søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
+                .medSøknad(søknad(søknadsperiode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -52,11 +50,11 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void søknadMottattdatoEtterGradertPeriodeBlirInnvilget() {
-        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = gradertoppgittPeriode(søknadMottattdato.plusDays(1), søknadMottattdato.plusWeeks(1));
+    public void mottattDatoEtterSluttAvGraderingBlirInnvilget() {
+        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
+        OppgittPeriode søknadsperiode = gradertoppgittPeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), mottattDato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
+                .medSøknad(søknad(søknadsperiode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -65,11 +63,11 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void søknadMottattdatoFørUtsettelseFeriePeriodeBlirAvslått() {
-        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.minusWeeks(1), søknadMottattdato, UtsettelseÅrsak.FERIE);
+    public void mottattDatoFørSluttAvFerieBlirAvslått() {
+        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
+        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
+                .medSøknad(søknad(søknadsperiode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -81,11 +79,11 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void søknadMottattdatoEtterUtsettelseFeriePeriodeBlirInnvilget() {
-        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.plusDays(1), søknadMottattdato.plusWeeks(1), UtsettelseÅrsak.FERIE);
+    public void mottattDatoEtterSluttAvFerieBlirInnvilget() {
+        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
+        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE, mottattDato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
+                .medSøknad(søknad(søknadsperiode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -94,11 +92,11 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void søknadMottattdatoFørUtsettelseArbeidPeriodeBlirAvslått() {
-        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.minusWeeks(1), søknadMottattdato, UtsettelseÅrsak.ARBEID);
+    public void mottattDatoFørSluttAvArbeidBlirAvslått() {
+        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
+        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
+                .medSøknad(søknad(søknadsperiode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -110,11 +108,11 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void søknadMottattdatoEtterUtsettelseArbeidPeriodeBlirInnvilget() {
-        LocalDate søknadMottattdato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(søknadMottattdato.plusDays(1), søknadMottattdato.plusWeeks(1), UtsettelseÅrsak.ARBEID);
+    public void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
+        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
+        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID, mottattDato);
         RegelGrunnlag grunnlag = basicBuilder()
-                .medSøknad(søknad(søknadsperiode, søknadMottattdato))
+                .medSøknad(søknad(søknadsperiode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -122,15 +120,14 @@ public class SøknadMottattDatoRegelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
     }
 
-    private Søknad.Builder søknad(OppgittPeriode søknadsperiode, LocalDate søknadMottattdato) {
+    private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
-                .leggTilOppgittPeriode(søknadsperiode)
-                .medMottattDato(søknadMottattdato);
+                .leggTilOppgittPeriode(søknadsperiode);
     }
 
-    private OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeKilde.SØKNAD, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak);
+    private OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, LocalDate mottattDato) {
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak, mottattDato);
     }
 
     private RegelGrunnlag.Builder basicBuilder() {
@@ -143,8 +140,7 @@ public class SøknadMottattDatoRegelTest {
                 .medKontoer(kontoer)
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(FAMILIEHENDELSE_DATO)
-                        .medFørsteLovligeUttaksdag(FØRSTE_LOVLIGE_UTTAKSDAG))
+                        .medFødsel(FAMILIEHENDELSE_DATO))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true))
                 .medBehandling(new Behandling.Builder()
@@ -156,8 +152,8 @@ public class SøknadMottattDatoRegelTest {
                         .medOpptjeningOppfylt(true));
     }
 
-    private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, PeriodeKilde.SØKNAD, BigDecimal.TEN,
-                null, false, Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), PeriodeVurderingType.IKKE_VURDERT);
+    private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {
+        return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, BigDecimal.TEN,
+                null, false, Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), PeriodeVurderingType.IKKE_VURDERT, mottattDato);
     }
 }

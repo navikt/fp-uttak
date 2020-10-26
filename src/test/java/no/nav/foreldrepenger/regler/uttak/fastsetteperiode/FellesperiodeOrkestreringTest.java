@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -32,7 +31,6 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-    private LocalDate førsteLovligeUttaksdag = førsteLovligeUttaksdag(fødselsdato);
 
     @Test
     public void fellesperiode_mor_etter_uke_7_etter_fødsel_uten_nok_dager_blir_innvilget_med_knekk_og_avslått_periode_på_resten() {
@@ -166,18 +164,17 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
         var termin = LocalDate.of(2020, 6, 10);
         var grunnlag = basicGrunnlagMor()
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(termin.minusYears(1))
                         .medTermin(termin)
                         .medFødsel(termin.plusWeeks(2)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.TERMIN)
                         .medOppgittePerioder(List.of(
-                                OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(15), termin.minusWeeks(3).minusDays(1),
-                                        PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT),
-                                OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
-                                        PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT),
-                                OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4),
-                                        PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT)
+                                OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(15), termin.minusWeeks(3).minusDays(1)
+                                        , null, false, PeriodeVurderingType.IKKE_VURDERT, null),
+                                OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1)
+                                        , null, false, PeriodeVurderingType.IKKE_VURDERT, null),
+                                OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4)
+                                        , null, false, PeriodeVurderingType.IKKE_VURDERT,null)
                         )));
 
         List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
@@ -196,18 +193,17 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
         var termin = LocalDate.of(2020, 6, 10);
         var grunnlag = basicGrunnlagMor()
                 .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(termin.minusYears(1))
                         .medTermin(termin)
                         .medFødsel(termin.plusWeeks(2)))
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
                         .medOppgittePerioder(List.of(
-                                OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(12), termin.minusWeeks(3).minusDays(1),
-                                        PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT),
-                                OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
-                                        PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT),
-                                OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4),
-                                        PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.IKKE_VURDERT)
+                                OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(12), termin.minusWeeks(3).minusDays(1)
+                                        , null, false, PeriodeVurderingType.IKKE_VURDERT, null),
+                                OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1)
+                                        , null, false, PeriodeVurderingType.IKKE_VURDERT, null),
+                                OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4)
+                                        , null, false, PeriodeVurderingType.IKKE_VURDERT, null)
                         )));
 
         List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
@@ -227,9 +223,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return grunnlag
-                .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
-                        .medFødsel(fødselsdato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett());
     }
 }

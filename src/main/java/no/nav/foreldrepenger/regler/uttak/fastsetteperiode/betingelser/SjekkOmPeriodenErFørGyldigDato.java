@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
+import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -17,8 +17,12 @@ public class SjekkOmPeriodenErFørGyldigDato extends LeafSpecification<Fastsette
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        if (oppgittPeriode.getTom().isBefore(grunnlag.getFørsteLovligeUttaksdag())) {
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        var mottattDato = oppgittPeriode.getMottattDato();
+        if (mottattDato.isEmpty()) {
+            return nei();
+        }
+        if (oppgittPeriode.getTom().isBefore(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(mottattDato.get()))) {
             return ja();
         }
         return nei();

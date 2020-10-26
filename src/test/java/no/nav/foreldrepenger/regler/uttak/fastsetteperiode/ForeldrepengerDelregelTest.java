@@ -24,7 +24,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
@@ -116,8 +115,8 @@ public class ForeldrepengerDelregelTest {
 
     private OppgittPeriode gradertPeriode(LocalDate fom, LocalDate tom, AktivitetIdentifikator aktivitetIdentifikator, PeriodeVurderingType vurderingType,
                                           SamtidigUttaksprosent samtidigUttaksprosent, boolean flerbarnsdager) {
-        return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD, BigDecimal.TEN,
-                samtidigUttaksprosent, flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType);
+        return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN,
+                samtidigUttaksprosent, flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType, null);
     }
 
     @Test
@@ -494,7 +493,7 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(4);
         LocalDate tom = familiehendelseDato.plusWeeks(5);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
-                PeriodeKilde.SØKNAD, null, false, PeriodeVurderingType.UAVKLART_PERIODE);
+                null, false, PeriodeVurderingType.UAVKLART_PERIODE, null);
         RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
                 .medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
@@ -643,8 +642,8 @@ public class ForeldrepengerDelregelTest {
         LocalDate familiehendelseDato = LocalDate.now().minusMonths(2);
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(3);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
-                null, true, PeriodeVurderingType.IKKE_VURDERT);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
+                null, true, PeriodeVurderingType.IKKE_VURDERT, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(40, 17);
         RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
                 .medSøknad(søknad(oppgittPeriode))
@@ -687,8 +686,8 @@ public class ForeldrepengerDelregelTest {
         LocalDate familiehendelseDato = LocalDate.now().minusMonths(2);
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(3);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, PeriodeKilde.SØKNAD,
-                null, true, PeriodeVurderingType.IKKE_VURDERT);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
+                null, true, PeriodeVurderingType.IKKE_VURDERT, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(100, 0);
         RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
                 .medSøknad(søknad(oppgittPeriode))
@@ -726,9 +725,7 @@ public class ForeldrepengerDelregelTest {
 
     private RegelGrunnlag.Builder grunnlag(LocalDate familiehendelseDato, boolean søkerMor) {
         return RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))
-                        .medFødsel(familiehendelseDato))
+                .medDatoer(new Datoer.Builder().medFødsel(familiehendelseDato))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(søkerMor))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
@@ -760,7 +757,6 @@ public class ForeldrepengerDelregelTest {
     private Søknad.Builder søknad(OppgittPeriode uttakPeriode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
-                .medMottattDato(uttakPeriode.getFom().minusWeeks(1))
                 .leggTilOppgittPeriode(uttakPeriode);
     }
 

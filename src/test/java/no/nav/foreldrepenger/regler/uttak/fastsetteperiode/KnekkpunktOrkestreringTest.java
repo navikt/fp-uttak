@@ -33,8 +33,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         .medTrekkdager(3 * 5));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                        .medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .medSøknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato)))
@@ -66,8 +65,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         .medTrekkdager(3 * 5));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                        .medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true))
@@ -101,8 +99,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         .medTrekkdager(15 * 5));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
@@ -154,8 +151,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         .medTrekkdager(2));
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(
@@ -184,8 +180,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(200));
         grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                .medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
