@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -152,8 +151,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurdering) {
-        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom,
-                PeriodeKilde.SØKNAD, null, false, vurdering);
+        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurdering, null);
     }
 
     @Test
@@ -221,8 +219,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
         return RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(fødselsdato.minusMonths(3)))
+                        .medFødsel(fødselsdato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medMorHarRett(true)

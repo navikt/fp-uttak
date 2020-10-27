@@ -70,7 +70,6 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         OppgittPeriode utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), UtsettelseÅrsak.FERIE);
         OppgittPeriode fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1));
         basicGrunnlag(fødselsdato).medSøknad(new Søknad.Builder()
-                .medMottattDato(fpff.getFom().minusWeeks(1))
                 .leggTilOppgittPeriode(fpff)
                 .leggTilOppgittPeriode(mødrekvote)
                 .leggTilOppgittPeriode(utsettelseFellesperiode)
@@ -114,8 +113,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                 BigDecimal.valueOf(20), aktiviteter);
         grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medInngangsvilkår(oppfyltAlleVilkår())
@@ -151,7 +149,6 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), new BigDecimal("17.55"), aktivititeter);
         grunnlag.medDatoer(new Datoer.Builder()
-                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato))
                 .medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())

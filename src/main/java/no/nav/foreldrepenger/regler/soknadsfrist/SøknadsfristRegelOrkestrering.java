@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
@@ -24,7 +25,7 @@ public class SøknadsfristRegelOrkestrering {
         String grunnlagJson = toJson(grunnlag);
         String evaluationJson = EvaluationSerializer.asJson(evaluation);
         SøknadsfristResultat.Builder regelResultatBuilder = new SøknadsfristResultat.Builder(evaluationJson, grunnlagJson)
-            .medTidligsteLovligeUttak(grunnlag.getFørsteLovligeUttaksdato());
+            .medTidligsteLovligeUttak(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(grunnlag.getSøknadMottattDato()));
 
         Regelresultat regelresultat = new Regelresultat(evaluation);
         if (!regelresultat.oppfylt()) {

@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -30,14 +29,13 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 public class FellesperiodeMedGraderingTest {
 
     private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-    private LocalDate førsteLovligeUttaksdag = fødselsdato.minusMonths(3);
 
     @Test
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {
         LocalDate graderingFom = fødselsdato.plusWeeks(10);
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
-        var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom, PeriodeKilde.SØKNAD,
-                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT);
+        var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
+                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
@@ -45,8 +43,7 @@ public class FellesperiodeMedGraderingTest {
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(aktuellPeriode)
-                        .medMottattDato(graderingFom.minusWeeks(1)))
+                        .leggTilOppgittPeriode(aktuellPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
@@ -59,8 +56,8 @@ public class FellesperiodeMedGraderingTest {
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_4_uker_igjen_på_saldo() {
         LocalDate graderingFom = fødselsdato.plusWeeks(10);
         LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
-        var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom, PeriodeKilde.SØKNAD,
-                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT);
+        var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
+                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null);
         var kontoer = new Kontoer.Builder()
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
@@ -68,8 +65,7 @@ public class FellesperiodeMedGraderingTest {
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder()
                         .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(aktuellPeriode)
-                        .medMottattDato(graderingFom.minusWeeks(1)))
+                        .leggTilOppgittPeriode(aktuellPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
@@ -86,9 +82,7 @@ public class FellesperiodeMedGraderingTest {
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(new Behandling.Builder()
                         .medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()

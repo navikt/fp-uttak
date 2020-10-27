@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -162,16 +163,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public LocalDate getFørsteLovligeUttaksdag() {
-        return regelGrunnlag.getDatoer().getFørsteLovligeUttaksdag();
-    }
-
-    @Override
-    public LocalDate getSøknadMottattdato() {
-        return regelGrunnlag.getSøknad().getMottattDato();
-    }
-
-    @Override
     public SaldoUtregning getSaldoUtregning() {
         return saldoUtregning;
     }
@@ -234,5 +225,10 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean isTapendeBehandling() {
         return regelGrunnlag.getBehandling().isTapende();
+    }
+
+    @Override
+    public Optional<LocalDate> getMottattDato() {
+        return aktuellPeriode.getMottattDato();
     }
 }

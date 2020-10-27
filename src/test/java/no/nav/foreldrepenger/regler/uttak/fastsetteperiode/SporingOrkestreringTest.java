@@ -25,8 +25,7 @@ public class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     public void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato)
-                .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag(fødselsdato)))
+                .medFødsel(fødselsdato))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .medSøknad(søknad(

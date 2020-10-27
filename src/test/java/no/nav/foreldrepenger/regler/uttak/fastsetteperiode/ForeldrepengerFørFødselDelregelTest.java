@@ -36,7 +36,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medKontoer(kontoer)
-                .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
+                .medSøknad(søknad(uttakPeriode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -51,7 +51,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medKontoer(kontoer)
-                .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
+                .medSøknad(søknad(uttakPeriode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -66,7 +66,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medKontoer(kontoer)
-                .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(4)))
+                .medSøknad(søknad(uttakPeriode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -82,7 +82,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
         RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
                 .medKontoer(kontoer)
-                .medSøknad(søknad(msp, familiehendelseDato.minusWeeks(1)))
+                .medSøknad(søknad(msp))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(msp, grunnlag);
@@ -104,7 +104,7 @@ public class ForeldrepengerFørFødselDelregelTest {
         RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato)
                 .medKontoer(kontoer)
                 .medBehandling(søkerErFarBehandling())
-                .medSøknad(søknad(uttakPeriode, familiehendelseDato.minusWeeks(1)))
+                .medSøknad(søknad(uttakPeriode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -126,11 +126,10 @@ public class ForeldrepengerFørFødselDelregelTest {
                 .medTrekkdager(trekkdager);
     }
 
-    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, LocalDate mottattDato) {
+    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode) {
         return new Søknad.Builder()
                 .leggTilOppgittPeriode(oppgittPeriode)
-                .medType(Søknadstype.FØDSEL)
-                .medMottattDato(mottattDato);
+                .medType(Søknadstype.FØDSEL);
     }
 
     private Behandling.Builder søkerErFarBehandling() {
@@ -153,9 +152,7 @@ public class ForeldrepengerFørFødselDelregelTest {
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate familiehendelseDato) {
         return create()
-                .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(familiehendelseDato.minusWeeks(15))
-                        .medFødsel(familiehendelseDato))
+                .medDatoer(new Datoer.Builder().medFødsel(familiehendelseDato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medFarHarRett(true)

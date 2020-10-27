@@ -282,9 +282,7 @@ public class OverføringDelregelTest {
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
         return RegelGrunnlagTestBuilder.create()
                 .medInngangsvilkår(new Inngangsvilkår.Builder())
-                .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(fødselsdato.withDayOfMonth(1).minusMonths(3))
-                        .medFødsel(fødselsdato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medMorHarRett(true)

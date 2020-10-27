@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeKilde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -406,9 +405,8 @@ public class FellesperiodeDelregelTest {
                                                  PeriodeVurderingType vurderingType,
                                                  SamtidigUttaksprosent samtidigUttaksprosent,
                                                  boolean flerbarnsdager) {
-        return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom,
-                PeriodeKilde.SØKNAD, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
-                Set.of(AktivitetIdentifikator.forFrilans()), vurderingType);
+        return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
+                Set.of(AktivitetIdentifikator.forFrilans()), vurderingType, null);
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
@@ -422,7 +420,6 @@ public class FellesperiodeDelregelTest {
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {
         return new Søknad.Builder()
                 .medType(Søknadstype.FØDSEL)
-                .medMottattDato(søknadsperiode.getFom().minusWeeks(1))
                 .leggTilOppgittPeriode(søknadsperiode);
     }
 
@@ -455,7 +452,7 @@ public class FellesperiodeDelregelTest {
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager,
                                           PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, PeriodeKilde.SØKNAD, samtidigUttaksprosent, flerbarnsdager, vurderingType);
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {
@@ -502,9 +499,7 @@ public class FellesperiodeDelregelTest {
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder()
-                        .medFørsteLovligeUttaksdag(førsteLovligeUttaksdag)
-                        .medFødsel(fødselsdato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder()
                         .medSamtykke(true)
                         .medFarHarRett(true)

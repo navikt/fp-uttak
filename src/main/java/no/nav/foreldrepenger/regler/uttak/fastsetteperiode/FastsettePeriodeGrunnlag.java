@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
@@ -75,13 +76,6 @@ public interface FastsettePeriodeGrunnlag {
      * @return true dersom det er informert, ellers false.
      */
     boolean isSamtykke();
-
-    /**
-     * Finn første dato for når gyldig uttak kan starte basert på søknadsfrist.
-     *
-     * @return første dato for når gyldig uttak kan starte.
-     */
-    LocalDate getFørsteLovligeUttaksdag();
 
     /**
      * Finn alle perioder med gyldig grunn for tidlig oppstart
@@ -163,12 +157,6 @@ public interface FastsettePeriodeGrunnlag {
 
     boolean isMorRett();
 
-    /**
-     * Dato for mottatt siste søknad
-     * @return dato
-     */
-    LocalDate getSøknadMottattdato();
-
     SaldoUtregning getSaldoUtregning();
 
     /**
@@ -227,4 +215,9 @@ public interface FastsettePeriodeGrunnlag {
     boolean isTapendeBehandling();
 
     List<PeriodeMedHV> getPerioderHV();
+
+    /**
+     * Dato denne perioden ble søkt om
+     */
+    Optional<LocalDate> getMottattDato();
 }

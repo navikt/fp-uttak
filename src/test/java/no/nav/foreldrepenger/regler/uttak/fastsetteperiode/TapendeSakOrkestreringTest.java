@@ -31,10 +31,7 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     private static final AktivitetIdentifikator MOR_ARBEIDSFORHOLD = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 
-
-    private LocalDate førsteLovligeDato = LocalDate.of(2017, 10, 1);
     private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-
 
     @Test
     public void skal_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_innvilget_samme_tidsrom() {
@@ -44,9 +41,7 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
          */
         PeriodeUtenOmsorg periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeDato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), MOR_ARBEIDSFORHOLD, true))
                         .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD, true))
@@ -70,9 +65,7 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
     public void skal_ikke_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_avslått_samme_tidsrom() {
         PeriodeUtenOmsorg periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medFørsteLovligeUttaksdag(førsteLovligeDato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder()
                         .leggTilUttaksperiode(annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), MOR_ARBEIDSFORHOLD, true))
                         .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD, true))

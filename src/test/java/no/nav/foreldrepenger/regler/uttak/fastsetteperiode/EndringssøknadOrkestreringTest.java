@@ -40,7 +40,7 @@ public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkes
                 .medGjeldendeVedtak(vedtak);
         var søknadOm10UkerMødrekvote = søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.MØDREKVOTE, endringsdato, endringsdato.plusWeeks(10).minusDays(1)));
         grunnlag.medRevurdering(revurdering)
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato).medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitet)))
                 .medSøknad(søknadOm10UkerMødrekvote);
@@ -72,7 +72,7 @@ public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkes
                 .medGjeldendeVedtak(vedtak);
         var søknadOm12UkerMødrekvote = søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(18).minusDays(1)));
         grunnlag.medRevurdering(revurdering)
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato).medFørsteLovligeUttaksdag(LocalDate.of(2017, 1, 1)))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
                 .medArbeid(new Arbeid.Builder()
                         .leggTilArbeidsforhold(new Arbeidsforhold(aktivitet1))

@@ -10,14 +10,13 @@ public class SøknadsfristGrunnlag {
 
     private LocalDate søknadMottattDato;
     private LocalDate førsteUttaksdato;
-    private Integer antallMånederSøknadsfrist;
 
     public LocalDate getFørsteUttaksdato() {
         return førsteUttaksdato;
     }
 
-    public LocalDate getFørsteLovligeUttaksdato() {
-        return søknadMottattDato.withDayOfMonth(1).minusMonths(antallMånederSøknadsfrist);
+    public LocalDate getSøknadMottattDato() {
+        return søknadMottattDato;
     }
 
     public static Builder builder() {
@@ -37,14 +36,9 @@ public class SøknadsfristGrunnlag {
             return this;
         }
 
-        public Builder medAntallMånederSøknadsfrist(int antallMånederSøknadsfrist) {
-            kladd.antallMånederSøknadsfrist = antallMånederSøknadsfrist;
-            return this;
-        }
-
         public SøknadsfristGrunnlag build() {
-            Objects.requireNonNull(kladd.antallMånederSøknadsfrist);
             Objects.requireNonNull(kladd.søknadMottattDato);
+            Objects.requireNonNull(kladd.førsteUttaksdato);
             return kladd;
         }
     }

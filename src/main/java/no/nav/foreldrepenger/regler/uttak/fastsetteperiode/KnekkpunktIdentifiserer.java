@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -12,13 +20,6 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 class KnekkpunktIdentifiserer {
 
@@ -33,7 +34,7 @@ class KnekkpunktIdentifiserer {
 
         Set<LocalDate> knekkpunkter = new TreeSet<>();
         knekkpunkter.add(minimumsgrenseForLovligUttak);
-        knekkpunkter.add(grunnlag.getDatoer().getFørsteLovligeUttaksdag());
+        knekkpunkter.addAll(knekkPunkterBaserPåFørsteLovligeUttaksdag(grunnlag));
         knekkpunkter.add(familiehendelseDato);
         knekkpunkter.add(maksimumsgrenseForLovligeUttak);
 
@@ -71,6 +72,14 @@ class KnekkpunktIdentifiserer {
         return knekkpunkter.stream()
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
                 .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
+                .collect(Collectors.toSet());
+    }
+
+    private static Set<LocalDate> knekkPunkterBaserPåFørsteLovligeUttaksdag(RegelGrunnlag grunnlag) {
+        return grunnlag.getSøknad().getOppgittePerioder().stream()
+                .filter(p -> p.getMottattDato().isPresent())
+                .filter(p -> p.overlapper(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getMottattDato().get())))
+                .map(p -> SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getMottattDato().get()))
                 .collect(Collectors.toSet());
     }
 
@@ -142,17 +151,26 @@ class KnekkpunktIdentifiserer {
     private static void leggTilKnekkpunkterVedGradering(Set<LocalDate> knekkpunkter,
                                                         RegelGrunnlag grunnlag) {
         for (OppgittPeriode oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
-            if (oppgittPeriode.erSøktGradering() && !oppgittPeriode.getFom().isAfter(grunnlag.getSøknad().getMottattDato())) {
-                knekkpunkter.add(grunnlag.getSøknad().getMottattDato());
+            if (oppgittPeriode.erSøktGradering()) {
+                var mottattDato = oppgittPeriode.getMottattDato();
+                if (mottattDato.isPresent()) {
+                    if (!oppgittPeriode.getFom().isAfter(mottattDato.get())) {
+                        knekkpunkter.add(mottattDato.get());
+                    }
+                }
             }
         }
     }
 
     private static void leggTilKnekkpunkterVedUtsettelse(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
         for (OppgittPeriode oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
-            LocalDate mottattDato = grunnlag.getSøknad().getMottattDato();
-            if (oppgittPeriode.isUtsettelse() && !oppgittPeriode.getFom().isAfter(mottattDato)) {
-                knekkpunkter.add(mottattDato);
+            if (oppgittPeriode.isUtsettelse()) {
+                var mottattDato = oppgittPeriode.getMottattDato();
+                if (mottattDato.isPresent()) {
+                    if (!oppgittPeriode.getFom().isAfter(mottattDato.get())) {
+                        knekkpunkter.add(mottattDato.get());
+                    }
+                }
             }
         }
     }
