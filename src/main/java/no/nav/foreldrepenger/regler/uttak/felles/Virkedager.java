@@ -5,6 +5,8 @@ import static java.lang.Math.toIntExact;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
@@ -14,11 +16,14 @@ public class Virkedager {
     private static final int DAGER_PR_UKE = 7;
     private static final int VIRKEDAGER_PR_UKE = 5;
     private static final int HELGEDAGER_PR_UKE = DAGER_PR_UKE - VIRKEDAGER_PR_UKE;
+    private static final TemporalAdjuster NESTE_VIRKEDAG_ADJUSTER =
+            TemporalAdjusters.ofDateAdjuster(dato -> dato.plusDays(finnDagerÅLeggeTil(dato)));
+    private static final TemporalAdjuster HELG_TIL_MANDAG_ADJUSTER =
+            TemporalAdjusters.ofDateAdjuster(dato -> erHelg(dato) ? dato.with(NESTE_VIRKEDAG_ADJUSTER) : dato);
 
     private Virkedager() {
         // For å unngå instanser
     }
-
 
     public static int beregnAntallVirkedager(Periode periode) {
         Objects.requireNonNull(periode);
@@ -48,22 +53,45 @@ public class Virkedager {
         }
     }
 
-    public static LocalDate plusVirkedager(LocalDate fom, int virkedager) {
-        int uker = virkedager / VIRKEDAGER_PR_UKE;
-        int dager = virkedager % VIRKEDAGER_PR_UKE;
-
-        LocalDate resultat = fom.plusWeeks(uker);
-
-        while (dager > 0 || erHelg(resultat)) {
-            if (!erHelg(resultat)) {
-                dager--;
-            }
-            resultat = resultat.plusDays(1);
+    public static LocalDate plusVirkedager(LocalDate dato, int virkedager) {
+        while (virkedager > 0) {
+            dato = plusVirkedag(dato);
+            virkedager--;
         }
-        return resultat;
-    }
-    private static boolean erHelg(LocalDate dato) {
-        return dato.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dato.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+        return dato;
     }
 
+    public static LocalDate justerHelgTilMandag(LocalDate dato) {
+        return dato.with(HELG_TIL_MANDAG_ADJUSTER);
+    }
+
+    private static LocalDate plusVirkedag(LocalDate dato) {
+        return dato.with(NESTE_VIRKEDAG_ADJUSTER);
+    }
+
+    private static int finnDagerÅLeggeTil(LocalDate dato) {
+        if (erFredag(dato)) {
+            return 3;
+        }
+        if (erLørdag(dato)) {
+            return 2;
+        }
+        return 1;
+    }
+
+    private static boolean erHelg(LocalDate dato) {
+        return erLørdag(dato) || erSøndag(dato);
+    }
+
+    private static boolean erFredag(LocalDate dato) {
+        return dato.getDayOfWeek().equals(DayOfWeek.FRIDAY);
+    }
+
+    private static boolean erSøndag(LocalDate dato) {
+        return dato.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+    }
+
+    private static boolean erLørdag(LocalDate dato) {
+        return dato.getDayOfWeek().equals(DayOfWeek.SATURDAY);
+    }
 }

@@ -50,7 +50,6 @@ public class VirkedagerTest {
         LocalDate søndag = getDayOfWeek(DayOfWeek.SUNDAY);
         LocalDate nesteMandag = mandag.plusWeeks(1);
         LocalDate nesteTirsdag = tirsdag.plusWeeks(1);
-        LocalDate nesteOnsdag = onsdag.plusWeeks(1);
 
         assertThat(Virkedager.plusVirkedager(mandag, 1)).isEqualTo(tirsdag);
         assertThat(Virkedager.plusVirkedager(mandag, 4)).isEqualTo(fredag);
@@ -60,11 +59,23 @@ public class VirkedagerTest {
         assertThat(Virkedager.plusVirkedager(tirsdag, 3)).isEqualTo(fredag);
         assertThat(Virkedager.plusVirkedager(tirsdag, 4)).isEqualTo(nesteMandag);
 
-        assertThat(Virkedager.plusVirkedager(lørdag, 1)).isEqualTo(nesteTirsdag);
+        assertThat(Virkedager.plusVirkedager(lørdag, 1)).isEqualTo(nesteMandag);
         assertThat(Virkedager.plusVirkedager(fredag, 2)).isEqualTo(nesteTirsdag);
-        assertThat(Virkedager.plusVirkedager(lørdag, 2)).isEqualTo(nesteOnsdag);
+        assertThat(Virkedager.plusVirkedager(lørdag, 2)).isEqualTo(nesteTirsdag);
 
-        assertThat(Virkedager.plusVirkedager(søndag, 5)).isEqualTo(søndag.plusWeeks(1).plusDays(1));
+        assertThat(Virkedager.plusVirkedager(søndag, 5)).isEqualTo(fredag.plusWeeks(1));
+    }
+
+    @Test
+    public void søndagPlusEnVirkedagerSkalBliMandag() {
+        var nyDato = Virkedager.plusVirkedager(LocalDate.of(2020, 8, 2), 1);
+        assertThat(nyDato).isEqualTo(LocalDate.of(2020, 8, 3));
+    }
+
+    @Test
+    public void søndagPlusNullVirkedagerSkalBliSøndag() {
+        var nyDato = Virkedager.plusVirkedager(LocalDate.of(2020, 8, 2), 0);
+        assertThat(nyDato).isEqualTo(LocalDate.of(2020, 8, 2));
     }
 
     private LocalDate getDayOfWeek(DayOfWeek dayOfWeek) {

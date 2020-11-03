@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
+import static no.nav.foreldrepenger.regler.uttak.felles.Virkedager.justerHelgTilMandag;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -10,11 +12,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
+import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class TomKontoIdentifiserer {
@@ -55,11 +57,12 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
+        var saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
         int saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
 
-        LocalDate datoKontoGårTom = Virkedager.plusVirkedager(oppgittPeriode.getFom(), saldoTilVirkedager);
-        if (datoKontoGårTom.isAfter(oppgittPeriode.getFom()) && !datoKontoGårTom.isAfter(oppgittPeriode.getTom())) {
+        var trekkdagerIPeriodeFom = justerHelgTilMandag(oppgittPeriode.getFom());
+        var datoKontoGårTom = Virkedager.plusVirkedager(trekkdagerIPeriodeFom, saldoTilVirkedager);
+        if (datoKontoGårTom.isAfter(trekkdagerIPeriodeFom) && !datoKontoGårTom.isAfter(oppgittPeriode.getTom())) {
             return Optional.of(datoKontoGårTom);
         }
 

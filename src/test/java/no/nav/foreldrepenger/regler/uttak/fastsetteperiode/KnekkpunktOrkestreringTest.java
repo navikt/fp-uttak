@@ -137,6 +137,34 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
+    public void riktig_knekk_ved_tom_for_dager_ifm_helg2() {
+        LocalDate fødselsdato = LocalDate.of(2020, 9, 20);
+        var kontoer = new Kontoer.Builder()
+                .leggTilKonto(new Konto.Builder()
+                        .medType(Stønadskontotype.FEDREKVOTE)
+                        .medTrekkdager(10));
+        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+                .medDatoer(new Datoer.Builder()
+                        .medFødsel(fødselsdato))
+                .medRettOgOmsorg(beggeRett())
+                .medBehandling(farBehandling())
+                .medSøknad(søknad(
+                        Søknadstype.FØDSEL,
+                        //Starter søndag, slutter lørdag
+                        oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))
+                ))
+                .medKontoer(kontoer)
+                .build();
+
+        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2020, 11, 15));
+        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(LocalDate.of(2020, 11, 16));
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+    }
+
+    @Test
     public void periode_etter_knekk_skal_gå_videre() {
         LocalDate fødselsdato = LocalDate.of(2018, 5, 15);
         var kontoer = new Kontoer.Builder()
