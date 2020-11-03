@@ -235,8 +235,8 @@ public final class OppgittPeriode extends LukketPeriode {
     public String toString() {
         return "OppgittPeriode{" +
                 "stønadskontotype=" + stønadskontotype +
-                ", tom=" + getTom() +
                 ", fom=" + getFom() +
+                ", tom=" + getTom() +
                 ", arbeidsprosent=" + arbeidsprosent +
                 ", gradertAktiviteter=" + gradertAktiviteter +
                 ", overføringÅrsak=" + overføringÅrsak +

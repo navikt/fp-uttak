@@ -75,6 +75,6 @@ public class TomKontoIdentifisererTest {
         var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
         var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(oppgittPeriode, List.of(ARBEIDSFORHOLD_1),
                 saldoUtregning, Stønadskontotype.MØDREKVOTE, true);
-        assertThat(tomKontoKnekkpunkt.get().getDato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
+        assertThat(tomKontoKnekkpunkt.orElseThrow().getDato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
     }
 }
