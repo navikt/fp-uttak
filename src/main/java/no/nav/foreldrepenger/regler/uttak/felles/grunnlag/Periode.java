@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.felles.grunnlag;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Periode {
 
@@ -33,6 +34,10 @@ public class Periode {
 
     public boolean erOmsluttetAv(LukketPeriode periode) {
         return !periode.getFom().isAfter(fom) && !periode.getTom().isBefore(tom);
+    }
+
+    public boolean erLik(LukketPeriode periode) {
+        return Objects.equals(getFom(), periode.getFom()) && Objects.equals(getTom(), periode.getTom());
     }
 
     @Override
