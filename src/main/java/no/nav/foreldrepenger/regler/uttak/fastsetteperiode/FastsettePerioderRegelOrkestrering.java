@@ -11,6 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
@@ -39,6 +42,8 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class FastsettePerioderRegelOrkestrering {
 
+    private static final Logger LOG = LoggerFactory.getLogger(FastsettePerioderRegelOrkestrering.class);
+
     private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
     public List<FastsettePeriodeResultat> fastsettePerioder(RegelGrunnlag grunnlag, FeatureToggles featureToggles) {
@@ -51,6 +56,7 @@ public class FastsettePerioderRegelOrkestrering {
 
         var fastsettePeriodeRegel = new FastsettePeriodeRegel(konfigurasjon, featureToggles);
         var orkestreringTillegg = lagOrkestreringTillegg(grunnlag, konfigurasjon);
+        LOG.info("Orkestreringstillegg {}", orkestreringTillegg);
 
         var allePerioderSomSkalFastsettes = samletUttaksperioder(grunnlag, orkestreringTillegg).stream()
                 .filter(periode -> !erHelg(periode))
