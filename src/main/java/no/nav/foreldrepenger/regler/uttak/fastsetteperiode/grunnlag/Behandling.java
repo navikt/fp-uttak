@@ -2,14 +2,14 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 public final class Behandling {
 
-    private boolean søkerErMor;
+    private boolean søkerMor;
     private boolean tapende;
 
     private Behandling() {
     }
 
     public boolean isSøkerMor() {
-        return søkerErMor;
+        return søkerMor;
     }
 
     public boolean isTapende() {
@@ -22,7 +22,7 @@ public final class Behandling {
 
 
         public Builder medSøkerErMor(boolean søkerErMor) {
-            kladd.søkerErMor = søkerErMor;
+            kladd.søkerMor = søkerErMor;
             return this;
         }
 
