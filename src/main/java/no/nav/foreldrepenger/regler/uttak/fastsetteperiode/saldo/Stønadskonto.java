@@ -23,9 +23,6 @@ public class Stønadskonto {
 
     @Override
     public String toString() {
-        return "Stønadskonto{" +
-                "stønadskontoType=" + stønadskontoType +
-                ", maksdager=" + maksdager +
-                '}';
+        return "Stønadskonto{" + "stønadskontoType=" + stønadskontoType + ", maksdager=" + maksdager + '}';
     }
 }

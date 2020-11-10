@@ -31,13 +31,13 @@ public class RegelResultatBehandlerTest {
 
     @Test
     public void skal_knekke_på_riktig_datoer_ved_avslag() {
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FELLESPERIODE));
+        var kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FELLESPERIODE));
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet());
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom,
-                null, false, PeriodeVurderingType.IKKE_VURDERT, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom, null, false,
+                PeriodeVurderingType.IKKE_VURDERT, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(false))
@@ -45,13 +45,14 @@ public class RegelResultatBehandlerTest {
                 .medKontoer(kontoer)
                 .build();
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),
+                oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
         oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.getIdentifikator()));
-        var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag,
+                StandardKonfigurasjon.KONFIGURASJON);
 
-        var regelresultat = new FastsettePerioderRegelresultat(null, false, true, null,
-                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, null, UtfallType.AVSLÅTT);
+        var regelresultat = new FastsettePerioderRegelresultat(null, false, true, null, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, null,
+                UtfallType.AVSLÅTT);
         var resultat = behandler.avslåAktuellPeriode(oppgittPeriode, regelresultat, Optional.of(knekkpunkt), false);
 
         assertThat(resultat.getPeriode().getFom()).isEqualTo(fom);

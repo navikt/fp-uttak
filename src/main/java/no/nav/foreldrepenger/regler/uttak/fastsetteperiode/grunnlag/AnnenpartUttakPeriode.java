@@ -51,7 +51,9 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return oppholdÅrsak;
     }
 
-    public AnnenpartUttakPeriode kopiMedNyPeriode(LocalDate fom, LocalDate tom, List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+    public AnnenpartUttakPeriode kopiMedNyPeriode(LocalDate fom,
+                                                  LocalDate tom,
+                                                  List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(this.samtidigUttak)
                 .medFlerbarnsdager(this.flerbarnsdager)
@@ -59,7 +61,8 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                 .medOppholdsperiode(this.oppholdsperiode)
                 .medInnvilget(this.innvilget)
                 .medOppholdsårsak(this.oppholdÅrsak)
-                .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter).build();
+                .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
+                .build();
     }
 
     public boolean harTrekkdager() {

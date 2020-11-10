@@ -45,8 +45,7 @@ public class ForeldrepengerDelregelTest {
     public void UT1185_mor_starter_tidligere_enn_12_uker_før_termin() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(12).minusDays(1), familiehendelseDato);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(15))
                 .build();
 
@@ -54,7 +53,8 @@ public class ForeldrepengerDelregelTest {
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
-        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL);
+        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(
+                IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL);
         assertThat(regelresultat.getManuellbehandlingårsak()).isNull();
     }
 
@@ -62,12 +62,9 @@ public class ForeldrepengerDelregelTest {
     public void UT1186_mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_ikkeGradering_ikkeBareMorRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato.minusWeeks(5));
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(false)
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(false).medAleneomsorg(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -79,12 +76,9 @@ public class ForeldrepengerDelregelTest {
     public void UT1211_utenAleneomsorg_morRett_aleneomsorg_før3ukerFørFødsel_disponibleDager_ikkeGradering_morRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato.minusWeeks(5));
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true)
-                        .medAleneomsorg(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medAleneomsorg(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -94,63 +88,61 @@ public class ForeldrepengerDelregelTest {
     @Test
     public void UT1187_mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_gradering_ikkeBareMorRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato, AktivitetIdentifikator.forFrilans(),
-                PeriodeVurderingType.PERIODE_OK);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+        var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato,
+                AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
-        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
+                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
 
-    private OppgittPeriode gradertPeriode(LocalDate fom, LocalDate tom, AktivitetIdentifikator aktivitetIdentifikator, PeriodeVurderingType periodeVurderingType) {
+    private OppgittPeriode gradertPeriode(LocalDate fom,
+                                          LocalDate tom,
+                                          AktivitetIdentifikator aktivitetIdentifikator,
+                                          PeriodeVurderingType periodeVurderingType) {
         return gradertPeriode(fom, tom, aktivitetIdentifikator, periodeVurderingType, null, false);
     }
 
-    private OppgittPeriode gradertPeriode(LocalDate fom, LocalDate tom, AktivitetIdentifikator aktivitetIdentifikator, PeriodeVurderingType vurderingType,
-                                          SamtidigUttaksprosent samtidigUttaksprosent, boolean flerbarnsdager) {
-        return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN,
-                samtidigUttaksprosent, flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType, null);
+    private OppgittPeriode gradertPeriode(LocalDate fom,
+                                          LocalDate tom,
+                                          AktivitetIdentifikator aktivitetIdentifikator,
+                                          PeriodeVurderingType vurderingType,
+                                          SamtidigUttaksprosent samtidigUttaksprosent,
+                                          boolean flerbarnsdager) {
+        return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN, samtidigUttaksprosent,
+                flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType, null);
     }
 
     @Test
     public void UT1212_mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_gradering_bareMorRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato,
-                AktivitetIdentifikator.forFrilans(),
-                PeriodeVurderingType.PERIODE_OK);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .medMorHarRett(true))
+                AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(gradertPeriode))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true).medMorHarRett(true))
                 .medKontoer(foreldrepengerKonto(100))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
-        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT,
+                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
 
     @Test
     public void UT1210_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_gradering_avklart_ikkeBareMorRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8),
-                AktivitetIdentifikator.forFrilans(),
-                PeriodeVurderingType.PERIODE_OK);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+                AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medKontoer(foreldrepengerKonto(100))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -162,17 +154,13 @@ public class ForeldrepengerDelregelTest {
     public void UT1213_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_gradering_avklart_morRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         AktivitetIdentifikator aktivitetIdentifikator = ARBEIDSFORHOLD_1;
-        var gradertPeriode = gradertPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8),
-                aktivitetIdentifikator,
+        var gradertPeriode = gradertPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8), aktivitetIdentifikator,
                 PeriodeVurderingType.PERIODE_OK);
         var kontoer = foreldrepengerKonto(100);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .medMorHarRett(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true).medMorHarRett(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -184,12 +172,9 @@ public class ForeldrepengerDelregelTest {
     public void UT1190_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_ikkeGradering_ikkeBareMorRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8));
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -201,12 +186,9 @@ public class ForeldrepengerDelregelTest {
     public void UT1214_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_ikkeGradering_morRett() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8));
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true)
-                        .medMorHarRett(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true).medMorHarRett(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -214,7 +196,9 @@ public class ForeldrepengerDelregelTest {
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
     }
 
-    private void assertInnvilgetMenAvslåttGradering(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak, GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
+    private void assertInnvilgetMenAvslåttGradering(FastsettePerioderRegelresultat regelresultat,
+                                                    InnvilgetÅrsak innvilgetÅrsak,
+                                                    GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         assertInnvilget(regelresultat, innvilgetÅrsak);
         assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(graderingIkkeInnvilgetÅrsak);
     }
@@ -223,19 +207,17 @@ public class ForeldrepengerDelregelTest {
     public void UT1190_mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_noenDisponibleDager() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(12));
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
                         .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .medKontoer(foreldrepengerKonto(10))
                 .build();
 
-        var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder()
-                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+        var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder().medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(oppgittPeriode.getFom().minusWeeks(1), oppgittPeriode.getFom().minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(8), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(8), Stønadskontotype.FORELDREPENGER,
+                        AktivitetIdentifikator.forFrilans())))
                 .build());
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag, fastsattePerioder);
 
@@ -249,14 +231,11 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(6);
         LocalDate tom = familiehendelseDato.plusWeeks(7);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(oppgittPeriode)
-                        .medType(Søknadstype.FØDSEL)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode)
+                .medType(Søknadstype.FØDSEL)
+                .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -273,15 +252,11 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(6);
         LocalDate tom = familiehendelseDato.plusWeeks(7);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                .leggTilOppgittPeriode(oppgittPeriode)
+                .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(false)
-                        .medFarHarRett(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(false).medFarHarRett(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -295,13 +270,10 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.minusWeeks(3);
         LocalDate tom = familiehendelseDato.minusWeeks(2);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(
+                new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -315,13 +287,10 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.minusWeeks(3);
         LocalDate tom = familiehendelseDato.minusWeeks(2);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagMor(familiehendelseDato).medSøknad(
+                new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -329,7 +298,9 @@ public class ForeldrepengerDelregelTest {
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, "UT1197");
     }
 
-    private void assertManuellBehandling(FastsettePerioderRegelresultat regelresultat, PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellBehandlingÅrsak) {
+    private void assertManuellBehandling(FastsettePerioderRegelresultat regelresultat,
+                                         PeriodeResultatÅrsak periodeResultatÅrsak,
+                                         Manuellbehandlingårsak manuellBehandlingÅrsak) {
         assertManuellBehandling(regelresultat, periodeResultatÅrsak, manuellBehandlingÅrsak, false, false);
     }
 
@@ -363,14 +334,14 @@ public class ForeldrepengerDelregelTest {
     public void UT1193_far_før_familiehendelse() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(3), familiehendelseDato.minusWeeks(2));
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertManuellBehandling(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
+        assertManuellBehandling(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER,
+                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
     }
 
     @Test
@@ -379,14 +350,11 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(2);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                .leggTilOppgittPeriode(oppgittPeriode)
+                .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -403,21 +371,19 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(2);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(10))
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
                         .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
-        var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder()
-                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+        var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder().medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(fom.minusWeeks(1), fom.minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans()),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER,
+                                AktivitetIdentifikator.forFrilans()),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), Stønadskontotype.FORELDREPENGER,
+                                AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
                 .build());
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag, fastsattePerioder);
 
@@ -432,12 +398,10 @@ public class ForeldrepengerDelregelTest {
         LocalDate tom = familiehendelseDato.plusWeeks(2);
         AktivitetIdentifikator aktivitetIdentifikator = ARBEIDSFORHOLD_1;
         var gradertPeriode = gradertPeriode(fom, tom, aktivitetIdentifikator, PeriodeVurderingType.PERIODE_OK);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -451,8 +415,7 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(4);
         LocalDate tom = familiehendelseDato.plusWeeks(5);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .build();
@@ -468,15 +431,11 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(4);
         LocalDate tom = familiehendelseDato.plusWeeks(5);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(oppgittPeriode)
-                        .medType(Søknadstype.FØDSEL)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode)
+                .medType(Søknadstype.FØDSEL)
+                .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fom, tom))))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -492,14 +451,11 @@ public class ForeldrepengerDelregelTest {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
         LocalDate fom = familiehendelseDato.plusWeeks(4);
         LocalDate tom = familiehendelseDato.plusWeeks(5);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
-                null, false, PeriodeVurderingType.UAVKLART_PERIODE, null);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false,
+                PeriodeVurderingType.UAVKLART_PERIODE, null);
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -516,13 +472,9 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(4);
         LocalDate tom = familiehendelseDato.plusWeeks(5);
         var oppgittPeriode = oppgittPeriode(fom, tom, PeriodeVurderingType.PERIODE_OK);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false)
-                        .medAleneomsorg(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false).medAleneomsorg(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -536,12 +488,9 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(8);
         LocalDate tom = familiehendelseDato.plusWeeks(9);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -555,12 +504,9 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(4);
         LocalDate tom = familiehendelseDato.plusWeeks(5);
         var gradertPeriode = gradertPeriode(fom, tom, AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -576,13 +522,10 @@ public class ForeldrepengerDelregelTest {
         AktivitetIdentifikator aktivitetIdentifikator = ARBEIDSFORHOLD_1;
         var gradertPeriode = gradertPeriode(fom, tom, aktivitetIdentifikator, PeriodeVurderingType.PERIODE_OK);
         var kontoer = foreldrepengerKonto(100);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -596,22 +539,19 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(8);
         LocalDate tom = familiehendelseDato.plusWeeks(9);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
                         .leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .medKontoer(foreldrepengerKonto(10))
                 .build();
 
-        var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder()
-                .medPeriodeResultatType(Perioderesultattype.INNVILGET)
+        var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder().medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(fom.minusWeeks(1), fom.minusDays(1))
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forFrilans()),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), Stønadskontotype.FORELDREPENGER, AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
+                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), Stønadskontotype.FORELDREPENGER,
+                                AktivitetIdentifikator.forFrilans()),
+                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), Stønadskontotype.FORELDREPENGER,
+                                AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
                 .build());
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag, fastsattePerioder);
 
@@ -625,11 +565,9 @@ public class ForeldrepengerDelregelTest {
         LocalDate fom = familiehendelseDato.plusWeeks(8);
         LocalDate tom = familiehendelseDato.plusWeeks(9);
         var oppgittPeriode = oppgittPeriode(fom, tom);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medMorHarRett(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -642,16 +580,13 @@ public class ForeldrepengerDelregelTest {
         LocalDate familiehendelseDato = LocalDate.now().minusMonths(2);
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(3);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
-                null, true, PeriodeVurderingType.IKKE_VURDERT, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true,
+                PeriodeVurderingType.IKKE_VURDERT, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(40, 17);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medKontoer(kontoer)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -667,13 +602,10 @@ public class ForeldrepengerDelregelTest {
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var gradertPeriode = gradertPeriode(fom, tom, aktivitetIdentifikator, PeriodeVurderingType.PERIODE_OK, null, true);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(40, 17);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(gradertPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(gradertPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medKontoer(kontoer)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -686,16 +618,13 @@ public class ForeldrepengerDelregelTest {
         LocalDate familiehendelseDato = LocalDate.now().minusMonths(2);
         LocalDate fom = familiehendelseDato.plusWeeks(1);
         LocalDate tom = familiehendelseDato.plusWeeks(3);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom,
-                null, true, PeriodeVurderingType.IKKE_VURDERT, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true,
+                PeriodeVurderingType.IKKE_VURDERT, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(100, 0);
-        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato)
-                .medSøknad(søknad(oppgittPeriode))
+        RegelGrunnlag grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -726,38 +655,27 @@ public class ForeldrepengerDelregelTest {
     private RegelGrunnlag.Builder grunnlag(LocalDate familiehendelseDato, boolean søkerMor) {
         return RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelseDato))
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(søkerMor))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
+                .medBehandling(new Behandling.Builder().medSøkerErMor(søkerMor))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
+                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));
     }
 
     private Kontoer.Builder foreldrepengerKonto(int trekkdager) {
-        return new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medType(Stønadskontotype.FORELDREPENGER)
-                        .medTrekkdager(trekkdager));
+        return new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(trekkdager));
     }
 
     private Kontoer.Builder foreldrepengerOgFlerbarnsdagerKonto(int foreldrepengerTrekkdager, int flerbarnsdagerTrekkdager) {
-        return new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medType(Stønadskontotype.FORELDREPENGER)
-                        .medTrekkdager(foreldrepengerTrekkdager))
-                .leggTilKonto(new Konto.Builder()
-                        .medType(Stønadskontotype.FLERBARNSDAGER)
-                        .medTrekkdager(flerbarnsdagerTrekkdager));
+        return new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(foreldrepengerTrekkdager))
+                .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.FLERBARNSDAGER).medTrekkdager(flerbarnsdagerTrekkdager));
     }
 
     private Søknad.Builder søknad(OppgittPeriode uttakPeriode) {
-        return new Søknad.Builder()
-                .medType(Søknadstype.FØDSEL)
-                .leggTilOppgittPeriode(uttakPeriode);
+        return new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(uttakPeriode);
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom) {

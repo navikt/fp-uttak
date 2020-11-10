@@ -9,10 +9,9 @@ public class Oppfylt {
     /**
      * Opprette endenode for oppfylt periode.
      *
-     * @param id sluttnode id.
+     * @param id             sluttnode id.
      * @param innvilgetÅrsak innvilget årsak
-     * @param utbetal skal det utbetales for denne perioden.
-     *
+     * @param utbetal        skal det utbetales for denne perioden.
      * @return periode utfall.
      */
     public static FastsettePeriodeUtfall opprett(String id, InnvilgetÅrsak innvilgetÅrsak, boolean utbetal) {
@@ -22,11 +21,10 @@ public class Oppfylt {
     /**
      * Opprette endenode for oppfylt periode.
      *
-     * @param id sluttnode id.
+     * @param id             sluttnode id.
      * @param innvilgetÅrsak innvilget årsak
-     * @param trekkDager skal det trekkes dager for denne perioder.
-     * @param utbetal skal det utbetales for denne perioden.
-     *
+     * @param trekkDager     skal det trekkes dager for denne perioder.
+     * @param utbetal        skal det utbetales for denne perioden.
      * @return periode utfall.
      */
     public static FastsettePeriodeUtfall opprett(String id, InnvilgetÅrsak innvilgetÅrsak, boolean trekkDager, boolean utbetal) {
@@ -38,7 +36,10 @@ public class Oppfylt {
                 .create();
     }
 
-    public static FastsettePeriodeUtfall opprettMedAvslåttGradering(String id, InnvilgetÅrsak innvilgetÅrsak, GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak, boolean utbetal) {
+    public static FastsettePeriodeUtfall opprettMedAvslåttGradering(String id,
+                                                                    InnvilgetÅrsak innvilgetÅrsak,
+                                                                    GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak,
+                                                                    boolean utbetal) {
         return FastsettePeriodeUtfall.builder()
                 .oppfylt(innvilgetÅrsak)
                 .utbetal(utbetal)
@@ -52,7 +53,6 @@ public class Oppfylt {
      * Opprette endenode for oppfylt oppholds periode
      *
      * @param id sluttnode id.
-     *
      * @return periode utfall.
      */
     public static FastsettePeriodeUtfall opprettForOppholds(String id, boolean trekkDagerFraSaldo, boolean utbetal) {

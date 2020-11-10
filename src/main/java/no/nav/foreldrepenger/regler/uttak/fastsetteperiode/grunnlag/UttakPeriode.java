@@ -140,19 +140,19 @@ public final class UttakPeriode extends LukketPeriode {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UttakPeriode that = (UttakPeriode) o;
-        return flerbarnsdager == that.flerbarnsdager &&
-                perioderesultattype == that.perioderesultattype &&
-                manuellbehandlingårsak == that.manuellbehandlingårsak &&
-                Objects.equals(periodeResultatÅrsak, that.periodeResultatÅrsak) &&
-                graderingIkkeInnvilgetÅrsak == that.graderingIkkeInnvilgetÅrsak &&
-                Objects.equals(aktiviteter, that.aktiviteter) &&
-                Objects.equals(samtidigUttaksprosent, that.samtidigUttaksprosent) &&
-                oppholdÅrsak == that.oppholdÅrsak &&
-                stønadskontotype == that.stønadskontotype &&
-                Objects.equals(arbeidsprosent, that.arbeidsprosent);
+        return flerbarnsdager == that.flerbarnsdager && perioderesultattype == that.perioderesultattype
+                && manuellbehandlingårsak == that.manuellbehandlingårsak && Objects.equals(periodeResultatÅrsak,
+                that.periodeResultatÅrsak) && graderingIkkeInnvilgetÅrsak == that.graderingIkkeInnvilgetÅrsak && Objects.equals(
+                aktiviteter, that.aktiviteter) && Objects.equals(samtidigUttaksprosent, that.samtidigUttaksprosent)
+                && oppholdÅrsak == that.oppholdÅrsak && stønadskontotype == that.stønadskontotype && Objects.equals(arbeidsprosent,
+                that.arbeidsprosent);
     }
 
     @Override
@@ -163,19 +163,10 @@ public final class UttakPeriode extends LukketPeriode {
 
     @Override
     public String toString() {
-        return "UttakPeriode{" +
-                "perioderesultattype=" + perioderesultattype +
-                ", fom=" + getFom() +
-                ", tom=" + getTom() +
-                ", manuellbehandlingårsak=" + manuellbehandlingårsak +
-                ", periodeResultatÅrsak=" + periodeResultatÅrsak +
-                ", graderingIkkeInnvilgetÅrsak=" + graderingIkkeInnvilgetÅrsak +
-                ", aktiviteter=" + aktiviteter +
-                ", flerbarnsdager=" + flerbarnsdager +
-                ", samtidigUttak=" + samtidigUttaksprosent +
-                ", oppholdÅrsak=" + oppholdÅrsak +
-                ", stønadskontotype=" + stønadskontotype +
-                ", arbeidsprosent=" + arbeidsprosent +
-                '}';
+        return "UttakPeriode{" + "perioderesultattype=" + perioderesultattype + ", fom=" + getFom() + ", tom=" + getTom()
+                + ", manuellbehandlingårsak=" + manuellbehandlingårsak + ", periodeResultatÅrsak=" + periodeResultatÅrsak
+                + ", graderingIkkeInnvilgetÅrsak=" + graderingIkkeInnvilgetÅrsak + ", aktiviteter=" + aktiviteter + ", flerbarnsdager="
+                + flerbarnsdager + ", samtidigUttak=" + samtidigUttaksprosent + ", oppholdÅrsak=" + oppholdÅrsak
+                + ", stønadskontotype=" + stønadskontotype + ", arbeidsprosent=" + arbeidsprosent + '}';
     }
 }

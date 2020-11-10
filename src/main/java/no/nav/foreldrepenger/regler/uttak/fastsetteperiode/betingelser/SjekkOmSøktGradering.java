@@ -5,7 +5,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-public class SjekkOmSøktGradering extends LeafSpecification<FastsettePeriodeGrunnlag>{
+public class SjekkOmSøktGradering extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "FP_VK 26.1";
 
     public SjekkOmSøktGradering() {

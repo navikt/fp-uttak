@@ -24,7 +24,8 @@ public class SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato extends LeafSpec
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        int antallUkerUttakEtterBarnDødt = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, fastsettePeriodeGrunnlag.getFamiliehendelse());
+        int antallUkerUttakEtterBarnDødt = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER,
+                fastsettePeriodeGrunnlag.getFamiliehendelse());
         if (fastsettePeriodeGrunnlag.getDødsdatoForBarn() != null) {
             LocalDate dødsdatoForBarn = fastsettePeriodeGrunnlag.getDødsdatoForBarn();
             OppgittPeriode oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();

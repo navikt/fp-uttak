@@ -26,6 +26,7 @@ public class SøknadsfristRegel implements RuleService<SøknadsfristGrunnlag> {
         Ruleset<SøknadsfristGrunnlag> rs = new Ruleset<>();
         return rs.hvisRegel(SjekkOmFørsteUttakErInnenforSøknadsfrist.ID, "Er første uttaksdag innenfor søknadsfristen?")
                 .hvis(new SjekkOmFørsteUttakErInnenforSøknadsfrist(), new Oppfylt<>())
-                .ellers(new KanIkkeVurdere<>(SjekkOmFørsteUttakErInnenforSøknadsfrist.KAN_IKKE_VURDERE_PASSERT_SØKNADSFRIST_FOR_FØRSTE_UTTAK));
+                .ellers(new KanIkkeVurdere<>(
+                        SjekkOmFørsteUttakErInnenforSøknadsfrist.KAN_IKKE_VURDERE_PASSERT_SØKNADSFRIST_FOR_FØRSTE_UTTAK));
     }
 }

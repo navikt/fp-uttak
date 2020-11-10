@@ -41,7 +41,8 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
         // Opprette alle kontoer utenom samtidig uttak
         for (Kontokonfigurasjon kontokonfigurasjon : kontokonfigurasjoner) {
             if (kontokonfigurasjon.getStønadskontotype() != Stønadskontotype.FLERBARNSDAGER) {
-                int antallDager = konfigurasjon.getParameter(kontokonfigurasjon.getParametertype(), grunnlag.getFamiliehendelsesdato());
+                int antallDager = konfigurasjon.getParameter(kontokonfigurasjon.getParametertype(),
+                        grunnlag.getFamiliehendelsesdato());
                 if (antallExtraBarnDager > 0) {
                     // Legg ekstra dager til foreldrepenger eller fellesperiode.
                     if ((kontokonfigurasjon.getStønadskontotype().equals(Stønadskontotype.FORELDREPENGER))) {
@@ -80,7 +81,8 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
 
     private int antallVirkedagerFomFødselTilTermin(BeregnKontoerGrunnlag grunnlag) {
         //Fra termin, ikke inkludert termin
-        return Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().orElseThrow(), grunnlag.getTermindato().orElseThrow().minusDays(1));
+        return Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().orElseThrow(),
+                grunnlag.getTermindato().orElseThrow().minusDays(1));
     }
 
     private boolean skalLeggeTilPrematurUker(BeregnKontoerGrunnlag grunnlag) {
@@ -97,7 +99,9 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
         return grunnlag.isFarRett() && !grunnlag.isMorRett() && !grunnlag.isFarAleneomsorg() && grunnlag.getAntallBarn() > 0;
     }
 
-    private Evaluation beregnetMedResultat(Map<Stønadskontotype, Integer> kontoer, Integer antallExtraBarnDager, Integer antallPrematurDager) {
+    private Evaluation beregnetMedResultat(Map<Stønadskontotype, Integer> kontoer,
+                                           Integer antallExtraBarnDager,
+                                           Integer antallPrematurDager) {
         SingleEvaluation eval = ja();
         Map<String, Object> properties = new HashMap<>();
         properties.put(BeregnKontoerPropertyType.KONTOER, kontoer);

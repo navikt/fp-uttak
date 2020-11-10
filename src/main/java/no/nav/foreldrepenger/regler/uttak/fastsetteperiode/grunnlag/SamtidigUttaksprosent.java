@@ -47,8 +47,12 @@ public class SamtidigUttaksprosent implements Comparable<SamtidigUttaksprosent> 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SamtidigUttaksprosent that = (SamtidigUttaksprosent) o;
         return Objects.equals(decimalValue(), that.decimalValue());
     }

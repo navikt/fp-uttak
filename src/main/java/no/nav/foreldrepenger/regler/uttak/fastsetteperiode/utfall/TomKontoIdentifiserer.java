@@ -33,10 +33,12 @@ public class TomKontoIdentifiserer {
 
         Map<LocalDate, TomKontoKnekkpunkt> knekkpunkter = new HashMap<>();
         for (AktivitetIdentifikator aktivitet : aktiviteter) {
-            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager);
+            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
+                    stønadskontotype, skalTrekkeDager);
             datoKontoGårTomIPeriode.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             if (uttakPeriode.isFlerbarnsdager()) {
-                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, Stønadskontotype.FLERBARNSDAGER, skalTrekkeDager);
+                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
+                        Stønadskontotype.FLERBARNSDAGER, skalTrekkeDager);
                 knekkpunktFlerbarnsdager.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
         }

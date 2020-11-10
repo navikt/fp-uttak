@@ -9,8 +9,7 @@ class UtbetalingsgradMedGraderingUtregning implements UtbetalingsgradUtregning {
     private final OppgittPeriode uttakPeriode;
     private final AktivitetIdentifikator aktivitet;
 
-    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode,
-                                         AktivitetIdentifikator aktivitet) {
+    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode, AktivitetIdentifikator aktivitet) {
         this.uttakPeriode = uttakPeriode;
         this.aktivitet = aktivitet;
     }

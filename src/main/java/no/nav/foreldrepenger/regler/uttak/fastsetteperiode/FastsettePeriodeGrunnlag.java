@@ -29,7 +29,6 @@ import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 public interface FastsettePeriodeGrunnlag {
 
     /**
-     *
      * @return Aktuell periode. Det er den perioden som skal behandles av regel.
      */
     OppgittPeriode getAktuellPeriode();
@@ -161,6 +160,7 @@ public interface FastsettePeriodeGrunnlag {
 
     /**
      * Finnes alle uttaks perioder av annenpart
+     *
      * @return list av annenpart sin uttaksperioder
      */
     List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder();

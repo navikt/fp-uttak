@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
@@ -27,7 +27,8 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
         OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
         // Filtrer ut perioder hvor det er søkt om gradering, overføring og far som søker fellesperiode&FK før uke 7 på termin&fødsel
         // fordi de håndteres i sine delregler.
-        if (oppgittPeriode.erSøktGradering() || oppgittPeriode.harSøktOmOverføringAvKvote() || tidligOppstart(grunnlag, oppgittPeriode)) {
+        if (oppgittPeriode.erSøktGradering() || oppgittPeriode.harSøktOmOverføringAvKvote() || tidligOppstart(grunnlag,
+                oppgittPeriode)) {
             return nei();
         } else if (PeriodeVurderingType.UAVKLART_PERIODE.equals(oppgittPeriode.getPeriodeVurderingType())) {
             return ja();
@@ -36,12 +37,12 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
     }
 
     private boolean tidligOppstart(FastsettePeriodeGrunnlag grunnlag, OppgittPeriode oppgittPeriode) {
-        int ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, grunnlag.getFamiliehendelse());
+        int ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+                grunnlag.getFamiliehendelse());
 
-        return !grunnlag.isSøkerMor() &&
-                (Stønadskontotype.FEDREKVOTE.equals(oppgittPeriode.getStønadskontotype()) ||
-                        Stønadskontotype.FELLESPERIODE.equals(oppgittPeriode.getStønadskontotype()) ||
-                        Stønadskontotype.FORELDREPENGER.equals(oppgittPeriode.getStønadskontotype()))
-                && oppgittPeriode.getFom().isBefore(grunnlag.getFamiliehendelse().plusWeeks(ukerReservertForMor));
+        return !grunnlag.isSøkerMor() && (Stønadskontotype.FEDREKVOTE.equals(oppgittPeriode.getStønadskontotype())
+                || Stønadskontotype.FELLESPERIODE.equals(oppgittPeriode.getStønadskontotype())
+                || Stønadskontotype.FORELDREPENGER.equals(oppgittPeriode.getStønadskontotype())) && oppgittPeriode.getFom()
+                .isBefore(grunnlag.getFamiliehendelse().plusWeeks(ukerReservertForMor));
     }
 }

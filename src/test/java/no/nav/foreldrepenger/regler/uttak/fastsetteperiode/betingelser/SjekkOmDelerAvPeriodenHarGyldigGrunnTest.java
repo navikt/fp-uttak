@@ -8,16 +8,16 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlagImpl;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
@@ -32,10 +32,9 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                                new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
@@ -51,9 +50,9 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                                new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
@@ -69,10 +68,9 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
+                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                                new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
         Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
@@ -86,10 +84,9 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
+                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                                new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
                 .build();
 
@@ -112,10 +109,11 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     private Evaluation evaluer(OppgittPeriode søknadsperiode, RegelGrunnlag grunnlag) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getKontoer(), søknadsperiode.getFom(), grunnlag.getArbeid().getAktiviteter());
-        return new SjekkOmDelerAvPeriodenHarGyldigGrunn().evaluate(new FastsettePeriodeGrunnlagImpl(grunnlag,
-                SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), søknadsperiode));
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),
+                søknadsperiode.getFom(), grunnlag.getArbeid().getAktiviteter());
+        return new SjekkOmDelerAvPeriodenHarGyldigGrunn().evaluate(
+                new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
+                        søknadsperiode));
     }
 
     private OppgittPeriode manglendeSøktPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {

@@ -11,15 +11,15 @@ public final class Dødsdatoer {
     private Dødsdatoer() {
     }
 
-    public LocalDate getSøkersDødsdato(){
+    public LocalDate getSøkersDødsdato() {
         return søkersDødsdato;
     }
 
-    public LocalDate getBarnsDødsdato(){
+    public LocalDate getBarnsDødsdato() {
         return barnsDødsdato;
     }
 
-    public boolean erAlleBarnDøde(){
+    public boolean erAlleBarnDøde() {
         return alleBarnDøde;
     }
 

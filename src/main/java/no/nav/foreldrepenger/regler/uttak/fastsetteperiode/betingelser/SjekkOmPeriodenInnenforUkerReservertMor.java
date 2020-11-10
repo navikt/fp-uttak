@@ -31,12 +31,15 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
         int antallUkerEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
 
-        LukketPeriode periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse, familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));
+        LukketPeriode periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse,
+                familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));
         if (periodeEtterFødselNormaltReservertMor.overlapper(aktuellPeriode)) {
             if (aktuellPeriode.erOmsluttetAv(periodeEtterFødselNormaltReservertMor)) {
                 return ja();
             } else {
-                throw new IllegalArgumentException("Utvikler-feil: periode er ikke knekt riktig fom=" + aktuellPeriode.getFom() + " tom=" + aktuellPeriode.getTom());
+                throw new IllegalArgumentException(
+                        "Utvikler-feil: periode er ikke knekt riktig fom=" + aktuellPeriode.getFom() + " tom="
+                                + aktuellPeriode.getTom());
             }
         } else {
             return nei();

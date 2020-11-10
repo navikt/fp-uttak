@@ -20,7 +20,8 @@ public class KonfigurasjonBuilder {
 
     public KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Object verdi) {
         if (!parametertype.getKlasseForVerdier().isAssignableFrom(verdi.getClass())) {
-            throw new IllegalArgumentException("Utvikler-feil: kan legge til verdi fra klasse " + verdi.getClass() + " for " + parametertype);
+            throw new IllegalArgumentException(
+                    "Utvikler-feil: kan legge til verdi fra klasse " + verdi.getClass() + " for " + parametertype);
         }
 
         Collection<Parameter> parameterListe = parameterMap.get(parametertype);
@@ -30,8 +31,10 @@ public class KonfigurasjonBuilder {
             parameterMap.put(parametertype, coll);
         } else {
             Parameter nyttParameter = new Parameter(fom, tom, verdi);
-            long count = parameterListe.stream().filter(p -> p.overlapper(nyttParameter.getFom()) ||
-                    (nyttParameter.getTom()!=null && p.overlapper(nyttParameter.getTom()))).count();
+            long count = parameterListe.stream()
+                    .filter(p -> p.overlapper(nyttParameter.getFom()) || (nyttParameter.getTom() != null && p.overlapper(
+                            nyttParameter.getTom())))
+                    .count();
             if (count > 0L) {
                 throw new IllegalArgumentException("Overlappende perioder kan ikke eksistere i konfigurasjon.");
             }

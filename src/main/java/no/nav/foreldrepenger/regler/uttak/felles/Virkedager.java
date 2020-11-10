@@ -16,10 +16,10 @@ public class Virkedager {
     private static final int DAGER_PR_UKE = 7;
     private static final int VIRKEDAGER_PR_UKE = 5;
     private static final int HELGEDAGER_PR_UKE = DAGER_PR_UKE - VIRKEDAGER_PR_UKE;
-    private static final TemporalAdjuster NESTE_VIRKEDAG_ADJUSTER =
-            TemporalAdjusters.ofDateAdjuster(dato -> dato.plusDays(finnDagerÅLeggeTil(dato)));
-    private static final TemporalAdjuster HELG_TIL_MANDAG_ADJUSTER =
-            TemporalAdjusters.ofDateAdjuster(dato -> erHelg(dato) ? dato.with(NESTE_VIRKEDAG_ADJUSTER) : dato);
+    private static final TemporalAdjuster NESTE_VIRKEDAG_ADJUSTER = TemporalAdjusters.ofDateAdjuster(
+            dato -> dato.plusDays(finnDagerÅLeggeTil(dato)));
+    private static final TemporalAdjuster HELG_TIL_MANDAG_ADJUSTER = TemporalAdjusters.ofDateAdjuster(
+            dato -> erHelg(dato) ? dato.with(NESTE_VIRKEDAG_ADJUSTER) : dato);
 
     private Virkedager() {
         // For å unngå instanser
@@ -43,7 +43,8 @@ public class Virkedager {
             // Utvid til nærmeste søndag fram i tid fra og med slutt (tom) (0-6 dager)
             int padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
             // Antall virkedager i perioden utvidet til hele uker
-            int virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
+            int virkedagerPadded = toIntExact(
+                    ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
             // Antall virkedager i utvidelse
             int virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
             // Virkedager i perioden uten virkedagene fra utvidelse

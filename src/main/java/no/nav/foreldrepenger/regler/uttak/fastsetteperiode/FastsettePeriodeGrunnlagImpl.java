@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
@@ -25,7 +26,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenO
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -38,9 +38,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final OppgittPeriode aktuellPeriode;
 
-    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag,
-                                        SaldoUtregning saldoUtregning,
-                                        OppgittPeriode aktuellPeriode) {
+    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning, OppgittPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;
         this.saldoUtregning = saldoUtregning;
         this.aktuellPeriode = aktuellPeriode;
@@ -57,7 +55,8 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
         if (dokumentasjon == null) {
             return Collections.emptyList();
         }
-        return dokumentasjon.getGyldigGrunnPerioder().stream()
+        return dokumentasjon.getGyldigGrunnPerioder()
+                .stream()
                 .filter(p -> p.overlapper(aktuellPeriode))
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
@@ -114,8 +113,12 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     private List<OppgittPeriode> getPerioderMedOverføringÅrsak(OverføringÅrsak årsak) {
-        return regelGrunnlag.getSøknad().getOppgittePerioder().stream().filter(periode -> Objects.equals(periode.getOverføringÅrsak(), årsak)
-                && PeriodeVurderingType.avklart(periode.getPeriodeVurderingType())).collect(Collectors.toList());
+        return regelGrunnlag.getSøknad()
+                .getOppgittePerioder()
+                .stream()
+                .filter(periode -> Objects.equals(periode.getOverføringÅrsak(), årsak) && PeriodeVurderingType.avklart(
+                        periode.getPeriodeVurderingType()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -184,7 +187,9 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public LocalDate getDødsdatoForSøker() {
-        return regelGrunnlag.getDatoer().getDødsdatoer() == null ? null : regelGrunnlag.getDatoer().getDødsdatoer().getSøkersDødsdato();
+        return regelGrunnlag.getDatoer().getDødsdatoer() == null ? null : regelGrunnlag.getDatoer()
+                .getDødsdatoer()
+                .getSøkersDødsdato();
     }
 
     @Override

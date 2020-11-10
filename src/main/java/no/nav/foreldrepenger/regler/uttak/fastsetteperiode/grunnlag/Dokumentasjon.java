@@ -52,18 +52,22 @@ public class Dokumentasjon {
             kladd.gyldigGrunnPerioder.add(gyldigGrunnPeriode);
             return this;
         }
+
         public Builder leggPeriodeUtenOmsorg(PeriodeUtenOmsorg periodeUtenOmsorg) {
             kladd.perioderUtenOmsorg.add(periodeUtenOmsorg);
             return this;
         }
+
         public Builder leggPeriodeMedSykdomEllerSkade(PeriodeMedSykdomEllerSkade periodeMedSykdomEllerSkade) {
             kladd.perioderMedSykdomEllerSkade.add(periodeMedSykdomEllerSkade);
             return this;
         }
+
         public Builder leggPeriodeMedInnleggelse(PeriodeMedInnleggelse periodeMedInnleggelse) {
             kladd.perioderMedInnleggelse.add(periodeMedInnleggelse);
             return this;
         }
+
         public Builder leggPeriodeMedBarnInnlagt(PeriodeMedBarnInnlagt periodeMedBarnInnlagt) {
             kladd.perioderMedBarnInnlagt.add(periodeMedBarnInnlagt);
             return this;

@@ -22,11 +22,13 @@ public class SjekkOmGyldigOverføringPgaIkkeRett extends LeafSpecification<Fasts
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
         for (OppgittPeriode perioderMedIkkeRett : grunnlag.getPerioderMedAnnenForelderIkkeRett()) {
-            if (oppgittPeriode.erOmsluttetAv(perioderMedIkkeRett) && harGyldigGrunn(oppgittPeriode, grunnlag.getGyldigGrunnPerioder())) {
+            if (oppgittPeriode.erOmsluttetAv(perioderMedIkkeRett) && harGyldigGrunn(oppgittPeriode,
+                    grunnlag.getGyldigGrunnPerioder())) {
                 return ja();
             }
         }
-        return nei();    }
+        return nei();
+    }
 
     private boolean harGyldigGrunn(OppgittPeriode oppgittPeriode, List<GyldigGrunnPeriode> gyldigGrunnPerioder) {
         for (GyldigGrunnPeriode gyldigGrunnPeriode : gyldigGrunnPerioder) {

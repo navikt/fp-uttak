@@ -62,8 +62,8 @@ final class ValgAvStønadskontoTjeneste {
     }
 
     private static boolean periodeErPleiepenger(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
-        return PrematurukerUtil.oppfyllerKravTilPrematuruker(regelGrunnlag.getDatoer().getFødsel(), regelGrunnlag.getDatoer().getTermin(), konfigurasjon)
-                && periodeErFørTermin(periode, regelGrunnlag)
+        return PrematurukerUtil.oppfyllerKravTilPrematuruker(regelGrunnlag.getDatoer().getFødsel(),
+                regelGrunnlag.getDatoer().getTermin(), konfigurasjon) && periodeErFørTermin(periode, regelGrunnlag)
                 && periode.isUtsettelsePga(UtsettelseÅrsak.INNLAGT_BARN);
     }
 
@@ -79,16 +79,19 @@ final class ValgAvStønadskontoTjeneste {
         if (regelGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FORELDREPENGER)) {
             return Optional.of(Stønadskontotype.FORELDREPENGER);
         }
-        throw new IllegalStateException("Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: " + regelGrunnlag.getGyldigeStønadskontotyper());
+        throw new IllegalStateException(
+                "Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: " + regelGrunnlag.getGyldigeStønadskontotyper());
     }
 
     private static List<Stønadskontotype> hentSøkerSineKontoer(RegelGrunnlag regelGrunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         Set<Stønadskontotype> gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
         if (regelGrunnlag.getBehandling().isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
-            søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
+            søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE,
+                    Stønadskontotype.FORELDREPENGER);
         } else if (gyldige.contains(Stønadskontotype.FEDREKVOTE)) {
-            søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
+            søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE,
+                    Stønadskontotype.FORELDREPENGER);
         } else {
             søkerSineKonto = List.of(Stønadskontotype.FORELDREPENGER);
         }
@@ -108,5 +111,5 @@ final class ValgAvStønadskontoTjeneste {
         }
         return tomForKonto;
     }
-    
+
 }

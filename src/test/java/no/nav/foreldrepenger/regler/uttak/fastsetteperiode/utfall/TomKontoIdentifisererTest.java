@@ -59,22 +59,19 @@ public class TomKontoIdentifisererTest {
 
         var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, idag, idag.plusDays(søktOmDag - 1),
                 arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null);
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder()
-                        .medType(Stønadskontotype.MØDREKVOTE)
-                        .medTrekkdager(saldo));
+        var kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(saldo));
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder()
-                        .leggTilOppgittPeriode(oppgittPeriode))
+                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medKontoer(kontoer)
                 .build();
 
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(),
-                List.of(), grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),
+                oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
         var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
-        var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(oppgittPeriode, List.of(ARBEIDSFORHOLD_1),
-                saldoUtregning, Stønadskontotype.MØDREKVOTE, true);
+        var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(oppgittPeriode, List.of(ARBEIDSFORHOLD_1), saldoUtregning,
+                Stønadskontotype.MØDREKVOTE, true);
         assertThat(tomKontoKnekkpunkt.orElseThrow().getDato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
     }
 }

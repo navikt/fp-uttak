@@ -49,8 +49,6 @@ public class FastsettePeriodeResultat {
 
     @Override
     public String toString() {
-        return "FastsettePeriodeResultat{" +
-            "uttakPeriode=" + uttakPeriode +
-            '}';
+        return "FastsettePeriodeResultat{" + "uttakPeriode=" + uttakPeriode + '}';
     }
 }

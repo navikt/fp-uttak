@@ -19,13 +19,15 @@ public final class AnnenPart {
     }
 
     public Set<AktivitetIdentifikator> getAktiviteter() {
-        return uttaksperioder.stream().flatMap(periode -> periode.getAktiviteter().stream())
+        return uttaksperioder.stream()
+                .flatMap(periode -> periode.getAktiviteter().stream())
                 .map(AnnenpartUttakPeriodeAktivitet::getAktivitetIdentifikator)
                 .collect(Collectors.toSet());
     }
 
     public Optional<LocalDate> sisteUttaksdag() {
-        var sisteInnvilgetPeriode = uttaksperioder.stream().filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
+        var sisteInnvilgetPeriode = uttaksperioder.stream()
+                .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
                 .min((o1, o2) -> o2.getTom().compareTo(o1.getTom()));
         return sisteInnvilgetPeriode.map(p -> p.getTom());
     }

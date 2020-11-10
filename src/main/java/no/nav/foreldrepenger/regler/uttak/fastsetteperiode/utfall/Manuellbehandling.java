@@ -8,11 +8,20 @@ public class Manuellbehandling {
         // For å hindre instanser
     }
 
-    public static FastsettePeriodeUtfall opprett(String id, PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellbehandlingårsak, boolean trekkDagerFraSaldo, boolean utbetal) {
+    public static FastsettePeriodeUtfall opprett(String id,
+                                                 PeriodeResultatÅrsak periodeResultatÅrsak,
+                                                 Manuellbehandlingårsak manuellbehandlingårsak,
+                                                 boolean trekkDagerFraSaldo,
+                                                 boolean utbetal) {
         return opprett(id, periodeResultatÅrsak, manuellbehandlingårsak, trekkDagerFraSaldo, utbetal, Optional.empty());
     }
 
-    public static FastsettePeriodeUtfall opprett(String id, PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellbehandlingårsak, boolean trekkDagerFraSaldo, boolean utbetal, Optional<GraderingIkkeInnvilgetÅrsak> graderingIkkeInnvilgetÅrsak) {
+    public static FastsettePeriodeUtfall opprett(String id,
+                                                 PeriodeResultatÅrsak periodeResultatÅrsak,
+                                                 Manuellbehandlingårsak manuellbehandlingårsak,
+                                                 boolean trekkDagerFraSaldo,
+                                                 boolean utbetal,
+                                                 Optional<GraderingIkkeInnvilgetÅrsak> graderingIkkeInnvilgetÅrsak) {
         FastsettePeriodeUtfall.Builder builder = FastsettePeriodeUtfall.builder()
                 .manuellBehandling(periodeResultatÅrsak, manuellbehandlingårsak)
                 .utbetal(utbetal)

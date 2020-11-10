@@ -55,7 +55,8 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMorNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmSøkerErMor.ID, "Er søker mor?")
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmPeriodenStarterForTidligNode(rs))
-                .ellers(Manuellbehandling.opprett("UT1076", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
+                .ellers(Manuellbehandling.opprett("UT1076", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER,
+                        Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterForTidligNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
@@ -67,14 +68,16 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriodeNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det manglende søkt periode?")
-                .hvis(new SjekkOmManglendeSøktPeriode(), IkkeOppfylt.opprett("UT1073", IkkeOppfyltÅrsak.MOR_TAR_IKKE_ALLE_UKENE, true, false))
+                .hvis(new SjekkOmManglendeSøktPeriode(),
+                        IkkeOppfylt.opprett("UT1073", IkkeOppfyltÅrsak.MOR_TAR_IKKE_ALLE_UKENE, true, false))
                 .ellers(sjekkOmGradering(rs));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGradering(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
-                .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprettMedAvslåttGradering("UT1072", InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL,
-                        GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true))
+                .hvis(new SjekkOmGradertPeriode(),
+                        Oppfylt.opprettMedAvslåttGradering("UT1072", InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL,
+                                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true))
                 .ellers(Oppfylt.opprett("UT1071", InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL, true));
     }
 

@@ -7,8 +7,7 @@ public enum OppholdÅrsak {
     FELLESPERIODE_ANNEN_FORELDER,
     MØDREKVOTE_ANNEN_FORELDER,
     FEDREKVOTE_ANNEN_FORELDER,
-    FORELDREPENGER_ANNEN_FORELDER
-    ;
+    FORELDREPENGER_ANNEN_FORELDER;
 
     public static Stønadskontotype map(OppholdÅrsak oppholdÅrsak) {
         if (FELLESPERIODE_ANNEN_FORELDER.equals(oppholdÅrsak)) {

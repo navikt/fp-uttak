@@ -24,28 +24,25 @@ public class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     @Test
     public void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
-                .medSøknad(søknad(
-                    Søknadstype.FØDSEL, oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                .medSøknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                         oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
-                        oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))
-                ));
+                        oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))));
 
         List<FastsettePeriodeResultat> resultatListe = fastsettPerioder(grunnlag);
 
         assertThat(resultatListe).hasSize(3);
-        resultatListe
-                .forEach(resultat -> {
-                    try {
-                        assertThat(new ObjectMapper().readValue(resultat.getInnsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
-                        assertThat(new ObjectMapper().readValue(resultat.getEvalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
-                    } catch (IOException e) {
-                        fail("JSON mapping feiler.");
-                    }
-                });
+        resultatListe.forEach(resultat -> {
+            try {
+                assertThat(new ObjectMapper().readValue(resultat.getInnsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
+                assertThat(new ObjectMapper().readValue(resultat.getEvalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
+            } catch (IOException e) {
+                fail("JSON mapping feiler.");
+            }
+        });
     }
 
 }

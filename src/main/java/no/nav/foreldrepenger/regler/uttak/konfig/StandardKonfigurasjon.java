@@ -66,7 +66,8 @@ public class StandardKonfigurasjon {
 
                 .leggTilParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, d_2010_01_01, d_2018_12_31, 85)
                 .leggTilParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, d_2010_01_01, d_2018_12_31, 105)
-                .leggTilParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, d_2010_01_01, d_2018_12_31, 230)
+                .leggTilParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, d_2010_01_01, d_2018_12_31,
+                        230)
                 .leggTilParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, d_2010_01_01, d_2018_12_31, 280)
                 .leggTilParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT, d_2010_01_01, d_2018_12_31, 75)
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, d_2010_01_01, d_2018_12_31, 75)

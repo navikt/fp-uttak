@@ -8,30 +8,35 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 public class Konfigurasjonsfaktorer {
 
-    enum Berettiget{
+    enum Berettiget {
         MOR,
         FAR,
         FAR_ALENE,
         BEGGE
     }
 
-    static final Map<Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_100_PROSENT = Map.ofEntries(
-            Map.entry(Berettiget.MOR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER))),
-            Map.entry(Berettiget.FAR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER))),
-            Map.entry(Berettiget.FAR_ALENE, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER))),
-            Map.entry(Berettiget.BEGGE, List.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER),
-                            new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT),
-                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT)))
-    );
+    static final Map<Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_100_PROSENT = Map.ofEntries(Map.entry(Berettiget.MOR,
+            List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER,
+                    Parametertype.FORELDREPENGER_100_PROSENT_MOR_ALENEOMSORG_DAGER))), Map.entry(Berettiget.FAR,
+            List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER,
+                    Parametertype.FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER))), Map.entry(Berettiget.FAR_ALENE,
+            List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER,
+                    Parametertype.FORELDREPENGER_100_PROSENT_FAR_ALENEOMSORG_DAGER))), Map.entry(Berettiget.BEGGE,
+            List.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER),
+                    new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_100_PROSENT),
+                    new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_100_PROSENT))));
 
     static final Map<Konfigurasjonsfaktorer.Berettiget, List<Kontokonfigurasjon>> KONFIGURASJONER_80_PROSENT = Map.ofEntries(
-            Map.entry(Berettiget.MOR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER))),
-            Map.entry(Berettiget.FAR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER))),
-            Map.entry(Berettiget.FAR_ALENE, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER, Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER))),
-            Map.entry(Berettiget.BEGGE, List.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE, Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER),
+            Map.entry(Berettiget.MOR, List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER,
+                    Parametertype.FORELDREPENGER_80_PROSENT_MOR_ALENEOMSORG_DAGER))), Map.entry(Berettiget.FAR,
+                    List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER,
+                            Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER))), Map.entry(Berettiget.FAR_ALENE,
+                    List.of(new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER,
+                            Parametertype.FORELDREPENGER_80_PROSENT_FAR_ALENEOMSORG_DAGER))), Map.entry(Berettiget.BEGGE,
+                    List.of(new Kontokonfigurasjon(Stønadskontotype.FELLESPERIODE,
+                                    Parametertype.FELLESPERIODE_80_PROSENT_BEGGE_RETT_DAGER),
                             new Kontokonfigurasjon(Stønadskontotype.MØDREKVOTE, Parametertype.MØDREKVOTE_DAGER_80_PROSENT),
-                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT)))
-    );
+                            new Kontokonfigurasjon(Stønadskontotype.FEDREKVOTE, Parametertype.FEDREKVOTE_DAGER_80_PROSENT))));
 
     private Boolean er100Prosent;
     private Integer antallLevendeBarn;

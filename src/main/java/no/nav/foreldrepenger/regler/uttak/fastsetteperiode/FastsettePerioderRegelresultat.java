@@ -18,9 +18,12 @@ class FastsettePerioderRegelresultat extends Regelresultat {
 
     FastsettePerioderRegelresultat(Evaluation evaluation) {
         super(evaluation);
-        skalUtbetale = getProperty(FastsettePeriodePropertyType.UTBETAL, Boolean.class) != null && getProperty(FastsettePeriodePropertyType.UTBETAL, Boolean.class);
-        trekkDagerFraSaldo = getProperty(FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, Boolean.class) != null && getProperty(FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, Boolean.class);
-        graderingIkkeInnvilgetÅrsak = getProperty(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK, GraderingIkkeInnvilgetÅrsak.class);
+        skalUtbetale = getProperty(FastsettePeriodePropertyType.UTBETAL, Boolean.class) != null && getProperty(
+                FastsettePeriodePropertyType.UTBETAL, Boolean.class);
+        trekkDagerFraSaldo = getProperty(FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, Boolean.class) != null && getProperty(
+                FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, Boolean.class);
+        graderingIkkeInnvilgetÅrsak = getProperty(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK,
+                GraderingIkkeInnvilgetÅrsak.class);
         avklaringÅrsak = getProperty(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, PeriodeResultatÅrsak.class);
         manuellbehandlingårsak = getProperty(FastsettePeriodePropertyType.MANUELL_BEHANDLING_ÅRSAK, Manuellbehandlingårsak.class);
         utfallType = getProperty(FastsettePeriodePropertyType.UTFALL, UtfallType.class);

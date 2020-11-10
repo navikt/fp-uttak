@@ -20,9 +20,9 @@ public class SøknadsfristRegelOrkestreringTest {
     public void søknadOmUttakInnenforSøknadsfristSkalGiOppfyltResultat() {
         LocalDate nå = LocalDate.now();
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medSøknadMottattDato(nå.with(lastDayOfMonth()))
-            .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
-            .build();
+                .medSøknadMottattDato(nå.with(lastDayOfMonth()))
+                .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
+                .build();
 
         SøknadsfristRegelOrkestrering regelOrkestrering = new SøknadsfristRegelOrkestrering();
         SøknadsfristResultat resultat = regelOrkestrering.vurderSøknadsfrist(grunnlag);
@@ -49,9 +49,9 @@ public class SøknadsfristRegelOrkestreringTest {
     public void søknadOmUttakUtenforSøknadsfristSkalGiIkkeOppfyltOgAksjonskode() {
         LocalDate nå = LocalDate.now();
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
-            .medSøknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
-            .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
-            .build();
+                .medSøknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
+                .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
+                .build();
 
         SøknadsfristRegelOrkestrering regelOrkestrering = new SøknadsfristRegelOrkestrering();
         SøknadsfristResultat resultat = regelOrkestrering.vurderSøknadsfrist(grunnlag);

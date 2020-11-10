@@ -35,22 +35,18 @@ public class UtsettelseDelregelTest {
     @Test
     public void UT1101_ferie_innenfor_seks_første_uker() {
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
-        var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), PeriodeVurderingType.IKKE_VURDERT,
-                UtsettelseÅrsak.FERIE, fødselsdato.minusWeeks(1)); // innenfor seks uker etter fødsel
+        var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
+                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE,
+                fødselsdato.minusWeeks(1)); // innenfor seks uker etter fødsel
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
+        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+                new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(periode))
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(periode))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(beggeRett())
-                .medDatoer(new Datoer.Builder()
-                        .medFødsel(fødselsdato)
-                        .medTermin(fødselsdato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato).medTermin(fødselsdato))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -68,13 +64,11 @@ public class UtsettelseDelregelTest {
         LocalDate fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
+        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+                new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(periode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))))
                 .medBehandling(behandlingMor())
@@ -82,8 +76,7 @@ public class UtsettelseDelregelTest {
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
                         //Nok til å få prematuruker
-                        .medFødsel(fom)
-                        .medTermin(fom.plusWeeks(8)))
+                        .medFødsel(fom).medTermin(fom.plusWeeks(8)))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -97,23 +90,20 @@ public class UtsettelseDelregelTest {
         LocalDate fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN);
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
+        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+                new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(periode)
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom.plusWeeks(10), fom.plusWeeks(10)))))
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeMedBarnInnlagt(
+                                new PeriodeMedBarnInnlagt(fom.plusWeeks(10), fom.plusWeeks(10)))))
                 .medBehandling(behandlingMor())
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(fom))
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
                         //Nok til å få prematuruker
-                        .medFødsel(fom)
-                        .medTermin(fom.plusWeeks(8)))
+                        .medFødsel(fom).medTermin(fom.plusWeeks(8)))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -127,23 +117,19 @@ public class UtsettelseDelregelTest {
         LocalDate fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
         AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
+        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+                new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(periode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))))
                 .medBehandling(behandlingMor())
-                .medRevurdering(new Revurdering.Builder()
-                        .medEndringsdato(fom))
+                .medRevurdering(new Revurdering.Builder().medEndringsdato(fom))
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
                         //Nok til å få prematuruker
-                        .medFødsel(fom)
-                        .medTermin(fom))
+                        .medFødsel(fom).medTermin(fom))
                 .medInngangsvilkår(oppfylt())
                 .build();
 
@@ -153,10 +139,7 @@ public class UtsettelseDelregelTest {
     }
 
     private RettOgOmsorg.Builder beggeRett() {
-        return new RettOgOmsorg.Builder()
-                .medFarHarRett(true)
-                .medMorHarRett(true)
-                .medSamtykke(true);
+        return new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true).medSamtykke(true);
     }
 
     private Behandling.Builder behandlingMor() {
@@ -164,8 +147,7 @@ public class UtsettelseDelregelTest {
     }
 
     private Inngangsvilkår.Builder oppfylt() {
-        return new Inngangsvilkår.Builder()
-                .medFødselOppfylt(true)
+        return new Inngangsvilkår.Builder().medFødselOppfylt(true)
                 .medAdopsjonOppfylt(true)
                 .medForeldreansvarnOppfylt(true)
                 .medOpptjeningOppfylt(true);

@@ -27,7 +27,8 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto e
             Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (saldo.merEnn0()) {
                 if (aktuellPeriode.isFlerbarnsdager()) {
-                    Trekkdager saldoFlerbarnsdager = grunnlag.getSaldoUtregning().saldoITrekkdager(Stønadskontotype.FLERBARNSDAGER, aktivitet);
+                    Trekkdager saldoFlerbarnsdager = grunnlag.getSaldoUtregning()
+                            .saldoITrekkdager(Stønadskontotype.FLERBARNSDAGER, aktivitet);
                     if (saldoFlerbarnsdager.merEnn0()) {
                         return ja();
                     }

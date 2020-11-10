@@ -21,7 +21,8 @@ public class SjekkOmPeriodenStarterFørUke7 extends LeafSpecification<FastsetteP
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        int ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, grunnlag.getFamiliehendelse());
+        int ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+                grunnlag.getFamiliehendelse());
         if (grunnlag.getAktuellPeriode().getFom().isBefore(grunnlag.getFamiliehendelse().plusWeeks(ukerReservertForMor))) {
             return ja();
         }

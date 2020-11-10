@@ -12,7 +12,8 @@ public class FastsattUttakPeriode {
     private LocalDate tom;
     private boolean samtidigUttak;
 
-    private FastsattUttakPeriode() { }
+    private FastsattUttakPeriode() {
+    }
 
     private FastsattUttakPeriode(FastsattUttakPeriode periode) {
         this.perioderesultattype = periode.perioderesultattype;

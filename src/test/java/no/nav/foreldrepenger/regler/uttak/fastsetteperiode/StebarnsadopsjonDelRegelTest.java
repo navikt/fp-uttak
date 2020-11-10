@@ -39,13 +39,11 @@ public class StebarnsadopsjonDelRegelTest {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.ADOPSJON)
+        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medSøknad(
+                new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(uttakPeriode)
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
-                .build();
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(
+                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100))))).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -81,10 +79,10 @@ public class StebarnsadopsjonDelRegelTest {
     @Test
     public void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
-        var uttakPeriode = gradertPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2), Set.of(ARBEIDSFORHOLD_1));
+        var uttakPeriode = gradertPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2),
+                Set.of(ARBEIDSFORHOLD_1));
 
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .build();
+        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -100,14 +98,11 @@ public class StebarnsadopsjonDelRegelTest {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medArbeid(
+                new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -123,14 +118,11 @@ public class StebarnsadopsjonDelRegelTest {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medArbeid(
+                new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -141,29 +133,18 @@ public class StebarnsadopsjonDelRegelTest {
     }
 
     private RegelGrunnlag.Builder grunnlagFar(LocalDate familiehendelseDato, OppgittPeriode oppgittPeriode) {
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
         return RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.ADOPSJON)
-                        .leggTilOppgittPeriode(oppgittPeriode))
-                .medDatoer(new Datoer.Builder()
-                        .medOmsorgsovertakelse(familiehendelseDato))
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON).leggTilOppgittPeriode(oppgittPeriode))
+                .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(familiehendelseDato))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medKontoer(kontoer)
-                .medBehandling(new Behandling.Builder()
-                        .medSøkerErMor(false))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medFarHarRett(true)
-                        .medMorHarRett(true)
-                        .medSamtykke(true))
-                .medAdopsjon(new Adopsjon.Builder()
-                        .medAnkomstNorge(null)
-                        .medStebarnsadopsjon(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true).medSamtykke(true))
+                .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null).medStebarnsadopsjon(true))
+                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));

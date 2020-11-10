@@ -33,14 +33,17 @@ public final class RettOgOmsorg {
             kladd.farHarRett = medFarRett;
             return this;
         }
+
         public Builder medMorHarRett(boolean medMorRett) {
             kladd.morHarRett = medMorRett;
             return this;
         }
+
         public Builder medSamtykke(boolean medSamtykke) {
             kladd.samtykke = medSamtykke;
             return this;
         }
+
         public Builder medAleneomsorg(boolean medAleneomsorg) {
             kladd.aleneomsorg = medAleneomsorg;
             return this;

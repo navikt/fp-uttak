@@ -67,10 +67,11 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         OppgittPeriode fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
-        OppgittPeriode utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), UtsettelseÅrsak.FERIE);
-        OppgittPeriode fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1));
-        basicGrunnlag(fødselsdato).medSøknad(new Søknad.Builder()
-                .leggTilOppgittPeriode(fpff)
+        OppgittPeriode utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
+                UtsettelseÅrsak.FERIE);
+        OppgittPeriode fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12),
+                fødselsdato.plusWeeks(14).minusDays(1));
+        basicGrunnlag(fødselsdato).medSøknad(new Søknad.Builder().leggTilOppgittPeriode(fpff)
                 .leggTilOppgittPeriode(mødrekvote)
                 .leggTilOppgittPeriode(utsettelseFellesperiode)
                 .leggTilOppgittPeriode(fellesperiode)
@@ -110,16 +111,14 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         leggPåKvoter(grunnlag);
         OppgittPeriode fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
-                BigDecimal.valueOf(20), aktiviteter);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
+                fødselsdato.plusWeeks(8).minusDays(1), BigDecimal.valueOf(20), aktiviteter);
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medInngangsvilkår(oppfyltAlleVilkår())
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote, gradertFellesperiode))
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
                         .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
@@ -148,13 +147,11 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
         OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), new BigDecimal("17.55"), aktivititeter);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
                 .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote, gradertFellesperiode))
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
                         .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
                 .medInngangsvilkår(oppfyltAlleVilkår());
 
@@ -166,8 +163,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
     }
 
     private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 50))
                 .leggTilKonto(konto(FEDREKVOTE, 50))
                 .leggTilKonto(konto(FELLESPERIODE, 130));

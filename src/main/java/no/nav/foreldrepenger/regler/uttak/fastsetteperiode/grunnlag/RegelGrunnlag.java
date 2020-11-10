@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class RegelGrunnlag {
 
@@ -80,7 +80,7 @@ public class RegelGrunnlag {
         return kontoer;
     }
 
-    public static class Builder  {
+    public static class Builder {
 
         private RegelGrunnlag kladd = new RegelGrunnlag();
 
@@ -88,26 +88,32 @@ public class RegelGrunnlag {
             kladd.søknad = søknad.build();
             return this;
         }
+
         public Builder medBehandling(Behandling.Builder behandling) {
             kladd.behandling = behandling == null ? null : behandling.build();
             return this;
         }
+
         public Builder medDatoer(Datoer.Builder datoer) {
             kladd.datoer = datoer == null ? null : datoer.build();
             return this;
         }
+
         public Builder medRettOgOmsorg(RettOgOmsorg.Builder rettOgOmsorg) {
             kladd.rettOgOmsorg = rettOgOmsorg == null ? null : rettOgOmsorg.build();
             return this;
         }
+
         public Builder medArbeid(Arbeid.Builder arbeid) {
             kladd.arbeid = arbeid == null ? null : arbeid.build();
             return this;
         }
+
         public Builder medRevurdering(Revurdering.Builder revurdering) {
             kladd.revurdering = revurdering == null ? null : revurdering.build();
             return this;
         }
+
         public Builder medAnnenPart(AnnenPart.Builder annenPart) {
             kladd.annenPart = annenPart == null ? null : annenPart.build();
             return this;
@@ -122,6 +128,7 @@ public class RegelGrunnlag {
             kladd.inngangsvilkår = inngangsvilkår == null ? null : inngangsvilkår.build();
             return this;
         }
+
         public Builder medOpptjening(Opptjening.Builder opptjening) {
             kladd.opptjening = opptjening == null ? null : opptjening.build();
             return this;

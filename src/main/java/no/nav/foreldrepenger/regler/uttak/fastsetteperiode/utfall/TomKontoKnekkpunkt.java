@@ -16,8 +16,6 @@ public class TomKontoKnekkpunkt {
 
     @Override
     public String toString() {
-        return "TomKontoKnekkpunkt{" +
-                "dato=" + dato +
-                '}';
+        return "TomKontoKnekkpunkt{" + "dato=" + dato + '}';
     }
 }

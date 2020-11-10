@@ -58,32 +58,37 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødselMor() {
         return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse())
-            .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseMor());
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse())
+                .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseMor());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørOmsorgsovertakelseMor() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før omsorgsovertakelse?")
-            .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), IkkeOppfylt.opprett("UT1236", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
-            .ellers(sjekkOmMorHarOmsorgForBarnet());
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
+                        IkkeOppfylt.opprett("UT1236", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
+                .ellers(sjekkOmMorHarOmsorgForBarnet());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødselFar() {
         return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttakSkalVæreFørFamileHendelse())
-            .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseFar());
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttakSkalVæreFørFamileHendelse())
+                .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelseFar());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørOmsorgsovertakelseFar() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før omsorgsovertakelse?")
-            .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), IkkeOppfylt.opprett("UT1234", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
-            .ellers(sjekkErDetAleneomsorgFar());
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
+                        IkkeOppfylt.opprett("UT1234", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
+                .ellers(sjekkErDetAleneomsorgFar());
     }
 
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaketStarterFørLovligUttakFørFamiliehendelse() {
-        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(konfigurasjon), IkkeOppfylt.opprett("UT1185", IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL, false, false))
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID,
+                SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(konfigurasjon),
+                        IkkeOppfylt.opprett("UT1185", IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL, false,
+                                false))
                 .ellers(sjekkErDetAleneomsorgMor());
     }
 
@@ -101,14 +106,18 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel() {
         return rs.hvisRegel(SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel.ID, "Starter perioden før 3 uker før termin/fødsel?")
-                .hvis(new SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(konfigurasjon), sjekkErDetNoenDisponibleStønadsdagerPåKvotenMor())
+                .hvis(new SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(konfigurasjon),
+                        sjekkErDetNoenDisponibleStønadsdagerPåKvotenMor())
                 .ellers(sjekkOmPeriodenStarterFørFamilieHendelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErDetNoenDisponibleStønadsdagerPåKvotenMor() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmGraderingIPeriodenFørXUkerEtterFamiliehendelseMor())
-                .ellers(Manuellbehandling.opprett("UT1205", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
+                        sjekkOmGraderingIPeriodenFørXUkerEtterFamiliehendelseMor())
+                .ellers(Manuellbehandling.opprett("UT1205", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
+                        Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPeriodenFørXUkerEtterFamiliehendelseMor() {
@@ -116,21 +125,25 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
                 Oppfylt.opprett("UT1211", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true),
                 Oppfylt.opprett("UT1186", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true));
         Specification<FastsettePeriodeGrunnlag> erDetBareMorSomHarRettVedGradering = erDetBareMorSomHarRettSjekk(
-                Oppfylt.opprettMedAvslåttGradering("UT1212", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true),
-                Oppfylt.opprettMedAvslåttGradering("UT1187", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true));
+                Oppfylt.opprettMedAvslåttGradering("UT1212", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT,
+                        GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true),
+                Oppfylt.opprettMedAvslåttGradering("UT1187", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
+                        GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true));
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(), erDetBareMorSomHarRettVedGradering)
                 .ellers(erDetBareMorSomHarRettUtenGradering);
     }
 
-    private Specification<FastsettePeriodeGrunnlag> erDetBareMorSomHarRettSjekk(FastsettePeriodeUtfall utfallJa, FastsettePeriodeUtfall utfallNei) {
+    private Specification<FastsettePeriodeGrunnlag> erDetBareMorSomHarRettSjekk(FastsettePeriodeUtfall utfallJa,
+                                                                                FastsettePeriodeUtfall utfallNei) {
         return rs.hvisRegel(SjekkOmBareMorHarRett.ID, "Er det bare mor som har rett?")
                 .hvis(new SjekkOmBareMorHarRett(), utfallJa)
                 .ellers(utfallNei);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørFamilieHendelse() {
-        var erDetBareMorSomHarRettSjekk = erDetBareMorSomHarRettSjekk(Oppfylt.opprett("UT1192", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true, true),
+        var erDetBareMorSomHarRettSjekk = erDetBareMorSomHarRettSjekk(
+                Oppfylt.opprett("UT1192", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true, true),
                 Oppfylt.opprett("UT1197", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true, true));
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før termin/fødsel?")
                 .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), erDetBareMorSomHarRettSjekk)
@@ -144,10 +157,12 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorHarOmsorgForBarnet() {
-        ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmTilgjengeligeDager =
-                rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                        .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmGraderingIPeriodenXUkerEtterFamilieHendelseForMor())
-                        .ellers(Manuellbehandling.opprett("UT1188", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
+        ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmTilgjengeligeDager = rs.hvisRegel(
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
+                        sjekkOmGraderingIPeriodenXUkerEtterFamilieHendelseForMor())
+                .ellers(Manuellbehandling.opprett("UT1188", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
 
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
                 .hvis(new SjekkOmOmsorgHelePerioden(), sjekkOmTilgjengeligeDager)
@@ -168,7 +183,9 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkalVæreFørFamileHendelse() {
         return rs.hvisRegel(SjekkOmPeriodenSlutterFørFamiliehendelse.ID, "Skal uttak være før termin/fødsel?")
-                .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(), Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG, false, false))
+                .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(),
+                        Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER,
+                                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG, false, false))
                 .ellers(sjekkErDetAleneomsorgFar());
     }
 
@@ -180,13 +197,15 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmFarMedAleneomsorgHarOmsorgForBarnet() {
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
-                    .hvis(new SjekkOmOmsorgHelePerioden(), sjekkOmFarMedAleneomsorgHarDisponibleDager())
-                    .ellers(IkkeOppfylt.opprett("UT1194", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
+                .hvis(new SjekkOmOmsorgHelePerioden(), sjekkOmFarMedAleneomsorgHarDisponibleDager())
+                .ellers(IkkeOppfylt.opprett("UT1194", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
     }
 
     private ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmFarMedAleneomsorgHarDisponibleDager() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmFarMedAleneomsorgGraderingIPerioden())
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
+                        sjekkOmFarMedAleneomsorgGraderingIPerioden())
                 .ellers(Manuellbehandling.opprett("UT1195", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 
@@ -209,25 +228,27 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenGjelderFlerbarnsdager() {
-        ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPerioden =
-            rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
-                .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1267", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true))
+        ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPerioden = rs.hvisRegel(SjekkOmGradertPeriode.ID,
+                SjekkOmGradertPeriode.BESKRIVELSE)
+                .hvis(new SjekkOmGradertPeriode(),
+                        Oppfylt.opprett("UT1267", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true))
                 .ellers(Oppfylt.opprett("UT1266", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT, true));
 
-        ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmTilgjengeligeDager =
-            rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+        ConditionalOrSpecification<FastsettePeriodeGrunnlag> sjekkOmTilgjengeligeDager = rs.hvisRegel(
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
                 .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmGraderingIPerioden)
                 .ellers(Manuellbehandling.opprett("UT1269", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
 
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
-            .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), sjekkOmTilgjengeligeDager)
-            .ellers(sjekkOmDetErFødsel());
+                .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), sjekkOmTilgjengeligeDager)
+                .ellers(sjekkOmDetErFødsel());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødsel() {
         return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, FØDSEL)
-            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttakSkjerFørDeFørsteUkene())
-            .ellers(sjekkFarUtenAleneomsorgHarDisponibleDager());
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUttakSkjerFørDeFørsteUkene())
+                .ellers(sjekkFarUtenAleneomsorgHarDisponibleDager());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
@@ -237,20 +258,26 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigGrunnForTidligOppstart() {
-        return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID, "Foreligger et gyldig grunn for hele perioden for tidlig oppstart?")
+        return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID,
+                "Foreligger et gyldig grunn for hele perioden for tidlig oppstart?")
                 .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkOmFarUtenAleneomsorgGraderingIPerioden())
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFarUtenAleneomsorgGraderingIPerioden() {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
-                .hvis(new SjekkOmGradertPeriode(), Manuellbehandling.opprett("UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
-                .ellers(Manuellbehandling.opprett("UT1201", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
+                .hvis(new SjekkOmGradertPeriode(),
+                        Manuellbehandling.opprett("UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true,
+                                false))
+                .ellers(Manuellbehandling.opprett("UT1201", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true,
+                        false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkFarUtenAleneomsorgHarDisponibleDager() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmFarUtenAleneomsorgGraderingIPerioden())
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
+                        sjekkOmFarUtenAleneomsorgGraderingIPerioden())
                 .ellers(Manuellbehandling.opprett("UT1203", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 }

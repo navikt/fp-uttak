@@ -58,8 +58,12 @@ public class Arbeidsforhold {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Arbeidsforhold that = (Arbeidsforhold) o;
         return Objects.equals(identifikator, that.identifikator);
     }

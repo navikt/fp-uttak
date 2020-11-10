@@ -29,19 +29,18 @@ public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkes
         var fødselsdato = LocalDate.of(2020, 1, 16);
         var endringsdato = fødselsdato.plusWeeks(6);
         var aktivitet = AktivitetIdentifikator.forFrilans();
-        var vedtaksperiode = new FastsattUttakPeriode.Builder()
-                .medTidsperiode(fødselsdato, endringsdato.minusDays(1))
+        var vedtaksperiode = new FastsattUttakPeriode.Builder().medTidsperiode(fødselsdato, endringsdato.minusDays(1))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
-                .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(30), Stønadskontotype.MØDREKVOTE, aktivitet)));
-        var vedtak = new Vedtak.Builder()
-                .leggTilPeriode(vedtaksperiode);
-        var revurdering = new Revurdering.Builder()
-                .medEndringsdato(endringsdato)
-                .medGjeldendeVedtak(vedtak);
-        var søknadOm10UkerMødrekvote = søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.MØDREKVOTE, endringsdato, endringsdato.plusWeeks(10).minusDays(1)));
+                .medAktiviteter(
+                        List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(30), Stønadskontotype.MØDREKVOTE, aktivitet)));
+        var vedtak = new Vedtak.Builder().leggTilPeriode(vedtaksperiode);
+        var revurdering = new Revurdering.Builder().medEndringsdato(endringsdato).medGjeldendeVedtak(vedtak);
+        var søknadOm10UkerMødrekvote = søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(Stønadskontotype.MØDREKVOTE, endringsdato, endringsdato.plusWeeks(10).minusDays(1)));
         grunnlag.medRevurdering(revurdering)
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
+                .medKontoer(
+                        new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitet)))
                 .medSøknad(søknadOm10UkerMødrekvote);
 
@@ -61,24 +60,20 @@ public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkes
         var tilkommetAktivitet1 = AktivitetIdentifikator.forArbeid("123", null);
         var opprinnligUttakAktivitet1 = new FastsattUttakPeriodeAktivitet(new Trekkdager(30), Stønadskontotype.MØDREKVOTE, aktivitet1);
         var opprinnligUttakAktivitet2 = new FastsattUttakPeriodeAktivitet(new Trekkdager(20), Stønadskontotype.MØDREKVOTE, aktivitet2);
-        var vedtaksperiode = new FastsattUttakPeriode.Builder()
-                .medTidsperiode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
+        var vedtaksperiode = new FastsattUttakPeriode.Builder().medTidsperiode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medAktiviteter(List.of(opprinnligUttakAktivitet1, opprinnligUttakAktivitet2));
-        var vedtak = new Vedtak.Builder()
-                .leggTilPeriode(vedtaksperiode);
-        var revurdering = new Revurdering.Builder()
-                .medEndringsdato(fødselsdato.plusWeeks(6))
-                .medGjeldendeVedtak(vedtak);
-        var søknadOm12UkerMødrekvote = søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(18).minusDays(1)));
+        var vedtak = new Vedtak.Builder().leggTilPeriode(vedtaksperiode);
+        var revurdering = new Revurdering.Builder().medEndringsdato(fødselsdato.plusWeeks(6)).medGjeldendeVedtak(vedtak);
+        var søknadOm12UkerMødrekvote = søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(18).minusDays(1)));
         grunnlag.medRevurdering(revurdering)
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(aktivitet1))
+                .medKontoer(
+                        new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(75)))
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitet1))
                         .leggTilArbeidsforhold(new Arbeidsforhold(aktivitet2))
-                        .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetAktivitet1, fødselsdato.plusWeeks(8)))
-                )
+                        .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetAktivitet1, fødselsdato.plusWeeks(8))))
                 .medSøknad(søknadOm12UkerMødrekvote);
 
         var resultat = fastsettPerioder(grunnlag);

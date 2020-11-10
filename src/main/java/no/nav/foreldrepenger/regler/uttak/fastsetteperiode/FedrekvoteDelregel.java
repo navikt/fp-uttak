@@ -71,33 +71,37 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
         return rs.hvisRegel(SjekkOmOppholdKvoteAnnenForelder.ID, "Er det søkt om opphold av fedrekvoten?")
-            .hvis(new SjekkOmOppholdKvoteAnnenForelder(), sjekkOmNoenDisponibleDager())
-            .ellers(sjekkOmSøkerErFar());
+                .hvis(new SjekkOmOppholdKvoteAnnenForelder(), sjekkOmNoenDisponibleDager())
+                .ellers(sjekkOmSøkerErFar());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDisponibleDager() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, "Er det noen disponible stønadsdager på fedrekvoten?")
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), Oppfylt.opprettForOppholds("UT1263", true, false))
-                .ellers(Manuellbehandling.opprett("UT1262", null, Manuellbehandlingårsak.OPPHOLD_STØRRE_ENN_TILGJENGELIGE_DAGER, true, false));
+        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                "Er det noen disponible stønadsdager på fedrekvoten?")
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
+                        Oppfylt.opprettForOppholds("UT1263", true, false))
+                .ellers(Manuellbehandling.opprett("UT1262", null, Manuellbehandlingårsak.OPPHOLD_STØRRE_ENN_TILGJENGELIGE_DAGER, true,
+                        false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørOmsorgsovertakelse() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før omsorgsovertakelse?")
-            .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), IkkeOppfylt.opprett("UT1231", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
-            .ellers(delFlytForVanligUttak());
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
+                        IkkeOppfylt.opprett("UT1231", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
+                .ellers(delFlytForVanligUttak());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDetErFødsel() {
         return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
-            .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmPeriodeStarterFørUke7EtterFamiliehendelse())
-            .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelse());
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmPeriodeStarterFørUke7EtterFamiliehendelse())
+                .ellers(sjekkOmPeriodenStarterFørOmsorgsovertakelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErFar() {
         return rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmMorSøktOmOverføringAvFedrekvote())
                 .ellers(sjekkOmMorHarRett());
-                }
+    }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorHarRett() {
         return rs.hvisRegel(SjekkOmMorHarRett.ID, "Er det avklart at mor har rett?")
@@ -124,28 +128,32 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaInnleggelse() {
-        return rs.hvisRegel(SjekkOmGyldigOverføringPgaInnleggelse.ID, "Er det avklart at overføring av kvoten er gyldig grunn av innleggelse på institusjon?")
+        return rs.hvisRegel(SjekkOmGyldigOverføringPgaInnleggelse.ID,
+                "Er det avklart at overføring av kvoten er gyldig grunn av innleggelse på institusjon?")
                 .hvis(new SjekkOmGyldigOverføringPgaInnleggelse(), sjekkOmDetErFødsel())
                 .ellers(Manuellbehandling.opprett("UT1033", IkkeOppfyltÅrsak.DEN_ANDRE_PART_INNLEGGELSE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaSykdomSkade() {
-        return rs.hvisRegel(SjekkOmGyldigOverføringPgaSykdomSkade.ID, "Er det avklart at overføring av kvoten er gyldig grunn av sykdom/skade?")
+        return rs.hvisRegel(SjekkOmGyldigOverføringPgaSykdomSkade.ID,
+                "Er det avklart at overføring av kvoten er gyldig grunn av sykdom/skade?")
                 .hvis(new SjekkOmGyldigOverføringPgaSykdomSkade(), sjekkOmDetErFødsel())
                 .ellers(Manuellbehandling.opprett("UT1034", IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaAleneomsorg() {
-        return rs.hvisRegel(SjekkOmGyldigOverføringPgaAleneomsorg.ID, "Er det avklart at overføring av kvoten er gyldig på grunn av aleneomsorg?")
+        return rs.hvisRegel(SjekkOmGyldigOverføringPgaAleneomsorg.ID,
+                "Er det avklart at overføring av kvoten er gyldig på grunn av aleneomsorg?")
                 .hvis(new SjekkOmGyldigOverføringPgaAleneomsorg(), sjekkOmDetErFødsel())
                 .ellers(Manuellbehandling.opprett("UT1296", IkkeOppfyltÅrsak.ALENEOMSORG_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaIkkeRett() {
-        return rs.hvisRegel(SjekkOmGyldigOverføringPgaIkkeRett.ID, "Er det avklart at overføring av kvoten er gyldig på grunn av annen forelder ikke har rett?")
+        return rs.hvisRegel(SjekkOmGyldigOverføringPgaIkkeRett.ID,
+                "Er det avklart at overføring av kvoten er gyldig på grunn av annen forelder ikke har rett?")
                 .hvis(new SjekkOmGyldigOverføringPgaIkkeRett(), sjekkOmDetErFødsel())
                 .ellers(Manuellbehandling.opprett("UT1297", IkkeOppfyltÅrsak.DEN_ANDRE_PART_IKKE_RETT_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
@@ -167,44 +175,44 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     public Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenGjelderFlerbarnsdager() {
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
-            .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), delFlytForTidligUttak())
-            .ellers(gyldigGrunnForTidligUttak());
+                .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(), delFlytForTidligUttak())
+                .ellers(gyldigGrunnForTidligUttak());
     }
 
     private Specification<FastsettePeriodeGrunnlag> uttakFørTerminFødsel() {
         return rs.hvisRegel(SjekkOmPeriodenSlutterFørFamiliehendelse.ID, "Skal uttaksperioden være før termin/fødsel?")
-                .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(), Manuellbehandling.opprett("UT1020",
-                        IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG,
-                        Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG,
-                        false, false))
+                .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(),
+                        Manuellbehandling.opprett("UT1020", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG,
+                                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG, false, false))
                 .ellers(sjekkOmPeriodenGjelderFlerbarnsdager());
     }
 
     private Specification<FastsettePeriodeGrunnlag> gyldigGrunnForTidligUttak() {
-        return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID, "Foreligger det gyldig grunn for hele perioden for tidlig oppstart?")
+        return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID,
+                "Foreligger det gyldig grunn for hele perioden for tidlig oppstart?")
                 .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), delFlytForTidligUttak())
-                .ellers(Manuellbehandling.opprett("UT1021",
-                        IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO,
-                        false, false));
+                .ellers(Manuellbehandling.opprett("UT1021", IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT,
+                        Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForTidligUttak() {
 
-        Specification<FastsettePeriodeGrunnlag> graderingIPeriodenNode =
-                rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
-                        .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1217", InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, true))
-                        .ellers(Oppfylt.opprett("UT1026", InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, true));
+        Specification<FastsettePeriodeGrunnlag> graderingIPeriodenNode = rs.hvisRegel(SjekkOmGradertPeriode.ID,
+                SjekkOmGradertPeriode.BESKRIVELSE)
+                .hvis(new SjekkOmGradertPeriode(),
+                        Oppfylt.opprett("UT1217", InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, true))
+                .ellers(Oppfylt.opprett("UT1026", InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, true));
 
-        Specification<FastsettePeriodeGrunnlag> erSøkerFar =
-                rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
-                        .hvis(new SjekkOmSøkerErMor(), new OverføringDelregel().getSpecification())
-                        .ellers(graderingIPeriodenNode);
+        Specification<FastsettePeriodeGrunnlag> erSøkerFar = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
+                .hvis(new SjekkOmSøkerErMor(), new OverføringDelregel().getSpecification())
+                .ellers(graderingIPeriodenNode);
 
-        Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode =
-                rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, "Er det disponibelt antall stønadsdager på fedrekvoten?")
-                        .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), erSøkerFar)
-                        .ellers(Manuellbehandling.opprett("UT1022", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
+        Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode = rs.hvisRegel(
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                "Er det disponibelt antall stønadsdager på fedrekvoten?")
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), erSøkerFar)
+                .ellers(Manuellbehandling.opprett("UT1022", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
+                        Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
 
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
                 .hvis(new SjekkOmOmsorgHelePerioden(), noenDisponibleDagerNode)
@@ -213,23 +221,25 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForVanligUttak() {
 
-        Specification<FastsettePeriodeGrunnlag> graderingIPeriodenNode =
-                rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
-                        .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1218", InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, true))
-                        .ellers(Oppfylt.opprett("UT1031", InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, true));
+        Specification<FastsettePeriodeGrunnlag> graderingIPeriodenNode = rs.hvisRegel(SjekkOmGradertPeriode.ID,
+                SjekkOmGradertPeriode.BESKRIVELSE)
+                .hvis(new SjekkOmGradertPeriode(),
+                        Oppfylt.opprett("UT1218", InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, true))
+                .ellers(Oppfylt.opprett("UT1031", InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, true));
 
-        Specification<FastsettePeriodeGrunnlag> erSøkerFar =
-                rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
-                        .hvis(new SjekkOmSøkerErMor(), new OverføringDelregel().getSpecification())
-                        .ellers(graderingIPeriodenNode);
+        Specification<FastsettePeriodeGrunnlag> erSøkerFar = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
+                .hvis(new SjekkOmSøkerErMor(), new OverføringDelregel().getSpecification())
+                .ellers(graderingIPeriodenNode);
 
-        Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode =
-                rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID, "Er det disponibelt antall stønadsdager på fedrekvoten?")
-                        .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), erSøkerFar)
-                        .ellers(Manuellbehandling.opprett("UT1178", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
+        Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode = rs.hvisRegel(
+                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                "Er det disponibelt antall stønadsdager på fedrekvoten?")
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), erSøkerFar)
+                .ellers(Manuellbehandling.opprett("UT1178", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
+                        Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
 
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
-            .hvis(new SjekkOmOmsorgHelePerioden(), noenDisponibleDagerNode)
-            .ellers(IkkeOppfylt.opprett("UT1030", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
+                .hvis(new SjekkOmOmsorgHelePerioden(), noenDisponibleDagerNode)
+                .ellers(IkkeOppfylt.opprett("UT1030", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
     }
 }

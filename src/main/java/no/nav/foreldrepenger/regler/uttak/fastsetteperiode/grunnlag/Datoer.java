@@ -13,7 +13,7 @@ public final class Datoer {
     private Datoer() {
     }
 
-    public LocalDate getFamiliehendelse(){
+    public LocalDate getFamiliehendelse() {
         if (getOmsorgsovertakelse() != null) {
             return getOmsorgsovertakelse();
         }

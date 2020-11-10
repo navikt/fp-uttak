@@ -25,11 +25,14 @@ public class EndringAvStilling {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EndringAvStilling that = (EndringAvStilling) o;
-        return Objects.equals(dato, that.dato) &&
-                Objects.equals(stillingsprosent, that.stillingsprosent);
+        return Objects.equals(dato, that.dato) && Objects.equals(stillingsprosent, that.stillingsprosent);
     }
 
     @Override

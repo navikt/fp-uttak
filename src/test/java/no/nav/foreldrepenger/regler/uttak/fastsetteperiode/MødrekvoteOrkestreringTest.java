@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
@@ -19,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -26,14 +26,14 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     @Test
     public void mødrekvoteperiode_før_familiehendelse() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1).minusDays(1)))
-                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.minusWeeks(1), fødselsdato.plusWeeks(6).minusDays(1))));
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3),
+                                fødselsdato.minusWeeks(1).minusDays(1)))
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.minusWeeks(1),
+                                fødselsdato.plusWeeks(6).minusDays(1))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
@@ -61,17 +61,17 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     @Test
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_innvilges() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1),
-                                PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
-                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1)))
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                                new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
@@ -101,16 +101,15 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     @Test
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true))
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1),
-                                PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
-                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1))));
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
@@ -124,15 +123,15 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     @Test
     public void overføring_av_mødrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1),
-                                PeriodeVurderingType.UAVKLART_PERIODE, OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
-                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1))));
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE,
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
 
@@ -160,17 +159,17 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     @Test
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.medDatoer(new Datoer.Builder()
-                .medFødsel(fødselsdato))
+        grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1),
-                                PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
-                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                        .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1)))
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(
+                                new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);

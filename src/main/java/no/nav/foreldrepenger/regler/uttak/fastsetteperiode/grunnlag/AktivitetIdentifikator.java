@@ -5,7 +5,8 @@ import java.util.Objects;
 public class AktivitetIdentifikator {
 
     public enum ArbeidsgiverType {
-        PERSON, VIRKSOMHET
+        PERSON,
+        VIRKSOMHET
     }
 
     private final AktivitetType aktivitetType;
@@ -13,7 +14,10 @@ public class AktivitetIdentifikator {
     private final String arbeidsgiverIdentifikator;
     private final ArbeidsgiverType arbeidsgiverType;
 
-    private AktivitetIdentifikator(AktivitetType aktivitetType, String arbeidsforholdIdentifikator, String arbeidsforholdId, ArbeidsgiverType arbeidsgiverType) {
+    private AktivitetIdentifikator(AktivitetType aktivitetType,
+                                   String arbeidsforholdIdentifikator,
+                                   String arbeidsforholdId,
+                                   ArbeidsgiverType arbeidsgiverType) {
         this.aktivitetType = aktivitetType;
         this.arbeidsgiverType = arbeidsgiverType;
         this.arbeidsforholdId = arbeidsforholdId;
@@ -28,7 +32,9 @@ public class AktivitetIdentifikator {
         return forArbeid(arbeidsgiverIdentifikator, arbeidsforholdId, ArbeidsgiverType.VIRKSOMHET);
     }
 
-    public static AktivitetIdentifikator forArbeid(String arbeidsgiverIdentifikator, String arbeidsforholdId, ArbeidsgiverType arbeidsgiverType) {
+    public static AktivitetIdentifikator forArbeid(String arbeidsgiverIdentifikator,
+                                                   String arbeidsforholdId,
+                                                   ArbeidsgiverType arbeidsgiverType) {
         return new AktivitetIdentifikator(AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId, arbeidsgiverType);
     }
 
@@ -62,13 +68,15 @@ public class AktivitetIdentifikator {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AktivitetIdentifikator that = (AktivitetIdentifikator) o;
-        return arbeidsgiverType == that.arbeidsgiverType &&
-                aktivitetType == that.aktivitetType &&
-                Objects.equals(arbeidsgiverIdentifikator, that.arbeidsgiverIdentifikator) &&
-                Objects.equals(arbeidsforholdId, that.arbeidsforholdId);
+        return arbeidsgiverType == that.arbeidsgiverType && aktivitetType == that.aktivitetType && Objects.equals(
+                arbeidsgiverIdentifikator, that.arbeidsgiverIdentifikator) && Objects.equals(arbeidsforholdId, that.arbeidsforholdId);
     }
 
     @Override
@@ -78,11 +86,8 @@ public class AktivitetIdentifikator {
 
     @Override
     public String toString() {
-        return "AktivitetIdentifikator{" +
-                "aktivitetType=" + aktivitetType +
-                ", arbeidsgiverIdentifikator='" + arbeidsgiverIdentifikator + '\'' +
-                ", arbeidsforholdId='" + arbeidsforholdId + '\'' +
-                ", arbeidsgiverType=" + arbeidsgiverType +
-                '}';
+        return "AktivitetIdentifikator{" + "aktivitetType=" + aktivitetType + ", arbeidsgiverIdentifikator='"
+                + arbeidsgiverIdentifikator + '\'' + ", arbeidsforholdId='" + arbeidsforholdId + '\'' + ", arbeidsgiverType="
+                + arbeidsgiverType + '}';
     }
 }

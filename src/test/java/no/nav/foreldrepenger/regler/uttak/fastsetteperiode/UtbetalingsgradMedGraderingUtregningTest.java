@@ -32,8 +32,7 @@ public class UtbetalingsgradMedGraderingUtregningTest {
         assertThat(utregningForAktivitet2.resultat()).isEqualTo(Utbetalingsgrad.FULL);
     }
 
-    private UtbetalingsgradMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator,
-                                                           OppgittPeriode periode) {
+    private UtbetalingsgradMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator, OppgittPeriode periode) {
         return new UtbetalingsgradMedGraderingUtregning(periode, aktivitetIdentifikator);
     }
 }

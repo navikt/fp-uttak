@@ -34,14 +34,17 @@ public final class Søknad {
             kladd.oppgittePerioder.add(oppgittPeriode);
             return this;
         }
+
         public Builder medOppgittePerioder(List<OppgittPeriode> oppgittPerioder) {
             kladd.oppgittePerioder = oppgittPerioder;
             return this;
         }
+
         public Builder medDokumentasjon(Dokumentasjon.Builder dokumentasjon) {
             kladd.dokumentasjon = dokumentasjon.build();
             return this;
         }
+
         public Builder medType(Søknadstype type) {
             kladd.type = type;
             return this;

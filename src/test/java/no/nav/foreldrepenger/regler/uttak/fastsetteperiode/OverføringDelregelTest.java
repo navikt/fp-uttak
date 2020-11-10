@@ -33,14 +33,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -53,14 +52,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -73,14 +71,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -93,14 +90,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -113,14 +109,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(8);
         LocalDate tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -133,14 +128,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(8);
         LocalDate tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -153,14 +147,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(8);
         LocalDate tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -173,14 +166,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(8);
         LocalDate tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -193,14 +185,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -213,14 +204,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -233,14 +223,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -253,14 +242,13 @@ public class OverføringDelregelTest {
 
         LocalDate fom = fødselsdato.plusWeeks(3);
         LocalDate tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
+                PeriodeVurderingType.PERIODE_OK);
+        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
-                .medSøknad(søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
-                .medKontoer(kontoer)
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -268,40 +256,31 @@ public class OverføringDelregelTest {
     }
 
     private Søknad.Builder fødselssøknadMedEnPeriode(OppgittPeriode oppgittPeriode) {
-        return new Søknad.Builder()
-                .medType(Søknadstype.FØDSEL)
-                .leggTilOppgittPeriode(oppgittPeriode);
+        return new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(oppgittPeriode);
     }
 
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, GyldigGrunnPeriode gyldigGrunnPeriode) {
-        return fødselssøknadMedEnPeriode(oppgittPeriode)
-                .medDokumentasjon(new Dokumentasjon.Builder()
-                        .leggGyldigGrunnPeriode(gyldigGrunnPeriode));
+        return fødselssøknadMedEnPeriode(oppgittPeriode).medDokumentasjon(
+                new Dokumentasjon.Builder().leggGyldigGrunnPeriode(gyldigGrunnPeriode));
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
         return RegelGrunnlagTestBuilder.create()
                 .medInngangsvilkår(new Inngangsvilkår.Builder())
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medMorHarRett(true)
-                        .medFarHarRett(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true).medMorHarRett(true).medFarHarRett(true))
+                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(false));
+        return basicGrunnlag(fødselsdato).medBehandling(new Behandling.Builder().medSøkerErMor(false));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true));
+        return basicGrunnlag(fødselsdato).medBehandling(new Behandling.Builder().medSøkerErMor(true));
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

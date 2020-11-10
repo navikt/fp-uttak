@@ -32,12 +32,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     @Test
     public void UT1070_mor_utenFor3UkerFørFødsel() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8), familiehendelseDato.plusWeeks(9));
+        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8),
+                familiehendelseDato.plusWeeks(9));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
-                .medKontoer(kontoer)
-                .medSøknad(søknad(uttakPeriode))
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -47,12 +45,10 @@ public class ForeldrepengerFørFødselDelregelTest {
     @Test
     public void UT1071_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_ikkeGradering() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+                familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
-                .medKontoer(kontoer)
-                .medSøknad(søknad(uttakPeriode))
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -62,28 +58,25 @@ public class ForeldrepengerFørFødselDelregelTest {
     @Test
     public void UT1072_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_gradering() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        OppgittPeriode uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+                familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
-                .medKontoer(kontoer)
-                .medSøknad(søknad(uttakPeriode))
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL);
-        assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
+                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
 
     @Test
     public void UT1073_mor_innenFor3UkerFørFødsel_manglendeSøktPeriode() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
+        var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+                familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato)
-                .medKontoer(kontoer)
-                .medSøknad(søknad(msp))
-                .build();
+        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(msp)).build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(msp, grunnlag);
 
@@ -96,20 +89,20 @@ public class ForeldrepengerFørFødselDelregelTest {
     @Test
     public void UT1076_far_søker_fpff() {
         LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2), familiehendelseDato.minusWeeks(1));
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+                familiehendelseDato.minusWeeks(1));
+        var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
                 .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
-        RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato)
-                .medKontoer(kontoer)
+        RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato).medKontoer(kontoer)
                 .medBehandling(søkerErFarBehandling())
                 .medSøknad(søknad(uttakPeriode))
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
-        assertManuell(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false);
+        assertManuell(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO,
+                false, false);
     }
 
     private Kontoer.Builder kontoer(Stønadskontotype stønadskontotype, int trekkdager) {
@@ -121,15 +114,11 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Konto.Builder()
-                .medType(stønadskontotype)
-                .medTrekkdager(trekkdager);
+        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(trekkdager);
     }
 
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode) {
-        return new Søknad.Builder()
-                .leggTilOppgittPeriode(oppgittPeriode)
-                .medType(Søknadstype.FØDSEL);
+        return new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode).medType(Søknadstype.FØDSEL);
     }
 
     private Behandling.Builder søkerErFarBehandling() {
@@ -142,7 +131,11 @@ public class ForeldrepengerFørFødselDelregelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(innvilgetPeriodeResultatÅrsak);
     }
 
-    private void assertManuell(FastsettePerioderRegelresultat regelresultat, PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellbehandlingårsak, boolean trekkDager, boolean utbetal) {
+    private void assertManuell(FastsettePerioderRegelresultat regelresultat,
+                               PeriodeResultatÅrsak periodeResultatÅrsak,
+                               Manuellbehandlingårsak manuellbehandlingårsak,
+                               boolean trekkDager,
+                               boolean utbetal) {
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isEqualTo(utbetal);
         assertThat(regelresultat.trekkDagerFraSaldo()).isEqualTo(trekkDager);
@@ -151,21 +144,15 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate familiehendelseDato) {
-        return create()
-                .medDatoer(new Datoer.Builder().medFødsel(familiehendelseDato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder()
-                        .medSamtykke(true)
-                        .medFarHarRett(true)
-                        .medMorHarRett(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
+        return create().medDatoer(new Datoer.Builder().medFødsel(familiehendelseDato))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true).medFarHarRett(true).medMorHarRett(true))
+                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate familiehendelseDato) {
-        return basicGrunnlag(familiehendelseDato)
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true));
+        return basicGrunnlag(familiehendelseDato).medBehandling(new Behandling.Builder().medSøkerErMor(true));
     }
 }

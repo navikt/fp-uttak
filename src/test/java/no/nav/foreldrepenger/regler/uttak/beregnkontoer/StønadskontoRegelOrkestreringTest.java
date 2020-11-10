@@ -34,14 +34,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -68,7 +68,8 @@ public class StønadskontoRegelOrkestreringTest {
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        int forventetFellesperiode = 80 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
+        int forventetFellesperiode =
+                80 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(forventetFellesperiode);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
         assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
@@ -89,7 +90,8 @@ public class StønadskontoRegelOrkestreringTest {
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        int forventetForeldrepenger = 80 + 75 + 75 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
+        int forventetForeldrepenger = 80 + 75 + 75 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(),
+                grunnlag.getTermindato().get().minusDays(1));
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(forventetForeldrepenger);
     }
 
@@ -122,14 +124,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -150,14 +152,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -179,14 +181,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -208,14 +210,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -238,14 +240,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -268,14 +270,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medTermindato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medTermindato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -298,14 +300,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -444,14 +446,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(1)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(1)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -467,14 +469,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(true)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(1)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(true)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -490,14 +492,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(1)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(1)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -513,14 +515,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(1)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(true)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(1)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(true)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -536,14 +538,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(2)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(2)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -559,14 +561,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(2)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(true)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(2)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(true)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -582,14 +584,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_mor_rett_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medTermindato(DATO)
-            .medAntallBarn(2)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medTermindato(DATO)
+                .medAntallBarn(2)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -605,14 +607,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medOmsorgsovertakelseDato(DATO)
-            .medAntallBarn(2)
-            .farRett(false)
-            .morRett(true)
-            .farAleneomsorg(false)
-            .morAleneomsorg(true)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medOmsorgsovertakelseDato(DATO)
+                .medAntallBarn(2)
+                .farRett(false)
+                .morRett(true)
+                .farAleneomsorg(false)
+                .morAleneomsorg(true)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -719,14 +721,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(true)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(true)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -741,14 +743,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medTermindato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(true)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medTermindato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(true)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -763,14 +765,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(true)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(true)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -785,14 +787,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(true)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(true)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -851,14 +853,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medTermindato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medTermindato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -873,14 +875,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(1)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(1)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -897,14 +899,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medTermindato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medTermindato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -922,14 +924,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medFødselsdato(DATO)
-            .medAntallBarn(3)
-            .farRett(true)
-            .morRett(false)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
-            .build();
+                .medFødselsdato(DATO)
+                .medAntallBarn(3)
+                .farRett(true)
+                .morRett(false)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
@@ -993,14 +995,14 @@ public class StønadskontoRegelOrkestreringTest {
     @Test
     public void hverken_mor_eller_far_har_rett() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
-            .medTermindato(DATO)
-            .medAntallBarn(1)
-            .farRett(false)
-            .morRett(false)
-            .farAleneomsorg(false)
-            .morAleneomsorg(false)
-            .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
-            .build();
+                .medTermindato(DATO)
+                .medAntallBarn(1)
+                .farRett(false)
+                .morRett(false)
+                .farAleneomsorg(false)
+                .morAleneomsorg(false)
+                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
 
         StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();

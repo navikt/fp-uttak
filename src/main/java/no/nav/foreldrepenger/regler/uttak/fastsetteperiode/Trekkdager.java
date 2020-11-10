@@ -55,8 +55,12 @@ public class Trekkdager {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Trekkdager that = (Trekkdager) o;
         return Objects.equals(value, that.value);
     }
@@ -68,8 +72,6 @@ public class Trekkdager {
 
     @Override
     public String toString() {
-        return "Trekkdager{" +
-                "value=" + value +
-                '}';
+        return "Trekkdager{" + "value=" + value + '}';
     }
 }

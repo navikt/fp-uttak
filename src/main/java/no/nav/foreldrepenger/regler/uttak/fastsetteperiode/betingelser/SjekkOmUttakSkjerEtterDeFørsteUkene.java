@@ -26,7 +26,8 @@ public class SjekkOmUttakSkjerEtterDeFørsteUkene extends LeafSpecification<Fast
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
-        int minsteKravTilMødrekvoteEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, grunnlag.getFamiliehendelse());
+        int minsteKravTilMødrekvoteEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+                grunnlag.getFamiliehendelse());
         LocalDate tidligsteStartDatoForFedrekvote = grunnlag.getFamiliehendelse().plusWeeks(minsteKravTilMødrekvoteEtterFødsel);
         if (!aktuellPeriode.getFom().isBefore(tidligsteStartDatoForFedrekvote)) {
             return ja();

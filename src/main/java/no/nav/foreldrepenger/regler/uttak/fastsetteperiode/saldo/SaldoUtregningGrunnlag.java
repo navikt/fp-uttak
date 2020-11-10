@@ -41,10 +41,11 @@ public class SaldoUtregningGrunnlag {
                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                    Kontoer kontoer) {
         var aktiviteter = søkersFastsattePerioder.stream()
-                .flatMap(p -> p.getAktiviteter().stream()).map(a -> a.getAktivitetIdentifikator())
+                .flatMap(p -> p.getAktiviteter().stream())
+                .map(a -> a.getAktivitetIdentifikator())
                 .collect(Collectors.toSet());
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, tapendeBehandling, annenpartsPerioder,
-                List.of(), kontoer, aktiviteter);
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, tapendeBehandling, annenpartsPerioder, List.of(),
+                kontoer, aktiviteter);
     }
 
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttak(List<FastsattUttakPeriode> søkersFastsattePerioder,
@@ -52,7 +53,8 @@ public class SaldoUtregningGrunnlag {
                                                                     Kontoer kontoer,
                                                                     LocalDate utregningsdato,
                                                                     Set<AktivitetIdentifikator> aktiviteter) {
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, false, annenpartsPerioder, List.of(), kontoer, aktiviteter);
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, false, annenpartsPerioder, List.of(), kontoer,
+                aktiviteter);
     }
 
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakTapendeBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
@@ -61,8 +63,8 @@ public class SaldoUtregningGrunnlag {
                                                                                      LocalDate utregningsdato,
                                                                                      List<LukketPeriode> søktePerioder,
                                                                                      Set<AktivitetIdentifikator> aktiviteter) {
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, true, annenpartsPerioder,
-                søktePerioder, kontoer, aktiviteter);
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, true, annenpartsPerioder, søktePerioder, kontoer,
+                aktiviteter);
     }
 
     List<FastsattUttakPeriode> getSøkersFastsattePerioder() {

@@ -10,7 +10,7 @@ public final class Opptjening {
     private Opptjening() {
     }
 
-    public LocalDate getSkjæringstidspunkt(){
+    public LocalDate getSkjæringstidspunkt() {
         return skjæringstidspunkt;
     }
 

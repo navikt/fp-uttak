@@ -26,20 +26,17 @@ public class RegelGrunnlagTestBuilder {
     public static final AktivitetIdentifikator ARBEIDSFORHOLD_3 = AktivitetIdentifikator.forArbeid("000000003", null);
 
     public static RegelGrunnlag.Builder create() {
-        var kontoer = new Kontoer.Builder()
-                .leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
+        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
                 .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(80));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        return new RegelGrunnlag.Builder()
-                .medKontoer(kontoer)
+        return new RegelGrunnlag.Builder().medKontoer(kontoer)
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(LocalDate.MIN))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
-                .medInngangsvilkår(new Inngangsvilkår.Builder()
-                        .medAdopsjonOppfylt(true)
+                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
                         .medOpptjeningOppfylt(true));

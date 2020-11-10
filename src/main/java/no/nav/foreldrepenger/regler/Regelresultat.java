@@ -21,13 +21,15 @@ public class Regelresultat {
     public <T> T getProperty(String tag, Class<T> clazz) {
         Object obj = getProperty(tag);
         if (obj != null && !clazz.isAssignableFrom(obj.getClass())) {
-            throw new IllegalArgumentException("Kan ikke hente property " + tag + ". Forventet " + clazz.getSimpleName() + " men fant " + obj.getClass());
+            throw new IllegalArgumentException(
+                    "Kan ikke hente property " + tag + ". Forventet " + clazz.getSimpleName() + " men fant " + obj.getClass());
         }
         return (T) obj;
     }
 
     public String sluttpunktId() {
-        Optional<Evaluation> first = evaluationSummary.leafEvaluations().stream()
+        Optional<Evaluation> first = evaluationSummary.leafEvaluations()
+                .stream()
                 .filter(e -> e.ruleIdentification() != null)
                 .findFirst();
 
@@ -35,7 +37,8 @@ public class Regelresultat {
     }
 
     private Object getProperty(String tag) {
-        Optional<Evaluation> first = evaluationSummary.leafEvaluations().stream()
+        Optional<Evaluation> first = evaluationSummary.leafEvaluations()
+                .stream()
                 .filter(e -> e.getEvaluationProperties() != null)
                 .findFirst();
 

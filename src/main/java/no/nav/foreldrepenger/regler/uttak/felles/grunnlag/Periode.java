@@ -42,9 +42,6 @@ public class Periode {
 
     @Override
     public String toString() {
-        return "Periode{" +
-                "fom=" + fom +
-                ", tom=" + tom +
-                '}';
+        return "Periode{" + "fom=" + fom + ", tom=" + tom + '}';
     }
 }

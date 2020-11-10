@@ -17,7 +17,8 @@ public class StønadskontoResultat {
     public StønadskontoResultat(Map<Stønadskontotype, Integer> stønadskontoer,
                                 Integer antallFlerbarnsdager,
                                 String evalueringResultat,
-                                String innsendtGrunnlag, Integer antallPrematurDager) {
+                                String innsendtGrunnlag,
+                                Integer antallPrematurDager) {
         this.antallPrematurDager = antallPrematurDager;
         Objects.requireNonNull(stønadskontoer);
         Objects.requireNonNull(evalueringResultat);

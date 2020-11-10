@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public class BevegeligeHelligdagerUtilTest {

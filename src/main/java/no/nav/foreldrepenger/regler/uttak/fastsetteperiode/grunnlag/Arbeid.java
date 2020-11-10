@@ -21,7 +21,10 @@ public final class Arbeid {
     }
 
     public BigDecimal getStillingsprosent(LocalDate dato, AktivitetIdentifikator aktivitet) {
-        var arbeidsforhold = arbeidsforholdListe.stream().filter(a -> a.getIdentifikator().equals(aktivitet)).findFirst().orElseThrow();
+        var arbeidsforhold = arbeidsforholdListe.stream()
+                .filter(a -> a.getIdentifikator().equals(aktivitet))
+                .findFirst()
+                .orElseThrow();
         return arbeidsforhold.getStillingsprosent(dato);
     }
 

@@ -41,9 +41,11 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
         final List<Stønadskontotype> søkerSineKonto;
         if (!søkerOgAnnenForelderSineKontoer(grunnlag).contains(Stønadskontotype.FORELDREPENGER)) {
             if (grunnlag.isSøkerMor()) {
-                søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER); // 1 og 5
+                søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE,
+                        Stønadskontotype.FORELDREPENGER); // 1 og 5
             } else {
-                søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER); // 3 og 7
+                søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE,
+                        Stønadskontotype.FORELDREPENGER); // 3 og 7
             }
         } else { // en har rett
             søkerSineKonto = List.of(Stønadskontotype.FORELDREPENGER); // 2 4 6 og 8

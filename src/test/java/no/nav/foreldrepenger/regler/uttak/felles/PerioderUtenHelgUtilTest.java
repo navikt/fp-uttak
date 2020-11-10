@@ -49,32 +49,42 @@ public class PerioderUtenHelgUtilTest {
 
     @Test
     public void skal_si_at_periode_omslutter_den_andre() throws Exception {
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2), new LukketPeriode(lørdagUke1, søndagUke2))).isTrue();
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2), new LukketPeriode(lørdagUke2, søndagUke2))).isTrue();
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2), new LukketPeriode(lørdagUke1, søndagUke1))).isTrue();
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(lørdagUke1, søndagUke1), new LukketPeriode(lørdagUke1, søndagUke1))).isTrue();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2),
+                new LukketPeriode(lørdagUke1, søndagUke2))).isTrue();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2),
+                new LukketPeriode(lørdagUke2, søndagUke2))).isTrue();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2),
+                new LukketPeriode(lørdagUke1, søndagUke1))).isTrue();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(lørdagUke1, søndagUke1),
+                new LukketPeriode(lørdagUke1, søndagUke1))).isTrue();
     }
 
     @Test
     public void skal_si_at_periode_ikke_omslutter_den_andre_nå_andre_periode_er_lenger() throws Exception {
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2), new LukketPeriode(fredagUke1, søndagUke2))).isFalse();
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, tirsdagUke2), new LukketPeriode(mandagUke2, søndagUke2))).isFalse();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, fredagUke2),
+                new LukketPeriode(fredagUke1, søndagUke2))).isFalse();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(mandagUke2, tirsdagUke2),
+                new LukketPeriode(mandagUke2, søndagUke2))).isFalse();
     }
 
     @Test
     public void skal_si_at_helg1_ikke_omslutter_helg2() throws Exception {
-        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(lørdagUke1, søndagUke1), new LukketPeriode(lørdagUke2, søndagUke2))).isFalse();
+        assertThat(periodeUtenHelgOmslutter(new LukketPeriode(lørdagUke1, søndagUke1),
+                new LukketPeriode(lørdagUke2, søndagUke2))).isFalse();
     }
 
     @Test
     public void skal_si_at_perioder_overlapper() throws Exception {
-        assertThat(perioderUtenHelgOverlapper(new LukketPeriode(mandagUke2, fredagUke2), new LukketPeriode(fredagUke1, søndagUke2))).isTrue();
+        assertThat(perioderUtenHelgOverlapper(new LukketPeriode(mandagUke2, fredagUke2),
+                new LukketPeriode(fredagUke1, søndagUke2))).isTrue();
     }
 
     @Test
     public void skal_si_at_helg_ikke_overlapper() throws Exception {
-        assertThat(perioderUtenHelgOverlapper(new LukketPeriode(fredagUke1, søndagUke1), new LukketPeriode(lørdagUke1, søndagUke2))).isFalse();
-        assertThat(perioderUtenHelgOverlapper(new LukketPeriode(fredagUke1, søndagUke1), new LukketPeriode(lørdagUke1, søndagUke1))).isFalse();
+        assertThat(perioderUtenHelgOverlapper(new LukketPeriode(fredagUke1, søndagUke1),
+                new LukketPeriode(lørdagUke1, søndagUke2))).isFalse();
+        assertThat(perioderUtenHelgOverlapper(new LukketPeriode(fredagUke1, søndagUke1),
+                new LukketPeriode(lørdagUke1, søndagUke1))).isFalse();
     }
 
     private LocalDate dag(DayOfWeek dag, int ukenr) {

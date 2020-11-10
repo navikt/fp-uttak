@@ -15,7 +15,7 @@ public class SjekkOmFørsteUttakErInnenforSøknadsfrist extends LeafSpecificatio
     public static final String ID = "FK_VK 15.3";
 
     public static final RuleReasonRefImpl KAN_IKKE_VURDERE_PASSERT_SØKNADSFRIST_FOR_FØRSTE_UTTAK = new RuleReasonRefImpl("5043",
-        "Mottatt dato for søknad er senere enn søknadsfristen for første uttak");
+            "Mottatt dato for søknad er senere enn søknadsfristen for første uttak");
 
     public SjekkOmFørsteUttakErInnenforSøknadsfrist() {
         super(ID);

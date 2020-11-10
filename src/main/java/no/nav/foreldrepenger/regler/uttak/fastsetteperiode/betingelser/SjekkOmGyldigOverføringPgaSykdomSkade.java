@@ -22,7 +22,8 @@ public class SjekkOmGyldigOverføringPgaSykdomSkade extends LeafSpecification<Fa
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
         for (OppgittPeriode periodeMedAnnenForelderSykdomEllerSkade : grunnlag.getPerioderMedAnnenForelderSykdomEllerSkade()) {
-            if (oppgittPeriode.erOmsluttetAv(periodeMedAnnenForelderSykdomEllerSkade) && harGyldigGrunn(oppgittPeriode, grunnlag.getGyldigGrunnPerioder())) {
+            if (oppgittPeriode.erOmsluttetAv(periodeMedAnnenForelderSykdomEllerSkade) && harGyldigGrunn(oppgittPeriode,
+                    grunnlag.getGyldigGrunnPerioder())) {
                 return ja();
             }
         }

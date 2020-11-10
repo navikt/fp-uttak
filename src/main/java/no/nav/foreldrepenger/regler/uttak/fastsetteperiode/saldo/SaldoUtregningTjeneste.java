@@ -28,7 +28,8 @@ public final class SaldoUtregningTjeneste {
                 grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
         var søkersFastsattePerioder = grunnlag.getSøkersFastsattePerioder();
         var stønadskontoer = lagStønadskontoer(grunnlag);
-        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isTapendeBehandling(), grunnlag.getAktiviteter());
+        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isTapendeBehandling(),
+                grunnlag.getAktiviteter());
     }
 
     private static List<FastsattUttakPeriode> finnRelevanteAnnenpartsPerioder(boolean isTapendeBehandling,
@@ -41,23 +42,19 @@ public final class SaldoUtregningTjeneste {
                     .flatMap(ap -> finnDelerAvOppholdsperiode(søktePerioder, ap))
                     .collect(Collectors.toList());
         } else {
-            annenpartsPerioder = annenpartsPerioder.stream()
-                    .filter(ap -> ap.getFom().isBefore(utregningsdato))
-                    .map(ap -> {
-                        if (ap.overlapper(utregningsdato)) {
-                            return knekk(ap, ap.getFom(), utregningsdato.minusDays(1));
-                        }
-                        return ap;
-                    })
-                    .collect(Collectors.toList());
+            annenpartsPerioder = annenpartsPerioder.stream().filter(ap -> ap.getFom().isBefore(utregningsdato)).map(ap -> {
+                if (ap.overlapper(utregningsdato)) {
+                    return knekk(ap, ap.getFom(), utregningsdato.minusDays(1));
+                }
+                return ap;
+            }).collect(Collectors.toList());
         }
 
-        return annenpartsPerioder.stream()
-                .map(SaldoUtregningTjeneste::map)
-                .collect(Collectors.toList());
+        return annenpartsPerioder.stream().map(SaldoUtregningTjeneste::map).collect(Collectors.toList());
     }
 
-    private static Stream<AnnenpartUttakPeriode> finnDelerAvOppholdsperiode(List<LukketPeriode> søktePerioder, AnnenpartUttakPeriode ap) {
+    private static Stream<AnnenpartUttakPeriode> finnDelerAvOppholdsperiode(List<LukketPeriode> søktePerioder,
+                                                                            AnnenpartUttakPeriode ap) {
         for (LukketPeriode søktPeriode : søktePerioder) {
             if (ap.isOppholdsperiode() && ap.overlapper(søktPeriode.getFom())) {
                 if (søktPeriode.getFom().isEqual(ap.getFom()) && søktPeriode.getTom().isEqual(ap.getTom())) {
@@ -82,14 +79,15 @@ public final class SaldoUtregningTjeneste {
     }
 
     private static Set<Stønadskonto> lagStønadskontoer(SaldoUtregningGrunnlag grunnlag) {
-        return grunnlag.getKontoer().getKontoList().stream()
+        return grunnlag.getKontoer()
+                .getKontoList()
+                .stream()
                 .map(konto -> new Stønadskonto(konto.getType(), new Trekkdager(konto.getTrekkdager())))
                 .collect(Collectors.toSet());
     }
 
     private static FastsattUttakPeriode map(AnnenpartUttakPeriode annenpartsPeriode) {
-        return new FastsattUttakPeriode.Builder()
-                .medPeriodeResultatType(map(annenpartsPeriode.isInnvilget()))
+        return new FastsattUttakPeriode.Builder().medPeriodeResultatType(map(annenpartsPeriode.isInnvilget()))
                 .medSamtidigUttak(annenpartsPeriode.isSamtidigUttak())
                 .medFlerbarnsdager(annenpartsPeriode.isFlerbarnsdager())
                 .medOppholdÅrsak(annenpartsPeriode.getOppholdÅrsak())
@@ -103,8 +101,10 @@ public final class SaldoUtregningTjeneste {
     }
 
     private static List<FastsattUttakPeriodeAktivitet> mapAktiviteter(AnnenpartUttakPeriode annenpartsPeriode) {
-        return annenpartsPeriode.getAktiviteter().stream()
-                .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), aktivitet.getStønadskontotype(), aktivitet.getAktivitetIdentifikator()))
+        return annenpartsPeriode.getAktiviteter()
+                .stream()
+                .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), aktivitet.getStønadskontotype(),
+                        aktivitet.getAktivitetIdentifikator()))
                 .collect(Collectors.toList());
     }
 
@@ -119,12 +119,12 @@ public final class SaldoUtregningTjeneste {
         for (AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
             Trekkdager opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
             if (virkedagerInnenfor > 0 && opprinneligeTrekkdager.merEnn0()) {
-                BigDecimal vektetTrekkdager = opprinneligeTrekkdager.decimalValue().multiply(BigDecimal.valueOf(virkedagerInnenfor))
+                BigDecimal vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
+                        .multiply(BigDecimal.valueOf(virkedagerInnenfor))
                         .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
-                annenpartUttakPeriodeAktivitetMedNyttTrekkDager
-                        .add(new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
-                                annenpartUttakPeriodeAktivitet.getStønadskontotype(),
-                                new Trekkdager(vektetTrekkdager),
+                annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(
+                        new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
+                                annenpartUttakPeriodeAktivitet.getStønadskontotype(), new Trekkdager(vektetTrekkdager),
                                 annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
             }
         }

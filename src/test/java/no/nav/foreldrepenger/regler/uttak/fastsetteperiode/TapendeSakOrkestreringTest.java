@@ -42,14 +42,17 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
         PeriodeUtenOmsorg periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16), MOR_ARBEIDSFORHOLD, true)))
+                .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
+                        annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+                                MOR_ARBEIDSFORHOLD, true))
+                        .leggTilUttaksperiode(
+                                annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD,
+                                        true))
+                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
+                                MOR_ARBEIDSFORHOLD, true)))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
 
@@ -66,17 +69,19 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
         PeriodeUtenOmsorg periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16), MOR_ARBEIDSFORHOLD, false)))
+                .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
+                        annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+                                MOR_ARBEIDSFORHOLD, true))
+                        .leggTilUttaksperiode(
+                                annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD,
+                                        true))
+                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
+                                MOR_ARBEIDSFORHOLD, false)))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder()
-                        .medType(Søknadstype.FØDSEL)
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .medDokumentasjon(new Dokumentasjon.Builder()
-                                .leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
+                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
 
         List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
 

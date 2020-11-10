@@ -12,9 +12,7 @@ public final class PrematurukerUtil {
     private PrematurukerUtil() {
     }
 
-    public static boolean oppfyllerKravTilPrematuruker(LocalDate fødselsdato,
-                                                       LocalDate termindato,
-                                                       Konfigurasjon konfigurasjon) {
+    public static boolean oppfyllerKravTilPrematuruker(LocalDate fødselsdato, LocalDate termindato, Konfigurasjon konfigurasjon) {
         if (fødselsdato == null || termindato == null) {
             return false;
         }

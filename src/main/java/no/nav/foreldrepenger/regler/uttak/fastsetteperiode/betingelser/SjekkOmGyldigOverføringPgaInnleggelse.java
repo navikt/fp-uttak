@@ -22,7 +22,8 @@ public class SjekkOmGyldigOverføringPgaInnleggelse extends LeafSpecification<Fa
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
         for (OppgittPeriode periodeMedAnnenForelderInnlagt : grunnlag.getPerioderMedAnnenForelderInnlagt()) {
-            if (oppgittPeriode.erOmsluttetAv(periodeMedAnnenForelderInnlagt) && harGyldigGrunn(oppgittPeriode, grunnlag.getGyldigGrunnPerioder())) {
+            if (oppgittPeriode.erOmsluttetAv(periodeMedAnnenForelderInnlagt) && harGyldigGrunn(oppgittPeriode,
+                    grunnlag.getGyldigGrunnPerioder())) {
                 return ja();
             }
         }

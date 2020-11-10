@@ -36,39 +36,24 @@ class RegelResultatBehandler {
                                                                 Optional<TomKontoKnekkpunkt> knekkpunktOpt,
                                                                 FastsettePerioderRegelresultat regelresultat) {
         if (knekkpunktOpt.isEmpty()) {
-            var resultat = new UttakPeriode(oppgittPeriode.getFom(),
-                    oppgittPeriode.getTom(),
-                    Perioderesultattype.INNVILGET,
-                    null,
-                    regelresultat.getAvklaringÅrsak(),
-                    regelresultat.getGraderingIkkeInnvilgetÅrsak(),
-                    lagAktiviteter(oppgittPeriode, regelresultat, false),
-                    oppgittPeriode.isFlerbarnsdager(),
-                    regnSamtidigUttaksprosentMotGradering(oppgittPeriode),
-                    oppgittPeriode.getOppholdÅrsak(),
-                    oppgittPeriode.getStønadskontotype(),
-                    oppgittPeriode.getArbeidsprosent(),
-                    oppgittPeriode.getUtsettelseÅrsak(),
+            var resultat = new UttakPeriode(oppgittPeriode.getFom(), oppgittPeriode.getTom(), Perioderesultattype.INNVILGET, null,
+                    regelresultat.getAvklaringÅrsak(), regelresultat.getGraderingIkkeInnvilgetÅrsak(),
+                    lagAktiviteter(oppgittPeriode, regelresultat, false), oppgittPeriode.isFlerbarnsdager(),
+                    regnSamtidigUttaksprosentMotGradering(oppgittPeriode), oppgittPeriode.getOppholdÅrsak(),
+                    oppgittPeriode.getStønadskontotype(), oppgittPeriode.getArbeidsprosent(), oppgittPeriode.getUtsettelseÅrsak(),
                     oppgittPeriode.getOverføringÅrsak());
 
             return RegelResultatBehandlerResultat.utenKnekk(resultat);
         }
         validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
-        var oppgittPeriodeFørKnekk = oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkpunktOpt.get().getDato().minusDays(1));
-        var førKnekk = new UttakPeriode(oppgittPeriodeFørKnekk.getFom(),
-                oppgittPeriodeFørKnekk.getTom(),
-                Perioderesultattype.INNVILGET,
-                null,
-                regelresultat.getAvklaringÅrsak(),
-                regelresultat.getGraderingIkkeInnvilgetÅrsak(),
-                lagAktiviteter(oppgittPeriodeFørKnekk, regelresultat, false),
-                oppgittPeriodeFørKnekk.isFlerbarnsdager(),
-                regnSamtidigUttaksprosentMotGradering(oppgittPeriodeFørKnekk),
-                oppgittPeriodeFørKnekk.getOppholdÅrsak(),
-                oppgittPeriodeFørKnekk.getStønadskontotype(),
-                oppgittPeriodeFørKnekk.getArbeidsprosent(),
-                oppgittPeriodeFørKnekk.getUtsettelseÅrsak(),
-                oppgittPeriodeFørKnekk.getOverføringÅrsak());
+        var oppgittPeriodeFørKnekk = oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(),
+                knekkpunktOpt.get().getDato().minusDays(1));
+        var førKnekk = new UttakPeriode(oppgittPeriodeFørKnekk.getFom(), oppgittPeriodeFørKnekk.getTom(),
+                Perioderesultattype.INNVILGET, null, regelresultat.getAvklaringÅrsak(), regelresultat.getGraderingIkkeInnvilgetÅrsak(),
+                lagAktiviteter(oppgittPeriodeFørKnekk, regelresultat, false), oppgittPeriodeFørKnekk.isFlerbarnsdager(),
+                regnSamtidigUttaksprosentMotGradering(oppgittPeriodeFørKnekk), oppgittPeriodeFørKnekk.getOppholdÅrsak(),
+                oppgittPeriodeFørKnekk.getStønadskontotype(), oppgittPeriodeFørKnekk.getArbeidsprosent(),
+                oppgittPeriodeFørKnekk.getUtsettelseÅrsak(), oppgittPeriodeFørKnekk.getOverføringÅrsak());
         var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().getDato(), oppgittPeriode.getTom());
         return RegelResultatBehandlerResultat.medKnekk(førKnekk, etterKnekk);
     }
@@ -79,37 +64,24 @@ class RegelResultatBehandler {
                                                               boolean overlapperInnvilgetAnnenpartsPeriode) {
         if (!overlapperInnvilgetAnnenpartsPeriode && knekkpunktOpt.isPresent()) {
             validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
-            var oppgittPeriodeFørKnekk = oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkpunktOpt.get().getDato().minusDays(1));
-            var resultat = new UttakPeriode(oppgittPeriodeFørKnekk.getFom(),
-                    oppgittPeriodeFørKnekk.getTom(),
-                    Perioderesultattype.AVSLÅTT,
-                    null,
-                    regelresultat.getAvklaringÅrsak(),
+            var oppgittPeriodeFørKnekk = oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(),
+                    knekkpunktOpt.get().getDato().minusDays(1));
+            var resultat = new UttakPeriode(oppgittPeriodeFørKnekk.getFom(), oppgittPeriodeFørKnekk.getTom(),
+                    Perioderesultattype.AVSLÅTT, null, regelresultat.getAvklaringÅrsak(),
                     regelresultat.getGraderingIkkeInnvilgetÅrsak(),
                     lagAktiviteter(oppgittPeriodeFørKnekk, regelresultat, overlapperInnvilgetAnnenpartsPeriode),
-                    oppgittPeriodeFørKnekk.isFlerbarnsdager(),
-                    regnSamtidigUttaksprosentMotGradering(oppgittPeriodeFørKnekk),
-                    oppgittPeriodeFørKnekk.getOppholdÅrsak(),
-                    konto(oppgittPeriodeFørKnekk).orElse(null),
-                    oppgittPeriodeFørKnekk.getArbeidsprosent(),
-                    oppgittPeriodeFørKnekk.getUtsettelseÅrsak(),
+                    oppgittPeriodeFørKnekk.isFlerbarnsdager(), regnSamtidigUttaksprosentMotGradering(oppgittPeriodeFørKnekk),
+                    oppgittPeriodeFørKnekk.getOppholdÅrsak(), konto(oppgittPeriodeFørKnekk).orElse(null),
+                    oppgittPeriodeFørKnekk.getArbeidsprosent(), oppgittPeriodeFørKnekk.getUtsettelseÅrsak(),
                     oppgittPeriodeFørKnekk.getOverføringÅrsak());
             var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().getDato(), oppgittPeriode.getTom());
             return RegelResultatBehandlerResultat.medKnekk(resultat, etterKnekk);
         }
-        var resultat = new UttakPeriode(oppgittPeriode.getFom(),
-                oppgittPeriode.getTom(),
-                Perioderesultattype.AVSLÅTT,
-                null,
-                regelresultat.getAvklaringÅrsak(),
-                regelresultat.getGraderingIkkeInnvilgetÅrsak(),
-                lagAktiviteter(oppgittPeriode, regelresultat, overlapperInnvilgetAnnenpartsPeriode),
-                oppgittPeriode.isFlerbarnsdager(),
-                regnSamtidigUttaksprosentMotGradering(oppgittPeriode),
-                oppgittPeriode.getOppholdÅrsak(),
-                konto(oppgittPeriode).orElse(null),
-                oppgittPeriode.getArbeidsprosent(),
-                oppgittPeriode.getUtsettelseÅrsak(),
+        var resultat = new UttakPeriode(oppgittPeriode.getFom(), oppgittPeriode.getTom(), Perioderesultattype.AVSLÅTT, null,
+                regelresultat.getAvklaringÅrsak(), regelresultat.getGraderingIkkeInnvilgetÅrsak(),
+                lagAktiviteter(oppgittPeriode, regelresultat, overlapperInnvilgetAnnenpartsPeriode), oppgittPeriode.isFlerbarnsdager(),
+                regnSamtidigUttaksprosentMotGradering(oppgittPeriode), oppgittPeriode.getOppholdÅrsak(),
+                konto(oppgittPeriode).orElse(null), oppgittPeriode.getArbeidsprosent(), oppgittPeriode.getUtsettelseÅrsak(),
                 oppgittPeriode.getOverføringÅrsak());
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
@@ -118,31 +90,23 @@ class RegelResultatBehandler {
         if (!oppgittPeriode.erSøktSamtidigUttak()) {
             return null;
         }
-        return oppgittPeriode.erSøktGradering() ? SamtidigUttaksprosent.HUNDRED.subtract(oppgittPeriode.getArbeidsprosent()) :
-                oppgittPeriode.getSamtidigUttaksprosent();
+        return oppgittPeriode.erSøktGradering() ? SamtidigUttaksprosent.HUNDRED.subtract(
+                oppgittPeriode.getArbeidsprosent()) : oppgittPeriode.getSamtidigUttaksprosent();
     }
 
     private Optional<Stønadskontotype> konto(OppgittPeriode oppgittPeriode) {
-        return oppgittPeriode.getStønadskontotype() != null ? Optional.of(oppgittPeriode.getStønadskontotype()) : utledKonto(oppgittPeriode);
+        return oppgittPeriode.getStønadskontotype() != null ? Optional.of(oppgittPeriode.getStønadskontotype()) : utledKonto(
+                oppgittPeriode);
     }
 
-    RegelResultatBehandlerResultat manuellBehandling(OppgittPeriode oppgittPeriode,
-                                                     FastsettePerioderRegelresultat regelresultat) {
+    RegelResultatBehandlerResultat manuellBehandling(OppgittPeriode oppgittPeriode, FastsettePerioderRegelresultat regelresultat) {
         var stønadskontotype = konto(oppgittPeriode);
-        var resultat = new UttakPeriode(oppgittPeriode.getFom(),
-                oppgittPeriode.getTom(),
-                Perioderesultattype.MANUELL_BEHANDLING,
-                regelresultat.getManuellbehandlingårsak(),
-                regelresultat.getAvklaringÅrsak(),
-                regelresultat.getGraderingIkkeInnvilgetÅrsak(),
-                lagAktiviteter(oppgittPeriode, regelresultat, false),
-                oppgittPeriode.isFlerbarnsdager(),
-                regnSamtidigUttaksprosentMotGradering(oppgittPeriode),
-                oppgittPeriode.getOppholdÅrsak(),
-                stønadskontotype.orElse(null),
-                oppgittPeriode.getArbeidsprosent(),
-                oppgittPeriode.getUtsettelseÅrsak(),
-                oppgittPeriode.getOverføringÅrsak());
+        var resultat = new UttakPeriode(oppgittPeriode.getFom(), oppgittPeriode.getTom(), Perioderesultattype.MANUELL_BEHANDLING,
+                regelresultat.getManuellbehandlingårsak(), regelresultat.getAvklaringÅrsak(),
+                regelresultat.getGraderingIkkeInnvilgetÅrsak(), lagAktiviteter(oppgittPeriode, regelresultat, false),
+                oppgittPeriode.isFlerbarnsdager(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode),
+                oppgittPeriode.getOppholdÅrsak(), stønadskontotype.orElse(null), oppgittPeriode.getArbeidsprosent(),
+                oppgittPeriode.getUtsettelseÅrsak(), oppgittPeriode.getOverføringÅrsak());
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
 
@@ -153,7 +117,8 @@ class RegelResultatBehandler {
     private Set<UttakPeriodeAktivitet> lagAktiviteter(OppgittPeriode oppgittPeriode,
                                                       FastsettePerioderRegelresultat regelresultat,
                                                       boolean overlapperMedInnvilgetPeriodeHosAnnenpart) {
-        return oppgittPeriode.getAktiviteter().stream()
+        return oppgittPeriode.getAktiviteter()
+                .stream()
                 .map(a -> lagAktivitet(a, regelresultat, overlapperMedInnvilgetPeriodeHosAnnenpart, oppgittPeriode))
                 .collect(Collectors.toSet());
     }
@@ -192,7 +157,8 @@ class RegelResultatBehandler {
             if (manuellBehandling && stønadskonto.isEmpty()) {
                 trekkdager = Trekkdager.ZERO;
             } else {
-                var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(identifikator);
+                var graderingInnvilget =
+                        regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(identifikator);
                 trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget,
                         oppgittPeriode.getArbeidsprosent(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode));
             }
@@ -210,8 +176,7 @@ class RegelResultatBehandler {
         }
     }
 
-    private UtbetalingsgradUtregning bestemUtbetalingsgradUtregning(OppgittPeriode oppgittPeriode,
-                                                                       AktivitetIdentifikator aktivitet) {
+    private UtbetalingsgradUtregning bestemUtbetalingsgradUtregning(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet) {
         if (oppgittPeriode.erSøktGradering(aktivitet)) {
             return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet);
         } else {
