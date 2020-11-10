@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.konfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;;
 
 public class KonfigurasjonBuilderTest {
 
@@ -29,13 +30,12 @@ public class KonfigurasjonBuilderTest {
         assertThat(konfigurasjon.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå.plusDays(70))).isEqualTo(75);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void konfigurasjon_med_en_verdi_i_to_intervaller_med_overlapp() {
         LocalDate nå = LocalDate.now();
-        KonfigurasjonBuilder.create()
+        assertThrows(IllegalArgumentException.class, () -> KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, nå.plusDays(6), 50)
-                .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå.plusDays(5), null, 75)
-                .build();
+                .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå.plusDays(5), null, 75));
     }
 
 }
