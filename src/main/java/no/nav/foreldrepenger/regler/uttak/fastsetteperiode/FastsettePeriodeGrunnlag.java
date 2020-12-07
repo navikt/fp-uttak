@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
@@ -103,6 +104,14 @@ public interface FastsettePeriodeGrunnlag {
      * @return list av perioder der søker har bekreftet innleggelse.
      */
     List<PeriodeMedInnleggelse> getPerioderMedInnleggelse();
+
+    /**
+     * Finn alle perioder der det er avklart mors aktivitet
+     * Mor kan enten være i aktivitet i perioden eller ikke
+     *
+     * @return list av perioder.
+     */
+    List<PeriodeMedAvklartMorsAktivitet> getPerioderMedAvklartMorsAktivitet();
 
     /**
      * Finn alle perioder der søkers barn er innlagt på helseinstitusjon.

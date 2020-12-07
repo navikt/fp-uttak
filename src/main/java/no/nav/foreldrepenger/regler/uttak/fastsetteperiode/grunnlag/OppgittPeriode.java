@@ -22,6 +22,7 @@ public final class OppgittPeriode extends LukketPeriode {
     private final OppholdÅrsak oppholdÅrsak;
     private final boolean manglendeSøktPeriode;
     private final LocalDate mottattDato;
+    private final MorsAktivitet morsAktivitet;
     private Set<AktivitetIdentifikator> aktiviteter = Set.of();
 
     private OppgittPeriode(Stønadskontotype stønadskontotype,
@@ -36,7 +37,8 @@ public final class OppgittPeriode extends LukketPeriode {
                            boolean flerbarnsdager,
                            UtsettelseÅrsak utsettelseÅrsak,
                            OppholdÅrsak oppholdÅrsak,
-                           LocalDate mottattDato) {
+                           LocalDate mottattDato,
+                           MorsAktivitet morsAktivitet) {
         super(fom, tom);
         this.arbeidsprosent = arbeidsprosent;
         this.gradertAktiviteter = gradertAktiviteter;
@@ -49,12 +51,13 @@ public final class OppgittPeriode extends LukketPeriode {
         this.stønadskontotype = stønadskontotype;
         this.manglendeSøktPeriode = manglendeSøktPeriode;
         this.mottattDato = mottattDato;
+        this.morsAktivitet = morsAktivitet;
     }
 
     public OppgittPeriode kopiMedNyPeriode(LocalDate nyFom, LocalDate nyTom) {
         var kopi = new OppgittPeriode(stønadskontotype, nyFom, nyTom, manglendeSøktPeriode, arbeidsprosent, gradertAktiviteter,
                 overføringÅrsak, periodeVurderingType, samtidigUttaksprosent, flerbarnsdager, utsettelseÅrsak, oppholdÅrsak,
-                mottattDato);
+                mottattDato, morsAktivitet);
         kopi.aktiviteter = aktiviteter;
         return kopi;
     }
@@ -151,18 +154,23 @@ public final class OppgittPeriode extends LukketPeriode {
         return manglendeSøktPeriode;
     }
 
+    public MorsAktivitet getMorsAktivitet() {
+        return morsAktivitet;
+    }
+
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
         return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, PeriodeVurderingType.IKKE_VURDERT, null, false, null,
-                null, null);
+                null, null, null);
     }
 
     public static OppgittPeriode forUtsettelse(LocalDate fom,
                                                LocalDate tom,
                                                PeriodeVurderingType periodeVurderingType,
                                                UtsettelseÅrsak utsettelseÅrsak,
-                                               LocalDate mottattDato) {
+                                               LocalDate mottattDato,
+                                               MorsAktivitet morsAktivitet) {
         return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, periodeVurderingType, null, false, utsettelseÅrsak,
-                null, mottattDato);
+                null, mottattDato, morsAktivitet);
     }
 
     public static OppgittPeriode forOverføring(Stønadskontotype stønadskontotype,
@@ -172,12 +180,12 @@ public final class OppgittPeriode extends LukketPeriode {
                                                OverføringÅrsak overføringÅrsak,
                                                LocalDate mottattDato) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, periodeVurderingType, null,
-                false, null, null, mottattDato);
+                false, null, null, mottattDato, null);
     }
 
     public static OppgittPeriode forOpphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak, LocalDate mottattDato) {
         return new OppgittPeriode(OppholdÅrsak.map(oppholdÅrsak), fom, tom, false, null, Set.of(), null,
-                PeriodeVurderingType.IKKE_VURDERT, null, false, null, oppholdÅrsak, mottattDato);
+                PeriodeVurderingType.IKKE_VURDERT, null, false, null, oppholdÅrsak, mottattDato, null);
     }
 
     public static OppgittPeriode forGradering(Stønadskontotype stønadskontotype,
@@ -188,9 +196,10 @@ public final class OppgittPeriode extends LukketPeriode {
                                               boolean flerbarnsdager,
                                               Set<AktivitetIdentifikator> gradertAktiviteter,
                                               PeriodeVurderingType vurderingType,
-                                              LocalDate mottattDato) {
+                                              LocalDate mottattDato,
+                                              MorsAktivitet morsAktivitet) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, arbeidsprosent, gradertAktiviteter, null, vurderingType,
-                samtidigUttaksprosent, flerbarnsdager, null, null, mottattDato);
+                samtidigUttaksprosent, flerbarnsdager, null, null, mottattDato, morsAktivitet);
     }
 
     public static OppgittPeriode forVanligPeriode(Stønadskontotype stønadskontotype,
@@ -199,32 +208,31 @@ public final class OppgittPeriode extends LukketPeriode {
                                                   SamtidigUttaksprosent samtidigUttaksprosent,
                                                   boolean flerbarnsdager,
                                                   PeriodeVurderingType periodeVurderingType,
-                                                  LocalDate mottattDato) {
+                                                  LocalDate mottattDato,
+                                                  MorsAktivitet morsAktivitet) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), null, periodeVurderingType, samtidigUttaksprosent,
-                flerbarnsdager, null, null, mottattDato);
+                flerbarnsdager, null, null, mottattDato, morsAktivitet);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o)
             return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass())
             return false;
-        }
         OppgittPeriode that = (OppgittPeriode) o;
-        return flerbarnsdager == that.flerbarnsdager && stønadskontotype == that.stønadskontotype && Objects.equals(arbeidsprosent,
-                that.arbeidsprosent) && Objects.equals(gradertAktiviteter, that.gradertAktiviteter)
-                && overføringÅrsak == that.overføringÅrsak && periodeVurderingType == that.periodeVurderingType
-                && manglendeSøktPeriode == that.manglendeSøktPeriode && Objects.equals(samtidigUttaksprosent,
-                that.samtidigUttaksprosent) && Objects.equals(mottattDato, that.mottattDato) && utsettelseÅrsak == that.utsettelseÅrsak
-                && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(aktiviteter, that.aktiviteter);
+        return flerbarnsdager == that.flerbarnsdager && manglendeSøktPeriode == that.manglendeSøktPeriode
+                && stønadskontotype == that.stønadskontotype && Objects.equals(arbeidsprosent, that.arbeidsprosent)
+                && overføringÅrsak == that.overføringÅrsak && periodeVurderingType == that.periodeVurderingType && Objects.equals(
+                samtidigUttaksprosent, that.samtidigUttaksprosent) && utsettelseÅrsak == that.utsettelseÅrsak
+                && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(mottattDato, that.mottattDato)
+                && morsAktivitet == that.morsAktivitet;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stønadskontotype, arbeidsprosent, gradertAktiviteter, overføringÅrsak, periodeVurderingType,
-                manglendeSøktPeriode, flerbarnsdager, samtidigUttaksprosent, utsettelseÅrsak, oppholdÅrsak, aktiviteter, mottattDato);
+        return Objects.hash(stønadskontotype, arbeidsprosent, overføringÅrsak, periodeVurderingType, flerbarnsdager,
+                samtidigUttaksprosent, utsettelseÅrsak, oppholdÅrsak, manglendeSøktPeriode, mottattDato, morsAktivitet);
     }
 
     @Override

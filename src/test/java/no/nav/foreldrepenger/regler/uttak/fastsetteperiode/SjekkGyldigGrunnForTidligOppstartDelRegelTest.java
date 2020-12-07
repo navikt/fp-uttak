@@ -141,7 +141,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurdering) {
-        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurdering, null);
+        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurdering, null, null);
     }
 
     @Test

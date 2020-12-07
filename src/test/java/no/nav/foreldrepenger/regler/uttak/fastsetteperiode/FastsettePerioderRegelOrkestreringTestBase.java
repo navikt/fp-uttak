@@ -129,7 +129,8 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   boolean flerbarnsdager,
                                   SamtidigUttaksprosent samtidigUttaksprosent,
                                   PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null,
+                null);
     }
 
     OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
@@ -142,7 +143,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                                          BigDecimal arbeidsprosent,
                                          Set<AktivitetIdentifikator> gradertAktiviteter) {
         return OppgittPeriode.forGradering(stønadskontotype, fom, tom, arbeidsprosent, null, false, gradertAktiviteter,
-                PeriodeVurderingType.IKKE_VURDERT, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null);
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
@@ -174,7 +175,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak, null);
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak, null, null);
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {

@@ -52,7 +52,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurderingType, null);
+        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurderingType, null, null);
     }
 
     @Test

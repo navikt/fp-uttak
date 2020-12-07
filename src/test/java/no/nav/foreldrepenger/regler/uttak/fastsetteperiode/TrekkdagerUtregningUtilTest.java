@@ -23,7 +23,7 @@ public class TrekkdagerUtregningUtilTest {
         //periode på 2 dager, 1% gradering
         BigDecimal arbeidstidsprosent = BigDecimal.valueOf(1);
         OppgittPeriode periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, arbeidstidsprosent, null,
-                false, Set.of(), PeriodeVurderingType.IKKE_VURDERT, null);
+                false, Set.of(), PeriodeVurderingType.IKKE_VURDERT, null, null);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(1.9));
@@ -38,7 +38,7 @@ public class TrekkdagerUtregningUtilTest {
 
         SamtidigUttaksprosent samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         OppgittPeriode periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, samtidigUttaksprosent,
-                false, PeriodeVurderingType.IKKE_VURDERT, null);
+                false, PeriodeVurderingType.IKKE_VURDERT, null, null);
         Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(5));

@@ -16,11 +16,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 final class DelRegelTestUtil {
 
-    private static final FastsettePeriodeRegel REGEL = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON);
+    private static final FastsettePeriodeRegel REGEL = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON, new FeatureTogglesForTester());
 
     private DelRegelTestUtil() {
     }
@@ -65,7 +66,7 @@ final class DelRegelTestUtil {
                                          Set<AktivitetIdentifikator> gradertAktiviteter,
                                          PeriodeVurderingType vurderingType) {
         return OppgittPeriode.forGradering(stønadskontotype, fom, tom, BigDecimal.TEN, null, false, gradertAktiviteter, vurderingType,
-                null);
+                null, null);
     }
 
     static OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -76,7 +77,7 @@ final class DelRegelTestUtil {
                                          LocalDate fom,
                                          LocalDate tom,
                                          PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, vurderingType, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, vurderingType, null, null);
     }
 
     static OppgittPeriode oppholdPeriode(LocalDate fom, LocalDate tom, OppholdÅrsak årsak) {
@@ -84,6 +85,6 @@ final class DelRegelTestUtil {
     }
 
     static OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelsesÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, utsettelsesÅrsak, null);
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, utsettelsesÅrsak, null, null);
     }
 }

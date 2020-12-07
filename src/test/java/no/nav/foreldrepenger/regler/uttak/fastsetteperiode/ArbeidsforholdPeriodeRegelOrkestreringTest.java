@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
@@ -9,13 +10,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -175,8 +178,11 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
                 .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold2, LocalDate.of(2019, 6, 10)));
         var utsettelseArbeid = utsettelsePeriode(LocalDate.of(2019, 11, 4), LocalDate.of(2019, 12, 6), UtsettelseÅrsak.ARBEID);
         var fpPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 12, 16), LocalDate.of(2020, 1, 3));
+        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+                new PeriodeMedAvklartMorsAktivitet(utsettelseArbeid.getFom(), fpPeriode.getTom(), I_AKTIVITET));
+        var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode).medDokumentasjon(dokumentasjon);
         grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode))
+                .medSøknad(søknad)
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(false).medFarHarRett(true).medSamtykke(true))
                 .medBehandling(farBehandling())
                 .medDatoer(new Datoer.Builder().medFødsel(fødsel));
