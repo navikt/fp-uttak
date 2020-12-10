@@ -42,7 +42,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>navit</sonar.organization>
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
-        <revision>4.0</revision>
+        <revision>5.0</revision>
         <sha1>SNAPSHOT</sha1>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -66,6 +66,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>${jupiter.version}</version>
             <scope>test</scope>
         </dependency>

@@ -113,7 +113,7 @@ public class FedrekvoteDelregelTest {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), null,
-                true, PeriodeVurderingType.UAVKLART_PERIODE, null);
+                true, PeriodeVurderingType.UAVKLART_PERIODE, null, null);
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
                 søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))

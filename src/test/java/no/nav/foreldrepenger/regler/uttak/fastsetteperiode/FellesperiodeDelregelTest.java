@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -37,6 +38,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+
+;
 
 public class FellesperiodeDelregelTest {
 
@@ -308,18 +311,22 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1233_far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
+    public void far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
         OppgittPeriode søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9),
                 PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
-        RegelGrunnlag grunnlag = basicGrunnlagFar().medSøknad(søknad(søknadsperiode))
+        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+                new PeriodeMedAvklartMorsAktivitet(søknadsperiode.getFom(), søknadsperiode.getTom(),
+                        PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
+        var søknad = søknad(søknadsperiode).medDokumentasjon(dokumentasjon);
+        RegelGrunnlag grunnlag = basicGrunnlagFar().medSøknad(søknad)
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medKontoer(kontoer)
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     @Test
@@ -338,17 +345,21 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1061_far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
+    public void far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
         OppgittPeriode søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false);
         var kontoer = enFellesperiodeKonto(100);
-        RegelGrunnlag grunnlag = basicGrunnlagFar().medSøknad(søknad(søknadsperiode))
+        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+                new PeriodeMedAvklartMorsAktivitet(søknadsperiode.getFom(), søknadsperiode.getTom(),
+                        PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
+        var søknad = søknad(søknadsperiode).medDokumentasjon(dokumentasjon);
+        RegelGrunnlag grunnlag = basicGrunnlagFar().medSøknad(søknad)
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medKontoer(kontoer)
                 .build();
 
         FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     @Test
@@ -391,7 +402,7 @@ public class FellesperiodeDelregelTest {
                                                  SamtidigUttaksprosent samtidigUttaksprosent,
                                                  boolean flerbarnsdager) {
         return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
-                Set.of(AktivitetIdentifikator.forFrilans()), vurderingType, null);
+                Set.of(AktivitetIdentifikator.forFrilans()), vurderingType, null, null);
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
@@ -429,7 +440,8 @@ public class FellesperiodeDelregelTest {
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager,
                                           PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null);
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null,
+                null);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

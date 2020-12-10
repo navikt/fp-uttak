@@ -52,7 +52,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
         var periodeSlutt = periodeStart.plusWeeks(6);
 
         var uttakPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt, null, false,
-                PeriodeVurderingType.IKKE_VURDERT, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(15 * 5))
                 .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.FELLESPERIODE).medTrekkdager(10 * 5));

@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyldigGrunnForTidligOppstartHelePerioden;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarMedmorHarRett;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -24,6 +25,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
+import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -38,6 +40,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private static final String FØDSEL = "Er det fødsel?";
 
     private Konfigurasjon konfigurasjon;
+    private FeatureToggles featureToggles;
 
     private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
@@ -45,8 +48,9 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
         // For dokumentasjonsgenerering
     }
 
-    ForeldrepengerDelregel(Konfigurasjon konfigurasjon) {
+    ForeldrepengerDelregel(Konfigurasjon konfigurasjon, FeatureToggles featureToggles) {
         this.konfigurasjon = konfigurasjon;
+        this.featureToggles = featureToggles;
     }
 
     @Override
@@ -216,8 +220,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErDetBareFarMedmorSomHarRett() {
-        return rs.hvisRegel(SjekkOmBareFarMedmorHarRett.ID, "Er det bare far/medmor som har rett?")
-                .hvis(new SjekkOmBareFarMedmorHarRett(), sjekkOmFarUtenAleneomsorgHarOmsorgForBarnet())
+        return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmFarUtenAleneomsorgHarOmsorgForBarnet())
                 .ellers(Manuellbehandling.opprett("UT1204", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
     }
 
@@ -260,24 +264,31 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigGrunnForTidligOppstart() {
         return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID,
                 "Foreligger et gyldig grunn for hele perioden for tidlig oppstart?")
-                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkOmFarUtenAleneomsorgGraderingIPerioden())
+                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(),
+                        featureToggles.automatisertAktivitetskrav() ? sjekkOmAktivitetskravErOppfylt() : Manuellbehandling.opprett(
+                                "UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFarUtenAleneomsorgGraderingIPerioden() {
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAktivitetskravErOppfylt() {
+        return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
+                .hvis(new SjekkOmMorErIAktivitet(), sjekkGraderingVedKunFarMedmorRett())
+                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkGraderingVedKunFarMedmorRett() {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(),
-                        Manuellbehandling.opprett("UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true,
-                                false))
-                .ellers(Manuellbehandling.opprett("UT1201", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true,
-                        false));
+                        Oppfylt.opprett("UT1315", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true))
+                .ellers(Oppfylt.opprett("UT1316", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT, true));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkFarUtenAleneomsorgHarDisponibleDager() {
         return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
                 SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
                 .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
-                        sjekkOmFarUtenAleneomsorgGraderingIPerioden())
+                        featureToggles.automatisertAktivitetskrav() ? sjekkOmAktivitetskravErOppfylt() : Manuellbehandling.opprett(
+                                "UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
                 .ellers(Manuellbehandling.opprett("UT1203", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 }

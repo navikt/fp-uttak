@@ -54,7 +54,30 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     OPPTJENINGSVILKÅRET_IKKE_OPPFYLT(4099, "Opptjeningsvilkåret er ikke oppfylt"),
 
     //Prematur
-    FRATREKK_PLEIEPENGER(4077, "Avslag utsettelse, fratrekk pleiepenger");
+    FRATREKK_PLEIEPENGER(4077, "Avslag utsettelse, fratrekk pleiepenger"),
+
+    //aktivitetskrav
+    AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT(4050,"Aktivitetskravet arbeid ikke oppfylt"),
+    AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT(4066,"Aktivitetskravet arbeid ikke dokumentert"),
+
+    AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT(4051,"Aktivitetskravet utdanning ikke oppfylt"),
+    AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT(4067,"Aktivitetskravet utdanning ikke dokumentert"),
+
+    AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_OPPFYLT(4052,"Aktivitetskravet arbeid+utdanning ikke oppfylt"),
+    AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_DOKUMENTERT(4068,"Aktivitetskravet arbeid+utdanning ikke dokumentert"),
+
+    AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT(4053,"Aktivitetskravet sykdom ikke oppfylt"),
+    AKTIVITETSKRAVET_SYKDOM_IKKE_DOKUMENTERT(4069,"Aktivitetskravet sykdom ikke dokumentert"),
+
+    AKTIVITETSKRAVET_INNLEGGELSE_IKKE_OPPFYLT(4054,"Aktivitetskravet innleggelse ikke oppfylt"),
+    AKTIVITETSKRAVET_INNLEGGELSE_IKKE_DOKUMENTERT(4070,"Aktivitetskravet innleggelse ikke dokumentert"),
+
+    AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT(4055,"Aktivitetskravet introduksjonsprogrammet ikke oppfylt"),
+    AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT(4088,"Aktivitetskravet introduksjonsprogrammet ikke dokumentert"),
+
+    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT(4056,"Aktivitetskravet kvalifiseringsprogrammet ikke oppfylt"),
+    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT(4089,"Aktivitetskravet kvalifiseringsprogrammet ikke dokumentert");
+
 
     private int id;
     private String beskrivelse;

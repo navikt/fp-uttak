@@ -11,6 +11,7 @@ public class Dokumentasjon {
     private List<PeriodeMedBarnInnlagt> perioderMedBarnInnlagt = new ArrayList<>();
     private List<PeriodeMedHV> perioderMedHv = new ArrayList<>();
     private List<PeriodeMedTiltakIRegiAvNav> perioderMedTiltakViaNav = new ArrayList<>();
+    private List<PeriodeMedAvklartMorsAktivitet> perioderMedAvklartMorsAktivitet = new ArrayList<>();
 
     private Dokumentasjon() {
 
@@ -42,6 +43,10 @@ public class Dokumentasjon {
 
     public List<PeriodeMedTiltakIRegiAvNav> getPerioderMedTiltakViaNav() {
         return perioderMedTiltakViaNav;
+    }
+
+    public List<PeriodeMedAvklartMorsAktivitet> getPerioderMedAvklartMorsAktivitet() {
+        return perioderMedAvklartMorsAktivitet;
     }
 
     public static class Builder {
@@ -80,6 +85,10 @@ public class Dokumentasjon {
 
         public Builder leggTilPeriodeMedTiltakViaNav(PeriodeMedTiltakIRegiAvNav periodeMedTiltakIRegiAvNav) {
             kladd.perioderMedTiltakViaNav.add(periodeMedTiltakIRegiAvNav);
+            return this;
+        }
+        public Builder leggTilPeriodeMedAvklartMorsAktivitet(PeriodeMedAvklartMorsAktivitet periodeMedAvklartMorsAktivitet) {
+            kladd.perioderMedAvklartMorsAktivitet.add(periodeMedAvklartMorsAktivitet);
             return this;
         }
 

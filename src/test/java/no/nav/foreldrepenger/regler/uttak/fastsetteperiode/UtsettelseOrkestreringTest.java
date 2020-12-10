@@ -563,7 +563,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
         //Søkt om ferieutsettelse innenfor seks uker etter fødsel. Utsettelsen skal avlås og det skal trekkes dager fra mødrekvote
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, fødselsdato.plusWeeks(8));
+                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, fødselsdato.plusWeeks(8), null);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(
                 fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .leggTilOppgittPeriode(utsettelse));

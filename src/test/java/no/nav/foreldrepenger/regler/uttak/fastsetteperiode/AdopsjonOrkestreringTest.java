@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
@@ -22,8 +23,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -31,6 +34,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+
+;
 
 public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -402,27 +407,31 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FORELDREPENGER
     @Test
-    public void UT1201_adopsjon_far_søker_foreldrepenger_etter_omsorgsovertakelse_men_før_etter_uke_7() {
+    public void adopsjon_far_søker_foreldrepenger_etter_omsorgsovertakelse_men_før_uke_7_skal_innvilges() {
         LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
+        var oppgittPeriode = oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1));
+        var periodeMedAvklartMorsAktivitet = new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(),
+                I_AKTIVITET);
+        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(periodeMedAvklartMorsAktivitet);
+        var søknad = new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+                .leggTilOppgittPeriode(oppgittPeriode)
+                .medDokumentasjon(dokumentasjon);
         var grunnlag = grunnlagAdopsjon.medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false).medSamtykke(true))
                 .medBehandling(farBehandling())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
-                        .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
+                .medSøknad(søknad)
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
                 .build();
 
         List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
-                omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FORELDREPENGER, null,
-                Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+        verifiserPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1),
+                Perioderesultattype.INNVILGET, FORELDREPENGER);
     }
 
     @Test
@@ -439,7 +448,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
                         //Mottatt mer enn 3 mnd etter start
                         .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, omsorgsovertakelseDato,
                                 omsorgsovertakelseDato.plusWeeks(1).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT,
-                                omsorgsovertakelseDato.plusMonths(4))))
+                                omsorgsovertakelseDato.plusMonths(4), null)))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(omsorgsovertakelseDato))
                 .build();
 

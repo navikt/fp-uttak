@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnP
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
@@ -75,6 +76,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public List<PeriodeMedInnleggelse> getPerioderMedInnleggelse() {
         return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedInnleggelse();
+    }
+
+    @Override
+    public List<PeriodeMedAvklartMorsAktivitet> getPerioderMedAvklartMorsAktivitet() {
+        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedAvklartMorsAktivitet();
     }
 
     @Override
