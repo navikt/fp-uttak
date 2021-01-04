@@ -32,21 +32,31 @@ class ManglendeSøktePerioderTjeneste {
     }
 
     static List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        List<OppgittPeriode> perioderIUkerForbeholdtMor = finnManglendeSøktIUkerForbeholdtMor(grunnlag, konfigurasjon);
-        List<OppgittPeriode> perioderTilFarMedEneomsorg = finnManglendeSøktePerioderTilFarMedAleneomsorg(grunnlag);
-        List<OppgittPeriode> manglendeSøktePerioder = finnPerioderISøktePerioderEtterUkerForbeholdtMorOgFastsattePerioderTilAnnenPart(
-                grunnlag, perioderIUkerForbeholdtMor);
-        manglendeSøktePerioder.addAll(perioderTilFarMedEneomsorg);
-        manglendeSøktePerioder.addAll(finnPerioderVedAdopsjon(grunnlag));
+        List<OppgittPeriode> manglendePerioderIUkerForbeholdtMor = finnManglendeSøktIUkerForbeholdtMor(grunnlag, konfigurasjon);
+        List<OppgittPeriode> manglendePerioderIUkerFarMedAleneomsorg = finnManglendeSøktePerioderTilFarMedAleneomsorg(grunnlag);
+        List<OppgittPeriode> manglendePerioder = new ArrayList<>();
+        manglendePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
+        manglendePerioder.addAll(manglendePerioderIUkerForbeholdtMor);
 
-        List<OppgittPeriode> samlet = new ArrayList<>(perioderIUkerForbeholdtMor);
-        for (OppgittPeriode msp : manglendeSøktePerioder) {
+        List<OppgittPeriode> manglendeSøktePerioder = finnManglendeMellomliggendePerioder(
+                grunnlag, manglendePerioder);
+        manglendeSøktePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
+        manglendeSøktePerioder.addAll(finnPerioderVedAdopsjon(grunnlag));
+        manglendeSøktePerioder.addAll(manglendePerioderIUkerForbeholdtMor);
+
+        var trimmedePerioder = trimPerioder(grunnlag, manglendeSøktePerioder);
+        List<OppgittPeriode> samlet = new ArrayList<>();
+        for (OppgittPeriode msp : trimmedePerioder) {
             if (!contains(samlet, msp.getFom(), msp.getTom())) {
                 samlet.add(msp);
             }
         }
 
-        return samlet.stream()
+        return samlet;
+    }
+
+    private static List<OppgittPeriode> trimPerioder(RegelGrunnlag grunnlag, List<OppgittPeriode> manglendeSøktePerioder) {
+        return manglendeSøktePerioder.stream()
                 .map(ManglendeSøktePerioderTjeneste::fjernHelgFraBegynnelseOgSlutt)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -232,24 +242,24 @@ class ManglendeSøktePerioderTjeneste {
         return farSøkerFødselEllerTermin(grunnlag) && bareFarRett(grunnlag);
     }
 
-    private static List<OppgittPeriode> finnPerioderISøktePerioderEtterUkerForbeholdtMorOgFastsattePerioderTilAnnenPart(RegelGrunnlag grunnlag,
-                                                                                                                        List<OppgittPeriode> perioderIUkerForbeholdtMor) {
+    private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(RegelGrunnlag grunnlag,
+                                                                            List<OppgittPeriode> ekskludertePerioder) {
         List<LukketPeriode> allePerioder = slåSammenUttakForBeggeParter(grunnlag);
         //legge inn ikke søkte perioder til uker som er Forbeholdt til Mor etter fødsel
-        allePerioder.addAll(perioderIUkerForbeholdtMor);
-        return finnPerioderIPerioderEtterUkerForbeholdtMorEtterFødsel(allePerioder).stream()
+        allePerioder.addAll(ekskludertePerioder);
+        return finnManglendeMellomliggendePerioder(allePerioder).stream()
                 .map(ManglendeSøktePerioderTjeneste::fjernHelgFraBegynnelseOgSlutt)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private static List<OppgittPeriode> finnPerioderIPerioderEtterUkerForbeholdtMorEtterFødsel(List<LukketPeriode> perioder) {
+    private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder) {
         List<LukketPeriode> sortertePerioder = perioder.stream()
                 .sorted(Comparator.comparing(LukketPeriode::getFom))
                 .collect(Collectors.toList());
 
-        List<OppgittPeriode> manglendeSøktePerioder = new ArrayList<>();
+        List<OppgittPeriode> mellomliggendePerioder = new ArrayList<>();
         LocalDate mspFom = null;
         for (LukketPeriode lukketPeriode : sortertePerioder) {
             if (mspFom == null) {
@@ -257,14 +267,14 @@ class ManglendeSøktePerioderTjeneste {
             } else if (mspFom.isBefore(lukketPeriode.getFom())) {
                 LocalDate mspTom = lukketPeriode.getFom().minusDays(1);
                 if (Virkedager.beregnAntallVirkedager(mspFom, mspTom) > 0) {
-                    manglendeSøktePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom));
+                    mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom));
                 }
             }
             if (!lukketPeriode.getTom().isBefore(mspFom)) {
                 mspFom = lukketPeriode.getTom().plusDays(1);
             }
         }
-        return manglendeSøktePerioder;
+        return mellomliggendePerioder;
     }
 
     private static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
