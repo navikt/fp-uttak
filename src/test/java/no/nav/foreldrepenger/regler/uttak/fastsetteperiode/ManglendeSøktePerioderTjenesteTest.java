@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
@@ -96,6 +96,25 @@ public class ManglendeSøktePerioderTjenesteTest {
         assertThat(msp.get(0).getFom()).isEqualTo(adopsjonsDato);
         assertThat(msp.get(0).getTom()).isEqualTo(førsteUttakSøktFom.minusDays(1));
         assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    public void farMedAleneomsorgMedInnvilgetAnnetPartPerioder() {
+        // Gjelder der far først har søkt om aleneomsorg.
+        var morTom = LocalDate.of(2020, 12, 3);
+        var farFom = morTom.plusDays(10);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .medDatoer(new Datoer.Builder().medFødsel(LocalDate.of(2020, 11, 5)))
+                .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
+                        AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2020, 11, 5), morTom).build()))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(false))
+                .medRettOgOmsorg(
+                        new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true).medAleneomsorg(true).medSamtykke(false))
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, farFom, farFom.plusDays(10))))
+                .build();
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        assertThat(msp).hasSize(1);
     }
 
     private RegelGrunnlag.Builder grunnlagMedKontoer() {
