@@ -264,9 +264,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigGrunnForTidligOppstart() {
         return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID,
                 "Foreligger et gyldig grunn for hele perioden for tidlig oppstart?")
-                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmAktivitetskravErOppfylt() : Manuellbehandling.opprett(
-                                "UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkOmAktivitetskravErOppfylt())
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
@@ -286,9 +284,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkFarUtenAleneomsorgHarDisponibleDager() {
         return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
                 SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmAktivitetskravErOppfylt() : Manuellbehandling.opprett(
-                                "UT1216", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmAktivitetskravErOppfylt())
                 .ellers(Manuellbehandling.opprett("UT1203", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 }
