@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -42,15 +41,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     public static final String ID = "FP_VK 18";
     private Konfigurasjon konfigurasjon;
     private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
-    private FeatureToggles featureToggles;
 
     public UtsettelseDelregel() {
         // For regeldokumentasjon
     }
 
-    public UtsettelseDelregel(Konfigurasjon konfigurasjon, FeatureToggles featureToggles) {
+    public UtsettelseDelregel(Konfigurasjon konfigurasjon) {
         this.konfigurasjon = konfigurasjon;
-        this.featureToggles = featureToggles;
     }
 
     @Override

@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -40,7 +39,6 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private static final String FØDSEL = "Er det fødsel?";
 
     private Konfigurasjon konfigurasjon;
-    private FeatureToggles featureToggles;
 
     private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
@@ -48,9 +46,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
         // For dokumentasjonsgenerering
     }
 
-    ForeldrepengerDelregel(Konfigurasjon konfigurasjon, FeatureToggles featureToggles) {
+    ForeldrepengerDelregel(Konfigurasjon konfigurasjon) {
         this.konfigurasjon = konfigurasjon;
-        this.featureToggles = featureToggles;
     }
 
     @Override

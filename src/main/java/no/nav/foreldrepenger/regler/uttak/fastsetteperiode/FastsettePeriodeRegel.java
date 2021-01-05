@@ -60,7 +60,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
     private Konfigurasjon konfigurasjon;
-    private FeatureToggles featureToggles;
+    private FeatureToggles featureToggles; //NOSONAR
 
     public FastsettePeriodeRegel(Konfigurasjon konfigurasjon, FeatureToggles featureToggles) {
         this.konfigurasjon = konfigurasjon;
@@ -232,7 +232,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
                 .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
                         Manuellbehandling.opprett("UT1151", IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL,
                                 Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
-                .ellers(new UtsettelseDelregel(konfigurasjon, featureToggles).getSpecification());
+                .ellers(new UtsettelseDelregel(konfigurasjon).getSpecification());
 
         return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, "Er det utsettelse?")
                 .hvis(new SjekkOmPeriodeErUtsettelse(), sjekkOmUtsettelseFørFamiliehendelse)
@@ -328,14 +328,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFellesperiode() {
         return rs.hvisRegel(SjekkOmPeriodeErFellesperiode.ID, "Er det søkt om uttak av fellesperiode?")
-                .hvis(new SjekkOmPeriodeErFellesperiode(), new FellesperiodeDelregel(konfigurasjon, featureToggles).getSpecification())
+                .hvis(new SjekkOmPeriodeErFellesperiode(), new FellesperiodeDelregel(konfigurasjon).getSpecification())
                 .ellers(sjekkOmPeriodeErForeldrepengerFørFødsel());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForeldrepengerFørFødsel() {
         return rs.hvisRegel(SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
                 .hvis(new SjekkOmPeriodeErForeldrepengerFørFødsel(), sjekkOmFPFFGjelderFødsel())
-                .ellers(new ForeldrepengerDelregel(konfigurasjon, featureToggles).getSpecification());
+                .ellers(new ForeldrepengerDelregel(konfigurasjon).getSpecification());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFPFFGjelderFødsel() {
