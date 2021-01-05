@@ -74,9 +74,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID,
                 SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitet : Manuellbehandling.opprett("UT1106",
-                                null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1108", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE, false, false));
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmFeriePåBevegeligHelligdag = rs.hvisRegel(SjekkOmFeriePåBevegeligHelligdag.ID,
@@ -131,9 +129,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID,
                 SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitet : Manuellbehandling.opprett("UT1112",
-                                null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1114", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID, false, false));
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID,
@@ -199,9 +195,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID,
                 SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitet : Manuellbehandling.opprett("UT1121",
-                                null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1116", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false));
 
         return rs.hvisRegel(SjekkOmSykdomSkade.ID, "Er søker vurdert til ute av stand til å ta seg av barnet i perioden?")
@@ -218,9 +212,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID,
                 SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitet : Manuellbehandling.opprett("UT1123",
-                                null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1118", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false));
 
         return rs.hvisRegel(SjekkOmSøkerInnlagt.ID, "Var søker innlagt på helseinstitusjon i perioden?")
@@ -237,9 +229,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID,
                 SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(),
-                        featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitet : Manuellbehandling.opprett("UT1123",
-                                null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false))
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1120", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false));
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmFørTermin = rs.hvisRegel(SjekkOmPeriodeErFørTermin.ID,

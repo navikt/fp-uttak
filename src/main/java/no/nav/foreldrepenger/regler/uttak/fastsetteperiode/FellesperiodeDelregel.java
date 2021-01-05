@@ -217,8 +217,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, SjekkOmPeriodenGjelderFlerbarnsdager.BESKRIVELSE)
                 .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(),
                         Oppfylt.opprett("UT1270", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
-                .ellers(featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitetIGradertPeriodeUtenFlerbarnsdager() : Manuellbehandling
-                        .opprett("UT1233", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
+                .ellers(sjekkOmMorErIAktivitetIGradertPeriodeUtenFlerbarnsdager());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitetIGradertPeriodeUtenFlerbarnsdager() {
@@ -239,8 +238,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
                 SjekkOmPeriodenGjelderFlerbarnsdager.ID, SjekkOmPeriodenGjelderFlerbarnsdager.BESKRIVELSE)
                 .hvis(new SjekkOmPeriodenGjelderFlerbarnsdager(),
                         Oppfylt.opprett("UT1271", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true))
-                .ellers(featureToggles.automatisertAktivitetskrav() ? sjekkOmMorErIAktivitetIPerioden : Manuellbehandling.opprett(
-                        "UT1259", null, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
+                .ellers(sjekkOmMorErIAktivitetIPerioden);
 
 
         Specification<FastsettePeriodeGrunnlag> omGradertPeriodeNode = rs.hvisRegel(SjekkOmGradertPeriode.ID,
