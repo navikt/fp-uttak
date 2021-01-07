@@ -129,8 +129,10 @@ class ManglendeSøktePerioderTjeneste {
     }
 
     private static Optional<LocalDate> førsteUttaksdatoAnnenpart(RegelGrunnlag grunnlag) {
-        return grunnlag.getAnnenPart() == null ? Optional.empty() : Optional.of(
-                førsteFom(grunnlag.getAnnenPart().getUttaksperioder()));
+        if (grunnlag.getAnnenPart() == null || grunnlag.getAnnenPart().getUttaksperioder().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(førsteFom(grunnlag.getAnnenPart().getUttaksperioder()));
     }
 
     private static LocalDate førsteUttaksdatoSøknad(RegelGrunnlag grunnlag) {

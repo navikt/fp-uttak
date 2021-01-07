@@ -541,6 +541,28 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
+    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjonDerAnnenpartIkkeHarUttaksperioder() {
+        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+
+        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+                .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse.plusWeeks(1), familiehendelse.plusWeeks(3))))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
+                .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(familiehendelse))
+                .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
+                //Annenpart finnes, men har fått avslag på alle sine perioder
+                .medAnnenPart(new AnnenPart.Builder())
+                .build();
+
+        var msp = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
+        assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(1).minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isNull();
+    }
+
+    @Test
     public void skalIkkeLageManglendeSøktUke7VedAdopsjonTilFørsteUttaksdagNårBareFarHarRett() {
         LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
 
