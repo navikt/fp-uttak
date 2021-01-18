@@ -5,7 +5,7 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkOmSamtidigUttak.ID)
+@RuleDocumentation(SjekkOmKontoErOpprettet.ID)
 public class SjekkOmKontoErOpprettet extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 17.1.1";
