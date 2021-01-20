@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
@@ -98,7 +97,7 @@ public class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegel
         var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true))
+                .medRettOgOmsorg(bareFarRett())
                 .medSøknad(søknad)
                 .medInngangsvilkår(oppfyltAlleVilkår())
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -125,7 +124,7 @@ public class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegel
         var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true))
+                .medRettOgOmsorg(bareFarRett())
                 .medSøknad(søknad)
                 .medInngangsvilkår(oppfyltAlleVilkår())
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))

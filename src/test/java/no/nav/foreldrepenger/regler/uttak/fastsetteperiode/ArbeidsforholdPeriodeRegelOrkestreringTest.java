@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
@@ -183,7 +182,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
         var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode).medDokumentasjon(dokumentasjon);
         grunnlag.medArbeid(arbeid)
                 .medSøknad(søknad)
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(false).medFarHarRett(true).medSamtykke(true))
+                .medRettOgOmsorg(bareFarRett())
                 .medBehandling(farBehandling())
                 .medDatoer(new Datoer.Builder().medFødsel(fødsel));
 

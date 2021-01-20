@@ -224,7 +224,7 @@ public class FastsettePerioderRegelOrkestrering {
                                                         Konfigurasjon konfig,
                                                         SaldoUtregning saldoUtregning,
                                                         FastsettePerioderRegelresultat regelresultat) {
-        if (aktuellPeriode.isUtsettelse() || erFPFF(aktuellPeriode)) {
+        if (erFPFF(aktuellPeriode)) {
             return Optional.empty();
         }
         var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig);

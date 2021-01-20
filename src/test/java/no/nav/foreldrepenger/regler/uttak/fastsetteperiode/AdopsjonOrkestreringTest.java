@@ -364,7 +364,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
         RegelGrunnlag grunnlag = grunnlagAdopsjon.medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false).medSamtykke(true))
+                .medRettOgOmsorg(bareFarRett())
                 .medBehandling(farBehandling())
                 .medSøknad(søknad(Søknadstype.ADOPSJON,
                         oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato.minusWeeks(1), omsorgsovertakelseDato.minusDays(1))))
@@ -388,7 +388,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false).medSamtykke(true))
+                .medRettOgOmsorg(bareFarRett())
                 .medBehandling(farBehandling())
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato,
@@ -421,7 +421,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var grunnlag = grunnlagAdopsjon.medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false).medSamtykke(true))
+                .medRettOgOmsorg(bareFarRett())
                 .medBehandling(farBehandling())
                 .medSøknad(søknad)
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
