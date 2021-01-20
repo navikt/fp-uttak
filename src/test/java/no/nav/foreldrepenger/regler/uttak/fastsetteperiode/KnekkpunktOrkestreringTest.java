@@ -189,8 +189,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(200));
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
-                .medRettOgOmsorg(
-                        new RettOgOmsorg.Builder().medSamtykke(true).medFarHarRett(true).medMorHarRett(false).medAleneomsorg(false))
+                .medRettOgOmsorg(bareFarRett())
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER, LocalDate.of(2019, 3, 20),
                                 LocalDate.of(2019, 12, 24))))

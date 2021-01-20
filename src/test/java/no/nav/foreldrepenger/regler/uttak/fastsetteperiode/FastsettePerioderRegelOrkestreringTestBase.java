@@ -174,6 +174,10 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
         return new RettOgOmsorg.Builder().medSamtykke(true).medMorHarRett(true).medFarHarRett(true);
     }
 
+    RettOgOmsorg.Builder bareFarRett() {
+        return new RettOgOmsorg.Builder().medSamtykke(true).medMorHarRett(false).medFarHarRett(true);
+    }
+
     OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
         return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak, null, null);
     }

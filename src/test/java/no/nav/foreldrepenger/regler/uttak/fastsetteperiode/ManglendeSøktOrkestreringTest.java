@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.*;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -74,8 +73,8 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
                 //manglende søkt blir opprettet før foreldrepenger-perioder
                 oppgittPeriode)
                 .medDokumentasjon(dokumentasjon);
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medRettOgOmsorg(
-                new RettOgOmsorg.Builder().medMorHarRett(false).medFarHarRett(true))
+        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
+                .medRettOgOmsorg(bareFarRett())
                 .medSøknad(søknad)
                 .medKontoer(kontoer(konto(Stønadskontotype.FORELDREPENGER, 1000)))
                 .build();

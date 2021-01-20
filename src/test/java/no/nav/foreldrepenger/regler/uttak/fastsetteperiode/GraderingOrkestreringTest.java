@@ -118,7 +118,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
                 .medKontoer(kontoer)
                 .medBehandling(farBehandling())
                 .medDatoer(new Datoer.Builder().medFødsel(LocalDate.of(2019, 1, 23)))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(false).medFarHarRett(true).medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(false).medAleneomsorg(true))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(søknadsperiode1)
                         .leggTilOppgittPeriode(søknadsperiode2))
@@ -311,7 +311,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(søknadsperiode.getFom()))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(søknadsperiode.getFom()))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medAleneomsorg(true))
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medAleneomsorg(true))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON).leggTilOppgittPeriode(søknadsperiode))
                 .build();
 
