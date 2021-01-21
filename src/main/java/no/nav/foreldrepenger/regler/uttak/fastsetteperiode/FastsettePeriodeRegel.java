@@ -269,8 +269,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmSøktOverføringAvKvoteNode = rs.hvisRegel(SjekkOmSøktOmOverføringAvKvote.ID,
                 "Er det søkt om overføring av kvote")
-                .hvis(new SjekkOmSøktOmOverføringAvKvote(),
-                        Manuellbehandling.opprett("UT1161", null, Manuellbehandlingårsak.VURDER_OVERFØRING, true, false))
+                .hvis(new SjekkOmSøktOmOverføringAvKvote(), sjekkOmPeriodeUavklart)
                 .ellers(IkkeOppfylt.opprett("UT1160", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false));
 
         Specification<FastsettePeriodeGrunnlag> sjekkOmTomForAlleSineKontoerNode = rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID,

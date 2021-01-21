@@ -733,35 +733,6 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_gå_til_manuell_behandling_når_søker_er_tom_for_sine_konto_men_søkt_om_overføring() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 15)).leggTilKonto(konto(MØDREKVOTE, 15));
-        grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .medKontoer(kontoer)
-                .medDatoer(datoer(fødselsdato))
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
-                        OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1),
-                                PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
-                        .leggTilOppgittPeriode(
-                                oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1)))
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1)))));
-
-        List<FastsettePeriodeResultat> resultat = fastsettPerioder(grunnlag);
-
-        var uttakPeriode = resultat.get(1).getUttakPeriode(); // henter ut den siste perioden, som skal gå til manuell behandling
-        assertThat(uttakPeriode.getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(uttakPeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_OVERFØRING);
-        assertThat(uttakPeriode.getPeriodeResultatÅrsak()).isNull();
-        assertThat(uttakPeriode.getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(10));
-        assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.ZERO);
-    }
-
-    @Test
     public void oppholdsperiode_skal_knekke_og_bevare_årsaken() {
         LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))

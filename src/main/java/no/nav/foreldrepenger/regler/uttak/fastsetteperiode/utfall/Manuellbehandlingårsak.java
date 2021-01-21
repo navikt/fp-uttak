@@ -11,7 +11,6 @@ public enum Manuellbehandlingårsak {
     AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT(5004, "Aktivitetskravet må sjekkes manuelt"),
     PERIODE_UAVKLART(5012, "Periode uavklart av saksbehandler"),
     VURDER_SAMTIDIG_UTTAK(5014, "Vurder samtidig uttak"),
-    VURDER_OVERFØRING(5016, "Vurder søknad om overføring av kvote"),
     STEBARNSADOPSJON(5019, "Stebarnsadopsjon - sjekk uttak i forhold til aktivitetskravet"),
     OPPHOLD_STØRRE_ENN_TILGJENGELIGE_DAGER(5024, "Opphold større enn tilgjengelige dager"),
     IKKE_HELTIDSARBEID(5025, "Utsettelse ugyldig da søker ikke er i heltidsarbeid"),
@@ -19,8 +18,8 @@ public enum Manuellbehandlingårsak {
     MOR_UFØR(5027, "Mor er ufør"),
     ;
 
-    private int id;
-    private String beskrivelse;
+    private final int id;
+    private final String beskrivelse;
 
     Manuellbehandlingårsak(int id, String beskrivelse) {
         this.id = id;
