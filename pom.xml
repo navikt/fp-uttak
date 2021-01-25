@@ -53,7 +53,7 @@
         <fpsak.nare.version>2.1.0-20200121220149-fc67304</fpsak.nare.version>
 
         <jupiter.version>5.7.0</jupiter.version>
-        <assertj.version>3.18.1</assertj.version>
+        <assertj.version>3.19.0</assertj.version>
     </properties>
 
 
