@@ -16,20 +16,21 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
 
 public class SøknadsfristRegelOrkestrering {
 
-    private JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
+    private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
     public SøknadsfristResultat vurderSøknadsfrist(SøknadsfristGrunnlag grunnlag) {
-        SøknadsfristRegel søknadsfristRegel = new SøknadsfristRegel();
-        Evaluation evaluation = søknadsfristRegel.evaluer(grunnlag);
+        var søknadsfristRegel = new SøknadsfristRegel();
+        var evaluation = søknadsfristRegel.evaluer(grunnlag);
 
-        String grunnlagJson = toJson(grunnlag);
-        String evaluationJson = EvaluationSerializer.asJson(evaluation);
-        SøknadsfristResultat.Builder regelResultatBuilder = new SøknadsfristResultat.Builder(evaluationJson,
-                grunnlagJson).medTidligsteLovligeUttak(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(grunnlag.getSøknadMottattDato()));
+        var grunnlagJson = toJson(grunnlag);
+        var evaluationJson = EvaluationSerializer.asJson(evaluation);
+        var tidligsteLovligeUttak = SøknadsfristUtil.finnFørsteLoveligeUttaksdag(grunnlag.getSøknadMottattDato());
+        var regelResultatBuilder = new SøknadsfristResultat.Builder(evaluationJson, grunnlagJson)
+                .medTidligsteLovligeUttak(tidligsteLovligeUttak);
 
-        Regelresultat regelresultat = new Regelresultat(evaluation);
+        var regelresultat = new Regelresultat(evaluation);
         if (!regelresultat.oppfylt()) {
-            Optional<String> årsakskode = finnÅrsakskode(evaluation);
+            var årsakskode = finnÅrsakskode(evaluation);
             årsakskode.ifPresent(regelResultatBuilder::medSøknadsfristIkkeOppfylt);
         } else {
             regelResultatBuilder.medSøknadsfristOppfylt();
@@ -46,8 +47,8 @@ public class SøknadsfristRegelOrkestrering {
     }
 
     private Optional<String> finnÅrsakskode(Evaluation evaluation) {
-        EvaluationSummary summary = new EvaluationSummary(evaluation);
-        for (Evaluation e : summary.leafEvaluations(Resultat.IKKE_VURDERT)) {
+        var summary = new EvaluationSummary(evaluation);
+        for (var e : summary.leafEvaluations(Resultat.IKKE_VURDERT)) {
             if (e.getOutcome() != null) {
                 return Optional.of(e.getOutcome().getReasonCode());
             }

@@ -78,6 +78,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
+        return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodeErUtsettelse(), sjekkPeriodeInnenforMaksgrense())
+                .ellers(sjekkOmPeriodenErFørGyldigDato());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenErFørGyldigDato() {
         return rs.hvisRegel(SjekkOmPeriodenErFørGyldigDato.ID, "Er uttaksperiode før \"gyldig dato\"?")
                 .hvis(new SjekkOmPeriodenErFørGyldigDato(), sjekkOmManglendePeriode())
                 .ellers(sjekkPeriodeInnenforMaksgrense());
@@ -234,7 +240,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
                                 Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
                 .ellers(new UtsettelseDelregel(konfigurasjon).getSpecification());
 
-        return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, "Er det utsettelse?")
+        return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
                 .hvis(new SjekkOmPeriodeErUtsettelse(), sjekkOmUtsettelseFørFamiliehendelse)
                 .ellers(sjekkOmManglendeSøktPeriode());
     }
