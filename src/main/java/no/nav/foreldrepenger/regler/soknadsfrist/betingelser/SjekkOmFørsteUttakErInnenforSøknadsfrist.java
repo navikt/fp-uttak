@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.soknadsfrist.betingelser;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -23,8 +21,12 @@ public class SjekkOmFørsteUttakErInnenforSøknadsfrist extends LeafSpecificatio
 
     @Override
     public Evaluation evaluate(SøknadsfristGrunnlag søknadsfristGrunnlag) {
-        LocalDate førsteLovligeUttaksdato = SøknadsfristUtil.finnFørsteLoveligeUttaksdag(søknadsfristGrunnlag.getSøknadMottattDato());
-        LocalDate førsteUttaksdato = søknadsfristGrunnlag.getFørsteUttaksdato();
+        var førsteLovligeUttaksdato = SøknadsfristUtil.finnFørsteLoveligeUttaksdag(søknadsfristGrunnlag.getSøknadMottattDato());
+        var førsteUttaksdato = søknadsfristGrunnlag.getFørsteUttaksdato();
+        //Skjer ved søknad bare om utsettelse
+        if (førsteUttaksdato == null) {
+            return ja();
+        }
 
         if (førsteUttaksdato.isBefore(førsteLovligeUttaksdato)) {
             return nei();

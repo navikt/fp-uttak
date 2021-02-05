@@ -9,6 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmPeriodeErUtsettelse.ID)
 public class SjekkOmPeriodeErUtsettelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "FP_VK 18";
+    public static final String BESKRIVELSE = "Er det utsettelse?";
 
     public SjekkOmPeriodeErUtsettelse() {
         super(ID);

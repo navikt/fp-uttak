@@ -38,7 +38,6 @@ public class SøknadsfristGrunnlag {
 
         public SøknadsfristGrunnlag build() {
             Objects.requireNonNull(kladd.søknadMottattDato);
-            Objects.requireNonNull(kladd.førsteUttaksdato);
             return kladd;
         }
     }
