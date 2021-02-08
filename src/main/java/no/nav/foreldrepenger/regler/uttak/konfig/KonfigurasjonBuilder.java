@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class KonfigurasjonBuilder {
 
-    private Map<Parametertype, Collection<Parameter>> parameterMap;
+    private final Map<Parametertype, Collection<Parameter>> parameterMap;
 
     private KonfigurasjonBuilder() {
         this.parameterMap = new EnumMap<>(Parametertype.class);

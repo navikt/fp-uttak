@@ -66,7 +66,7 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         private UtfallType hovedUtfall;
         private RuleReasonRef ruleReasonRef;
         private String id;
-        private List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere = new ArrayList<>();
+        private final List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere = new ArrayList<>();
 
         public Builder ikkeOppfylt(IkkeOppfyltÅrsak årsak) {
             this.hovedUtfall = UtfallType.AVSLÅTT;

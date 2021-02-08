@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public final class Arbeid {
 
-    private Set<Arbeidsforhold> arbeidsforholdListe = new HashSet<>();
+    private final Set<Arbeidsforhold> arbeidsforholdListe = new HashSet<>();
 
     private Arbeid() {
     }

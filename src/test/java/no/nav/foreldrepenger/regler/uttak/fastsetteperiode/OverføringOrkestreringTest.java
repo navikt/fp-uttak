@@ -12,7 +12,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +26,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
@@ -107,7 +107,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
 
     private AnnenpartUttakPeriode innvilget(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype) {
         var aktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), stønadskontotype,
-                new Trekkdager(Virkedager.beregnAntallVirkedager(new Periode(fom, tom))), BigDecimal.valueOf(100));
+                new Trekkdager(Virkedager.beregnAntallVirkedager(new Periode(fom, tom))), Utbetalingsgrad.FULL);
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom).medInnvilget(true).medUttakPeriodeAktivitet(aktivitet).build();
     }
 }

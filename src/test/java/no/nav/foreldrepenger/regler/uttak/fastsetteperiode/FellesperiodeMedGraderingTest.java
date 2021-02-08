@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class FellesperiodeMedGraderingTest {
 
-    private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+    private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {

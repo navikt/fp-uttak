@@ -10,7 +10,7 @@ public class SamtidigUttaksprosent implements Comparable<SamtidigUttaksprosent> 
     public static final SamtidigUttaksprosent TEN = new SamtidigUttaksprosent(10);
     public static final SamtidigUttaksprosent HUNDRED = new SamtidigUttaksprosent(100);
 
-    private BigDecimal verdi;
+    private final BigDecimal verdi;
 
     public SamtidigUttaksprosent(BigDecimal verdi) {
         this.verdi = scale(verdi);

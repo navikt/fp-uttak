@@ -18,7 +18,7 @@ import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
 public class StønadskontoRegelOrkestrering {
 
-    private JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
+    private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
     public StønadskontoResultat beregnKontoer(BeregnKontoerGrunnlag grunnlag) {
         return beregnKontoer(grunnlag, StandardKonfigurasjon.KONFIGURASJON);

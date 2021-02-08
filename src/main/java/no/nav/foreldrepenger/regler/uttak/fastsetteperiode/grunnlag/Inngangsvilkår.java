@@ -29,7 +29,7 @@ public final class Inngangsvilkår {
 
     public static class Builder {
 
-        private Inngangsvilkår kladd = new Inngangsvilkår();
+        private final Inngangsvilkår kladd = new Inngangsvilkår();
 
         public Builder medAdopsjonOppfylt(boolean oppfylt) {
             kladd.adopsjonOppfylt = oppfylt;

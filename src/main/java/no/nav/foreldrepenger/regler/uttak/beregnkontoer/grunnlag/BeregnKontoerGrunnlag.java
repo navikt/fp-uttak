@@ -72,7 +72,7 @@ public class BeregnKontoerGrunnlag {
     }
 
     public static class Builder {
-        private BeregnKontoerGrunnlag kladd = new BeregnKontoerGrunnlag();
+        private final BeregnKontoerGrunnlag kladd = new BeregnKontoerGrunnlag();
 
         public Builder medAntallBarn(int antallBarn) {
             kladd.antallBarn = antallBarn;

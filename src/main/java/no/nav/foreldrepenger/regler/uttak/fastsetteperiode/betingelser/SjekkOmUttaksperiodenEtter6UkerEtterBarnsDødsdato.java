@@ -15,7 +15,7 @@ public class SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato extends LeafSpec
 
     public static final String ID = "FP_VK 17.1.1.1";
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
     public SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato(Konfigurasjon konfigurasjon) {
         super(ID);

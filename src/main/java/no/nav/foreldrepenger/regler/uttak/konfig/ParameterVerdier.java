@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class ParameterVerdier<T> {
-    private Parametertype parametertype;
-    private Collection<Parameter> verdier;
+    private final Parametertype parametertype;
+    private final Collection<Parameter> verdier;
 
     public ParameterVerdier(Parametertype parametertype, Collection<Parameter> verdier) {
         this.parametertype = parametertype;

@@ -6,7 +6,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 public class KanIkkeVurdere<T> extends LeafSpecification<T> {
 
-    private RuleReasonRef ruleReasonRef;
+    private final RuleReasonRef ruleReasonRef;
 
     public KanIkkeVurdere(RuleReasonRef ruleReasonRef) {
         super(ruleReasonRef.getReasonCode());

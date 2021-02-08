@@ -55,7 +55,7 @@ public class FastsattUttakPeriode {
 
     public static class Builder {
 
-        private FastsattUttakPeriode kladd;
+        private final FastsattUttakPeriode kladd;
 
         public Builder() {
             kladd = new FastsattUttakPeriode();

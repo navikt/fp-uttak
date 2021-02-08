@@ -12,7 +12,7 @@ public class SjekkOmPeriodenStarterFørUke7 extends LeafSpecification<FastsetteP
 
     public static final String ID = "FP_VK 13.2";
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
     public SjekkOmPeriodenStarterFørUke7(Konfigurasjon konfigurasjon) {
         super(ID);

@@ -6,7 +6,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 public class IkkeOppfylt<T> extends LeafSpecification<T> {
 
-    private RuleReasonRef ruleReasonRef;
+    private final RuleReasonRef ruleReasonRef;
 
     public IkkeOppfylt(RuleReasonRef ruleReasonRef) {
         super(ruleReasonRef.getReasonCode());

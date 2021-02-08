@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +9,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public class AnnenpartUttakPeriode extends LukketPeriode {
 
-    private Set<AnnenpartUttakPeriodeAktivitet> aktiviteter = new HashSet<>();
+    private final Set<AnnenpartUttakPeriodeAktivitet> aktiviteter = new HashSet<>();
 
     private boolean samtidigUttak;
     private boolean flerbarnsdager;
@@ -70,11 +69,11 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     }
 
     public boolean harUtbetaling() {
-        return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0);
+        return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().harUtbetaling());
     }
 
     public static class Builder {
-        private AnnenpartUttakPeriode kladd;
+        private final AnnenpartUttakPeriode kladd;
 
         public static Builder utsettelse(LocalDate fom, LocalDate tom) {
             return new Builder(fom, tom).medUtsettelse(true);

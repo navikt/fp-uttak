@@ -9,7 +9,7 @@ public class Konfigurasjon {
 
     public static final LocalDate PREMATURUKER_REGELENDRING_START_DATO = LocalDate.of(2019, 7, 1);
 
-    private Map<Parametertype, ParameterVerdier> parameterMap = new EnumMap<>(Parametertype.class);
+    private final Map<Parametertype, ParameterVerdier> parameterMap = new EnumMap<>(Parametertype.class);
 
     Konfigurasjon(Map<Parametertype, Collection<Parameter>> parameterMap) {
         for (Map.Entry<Parametertype, Collection<Parameter>> entry : parameterMap.entrySet()) {

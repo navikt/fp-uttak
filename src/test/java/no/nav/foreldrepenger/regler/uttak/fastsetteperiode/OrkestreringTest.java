@@ -42,7 +42,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -508,17 +507,17 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
                 fødselsdato.minusDays(1))
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(aktivitetIdentifikator, Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
-                                new Trekkdager(15), BigDecimal.TEN))
+                                new Trekkdager(15), Utbetalingsgrad.TEN))
                 .build();
         AnnenpartUttakPeriode annenPartPeriode2 = AnnenpartUttakPeriode.Builder.uttak(fødselsdato,
                 fødselsdato.plusWeeks(6).minusDays(1))
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(aktivitetIdentifikator, Stønadskontotype.MØDREKVOTE, new Trekkdager(30),
-                                BigDecimal.TEN))
+                                Utbetalingsgrad.TEN))
                 .build();
         AnnenpartUttakPeriode annenPartPeriode3 = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(6), tom)
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(aktivitetIdentifikator, Stønadskontotype.FELLESPERIODE,
-                        new Trekkdager(Virkedager.beregnAntallVirkedager(fødselsdato.plusWeeks(6), tom)), BigDecimal.TEN))
+                        new Trekkdager(Virkedager.beregnAntallVirkedager(fødselsdato.plusWeeks(6), tom)), Utbetalingsgrad.TEN))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 50))
                 .leggTilKonto(konto(MØDREKVOTE, 50))
@@ -796,17 +795,17 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
                         AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 6))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(),
-                                        Stønadskontotype.MØDREKVOTE, new Trekkdager(3), BigDecimal.valueOf(100)))
+                                        Stønadskontotype.MØDREKVOTE, new Trekkdager(3), Utbetalingsgrad.FULL))
                                 .build())
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 3, 7), LocalDate.of(2019, 3, 31))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(),
-                                        Stønadskontotype.MØDREKVOTE, new Trekkdager(17), BigDecimal.valueOf(100)))
+                                        Stønadskontotype.MØDREKVOTE, new Trekkdager(17), Utbetalingsgrad.FULL))
                                 .build())
                         .leggTilUttaksperiode(AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 3))
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(),
-                                        Stønadskontotype.MØDREKVOTE, new Trekkdager(25), BigDecimal.valueOf(100)))
+                                        Stønadskontotype.MØDREKVOTE, new Trekkdager(25), Utbetalingsgrad.FULL))
                                 .build()))
                 .medSøknad(
                         søknad(Søknadstype.FØDSEL, oppgittPeriode(MØDREKVOTE, LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 15))));

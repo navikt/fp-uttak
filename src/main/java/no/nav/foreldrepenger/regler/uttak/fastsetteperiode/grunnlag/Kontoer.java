@@ -19,7 +19,7 @@ public final class Kontoer {
 
     public static class Builder {
 
-        private Kontoer kladd = new Kontoer();
+        private final Kontoer kladd = new Kontoer();
 
         public Builder leggTilKonto(Konto.Builder konto) {
             kladd.kontoList.add(konto.build());

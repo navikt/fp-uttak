@@ -7,11 +7,10 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
@@ -27,11 +26,13 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
+;
+
 public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private static final AktivitetIdentifikator MOR_ARBEIDSFORHOLD = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 
-    private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+    private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
     public void skal_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_innvilget_samme_tidsrom() {
@@ -98,7 +99,7 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                                    boolean innvilget) {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype,
-                        new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), BigDecimal.TEN))
+                        new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), Utbetalingsgrad.TEN))
                 .medInnvilget(innvilget)
                 .build();
     }

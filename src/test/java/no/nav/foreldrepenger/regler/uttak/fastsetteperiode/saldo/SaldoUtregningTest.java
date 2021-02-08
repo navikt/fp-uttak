@@ -22,10 +22,10 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class SaldoUtregningTest {
 
-    private static AktivitetIdentifikator AKTIVITET1_SØKER = AktivitetIdentifikator.forArbeid("111", "222");
-    private static AktivitetIdentifikator AKTIVITET2_SØKER = AktivitetIdentifikator.forArbeid("333", "444");
-    private static AktivitetIdentifikator AKTIVITET1_ANNENPART = AktivitetIdentifikator.forArbeid("555", "666");
-    private static AktivitetIdentifikator AKTIVITET2_ANNENPART = AktivitetIdentifikator.forArbeid("777", "888");
+    private static final AktivitetIdentifikator AKTIVITET1_SØKER = AktivitetIdentifikator.forArbeid("111", "222");
+    private static final AktivitetIdentifikator AKTIVITET2_SØKER = AktivitetIdentifikator.forArbeid("333", "444");
+    private static final AktivitetIdentifikator AKTIVITET1_ANNENPART = AktivitetIdentifikator.forArbeid("555", "666");
+    private static final AktivitetIdentifikator AKTIVITET2_ANNENPART = AktivitetIdentifikator.forArbeid("777", "888");
     private final LocalDate enTirsdag = LocalDate.of(2019, 2, 19);
 
 

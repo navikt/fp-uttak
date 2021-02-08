@@ -16,7 +16,7 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
     public static final String ID = "FP_VK 10.3";
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
     public SjekkOmPeriodenInnenforUkerReservertMor(Konfigurasjon konfigurasjon) {
         super(SjekkOmPeriodenInnenforUkerReservertMor.class.getSimpleName());

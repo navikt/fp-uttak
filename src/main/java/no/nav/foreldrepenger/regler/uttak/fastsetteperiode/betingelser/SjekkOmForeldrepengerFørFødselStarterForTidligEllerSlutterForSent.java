@@ -13,7 +13,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent.ID)
 public class SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
     public static final String ID = "FP_VK 27.3.2";
 
     public SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent(Konfigurasjon konfigurasjon) {

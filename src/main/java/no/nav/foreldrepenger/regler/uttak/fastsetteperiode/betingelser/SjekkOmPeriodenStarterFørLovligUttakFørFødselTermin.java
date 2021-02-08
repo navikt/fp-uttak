@@ -17,7 +17,7 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
 
     public static final String ID = "FP_VK 27.2";
     public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før fødsel/termin";
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
 
     public SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(Konfigurasjon konfigurasjon) {

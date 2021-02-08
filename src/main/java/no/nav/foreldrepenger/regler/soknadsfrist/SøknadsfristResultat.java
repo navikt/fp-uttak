@@ -10,7 +10,6 @@ public class SøknadsfristResultat {
     private final String evalueringResultat;
     private final String innsendtGrunnlag;
 
-
     SøknadsfristResultat(String evalueringResultat, String innsendtGrunnlag) {
         this.evalueringResultat = evalueringResultat;
         this.innsendtGrunnlag = innsendtGrunnlag;
@@ -37,7 +36,7 @@ public class SøknadsfristResultat {
     }
 
     static class Builder {
-        SøknadsfristResultat kladd;
+        private final SøknadsfristResultat kladd;
 
         Builder(String evalueringResultat, String innsendtGrunnlag) {
             kladd = new SøknadsfristResultat(evalueringResultat, innsendtGrunnlag);

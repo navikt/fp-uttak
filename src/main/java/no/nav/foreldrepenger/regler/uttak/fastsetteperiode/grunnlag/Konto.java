@@ -19,7 +19,7 @@ public final class Konto {
     }
 
     public static class Builder {
-        private Konto kladd = new Konto();
+        private final Konto kladd = new Konto();
 
         public Builder medType(Stønadskontotype type) {
             kladd.type = type;

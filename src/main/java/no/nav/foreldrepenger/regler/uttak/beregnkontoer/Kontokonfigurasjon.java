@@ -5,8 +5,8 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 class Kontokonfigurasjon {
 
-    private Stønadskontotype stønadskontotype;
-    private Parametertype parametertype;
+    private final Stønadskontotype stønadskontotype;
+    private final Parametertype parametertype;
 
     Kontokonfigurasjon(Stønadskontotype stønadskontotype, Parametertype parametertype) {
         this.stønadskontotype = stønadskontotype;

@@ -40,7 +40,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Konfigurasjon konfigurasjon;
 
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     public ForeldrepengerDelregel() {
         // For dokumentasjonsgenerering

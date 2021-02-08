@@ -43,8 +43,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class FellesperiodeDelregelTest {
 
-    private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-    private LocalDate førsteLovligeUttaksdag = fødselsdato.minusMonths(3);
+    private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
     public void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_ved_3_uker_før_fødsel_blir_innvilget() {

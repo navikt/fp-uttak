@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;;
 public class LukketPeriodeTest {
 
     @Test
-    public void test_av_() throws Exception {
+    public void omsluttet() {
         LocalDate dag1 = LocalDate.of(2018, 1, 1);
         LocalDate dag2 = dag1.plusDays(1);
         LocalDate dag3 = dag1.plusDays(2);

@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
-    private FastsettePerioderRegelOrkestrering regelOrkestrering = new FastsettePerioderRegelOrkestrering();
+    private final FastsettePerioderRegelOrkestrering regelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
     //TODO PFP-8743 endre til å sjekke på GyldigGrunnPerioder og ikke om periodeverudering er OK
 

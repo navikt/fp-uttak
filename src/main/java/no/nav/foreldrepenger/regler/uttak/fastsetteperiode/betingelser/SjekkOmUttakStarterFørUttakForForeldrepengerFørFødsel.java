@@ -15,7 +15,7 @@ public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel extends Le
 
     public static final String ID = "FP_VK 27.5";
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
     public SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(Konfigurasjon konfigurasjon) {
         super(ID);

@@ -40,14 +40,14 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     public static final String ID = "FP_VK 18";
     private Konfigurasjon konfigurasjon;
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
-
-    public UtsettelseDelregel() {
-        // For regeldokumentasjon
-    }
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     public UtsettelseDelregel(Konfigurasjon konfigurasjon) {
         this.konfigurasjon = konfigurasjon;
+    }
+
+    public UtsettelseDelregel() {
+        // For regeldokumentasjon
     }
 
     @Override

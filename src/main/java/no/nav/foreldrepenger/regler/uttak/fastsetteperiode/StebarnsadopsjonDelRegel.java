@@ -19,7 +19,7 @@ public class StebarnsadopsjonDelRegel implements RuleService<FastsettePeriodeGru
 
     public static final String ID = "FP_VK 16.1";
 
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     public StebarnsadopsjonDelRegel() {
         // For regeldokumentasjon

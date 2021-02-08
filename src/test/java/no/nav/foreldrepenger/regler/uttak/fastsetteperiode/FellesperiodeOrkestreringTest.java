@@ -35,7 +35,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
-    private LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+    private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
     public void fellesperiode_mor_etter_uke_7_etter_fødsel_uten_nok_dager_blir_innvilget_med_knekk_og_avslått_periode_på_resten() {

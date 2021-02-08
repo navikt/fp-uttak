@@ -8,11 +8,11 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class StønadskontoResultat {
 
-    private Map<Stønadskontotype, Integer> stønadskontoer;
-    private String evalueringResultat;
-    private String innsendtGrunnlag;
-    private Integer antallFlerbarnsdager;
-    private Integer antallPrematurDager;
+    private final Map<Stønadskontotype, Integer> stønadskontoer;
+    private final String evalueringResultat;
+    private final String innsendtGrunnlag;
+    private final Integer antallFlerbarnsdager;
+    private final Integer antallPrematurDager;
 
     public StønadskontoResultat(Map<Stønadskontotype, Integer> stønadskontoer,
                                 Integer antallFlerbarnsdager,

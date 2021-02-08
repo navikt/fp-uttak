@@ -1,21 +1,20 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class AnnenpartUttakPeriodeAktivitet {
-    private Stønadskontotype stønadskontotype;
-    private AktivitetIdentifikator aktivitetIdentifikator;
-    private Trekkdager trekkdager;
-    private BigDecimal utbetalingsgrad;
+    private final Stønadskontotype stønadskontotype;
+    private final AktivitetIdentifikator aktivitetIdentifikator;
+    private final Trekkdager trekkdager;
+    private final Utbetalingsgrad utbetalingsgrad;
 
     public AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator aktivitetIdentifikator,
                                           Stønadskontotype stønadskontotype,
                                           Trekkdager trekkdager,
-                                          BigDecimal utbetalingsgrad) {
+                                          Utbetalingsgrad utbetalingsgrad) {
         Objects.requireNonNull(aktivitetIdentifikator);
         Objects.requireNonNull(utbetalingsgrad);
         this.aktivitetIdentifikator = aktivitetIdentifikator;
@@ -36,7 +35,7 @@ public class AnnenpartUttakPeriodeAktivitet {
         return stønadskontotype;
     }
 
-    public BigDecimal getUtbetalingsgrad() {
+    public Utbetalingsgrad getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
 

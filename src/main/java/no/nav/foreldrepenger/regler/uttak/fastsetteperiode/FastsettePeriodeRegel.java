@@ -58,7 +58,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static final String GJELDER_FPFF_PERIODE_FØDSEL = "Gjelder foreldrepenger før fødsel periode fødsel?";
     private static final String ER_PERIODEN_FPFF = "Er det søkt om uttak av foreldrepenger før fødsel?";
 
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
     private Konfigurasjon konfigurasjon;
     private FeatureToggles featureToggles; //NOSONAR
 

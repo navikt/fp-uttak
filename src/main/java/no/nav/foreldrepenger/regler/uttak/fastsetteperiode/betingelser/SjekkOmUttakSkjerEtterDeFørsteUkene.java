@@ -16,7 +16,7 @@ public class SjekkOmUttakSkjerEtterDeFørsteUkene extends LeafSpecification<Fast
     public static final String ID = "FP_VK 19.2";
     public static final String BESKRIVELSE = "Er perioden etter uke 6 etter termin/fødsel?";
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
     public SjekkOmUttakSkjerEtterDeFørsteUkene(Konfigurasjon konfigurasjon) {
         super(ID);

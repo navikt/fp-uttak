@@ -79,8 +79,8 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT(4089,"Aktivitetskravet kvalifiseringsprogrammet ikke dokumentert");
 
 
-    private int id;
-    private String beskrivelse;
+    private final int id;
+    private final String beskrivelse;
 
     IkkeOppfyltÅrsak(int id, String beskrivelse) {
         this.id = id;

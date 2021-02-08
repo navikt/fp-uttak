@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
 class Parameter extends Periode {
 
-    private Object verdi;
+    private final Object verdi;
 
     Parameter(LocalDate fom, LocalDate tom, Object verdi) {
         super(fom, tom);

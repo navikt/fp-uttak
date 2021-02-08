@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -278,14 +278,14 @@ public class ManglendeSøktePerioderTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10),
-                                BigDecimal.TEN))
+                                Utbetalingsgrad.TEN))
                 .build();
         var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(6),
                 familiehendelse.plusWeeks(7))
                 .medInnvilget(false)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO,
-                                BigDecimal.ZERO))
+                                Utbetalingsgrad.ZERO))
                 .build();
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
@@ -430,21 +430,21 @@ public class ManglendeSøktePerioderTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10),
-                                BigDecimal.TEN))
+                                Utbetalingsgrad.TEN))
                 .build();
         var annenpartInnvilgetUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(familiehendelse.plusWeeks(6),
                 familiehendelse.plusWeeks(7).minusDays(1))
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO,
-                                BigDecimal.ZERO))
+                                Utbetalingsgrad.ZERO))
                 .build();
         var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(7),
                 familiehendelse.plusWeeks(7).plusDays(2))
                 .medInnvilget(false)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO,
-                                BigDecimal.ZERO))
+                                Utbetalingsgrad.ZERO))
                 .build();
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
@@ -471,14 +471,14 @@ public class ManglendeSøktePerioderTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10),
-                                BigDecimal.TEN))
+                                Utbetalingsgrad.TEN))
                 .build();
         var annenpartInnvilgetUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(familiehendelse.plusWeeks(6),
                 familiehendelse.plusWeeks(7).minusDays(1))
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO,
-                                BigDecimal.ZERO))
+                                Utbetalingsgrad.ZERO))
                 .build();
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
@@ -504,7 +504,7 @@ public class ManglendeSøktePerioderTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10),
-                                BigDecimal.TEN))
+                                Utbetalingsgrad.TEN))
                 .build();
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))

@@ -24,7 +24,7 @@ public class SøknadsfristGrunnlag {
     }
 
     public static class Builder {
-        SøknadsfristGrunnlag kladd = new SøknadsfristGrunnlag();
+        private final SøknadsfristGrunnlag kladd = new SøknadsfristGrunnlag();
 
         public Builder medSøknadMottattDato(LocalDate søknadMottattDato) {
             kladd.søknadMottattDato = søknadMottattDato;

@@ -111,15 +111,15 @@ public final class SaldoUtregningTjeneste {
     private static List<AnnenpartUttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(AnnenpartUttakPeriode periode,
                                                                                            LocalDate nyFom,
                                                                                            LocalDate nyTom) {
-        int virkedagerInnenfor = Virkedager.beregnAntallVirkedager(nyFom, nyTom);
-        int virkedagerHele = periode.virkedager();
+        var virkedagerInnenfor = Virkedager.beregnAntallVirkedager(nyFom, nyTom);
+        var virkedagerHele = periode.virkedager();
 
         List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktivitetMedNyttTrekkDager = new ArrayList<>();
 
-        for (AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
-            Trekkdager opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
+        for (var annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
+            var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
             if (virkedagerInnenfor > 0 && opprinneligeTrekkdager.merEnn0()) {
-                BigDecimal vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
+                var vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
                         .multiply(BigDecimal.valueOf(virkedagerInnenfor))
                         .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
                 annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(

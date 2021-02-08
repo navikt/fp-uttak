@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 public class StønadskontoRegelOrkestreringTest {
 
     private static final LocalDate DATO = LocalDate.now();
-    private StønadskontoRegelOrkestrering stønadskontoRegelOrkestrering = new StønadskontoRegelOrkestrering();
+    private final StønadskontoRegelOrkestrering stønadskontoRegelOrkestrering = new StønadskontoRegelOrkestrering();
 
 
     /*

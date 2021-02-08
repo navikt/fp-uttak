@@ -52,7 +52,7 @@ import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
-    protected FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
+    protected final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
     private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))

@@ -12,13 +12,13 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public class SaldoUtregningGrunnlag {
-    private List<FastsattUttakPeriode> søkersFastsattePerioder;
-    private LocalDate utregningsdato;
-    private boolean tapendeBehandling;
-    private List<AnnenpartUttakPeriode> annenpartsPerioder;
-    private List<LukketPeriode> søktePerioder;
-    private Kontoer kontoer;
-    private Set<AktivitetIdentifikator> aktiviteter;
+    private final List<FastsattUttakPeriode> søkersFastsattePerioder;
+    private final LocalDate utregningsdato;
+    private final boolean tapendeBehandling;
+    private final List<AnnenpartUttakPeriode> annenpartsPerioder;
+    private final List<LukketPeriode> søktePerioder;
+    private final Kontoer kontoer;
+    private final Set<AktivitetIdentifikator> aktiviteter;
 
     private SaldoUtregningGrunnlag(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                    LocalDate utregningsdato,

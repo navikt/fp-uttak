@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dokumentasjon {
-    private List<GyldigGrunnPeriode> gyldigGrunnPerioder = new ArrayList<>();
-    private List<PeriodeUtenOmsorg> perioderUtenOmsorg = new ArrayList<>();
-    private List<PeriodeMedSykdomEllerSkade> perioderMedSykdomEllerSkade = new ArrayList<>();
-    private List<PeriodeMedInnleggelse> perioderMedInnleggelse = new ArrayList<>();
-    private List<PeriodeMedBarnInnlagt> perioderMedBarnInnlagt = new ArrayList<>();
-    private List<PeriodeMedHV> perioderMedHv = new ArrayList<>();
-    private List<PeriodeMedTiltakIRegiAvNav> perioderMedTiltakViaNav = new ArrayList<>();
-    private List<PeriodeMedAvklartMorsAktivitet> perioderMedAvklartMorsAktivitet = new ArrayList<>();
+    private final List<GyldigGrunnPeriode> gyldigGrunnPerioder = new ArrayList<>();
+    private final List<PeriodeUtenOmsorg> perioderUtenOmsorg = new ArrayList<>();
+    private final List<PeriodeMedSykdomEllerSkade> perioderMedSykdomEllerSkade = new ArrayList<>();
+    private final List<PeriodeMedInnleggelse> perioderMedInnleggelse = new ArrayList<>();
+    private final List<PeriodeMedBarnInnlagt> perioderMedBarnInnlagt = new ArrayList<>();
+    private final List<PeriodeMedHV> perioderMedHv = new ArrayList<>();
+    private final List<PeriodeMedTiltakIRegiAvNav> perioderMedTiltakViaNav = new ArrayList<>();
+    private final List<PeriodeMedAvklartMorsAktivitet> perioderMedAvklartMorsAktivitet = new ArrayList<>();
 
     private Dokumentasjon() {
 

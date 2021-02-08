@@ -58,7 +58,7 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private static final String OVERFØRING_ALENEOMSORG_ELLER_IKKE_RETT = "Er det søkt om overføring som følge av aleneomsorg eller annen forelder ikke har rett?";
 
     private Konfigurasjon konfigurasjon;
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     public FedrekvoteDelregel() {
         // For dokumentasjonsgenerering

@@ -5,8 +5,8 @@ public enum GraderingIkkeInnvilgetÅrsak {
     AVSLAG_PGA_SEN_SØKNAD(4501, "For sen søknad"),
     AVSLAG_PGA_FOR_TIDLIG_GRADERING(4504, "Gradering før uke 7");
 
-    private int id;
-    private String beskrivelse;
+    private final int id;
+    private final String beskrivelse;
 
     GraderingIkkeInnvilgetÅrsak(int id, String beskrivelse) {
         this.id = id;

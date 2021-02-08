@@ -3,13 +3,12 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
@@ -28,9 +27,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+
+;
 
 public class SaldoUtregningTjenesteTest {
 
@@ -42,7 +44,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(50), BigDecimal.valueOf(100)))
+                                new Trekkdager(50), Utbetalingsgrad.FULL))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FELLESPERIODE, fomAnnenpart.plusWeeks(5), tomAnnenpart);
@@ -74,7 +76,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(50), BigDecimal.valueOf(100)))
+                                new Trekkdager(50), Utbetalingsgrad.HUNDRED))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FEDREKVOTE, fomAnnenpartOpphold, tomAnnenpartOpphold);
@@ -103,7 +105,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(50), BigDecimal.valueOf(100)))
+                                new Trekkdager(50), Utbetalingsgrad.HUNDRED))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FEDREKVOTE, fomAnnenpartOpphold, tomAnnenpartOpphold.minusWeeks(5));
@@ -132,7 +134,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(50), BigDecimal.valueOf(100)))
+                                new Trekkdager(50), Utbetalingsgrad.HUNDRED))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FEDREKVOTE, fomAnnenpartOpphold.plusWeeks(5), tomAnnenpartOpphold);
@@ -161,7 +163,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(50), BigDecimal.valueOf(100)))
+                                new Trekkdager(50), Utbetalingsgrad.HUNDRED))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FEDREKVOTE, fomAnnenpartOpphold.plusWeeks(2),
@@ -198,7 +200,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(50), BigDecimal.valueOf(100)))
+                                new Trekkdager(50), Utbetalingsgrad.HUNDRED))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FELLESPERIODE, fomAnnenpart.plusDays(1), tomAnnenpart.plusWeeks(10));
@@ -222,7 +224,7 @@ public class SaldoUtregningTjenesteTest {
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.FELLESPERIODE,
-                                new Trekkdager(70), BigDecimal.valueOf(100)))
+                                new Trekkdager(70), Utbetalingsgrad.HUNDRED))
                 .build();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100));
         var aktuellPeriode = oppgittPeriode(Stønadskontotype.FELLESPERIODE, fomAnnenpart.plusWeeks(5).minusDays(1), tomAnnenpart);
@@ -276,7 +278,7 @@ public class SaldoUtregningTjenesteTest {
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 11), LocalDate.of(2019, 12, 17))
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forSelvstendigNæringsdrivende(),
-                        Stønadskontotype.MØDREKVOTE, new Trekkdager(100), BigDecimal.valueOf(100)))
+                        Stønadskontotype.MØDREKVOTE, new Trekkdager(100), Utbetalingsgrad.HUNDRED))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
                 List.of(annenpartsPeriode), kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold));
@@ -347,15 +349,15 @@ public class SaldoUtregningTjenesteTest {
                 .medFlerbarnsdager(true)
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, Stønadskontotype.FELLESPERIODE,
-                        new Trekkdager(1), BigDecimal.valueOf(100)))
+                        new Trekkdager(1), Utbetalingsgrad.HUNDRED))
                 .build();
         var annenpartPeriode2 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 19), LocalDate.of(2019, 12, 19))
                 .medFlerbarnsdager(false)
                 .medInnvilget(true)
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, Stønadskontotype.FELLESPERIODE,
-                        new Trekkdager(1), BigDecimal.valueOf(100)))
+                        new Trekkdager(1), Utbetalingsgrad.HUNDRED))
                 .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold2, Stønadskontotype.FELLESPERIODE,
-                        new Trekkdager(1), BigDecimal.valueOf(100)))
+                        new Trekkdager(1), Utbetalingsgrad.HUNDRED))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode), false,
                 List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build());

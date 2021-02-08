@@ -20,8 +20,8 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(OpprettKontoer.ID)
 class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
 
-    private Konfigurasjon konfigurasjon;
-    private Kontokonfigurasjon[] kontokonfigurasjoner;
+    private final Konfigurasjon konfigurasjon;
+    private final Kontokonfigurasjon[] kontokonfigurasjoner;
     public static final String ID = "Opprett kontoer";
 
     OpprettKontoer(Konfigurasjon konfigurasjon, Kontokonfigurasjon... kontokonfigurasjontoner) {

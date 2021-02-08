@@ -623,7 +623,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE,
-                                                Trekkdager.ZERO, BigDecimal.ZERO))
+                                                Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .medSøknad(new Søknad.Builder().medType(FØDSEL)
                         .leggTilOppgittPeriode(
@@ -657,7 +657,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE,
-                                                Trekkdager.ZERO, BigDecimal.ZERO))
+                                                Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .medSøknad(new Søknad.Builder().medType(FØDSEL)
                         .leggTilOppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE)));
@@ -683,7 +683,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE,
-                                                Trekkdager.ZERO, BigDecimal.ZERO))
+                                                Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .medSøknad(new Søknad.Builder().medType(FØDSEL)
                         .leggTilOppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE))
@@ -710,7 +710,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE,
-                                                Trekkdager.ZERO, BigDecimal.ZERO))
+                                                Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .medSøknad(new Søknad.Builder().medType(FØDSEL)
                         .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, NAV_TILTAK)));
@@ -736,7 +736,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 .medInnvilget(true)
                                 .medUttakPeriodeAktivitet(
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE,
-                                                Trekkdager.ZERO, BigDecimal.ZERO))
+                                                Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .medSøknad(new Søknad.Builder().medType(FØDSEL)
                         .leggTilOppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, NAV_TILTAK))

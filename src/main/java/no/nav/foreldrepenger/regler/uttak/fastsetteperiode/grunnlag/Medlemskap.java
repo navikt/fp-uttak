@@ -16,7 +16,7 @@ public class Medlemskap {
 
     public static class Builder {
 
-        private Medlemskap kladd = new Medlemskap();
+        private final Medlemskap kladd = new Medlemskap();
 
         public Builder medOpphørsdato(LocalDate opphørsdato) {
             kladd.opphørsdato = opphørsdato;

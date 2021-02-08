@@ -14,7 +14,7 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
 
     public static final String ID = "FP_VK 30.5.1";
 
-    private Konfigurasjon konfigurasjon;
+    private final Konfigurasjon konfigurasjon;
 
     public SjekkOmPeriodeUavklartUtenomNoenTyper(Konfigurasjon konfigurasjon) {
         super(ID);

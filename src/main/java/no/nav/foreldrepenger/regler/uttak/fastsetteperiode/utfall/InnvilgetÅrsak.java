@@ -28,8 +28,8 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT(2013, "Utsettelse pga innleggelse barn"),
     UTSETTELSE_GYLDIG_PGA_SYKDOM(2014, "Utsettelse pga sykdom");
 
-    private int id;
-    private String beskrivelse;
+    private final int id;
+    private final String beskrivelse;
 
     InnvilgetÅrsak(int id, String beskrivelse) {
         this.id = id;

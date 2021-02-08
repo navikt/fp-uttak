@@ -11,7 +11,7 @@ public class Utbetalingsgrad implements Comparable<Utbetalingsgrad> {
     public static final Utbetalingsgrad HUNDRED = new Utbetalingsgrad(100);
     public static final Utbetalingsgrad FULL = HUNDRED;
 
-    private BigDecimal verdi;
+    private final BigDecimal verdi;
 
     public Utbetalingsgrad(BigDecimal verdi) {
         this.verdi = scale(verdi);
@@ -23,6 +23,10 @@ public class Utbetalingsgrad implements Comparable<Utbetalingsgrad> {
 
     public Utbetalingsgrad(int verdi) {
         this(BigDecimal.valueOf(verdi));
+    }
+
+    public boolean harUtbetaling() {
+        return compareTo(Utbetalingsgrad.ZERO) > 0;
     }
 
     public BigDecimal decimalValue() {

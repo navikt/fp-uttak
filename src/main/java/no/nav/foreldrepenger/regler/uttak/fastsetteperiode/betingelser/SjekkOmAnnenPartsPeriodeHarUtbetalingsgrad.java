@@ -1,11 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.math.BigDecimal;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -22,8 +18,8 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (AnnenpartUttakPeriode periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (var periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
             if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(oppgittPeriode, periodeAnnenPart)
                     && finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(periodeAnnenPart)) {
                 return ja();
@@ -33,8 +29,8 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
     }
 
     private boolean finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(AnnenpartUttakPeriode periodeAnnenPart) {
-        for (AnnenpartUttakPeriodeAktivitet periodeAktivitet : periodeAnnenPart.getAktiviteter()) {
-            if (periodeAktivitet.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0) {
+        for (var periodeAktivitet : periodeAnnenPart.getAktiviteter()) {
+            if (periodeAktivitet.getUtbetalingsgrad().harUtbetaling()) {
                 return true;
             }
         }

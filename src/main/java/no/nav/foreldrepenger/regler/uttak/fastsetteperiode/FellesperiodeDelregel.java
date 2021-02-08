@@ -48,7 +48,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     public static final String ID = "FP_VK 19";
 
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     private Konfigurasjon konfigurasjon;
 

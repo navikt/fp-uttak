@@ -57,14 +57,14 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     private static final String RESERVERT_MØDREKVOTE = "Er perioden innenfor dager reservert for mødrekvote etter fødsel?";
 
     private Konfigurasjon konfigurasjon;
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
-
-    public MødrekvoteDelregel() {
-        // For regeldokumentasjon
-    }
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     public MødrekvoteDelregel(Konfigurasjon konfigurasjon) {
         this.konfigurasjon = konfigurasjon;
+    }
+
+    public MødrekvoteDelregel() {
+        // For regeldokumentasjon
     }
 
     @Override

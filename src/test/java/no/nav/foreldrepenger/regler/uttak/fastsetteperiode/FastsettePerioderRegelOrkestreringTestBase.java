@@ -39,7 +39,7 @@ import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 public abstract class FastsettePerioderRegelOrkestreringTestBase {
     static final AktivitetIdentifikator ARBEIDSFORHOLD = ARBEIDSFORHOLD_1;
 
-    private FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
+    private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
     protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
@@ -55,7 +55,7 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
     }
 
-    protected RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
+    protected final RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
             .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))
             .medBehandling(morBehandling())
             .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))

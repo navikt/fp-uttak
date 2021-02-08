@@ -22,7 +22,7 @@ import no.nav.fpsak.nare.specification.Specification;
 
 public class OverføringDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
-    private Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
     public OverføringDelregel() {
         // For regeldokumentasjon
