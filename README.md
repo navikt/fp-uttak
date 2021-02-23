@@ -23,4 +23,3 @@ Bygges med maven, java 11
 
 Interne henvendelser kan sendes via Slack i kanalen #teamforeldrepenger
 https://confluence.adeo.no/display/TVF/1.+Samleside+for+oppdaterte+regelflyter
-
