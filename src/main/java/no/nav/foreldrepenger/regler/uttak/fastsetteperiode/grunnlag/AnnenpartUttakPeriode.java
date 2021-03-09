@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -17,6 +18,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     private boolean oppholdsperiode;
     private OppholdÅrsak oppholdÅrsak;
     private boolean innvilget;
+    private LocalDate mottattDato;
 
     private AnnenpartUttakPeriode(LocalDate fom, LocalDate tom) {
         super(fom, tom);
@@ -53,7 +55,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     public AnnenpartUttakPeriode kopiMedNyPeriode(LocalDate fom,
                                                   LocalDate tom,
                                                   List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
-        return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+        return Builder.uttak(fom, tom)
                 .medSamtidigUttak(this.samtidigUttak)
                 .medFlerbarnsdager(this.flerbarnsdager)
                 .medUtsettelse(this.innvilget)
@@ -61,6 +63,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                 .medInnvilget(this.innvilget)
                 .medOppholdsårsak(this.oppholdÅrsak)
                 .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
+                .medMottattDato(this.mottattDato)
                 .build();
     }
 
@@ -70,6 +73,10 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
     public boolean harUtbetaling() {
         return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().harUtbetaling());
+    }
+
+    public Optional<LocalDate> getMottattDato() {
+        return Optional.ofNullable(mottattDato);
     }
 
     public static class Builder {
@@ -129,6 +136,11 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
         public Builder medFlerbarnsdager(boolean flerbarnsdager) {
             kladd.flerbarnsdager = flerbarnsdager;
+            return this;
+        }
+
+        public Builder medMottattDato(LocalDate mottattDato) {
+            kladd.mottattDato = mottattDato;
             return this;
         }
 
