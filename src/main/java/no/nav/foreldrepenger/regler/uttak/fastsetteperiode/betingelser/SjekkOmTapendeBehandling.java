@@ -25,6 +25,7 @@ public class SjekkOmTapendeBehandling extends LeafSpecification<FastsettePeriode
         var gammeltResultat = gammeltResultat(grunnlag);
         var nyttResultat = nyttResultat(grunnlag);
 
+
         if (gammeltResultat != nyttResultat) {
             var aktuellPeriode = grunnlag.getAktuellPeriode();
             var annenpartMottattDato = grunnlag.getAnnenPartUttaksperioder()
