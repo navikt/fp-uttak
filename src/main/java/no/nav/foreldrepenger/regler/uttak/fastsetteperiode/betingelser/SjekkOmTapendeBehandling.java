@@ -1,16 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.time.LocalDate;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
-import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmTapendeBehandling.ID)
@@ -27,10 +22,10 @@ public class SjekkOmTapendeBehandling extends LeafSpecification<FastsettePeriode
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        var gammeltResultat = grunnlag.isTapendeBehandling() ? ja() : nei();
+        var gammeltResultat = gammeltResultat(grunnlag);
         var nyttResultat = nyttResultat(grunnlag);
 
-        if (gammeltResultat.result() != nyttResultat.result()) {
+        if (gammeltResultat != nyttResultat) {
             var aktuellPeriode = grunnlag.getAktuellPeriode();
             var annenpartMottattDato = grunnlag.getAnnenPartUttaksperioder()
                     .stream()
@@ -40,24 +35,39 @@ public class SjekkOmTapendeBehandling extends LeafSpecification<FastsettePeriode
                     .orElse(null);
             LOG.info("Endring i sjekk om hvilken forelder som taper for periode {} - {}. Gammelt resultat: {}, N"
                             + "ytt resultat: {}. Mottatt dato søker {}, annenpart {}", aktuellPeriode.getFom(), aktuellPeriode.getTom(),
-                    gammeltResultat.result(), nyttResultat.result(), aktuellPeriode.getMottattDato(), annenpartMottattDato);
+                    gammeltResultat, nyttResultat, aktuellPeriode.getMottattDato(), annenpartMottattDato);
         }
-        return gammeltResultat;
+        return grunnlag.isTapendeBehandling() ? ja() : nei();
     }
 
-    private SingleEvaluation nyttResultat(FastsettePeriodeGrunnlag grunnlag) {
+    private boolean gammeltResultat(FastsettePeriodeGrunnlag grunnlag) {
+        if (!grunnlag.isTapendeBehandling()) {
+            return false;
+        }
+        return grunnlag.getAnnenPartUttaksperioder()
+                .stream()
+                .anyMatch(aup -> grunnlag.getAktuellPeriode().erOmsluttetAv(aup) && ((aup.isInnvilget() && aup.isUtsettelse())
+                        || aup.harUtbetaling()) && !aup.isSamtidigUttak());
+    }
+
+    private boolean nyttResultat(FastsettePeriodeGrunnlag grunnlag) {
+        if (grunnlag.getAnnenPartUttaksperioder().isEmpty()) {
+            return false;
+        }
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var mottattDato = aktuellPeriode.getMottattDato();
         return mottattDato.map(md -> {
-            var overlappendeSomStjeler = grunnlag.getAnnenPartUttaksperioder()
+            var overlappende = grunnlag.getAnnenPartUttaksperioder()
                     .stream()
-                    .anyMatch(aup -> stjelerAnnenpart(aktuellPeriode, md, aup));
-
-            return overlappendeSomStjeler ? ja() : nei();
-        }).orElse(ja());
+                    .filter(aup -> aktuellPeriode.erOmsluttetAv(aup))
+                    .filter(aup -> (aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling())
+                    .filter(aup -> !aup.isSamtidigUttak())
+                    .findFirst();
+            if (overlappende.isEmpty()) {
+                return false;
+            }
+            return overlappende.get().getMottattDato().map(aupMottattDato -> aupMottattDato.isAfter(md)).orElse(false);
+        }).orElse(true);
     }
 
-    private boolean stjelerAnnenpart(OppgittPeriode aktuellPeriode, LocalDate mottattDato, AnnenpartUttakPeriode aup) {
-        return aktuellPeriode.erOmsluttetAv(aup) && aup.getMottattDato().map(md ->  md.isAfter(mottattDato)).orElse(false);
-    }
 }
