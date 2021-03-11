@@ -61,8 +61,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-;
-
 public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test

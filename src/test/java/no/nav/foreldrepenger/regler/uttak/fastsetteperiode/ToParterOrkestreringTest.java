@@ -38,8 +38,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-;
-
 public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private static final int UKER_FPFF = 3;

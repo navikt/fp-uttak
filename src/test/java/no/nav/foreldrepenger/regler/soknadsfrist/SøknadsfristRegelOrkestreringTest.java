@@ -15,8 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePerioderRegelOrkestrering;
 
-;
-
 public class SøknadsfristRegelOrkestreringTest {
 
     @Test

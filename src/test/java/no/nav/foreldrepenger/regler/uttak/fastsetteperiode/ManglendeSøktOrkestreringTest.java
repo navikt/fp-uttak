@@ -29,8 +29,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-;
-
 public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test

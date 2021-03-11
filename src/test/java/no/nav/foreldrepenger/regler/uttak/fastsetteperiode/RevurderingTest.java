@@ -33,8 +33,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-;
-
 public class RevurderingTest {
 
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
