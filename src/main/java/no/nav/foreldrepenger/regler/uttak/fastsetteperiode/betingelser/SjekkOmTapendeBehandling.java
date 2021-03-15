@@ -52,23 +52,20 @@ public class SjekkOmTapendeBehandling extends LeafSpecification<FastsettePeriode
     }
 
     private boolean nyttResultat(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.getAnnenPartUttaksperioder().isEmpty()) {
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
+        var overlappende = grunnlag.getAnnenPartUttaksperioder()
+                .stream()
+                .filter(aup -> aktuellPeriode.erOmsluttetAv(aup))
+                .filter(aup -> (aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling())
+                .filter(aup -> !aup.isSamtidigUttak())
+                .findFirst();
+        if (overlappende.isEmpty()) {
             return false;
         }
-        var aktuellPeriode = grunnlag.getAktuellPeriode();
         var mottattDato = aktuellPeriode.getMottattDato();
-        return mottattDato.map(md -> {
-            var overlappende = grunnlag.getAnnenPartUttaksperioder()
-                    .stream()
-                    .filter(aup -> aktuellPeriode.erOmsluttetAv(aup))
-                    .filter(aup -> (aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling())
-                    .filter(aup -> !aup.isSamtidigUttak())
-                    .findFirst();
-            if (overlappende.isEmpty()) {
-                return false;
-            }
-            return overlappende.get().getMottattDato().map(aupMottattDato -> aupMottattDato.isAfter(md)).orElse(false);
-        }).orElse(true);
+        return mottattDato.map(
+                md -> overlappende.get().getMottattDato().map(aupMottattDato -> aupMottattDato.isAfter(md)).orElse(false))
+                .orElse(true);
     }
 
 }
