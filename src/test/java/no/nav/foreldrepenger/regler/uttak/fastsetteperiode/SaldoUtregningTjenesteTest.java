@@ -32,10 +32,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningG
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class SaldoUtregningTjenesteTest {
+class SaldoUtregningTjenesteTest {
 
     @Test
-    public void skal_knekke_annenparts_perioder() {
+    void skal_knekke_annenparts_perioder() {
         var fomAnnenpart = LocalDate.of(2019, 12, 2);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
@@ -64,7 +64,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_ta_med_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling() {
+    void skal_ikke_ta_med_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
@@ -93,7 +93,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling_tidlig_overlapp() {
+    void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling_tidlig_overlapp() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
@@ -122,7 +122,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling_sen_overlapp() {
+    void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling_sen_overlapp() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
@@ -151,7 +151,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling_midt_overlapp() {
+    void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_tapende_behandling_midt_overlapp() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
@@ -191,7 +191,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_knekke_annenparts_perioder_overlapp_annenpart_starter_en_dag_før() {
+    void skal_knekke_annenparts_perioder_overlapp_annenpart_starter_en_dag_før() {
         var fomAnnenpart = LocalDate.of(2019, 12, 3);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
@@ -215,7 +215,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_knekke_annenparts_perioder_ved_tapende_behandling() {
+    void skal_ikke_knekke_annenparts_perioder_ved_tapende_behandling() {
         var fomAnnenpart = LocalDate.of(2019, 12, 3);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
@@ -239,7 +239,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_avrunde_før_saldo_arves_til_nytt_arbeidsforhold() {
+    void skal_ikke_avrunde_før_saldo_arves_til_nytt_arbeidsforhold() {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100));
 
         var utregningsdato = LocalDate.of(2019, 12, 5);
@@ -261,7 +261,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_dobbelt_trekke_fra_annenpart_når_arbeidsforhold_starter_ila_uttaket() {
+    void skal_ikke_dobbelt_trekke_fra_annenpart_når_arbeidsforhold_starter_ila_uttaket() {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100))
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100));
 
@@ -287,7 +287,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_arve_saldo_flere_ganger() {
+    void skal_arve_saldo_flere_ganger() {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 155));
 
         var utregningsdato = LocalDate.MAX;
@@ -331,7 +331,7 @@ public class SaldoUtregningTjenesteTest {
     }
 
     @Test
-    public void skal_regne_riktig_flerbarnsdager_hvis_annenpart_har_nyoppstartet_arbeidsforhold() {
+    void skal_regne_riktig_flerbarnsdager_hvis_annenpart_har_nyoppstartet_arbeidsforhold() {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100))
                 .leggTilKonto(konto(Stønadskontotype.FLERBARNSDAGER, 50));
 

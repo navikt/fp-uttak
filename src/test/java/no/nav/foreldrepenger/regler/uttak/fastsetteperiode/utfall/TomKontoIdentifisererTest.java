@@ -22,31 +22,31 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningT
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class TomKontoIdentifisererTest {
+class TomKontoIdentifisererTest {
 
     @Test
-    public void knekkpunkt_ved_50_prosent_arbeid_og_gradering() {
+    void knekkpunkt_ved_50_prosent_arbeid_og_gradering() {
         verifiserKnekkpunktVedGradering(100, 1, 50, 2);
     }
 
 
     @Test
-    public void knekkpunkt_ved_80_prosent_arbeid_og_gradering() {
+    void knekkpunkt_ved_80_prosent_arbeid_og_gradering() {
         verifiserKnekkpunktVedGradering(100, 1, 80, 5);
     }
 
     @Test
-    public void knekkpunkt_ved_0_prosent_arbeid_og_gradering() {
+    void knekkpunkt_ved_0_prosent_arbeid_og_gradering() {
         verifiserKnekkpunktVedGradering(100, 1, 0, 1);
     }
 
     @Test
-    public void knekkpunkt_ved_10_prosent_arbeid_og_gradering() {
+    void knekkpunkt_ved_10_prosent_arbeid_og_gradering() {
         verifiserKnekkpunktVedGradering(100, 1, 10, 2);
     }
 
     @Test
-    public void eksempel_1_fra_krav_9() {
+    void eksempel_1_fra_krav_9() {
         verifiserKnekkpunktVedGradering(17, 4, 60, 10);
     }
 

@@ -32,10 +32,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class MødrekvoteDelregelTest {
+class MødrekvoteDelregelTest {
 
     @Test
-    public void mødrekvoteperiode_med_nok_dager_på_konto() {
+    void mødrekvoteperiode_med_nok_dager_på_konto() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -47,7 +47,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void mødrekvote_slutter_på_fredag_og_første_uker_slutter_på_søndag_blir_innvilget() {
+    void mødrekvote_slutter_på_fredag_og_første_uker_slutter_på_søndag_blir_innvilget() {
         var fødselsdato = LocalDate.of(2017, 12, 31);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(2));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -58,7 +58,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void mødrekvote_de_første_6_ukene_etter_fødsel_skal_innvilges_også_når_mor_ikke_har_omsorg() {
+    void mødrekvote_de_første_6_ukene_etter_fødsel_skal_innvilges_også_når_mor_ikke_har_omsorg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -72,7 +72,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_nok_på_kvoten_men_ikke_har_omsorg() {
+    void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_nok_på_kvoten_men_ikke_har_omsorg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -92,7 +92,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_noe_men_ikke_nok_på_kvoten_og_ikke_har_omsorg() {
+    void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_noe_men_ikke_nok_på_kvoten_og_ikke_har_omsorg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 1);
@@ -106,7 +106,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1007_mor_etterTermin_innenFor6Uker_ikkeGradering_disponibleDager() {
+    void UT1007_mor_etterTermin_innenFor6Uker_ikkeGradering_disponibleDager() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
@@ -120,7 +120,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1008_mor_innenFor6UkerEtterFødsel_gradering() {
+    void UT1008_mor_innenFor6UkerEtterFødsel_gradering() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(3),
                 fødselsdato.plusWeeks(4));
@@ -137,7 +137,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1221_mor_etterTermin_etter6Uker_omsorg_disponibleDager_gradering_avklart() {
+    void UT1221_mor_etterTermin_etter6Uker_omsorg_disponibleDager_gradering_avklart() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10),
                 fødselsdato.plusWeeks(11));
@@ -152,7 +152,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1251_fødselsvilkår_ikke_oppfylt() {
+    void UT1251_fødselsvilkår_ikke_oppfylt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
@@ -172,7 +172,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1252_adopsjonsvilkår_ikke_oppfylt() {
+    void UT1252_adopsjonsvilkår_ikke_oppfylt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
@@ -192,7 +192,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1253_foreldreansvarsvilkår_ikke_oppfylt() {
+    void UT1253_foreldreansvarsvilkår_ikke_oppfylt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
@@ -213,7 +213,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1254_opptjeningsvilkår_ikke_oppfylt() {
+    void UT1254_opptjeningsvilkår_ikke_oppfylt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
@@ -236,7 +236,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void opphold_mødrekvote_annenforelder() {
+    void opphold_mødrekvote_annenforelder() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppholdsperiode = DelRegelTestUtil.oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30),
@@ -254,7 +254,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void opphold_mødrekvote_annenforelder_tom_for_konto() {
+    void opphold_mødrekvote_annenforelder_tom_for_konto() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppholdsperiode = DelRegelTestUtil.oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30),
@@ -272,7 +272,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1275_søkte_mødrekvoteperiode_men_søker_døde_i_mellomtiden() {
+    void UT1275_søkte_mødrekvoteperiode_men_søker_døde_i_mellomtiden() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -290,7 +290,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1289_søkte_mødrekvoteperiode_men_barn_døde_i_mellomtiden() {
+    void UT1289_søkte_mødrekvoteperiode_men_barn_døde_i_mellomtiden() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -307,7 +307,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_og_barn_døde_men_mindre_enn_6_uker_siden() {
+    void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_og_barn_døde_men_mindre_enn_6_uker_siden() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var barnsDødsdato = fødselsdato.plusDays(1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato, barnsDødsdato.plusWeeks(6).minusDays(2));
@@ -325,7 +325,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_barn_døde_i_mellomtiden_men_alle_barn_er_ikke_døde() {
+    void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_barn_døde_i_mellomtiden_men_alle_barn_er_ikke_døde() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
@@ -346,7 +346,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1015_far_søker_mødrekvote_men_ikke_overføring() {
+    void UT1015_far_søker_mødrekvote_men_ikke_overføring() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -368,7 +368,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1016_far_overføring_innleggelse_men_ikke_gyldig() {
+    void UT1016_far_overføring_innleggelse_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -390,7 +390,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1017_far_overføring_sykdom_skade_men_ikke_gyldig() {
+    void UT1017_far_overføring_sykdom_skade_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -412,7 +412,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1294_far_overføring_aleneomsorg_men_ikke_gyldig() {
+    void UT1294_far_overføring_aleneomsorg_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -441,7 +441,7 @@ public class MødrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1295_far_overføring_ikke_rett_men_ikke_gyldig() {
+    void UT1295_far_overføring_ikke_rett_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);

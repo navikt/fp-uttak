@@ -33,10 +33,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
-public class KnekkpunktIdentifisererTest {
+class KnekkpunktIdentifisererTest {
 
     @Test
-    public void skal_finne_knekkpunkter_for_søknad_ved_fødsel() {
+    void skal_finne_knekkpunkter_for_søknad_ved_fødsel() {
         var fødselsdato = LocalDate.of(2018, 2, 22);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
@@ -53,7 +53,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_finne_knekkpunkter_for_opphørsdato_for_medlemskap() {
+    void skal_finne_knekkpunkter_for_opphørsdato_for_medlemskap() {
         var fødselsdato = LocalDate.of(2018, 2, 22);
         var opphørsdato = fødselsdato.plusWeeks(1);
         var grunnlag = RegelGrunnlagTestBuilder.create()
@@ -68,7 +68,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_finne_knekkpunkter_ved_adopsjon() {
+    void skal_finne_knekkpunkter_ved_adopsjon() {
         var adopsjonsdato = LocalDate.of(2018, 2, 22);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))
@@ -83,7 +83,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_medslutt_av_() {
+    void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_medslutt_av_() {
         var adopsjonsdato = LocalDate.of(2018, 2, 22);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -105,7 +105,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_for_alle_perioder_som_ikke_er_sammenhengende() {
+    void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_for_alle_perioder_som_ikke_er_sammenhengende() {
         var adopsjonsdato = LocalDate.of(2018, 2, 22);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -131,7 +131,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperStart1() {
+    void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperStart1() {
         final var uttakStartdato = LocalDate.of(2018, 6, 1);
         var fødselsdato = uttakStartdato.minusMonths(1);
         var førsteLovligeSøknadsperiode = fødselsdato.minusWeeks(12);
@@ -151,7 +151,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperStart2() {
+    void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperStart2() {
         final var uttakStartdato = LocalDate.of(2018, 10, 1);
         var fødselsdato = uttakStartdato.minusWeeks(7);
         var førsteLovligeSøknadsperiode = fødselsdato.minusWeeks(12);
@@ -172,7 +172,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperMidtI() {
+    void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperMidtI() {
         final var uttakStartdato = LocalDate.of(2018, 10, 1);
         var fødselsdato = uttakStartdato.minusWeeks(7);
         var førsteLovligeSøknadsperiode = fødselsdato.minusWeeks(12);
@@ -192,7 +192,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperSluttAvPeriode() {
+    void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperSluttAvPeriode() {
         final var stønadsperiodeFom = LocalDate.of(2018, 10, 1);
         var stønadsperiodeTom = stønadsperiodeFom.plusDays(6);
         var fødselsdato = stønadsperiodeFom.minusWeeks(7);
@@ -217,7 +217,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
+    void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var gradertStønadsperiode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, mottattdato.minusMonths(1),
@@ -236,7 +236,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkPåFørstegangssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
+    void finnerKnekkPåFørstegangssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var gradertStønadsperiode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato.minusMonths(1),
@@ -254,7 +254,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterPåMottattdato() {
+    void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterPåMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var gradering = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato, mottattdato.plusWeeks(2),
@@ -271,7 +271,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisGraderingStarterEtterMottattdato() {
+    void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisGraderingStarterEtterMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
         var gradering = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato.plusWeeks(1), mottattdato.plusWeeks(2),
@@ -288,7 +288,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
+    void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
                 PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato, null);
@@ -305,7 +305,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkPåFørstegangssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
+    void finnerKnekkPåFørstegangssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
                 PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato, null);
@@ -321,7 +321,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterPåMottattdato() {
+    void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterPåMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato, mottattdato.plusWeeks(2), PeriodeVurderingType.PERIODE_OK,
                 UtsettelseÅrsak.ARBEID, mottattdato, null);
@@ -337,7 +337,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterEtterMottattdato() {
+    void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterEtterMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.plusWeeks(1), mottattdato.plusWeeks(2),
                 PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato, null);
@@ -353,7 +353,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_knekke_på_bevegelige_helligdager() {
+    void skal_knekke_på_bevegelige_helligdager() {
         var fødselsdato = LocalDate.of(2019, 5, 1);
         var tom = LocalDate.of(2019, 5, 25);
         var grunnlag = RegelGrunnlagTestBuilder.create()
@@ -369,7 +369,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_knekke_både_på_termindato_og_fødselsdato_ved_prematuruker() {
+    void skal_knekke_både_på_termindato_og_fødselsdato_ved_prematuruker() {
         var fødselsdato = LocalDate.of(2019, 7, 22);
         var termin = LocalDate.of(2019, 9, 23);
         var førsteLovligeSøknadsperiode = LocalDate.of(2017, 12, 1);
@@ -384,7 +384,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_knekke_på_startdato_hos_arbeidsforhold() {
+    void skal_knekke_på_startdato_hos_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 9, 23);
         var startdato1 = fødselsdato.plusWeeks(8);
         var startdato2 = fødselsdato.plusWeeks(10);
@@ -403,7 +403,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_ikke_knekke_på_startdato_hos_arbeidsforhold_hvis_bare_ett_arbeidsforhold() {
+    void skal_ikke_knekke_på_startdato_hos_arbeidsforhold_hvis_bare_ett_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 9, 23);
         var startdato = fødselsdato.plusWeeks(8);
         var grunnlag = RegelGrunnlagTestBuilder.create()
@@ -419,7 +419,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_knekke_på_dokument_hv() {
+    void skal_knekke_på_dokument_hv() {
         var fødselsdato = LocalDate.of(2020, 10, 1);
         var dokFom = LocalDate.of(2020, 10, 10);
         var dokTom = LocalDate.of(2020, 10, 15);
@@ -435,7 +435,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_knekke_på_tiltak_nav() {
+    void skal_knekke_på_tiltak_nav() {
         var fødselsdato = LocalDate.of(2020, 10, 1);
         var dokFom = LocalDate.of(2020, 10, 10);
         var dokTom = LocalDate.of(2020, 10, 15);
@@ -452,7 +452,7 @@ public class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    public void skal_knekke_på_første_lovlige_uttaksdag_for_hver_søknadsperiode_der_første_lovlige_uttaksdag_overlapper_med_periode() {
+    void skal_knekke_på_første_lovlige_uttaksdag_for_hver_søknadsperiode_der_første_lovlige_uttaksdag_overlapper_med_periode() {
         var fødselsdato = LocalDate.of(2020, 7, 20);
         var mottattDatoPeriode1 = LocalDate.of(2020, 11, 1);
         var mottattDatoPeriode2 = LocalDate.of(2021, 2, 1);

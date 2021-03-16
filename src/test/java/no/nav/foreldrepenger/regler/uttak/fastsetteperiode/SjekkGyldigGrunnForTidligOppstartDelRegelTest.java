@@ -28,13 +28,13 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
+class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     private final FastsettePerioderRegelOrkestrering regelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
     //TODO PFP-8743 endre til å sjekke på GyldigGrunnPerioder og ikke om periodeverudering er OK
 
     @Test
-    public void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_blir_innvilget() {
+    void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6),
                 PeriodeVurderingType.PERIODE_OK);
@@ -55,7 +55,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    public void fellesperiode_med_tidlig_oppstart_og_gyldig_grunn_hele_perioden_blir_innvilget() {
+    void fellesperiode_med_tidlig_oppstart_og_gyldig_grunn_hele_perioden_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
                 PeriodeVurderingType.PERIODE_OK);
@@ -71,7 +71,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    public void fedrekvote_med_tidlig_oppstart_uten_gyldig_grunn_deler_av_perioden_skal_behandles_manuelt() {
+    void fedrekvote_med_tidlig_oppstart_uten_gyldig_grunn_deler_av_perioden_skal_behandles_manuelt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10), PeriodeVurderingType.UAVKLART_PERIODE);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
@@ -99,7 +99,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    public void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk() {
+    void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), PeriodeVurderingType.PERIODE_OK);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
@@ -120,7 +120,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    public void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget() {
+    void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
                 PeriodeVurderingType.PERIODE_OK);
@@ -144,7 +144,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    public void fedrekvote_med_tidlig_oppstart_og_vurdert_uavklart_av_saksbehandler_går_til_manuell_behandling() {
+    void fedrekvote_med_tidlig_oppstart_og_vurdert_uavklart_av_saksbehandler_går_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
                 PeriodeVurderingType.UAVKLART_PERIODE);
@@ -165,7 +165,7 @@ public class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     }
 
     @Test
-    public void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk_som_saksbehandler_har_registrert() {
+    void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk_som_saksbehandler_har_registrert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode1 = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
                 PeriodeVurderingType.ENDRE_PERIODE);

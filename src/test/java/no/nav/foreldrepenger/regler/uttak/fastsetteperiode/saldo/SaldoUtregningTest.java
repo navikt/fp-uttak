@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class SaldoUtregningTest {
+class SaldoUtregningTest {
 
     private static final AktivitetIdentifikator AKTIVITET1_SØKER = AktivitetIdentifikator.forArbeid("111", "222");
     private static final AktivitetIdentifikator AKTIVITET2_SØKER = AktivitetIdentifikator.forArbeid("333", "444");
@@ -34,7 +34,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void ingen_max_dag_og_ingen_trekkdager_skal_alltid_gi_0_i_saldo() {
+    void ingen_max_dag_og_ingen_trekkdager_skal_alltid_gi_0_i_saldo() {
         var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -48,7 +48,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void max_dager_minus_trekkdag_skal_bli_saldo() {
+    void max_dager_minus_trekkdag_skal_bli_saldo() {
         var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -62,7 +62,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void flere_trekk_gir_riktig_saldo() {
+    void flere_trekk_gir_riktig_saldo() {
         var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -81,7 +81,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_runde_opp_hvis_ikke_brukt_mer_enn_maks() {
+    void skal_runde_opp_hvis_ikke_brukt_mer_enn_maks() {
         var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10.5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -94,7 +94,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_runde_opp_hvis_brukt_mer_enn_maks() {
+    void skal_runde_opp_hvis_brukt_mer_enn_maks() {
         var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(13.5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -107,7 +107,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void for_stort_trekk_gir_riktig_saldo() {
+    void for_stort_trekk_gir_riktig_saldo() {
         var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -121,7 +121,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void for_stort_trekk_på_flere_aktiviteter_gir_riktig_saldo() {
+    void for_stort_trekk_på_flere_aktiviteter_gir_riktig_saldo() {
         var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(20), MØDREKVOTE, AKTIVITET2_SØKER)))
@@ -137,7 +137,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void flere_trekk_på_forskjellig_aktivitet_gir_forskjellig_saldo() {
+    void flere_trekk_på_forskjellig_aktivitet_gir_forskjellig_saldo() {
         var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), MØDREKVOTE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET2_SØKER)))
@@ -153,7 +153,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void trekkdager_på_annen_part_skal_telle_med_i_saldo() {
+    void trekkdager_på_annen_part_skal_telle_med_i_saldo() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
@@ -175,7 +175,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void minste_trekkdager_på_annen_part_skal_telle_med_i_saldo() {
+    void minste_trekkdager_på_annen_part_skal_telle_med_i_saldo() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
@@ -198,7 +198,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void flere_trekk_på_annen_part_skal_telle_med_i_saldo() {
+    void flere_trekk_på_annen_part_skal_telle_med_i_saldo() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
@@ -227,7 +227,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void ikke_stjele_men_summere_begge_parter_hvis_tapende_behandling() {
+    void ikke_stjele_men_summere_begge_parter_hvis_tapende_behandling() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -247,7 +247,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void stjele_fra_annenpart_hvis_ikke_tapende_behandling_og_ikke_samtidig_uttak() {
+    void stjele_fra_annenpart_hvis_ikke_tapende_behandling_og_ikke_samtidig_uttak() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -267,7 +267,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_summere_trekkdager_for_begge_parter_hvis_overlapp_og_samtidig_uttak_og_ikke_tapende_behandling() {
+    void skal_summere_trekkdager_for_begge_parter_hvis_overlapp_og_samtidig_uttak_og_ikke_tapende_behandling() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -287,7 +287,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_trekke_virkedager_fra_oppholdsperioder() {
+    void skal_trekke_virkedager_fra_oppholdsperioder() {
         var periodeSøker1 = new FastsattUttakPeriode.Builder().medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 15))
@@ -305,7 +305,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_trekke_oppholdsperioder_for_annenpart() {
+    void skal_trekke_oppholdsperioder_for_annenpart() {
         var periodeSøker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -329,7 +329,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_stjele_fra_annenpart_hvis_søker_har_oppholdsperiode() {
+    void skal_ikke_stjele_fra_annenpart_hvis_søker_har_oppholdsperiode() {
         var oppholdsperiodeSøker = new FastsattUttakPeriode.Builder().medAktiviteter(List.of())
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medTidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
@@ -354,7 +354,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_knekke_hvis_periode_er_i_en_helg() {
+    void skal_ikke_knekke_hvis_periode_er_i_en_helg() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
@@ -376,7 +376,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void overlappende_oppholdsperioder_skal_trekke_fra_annenparts_periode_ved() {
+    void overlappende_oppholdsperioder_skal_trekke_fra_annenparts_periode_ved() {
         var periodeSøker1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -406,7 +406,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void overlapp_med_avslått_perioder_på_søker_skal_telles_dobbelt() {
+    void overlapp_med_avslått_perioder_på_søker_skal_telles_dobbelt() {
         var søkerPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.AVSLÅTT)
@@ -425,7 +425,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void hvis_søkers_innvilget_periode_overlapper_med_annenparts_oppholdsperiode_skal_det_ikke_trekkes_dobbelt() {
+    void hvis_søkers_innvilget_periode_overlapper_med_annenparts_oppholdsperiode_skal_det_ikke_trekkes_dobbelt() {
         var periodeSøker1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), MØDREKVOTE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -455,7 +455,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void hvis_alle_søkers_perioder_er_etter_annenpart_skal_det_ikke_være_nok_dager_å_frigi() {
+    void hvis_alle_søkers_perioder_er_etter_annenpart_skal_det_ikke_være_nok_dager_å_frigi() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -487,7 +487,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void hvis_ikke_alle_søkers_perioder_er_etter_annenpart_skal_det_være_nok_dager_å_frigi() {
+    void hvis_ikke_alle_søkers_perioder_er_etter_annenpart_skal_det_være_nok_dager_å_frigi() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -514,7 +514,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_ikke_nok_dager_å_frigi_selv_med_perioder_etter_søkers_siste_periode_med_trekkdager() {
+    void annenpart_har_ikke_nok_dager_å_frigi_selv_med_perioder_etter_søkers_siste_periode_med_trekkdager() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -541,7 +541,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_ikke_nok_dager_å_frigi_selv_med_perioder_etter_søkers_siste_periode_med_trekkdager_flere_arbeidsforhold_hos_annenpart() {
+    void annenpart_har_ikke_nok_dager_å_frigi_selv_med_perioder_etter_søkers_siste_periode_med_trekkdager_flere_arbeidsforhold_hos_annenpart() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -570,7 +570,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager() {
+    void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -597,7 +597,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_hvis_søkers_siste_periode_starter_samme_dag_som_annenparts_siste_periode() {
+    void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_hvis_søkers_siste_periode_starter_samme_dag_som_annenparts_siste_periode() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -619,7 +619,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_flere_arbeidsforhold_hos_annenpart() {
+    void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_flere_arbeidsforhold_hos_annenpart() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -648,7 +648,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_oppholdsperiode() {
+    void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_oppholdsperiode() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -674,7 +674,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void annenpart_har_ikke_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager() {
+    void annenpart_har_ikke_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -707,7 +707,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void har_søkt_samtidig_uttak() {
+    void har_søkt_samtidig_uttak() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medSamtidigUttak(true)
@@ -724,7 +724,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void har_ikke_søkt_samtidig_uttak() {
+    void har_ikke_søkt_samtidig_uttak() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -740,7 +740,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_støtte_en_søknadsperiode_overlapper_med_flere_oppholdsperioder_hos_annenpart() {
+    void skal_støtte_en_søknadsperiode_overlapper_med_flere_oppholdsperioder_hos_annenpart() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -773,7 +773,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_støtte_flere_søknadsperioder_overlapper_med_opphold_hos_annenpart() {
+    void skal_støtte_flere_søknadsperioder_overlapper_med_opphold_hos_annenpart() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -806,7 +806,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_telle_dobbelt_når_oppholdsperiode_annenpart_overlapper_mer_flere_søknadsperioder_i_tapende_behandling() {
+    void skal_ikke_telle_dobbelt_når_oppholdsperiode_annenpart_overlapper_mer_flere_søknadsperioder_i_tapende_behandling() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(42), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -843,7 +843,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_frigi_dager_fra_oppholdsperiode_hvis_overlapp_med_avslått_periode_annenpart() {
+    void skal_ikke_frigi_dager_fra_oppholdsperiode_hvis_overlapp_med_avslått_periode_annenpart() {
         var periode1Søker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(6), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -874,7 +874,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_trekke_dager_for_oppholdsperioder_på_annenpart_som_ligger_etter_søkers_siste_periode() {
+    void skal_ikke_trekke_dager_for_oppholdsperioder_på_annenpart_som_ligger_etter_søkers_siste_periode() {
         var periodeSøker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -907,7 +907,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void riktig_saldo_ved_delvis_overlapp_og_gradering_på_annenpart_der_annenpart_har_flere_arbeidsforhold() {
+    void riktig_saldo_ved_delvis_overlapp_og_gradering_på_annenpart_der_annenpart_har_flere_arbeidsforhold() {
         var periodeSøker = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -928,7 +928,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_finnes_nok_dager_å_frigi_ved_flere_arbeidsforhold_der_bare_det_ene_arbeidsforholdet_har_nok_dager() {
+    void skal_ikke_finnes_nok_dager_å_frigi_ved_flere_arbeidsforhold_der_bare_det_ene_arbeidsforholdet_har_nok_dager() {
         var aktivitet1 = new FastsattUttakPeriodeAktivitet(new Trekkdager(8), FELLESPERIODE, AKTIVITET1_SØKER);
         var aktivitet2 = new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET2_SØKER);
         var søkersPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(List.of(aktivitet1, aktivitet2))
@@ -952,7 +952,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_finne_saldo_for_søker_uten_uttaksperioder() {
+    void skal_finne_saldo_for_søker_uten_uttaksperioder() {
         var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -968,7 +968,7 @@ public class SaldoUtregningTest {
 
     //FAGSYSTEM-81103
     @Test
-    public void skal_finnes_nok_dager_å_frigi_hvis_annenparts_uttaksperiode_starter_før_men_overlapper_med_søkers_periode() {
+    void skal_finnes_nok_dager_å_frigi_hvis_annenparts_uttaksperiode_starter_før_men_overlapper_med_søkers_periode() {
         var søkersPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(32), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -988,7 +988,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ikke_finnes_nok_dager_å_frigi_hvis_annenparts_uttaksperiode_starter_før_men_overlapper_med_søkers_periode_og_ikke_nok_dager_etter_søkers_fom() {
+    void skal_ikke_finnes_nok_dager_å_frigi_hvis_annenparts_uttaksperiode_starter_før_men_overlapper_med_søkers_periode_og_ikke_nok_dager_etter_søkers_fom() {
         var søkersPeriode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(32), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -1009,7 +1009,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_telle_riktig_antall_dager_på_annenpart_når_det_er_tilkommet_nytt_arbeidsforhold() {
+    void skal_telle_riktig_antall_dager_på_annenpart_når_det_er_tilkommet_nytt_arbeidsforhold() {
         var annenpartsPeriode1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(80), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -1029,7 +1029,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_telle_riktig_antall_dager_når_det_er_tilkommet_nytt_arbeidsforhold_og_siste_periode_før_tilkommet_er_opphold() {
+    void skal_telle_riktig_antall_dager_når_det_er_tilkommet_nytt_arbeidsforhold_og_siste_periode_før_tilkommet_er_opphold() {
         var periodeUtenNyttArbeidsforhold = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(40), MØDREKVOTE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -1055,7 +1055,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void innvilget_utsettelse_overlapper_med_annenpart() {
+    void innvilget_utsettelse_overlapper_med_annenpart() {
         var periode = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), null, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -1075,7 +1075,7 @@ public class SaldoUtregningTest {
     }
 
     @Test
-    public void skal_ta_med_overlappende_perioder_i_utregningen_av_dager_å_frigi_på_annenpart() {
+    void skal_ta_med_overlappende_perioder_i_utregningen_av_dager_å_frigi_på_annenpart() {
         var periode1 = new FastsattUttakPeriode.Builder().medAktiviteter(
                 List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)

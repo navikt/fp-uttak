@@ -26,12 +26,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FellesperiodeMedGraderingTest {
+class FellesperiodeMedGraderingTest {
 
     private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
-    public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {
+    void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
@@ -49,7 +49,7 @@ public class FellesperiodeMedGraderingTest {
     }
 
     @Test
-    public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_4_uker_igjen_på_saldo() {
+    void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_4_uker_igjen_på_saldo() {
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,

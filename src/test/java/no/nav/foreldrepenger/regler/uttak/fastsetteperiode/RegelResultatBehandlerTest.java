@@ -27,10 +27,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
-public class RegelResultatBehandlerTest {
+class RegelResultatBehandlerTest {
 
     @Test
-    public void skal_knekke_på_riktig_datoer_ved_avslag() {
+    void skal_knekke_på_riktig_datoer_ved_avslag() {
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FELLESPERIODE));
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet());

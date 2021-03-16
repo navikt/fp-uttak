@@ -41,10 +41,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class ForeldrepengerDelregelTest {
+class ForeldrepengerDelregelTest {
 
     @Test
-    public void mor_starter_tidligere_enn_12_uker_før_termin() {
+    void mor_starter_tidligere_enn_12_uker_før_termin() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(12).minusDays(1), familiehendelseDato);
         var grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -61,7 +61,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_ikkeGradering_ikkeBareMorRett() {
+    void mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_ikkeGradering_ikkeBareMorRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato.minusWeeks(5));
         var grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -75,7 +75,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void utenAleneomsorg_morRett_aleneomsorg_før3ukerFørFødsel_disponibleDager_ikkeGradering_morRett() {
+    void utenAleneomsorg_morRett_aleneomsorg_før3ukerFørFødsel_disponibleDager_ikkeGradering_morRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato.minusWeeks(5));
         var grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -88,7 +88,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_gradering_ikkeBareMorRett() {
+    void mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_gradering_ikkeBareMorRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato,
                 AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
@@ -121,7 +121,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_gradering_bareMorRett() {
+    void mor_aleneomsorg_før3ukerFørFødsel_disponibleDager_gradering_bareMorRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato,
                 AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
@@ -137,7 +137,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_gradering_avklart_ikkeBareMorRett() {
+    void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_gradering_avklart_ikkeBareMorRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8),
                 AktivitetIdentifikator.forFrilans(), PeriodeVurderingType.PERIODE_OK);
@@ -153,7 +153,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_gradering_avklart_morRett() {
+    void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_gradering_avklart_morRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var aktivitetIdentifikator = ARBEIDSFORHOLD_1;
         var gradertPeriode = gradertPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8), aktivitetIdentifikator,
@@ -171,7 +171,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_ikkeGradering_ikkeBareMorRett() {
+    void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_ikkeGradering_ikkeBareMorRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8));
         var grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -185,7 +185,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_ikkeGradering_morRett() {
+    void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_disponibleDager_ikkeGradering_morRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8));
         var grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -206,7 +206,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_noenDisponibleDager() {
+    void mor_aleneomsorg_etter6ukerEtterFødsel_omsorg_noenDisponibleDager() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(12));
         var grunnlag = grunnlagMor(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -228,7 +228,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_aleneomsorg_etter6ukerEtterFødsel_utenOmsorg() {
+    void mor_aleneomsorg_etter6ukerEtterFødsel_utenOmsorg() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(6);
         var tom = familiehendelseDato.plusWeeks(7);
@@ -249,7 +249,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void mor_utenAleneomsorg_ikkeBareMorRett() {
+    void mor_utenAleneomsorg_ikkeBareMorRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(6);
         var tom = familiehendelseDato.plusWeeks(7);
@@ -267,7 +267,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void _fødsel_bare_mor_rett_periode_før_fødsel() {
+    void _fødsel_bare_mor_rett_periode_før_fødsel() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.minusWeeks(3);
         var tom = familiehendelseDato.minusWeeks(2);
@@ -284,7 +284,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void _fødsel_bare_mor_aleneomsorg_periode_før_fødsel() {
+    void _fødsel_bare_mor_aleneomsorg_periode_før_fødsel() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.minusWeeks(3);
         var tom = familiehendelseDato.minusWeeks(2);
@@ -333,7 +333,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_før_familiehendelse() {
+    void far_før_familiehendelse() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(3), familiehendelseDato.minusWeeks(2));
         var grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
@@ -347,7 +347,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_aleneomsorg_utenOmsorg() {
+    void far_etterFamiliehendelse_aleneomsorg_utenOmsorg() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(2);
@@ -368,7 +368,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_aleneomsorg_medOmsorg_utenDisponibledager() {
+    void far_etterFamiliehendelse_aleneomsorg_medOmsorg_utenDisponibledager() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(2);
@@ -394,7 +394,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_aleneomsorg_medOmsorg_medDisponibledager_medGradering_førUke7() {
+    void far_etterFamiliehendelse_aleneomsorg_medOmsorg_medDisponibledager_medGradering_førUke7() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(2);
@@ -412,7 +412,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_aleneomsorg_medOmsorg_medDisponibledager_utenGradering() {
+    void far_etterFamiliehendelse_aleneomsorg_medOmsorg_medDisponibledager_utenGradering() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
@@ -428,7 +428,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_utenOmsorg() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_utenOmsorg() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
@@ -449,7 +449,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_førUke7_utenGyldigGrunn() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_førUke7_utenGyldigGrunn() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
@@ -469,7 +469,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_førUke7_medGyldigGrunn_utenGradering() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_førUke7_medGyldigGrunn_utenGradering() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
@@ -488,7 +488,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_medDisponibleDager_utenGradering() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_medDisponibleDager_utenGradering() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
@@ -507,7 +507,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_førUke7_medGyldigGrunn_medGradering_avklart() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_førUke7_medGyldigGrunn_medGradering_avklart() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
@@ -527,7 +527,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_medDisponibleDager_medGradering_avklart() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_medDisponibleDager_medGradering_avklart() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
@@ -550,7 +550,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_utenDisponibleDagerPåAlleAktiviteter() {
+    void far_etterFamiliehendelse_utenAleneomsorg_farRett_medOmsorg_EtterUke7_utenDisponibleDagerPåAlleAktiviteter() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
@@ -581,7 +581,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_utenFarRett() {
+    void far_etterFamiliehendelse_utenAleneomsorg_utenFarRett() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
@@ -597,7 +597,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett() {
+    void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett() {
         var familiehendelseDato = LocalDate.now().minusMonths(2);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);
@@ -616,7 +616,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_medDisponibleDager_medGradering_avklart() {
+    void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_medDisponibleDager_medGradering_avklart() {
         var familiehendelseDato = LocalDate.now().minusMonths(2);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);
@@ -635,7 +635,7 @@ public class ForeldrepengerDelregelTest {
     }
 
     @Test
-    public void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_noenDisponibleDager() {
+    void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_noenDisponibleDager() {
         var familiehendelseDato = LocalDate.now().minusMonths(2);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);

@@ -28,12 +28,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class SøknadMottattDatoRegelTest {
+class SøknadMottattDatoRegelTest {
 
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
 
     @Test
-    public void mottattDatoFørSluttAvGraderingBlirSendtManuellBehandling() {
+    void mottattDatoFørSluttAvGraderingBlirSendtManuellBehandling() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
         var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
@@ -48,7 +48,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void mottattDatoEtterSluttAvGraderingBlirInnvilget() {
+    void mottattDatoEtterSluttAvGraderingBlirInnvilget() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = gradertoppgittPeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), mottattDato);
         var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
@@ -59,7 +59,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void mottattDatoFørSluttAvFerieBlirAvslått() {
+    void mottattDatoFørSluttAvFerieBlirAvslått() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
@@ -73,7 +73,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void mottattDatoEtterSluttAvFerieBlirInnvilget() {
+    void mottattDatoEtterSluttAvFerieBlirInnvilget() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE,
                 mottattDato);
@@ -85,7 +85,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void mottattDatoFørSluttAvArbeidBlirAvslått() {
+    void mottattDatoFørSluttAvArbeidBlirAvslått() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
@@ -99,7 +99,7 @@ public class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    public void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
+    void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID,
                 mottattDato);

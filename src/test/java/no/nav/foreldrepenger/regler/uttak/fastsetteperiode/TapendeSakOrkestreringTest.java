@@ -24,14 +24,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private static final AktivitetIdentifikator MOR_ARBEIDSFORHOLD = RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 
     private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
-    public void skal_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_innvilget_samme_tidsrom() {
+    void skal_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_innvilget_samme_tidsrom() {
         /*
            Far søker fedrekvote samtidig som mor tar fellesperiode. Far har ikke omsorg i denne perioden og skal få avslag og egentlig trukket dager.
            Skal ikke trekke dager siden mor har innvilget i samme tidsrom
@@ -62,7 +62,7 @@ public class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void skal_ikke_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_avslått_samme_tidsrom() {
+    void skal_ikke_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_avslått_samme_tidsrom() {
         var periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))

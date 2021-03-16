@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
-public class BevegeligeHelligdagerUtilTest {
+class BevegeligeHelligdagerUtilTest {
 
     @Test
-    public void skal_gi_helligdagene_for_2017() {
+    void skal_gi_helligdagene_for_2017() {
         // 1.nyttårsdag, palmesømdag og 1.påskedag fjernes fordi de er søndager
         var skjærTorsdag = LocalDate.of(2017, 4, 13);
         var langFredag = LocalDate.of(2017, 4, 14);
@@ -40,7 +40,7 @@ public class BevegeligeHelligdagerUtilTest {
     }
 
     @Test
-    public void skal_gi_helligdagene_for_2018() {
+    void skal_gi_helligdagene_for_2018() {
         // palmesømdag og 1.påskedag fjernes fordi de er søndager
 
         var førsteNyttårsdag = LocalDate.of(2018, 1, 1);
@@ -72,7 +72,7 @@ public class BevegeligeHelligdagerUtilTest {
     }
 
     @Test
-    public void skal_gi_helligdagene_for_2019() {
+    void skal_gi_helligdagene_for_2019() {
         // palmesømdag og 1.påskedag fjernes fordi de er søndager
         var førsteNyttårsdag = LocalDate.of(2019, 1, 1);
         var skjærTorsdag = LocalDate.of(2019, 4, 18);

@@ -12,10 +12,10 @@ import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
+class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
 
     @Test
-    public void startAvUttakErInnenforSøknadsfrist() {
+    void startAvUttakErInnenforSøknadsfrist() {
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
                 .medFørsteUttaksdato(LocalDate.of(2017, Month.FEBRUARY, 1))
                 .medSøknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
@@ -27,7 +27,7 @@ public class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
     }
 
     @Test
-    public void startAvUttakErIkkeInnenforSøknadsfrist() {
+    void startAvUttakErIkkeInnenforSøknadsfrist() {
         SøknadsfristGrunnlag grunnlag = SøknadsfristGrunnlag.builder()
                 .medFørsteUttaksdato(LocalDate.of(2017, Month.JANUARY, 31))
                 .medSøknadMottattDato(LocalDate.of(2017, Month.MAY, 31))

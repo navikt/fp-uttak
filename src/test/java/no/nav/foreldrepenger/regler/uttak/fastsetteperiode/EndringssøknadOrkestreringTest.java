@@ -22,10 +22,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void skal_trekke_dager_for_perioder_i_vedtak() {
+    void skal_trekke_dager_for_perioder_i_vedtak() {
         var fødselsdato = LocalDate.of(2020, 1, 16);
         var endringsdato = fødselsdato.plusWeeks(6);
         var aktivitet = AktivitetIdentifikator.forFrilans();
@@ -53,7 +53,7 @@ public class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkes
     }
 
     @Test
-    public void skal_arve_høyest_saldo_fra_for_arbeidsforhold_med_startdato_i_uttak() {
+    void skal_arve_høyest_saldo_fra_for_arbeidsforhold_med_startdato_i_uttak() {
         var fødselsdato = LocalDate.of(2020, 1, 16);
         var aktivitet1 = AktivitetIdentifikator.forFrilans();
         var aktivitet2 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();

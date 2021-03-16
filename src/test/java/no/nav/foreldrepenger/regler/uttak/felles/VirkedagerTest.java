@@ -11,18 +11,18 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class VirkedagerTest {
+class VirkedagerTest {
     private Map<DayOfWeek, LocalDate> uke;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         var iDag = LocalDate.now();
         var mandag = iDag.minusDays(iDag.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue());
         uke = Stream.of(DayOfWeek.values()).collect(Collectors.toMap(day -> day, day -> mandag.plusDays(day.ordinal())));
     }
 
     @Test
-    public void skalBeregneAntallVirkedager() {
+    void skalBeregneAntallVirkedager() {
         var mandag = getDayOfWeek(DayOfWeek.MONDAY);
         var søndag = getDayOfWeek(DayOfWeek.SUNDAY);
 
@@ -41,7 +41,7 @@ public class VirkedagerTest {
     }
 
     @Test
-    public void skalLeggeTilVirkedager() {
+    void skalLeggeTilVirkedager() {
         var mandag = getDayOfWeek(DayOfWeek.MONDAY);
         var tirsdag = getDayOfWeek(DayOfWeek.TUESDAY);
         var onsdag = getDayOfWeek(DayOfWeek.WEDNESDAY);
@@ -67,13 +67,13 @@ public class VirkedagerTest {
     }
 
     @Test
-    public void søndagPlusEnVirkedagerSkalBliMandag() {
+    void søndagPlusEnVirkedagerSkalBliMandag() {
         var nyDato = Virkedager.plusVirkedager(LocalDate.of(2020, 8, 2), 1);
         assertThat(nyDato).isEqualTo(LocalDate.of(2020, 8, 3));
     }
 
     @Test
-    public void søndagPlusNullVirkedagerSkalBliSøndag() {
+    void søndagPlusNullVirkedagerSkalBliSøndag() {
         var nyDato = Virkedager.plusVirkedager(LocalDate.of(2020, 8, 2), 0);
         assertThat(nyDato).isEqualTo(LocalDate.of(2020, 8, 2));
     }

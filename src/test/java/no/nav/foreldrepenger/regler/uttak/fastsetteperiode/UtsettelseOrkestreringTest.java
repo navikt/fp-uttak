@@ -49,10 +49,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
-public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void periode_med_gyldig_utsettelse_pga_barn_innlagt_i_helseinstitusjon_skal_innvilges() {
+    void periode_med_gyldig_utsettelse_pga_barn_innlagt_i_helseinstitusjon_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -77,7 +77,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void periode_med_gyldig_utsettelse_pga_søker_innlagt_i_helseinstitusjon_skal_innvilges() {
+    void periode_med_gyldig_utsettelse_pga_søker_innlagt_i_helseinstitusjon_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -102,7 +102,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void periode_med_gyldig_utsettelse_pga_søkers_sykdom_eller_skade_skal_innvilges() {
+    void periode_med_gyldig_utsettelse_pga_søkers_sykdom_eller_skade_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -127,7 +127,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void periode_med_gyldig_utsettelse_pga_arbeid_skal_innvilges() {
+    void periode_med_gyldig_utsettelse_pga_arbeid_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var utsettelseFom = fødselsdato.plusWeeks(10);
         var utsettelseTom = fødselsdato.plusWeeks(12).minusDays(1);
@@ -159,7 +159,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void UT1110_periode_med_utsettelse_pga_arbeid_med_50_prosent_stilling_skal_manuell_behandles() {
+    void UT1110_periode_med_utsettelse_pga_arbeid_med_50_prosent_stilling_skal_manuell_behandles() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var utsettelseFom = fødselsdato.plusWeeks(10);
         var utsettelseTom = fødselsdato.plusWeeks(12).minusDays(1);
@@ -192,7 +192,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void periode_med_utsettelse_pga_ferie_skal_innvilges() {
+    void periode_med_utsettelse_pga_ferie_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -215,7 +215,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void skal_ikke_utlede_stønadskontotype_ved_innvilgelse_av_utsettelse() {
+    void skal_ikke_utlede_stønadskontotype_ved_innvilgelse_av_utsettelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -232,7 +232,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void periode_med_utsettelse_pga_ferie_skal_til_manuell_behandling_grunnet_bevegelige_helligdager() {
+    void periode_med_utsettelse_pga_ferie_skal_til_manuell_behandling_grunnet_bevegelige_helligdager() {
         var fødselsdato = LocalDate.of(2018, 1, 15);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -295,7 +295,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void flere_perioder_med_utsettelse_pga_ferie_skal_til_manuell_behandling_grunnet_bevegelige_helligdager() {
+    void flere_perioder_med_utsettelse_pga_ferie_skal_til_manuell_behandling_grunnet_bevegelige_helligdager() {
         var fødselsdato = LocalDate.of(2018, 1, 15);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -395,7 +395,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void periode_med_ugyldig_utsettelse_skal_til_manuell_behandling() {
+    void periode_med_ugyldig_utsettelse_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -418,7 +418,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_uten_stønadskonto_på_helligdag_skal_gi_ugyldig_opphold() {
+    void utsettelse_uten_stønadskonto_på_helligdag_skal_gi_ugyldig_opphold() {
         var fødselsdato = LocalDate.of(2018, 11, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -440,7 +440,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_periode_med_ukjent_kontotype_må_settes_til_neste_tilgjengelig() {
+    void utsettelse_periode_med_ukjent_kontotype_må_settes_til_neste_tilgjengelig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(fødselSøknad().leggTilOppgittPeriode(
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -464,7 +464,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void pleiepenger_utsettelse_skal_trekke_fra_fellesperiode() {
+    void pleiepenger_utsettelse_skal_trekke_fra_fellesperiode() {
         //Over 7 uker for tidlig, får pleiepenger. Utsettelsen skal avlås og det skal trekkes dager
         var termindato = LocalDate.of(2019, 9, 1);
         var fødselsdato = LocalDate.of(2019, 7, 1);
@@ -487,7 +487,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void pleiepenger_utsettelse_skal_trekke_fra_foreldrepenger() {
+    void pleiepenger_utsettelse_skal_trekke_fra_foreldrepenger() {
         //Over 7 uker for tidlig, får pleiepenger. Utsettelsen skal avlås og det skal trekkes dager
         var termindato = LocalDate.of(2019, 9, 1);
         var fødselsdato = LocalDate.of(2019, 7, 1);
@@ -512,7 +512,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void skal_trekke_fra_mødrekvote_ved_avslag_ferie_innenfor_første_seks_uker() {
+    void skal_trekke_fra_mødrekvote_ved_avslag_ferie_innenfor_første_seks_uker() {
         //Søkt om ferieutsettelse innenfor seks uker etter fødsel. Utsettelsen skal avlås og det skal trekkes dager fra mødrekvote
         var fødselsdato = LocalDate.of(2019, 7, 1);
         basicUtsettelseGrunnlag(fødselsdato).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -531,7 +531,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void skal_trekke_fra_foreldrepengekvote_ved_avslag_ferie_innenfor_første_seks_uker_ved_aleneomsorg_far() {
+    void skal_trekke_fra_foreldrepengekvote_ved_avslag_ferie_innenfor_første_seks_uker_ved_aleneomsorg_far() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         aleneomsorgUtsettelseGrunnlag(fødselsdato, farBehandling()).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
@@ -549,7 +549,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void skal_trekke_fra_foreldrepengekvote_ved_avslag_ferie_innenfor_første_seks_uker_ved_aleneomsorg_mor() {
+    void skal_trekke_fra_foreldrepengekvote_ved_avslag_ferie_innenfor_første_seks_uker_ved_aleneomsorg_mor() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         aleneomsorgUtsettelseGrunnlag(fødselsdato, morBehandling()).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
@@ -567,7 +567,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_før_søknad_mottatt_dato_skal_gå_til_manuell() {
+    void utsettelse_før_søknad_mottatt_dato_skal_gå_til_manuell() {
         //Søkt om ferieutsettelse innenfor seks uker etter fødsel. Utsettelsen skal avlås og det skal trekkes dager fra mødrekvote
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
@@ -586,7 +586,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_ved_tomme_dager_skal_også_avslås() {
+    void utsettelse_ved_tomme_dager_skal_også_avslås() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var uttakAvsluttetMedUtsettelse = basicUtsettelseGrunnlag(fødselsdato).medSøknad(
                 fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
@@ -613,7 +613,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void skal_knekke_riktig_på_helligdager_i_jula_ved_utsettelse_pga_ferie() {
+    void skal_knekke_riktig_på_helligdager_i_jula_ved_utsettelse_pga_ferie() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
@@ -645,7 +645,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_pga_heimevernet_skal_gå_til_manuell_hvis_ikke_dokumentert() {
+    void utsettelse_pga_heimevernet_skal_gå_til_manuell_hvis_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var hvFom = fødselsdato.plusWeeks(6);
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
@@ -671,7 +671,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_pga_heimevernet_skal_innvilges_hvis_dokumentert() {
+    void utsettelse_pga_heimevernet_skal_innvilges_hvis_dokumentert() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var hvFom = fødselsdato.plusWeeks(6);
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
@@ -698,7 +698,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_pga_tiltak_i_regi_av_nav_skal_gå_til_manuell_hvis_ikke_dokumentert() {
+    void utsettelse_pga_tiltak_i_regi_av_nav_skal_gå_til_manuell_hvis_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var tiltakFom = fødselsdato.plusWeeks(6);
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
@@ -724,7 +724,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void utsettelse_pga_tiltak_i_regi_av_nav_skal_innvilges_hvis_dokumentert() {
+    void utsettelse_pga_tiltak_i_regi_av_nav_skal_innvilges_hvis_dokumentert() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var tiltakFom = fødselsdato.plusWeeks(6);
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
@@ -753,7 +753,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     //FAGSYSTEM-151437
     @Test
-    public void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_maneull() {
+    void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_maneull() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .medRettOgOmsorg(bareFarRett())
@@ -768,7 +768,7 @@ public class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreri
     }
 
     @Test
-    public void avslag_utsettelse_med_trekkdager_skal_knekkes_når_saldo_går_tom() {
+    void avslag_utsettelse_med_trekkdager_skal_knekkes_når_saldo_går_tom() {
         var fødselsdato = LocalDate.of(2021, 1, 20);
         //Skal få avslag pga mor ikke er i aktivitet
         var fom = fødselsdato.plusWeeks(6);

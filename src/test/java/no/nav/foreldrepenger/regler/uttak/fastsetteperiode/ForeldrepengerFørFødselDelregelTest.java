@@ -27,10 +27,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class ForeldrepengerFørFødselDelregelTest {
+class ForeldrepengerFørFødselDelregelTest {
 
     @Test
-    public void UT1070_mor_utenFor3UkerFørFødsel() {
+    void UT1070_mor_utenFor3UkerFørFødsel() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8),
                 familiehendelseDato.plusWeeks(9));
@@ -43,7 +43,7 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     @Test
-    public void UT1071_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_ikkeGradering() {
+    void UT1071_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_ikkeGradering() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
@@ -56,7 +56,7 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     @Test
-    public void UT1072_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_gradering() {
+    void UT1072_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_gradering() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
@@ -71,7 +71,7 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     @Test
-    public void UT1073_mor_innenFor3UkerFørFødsel_manglendeSøktPeriode() {
+    void UT1073_mor_innenFor3UkerFørFødsel_manglendeSøktPeriode() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
@@ -87,7 +87,7 @@ public class ForeldrepengerFørFødselDelregelTest {
     }
 
     @Test
-    public void UT1076_far_søker_fpff() {
+    void UT1076_far_søker_fpff() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));

@@ -21,10 +21,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void mødrekvoteperiode_før_familiehendelse() {
+    void mødrekvoteperiode_før_familiehendelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
@@ -59,7 +59,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     }
 
     @Test
-    public void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_innvilges() {
+    void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
@@ -99,7 +99,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     }
 
     @Test
-    public void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
+    void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
@@ -121,7 +121,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     }
 
     @Test
-    public void overføring_av_mødrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
+    void overføring_av_mødrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
@@ -157,7 +157,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
     }
 
     @Test
-    public void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
+    void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())

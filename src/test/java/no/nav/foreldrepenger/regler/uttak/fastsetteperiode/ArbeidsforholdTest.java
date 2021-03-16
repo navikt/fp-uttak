@@ -11,10 +11,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvStilling;
 
-public class ArbeidsforholdTest {
+class ArbeidsforholdTest {
 
     @Test
-    public void skal_finne_stillingsprosent() {
+    void skal_finne_stillingsprosent() {
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.forFrilans());
 
         arbeidsforhold.leggTilEndringIStilling(new EndringAvStilling(LocalDate.of(2019, 1, 1), BigDecimal.valueOf(50)));

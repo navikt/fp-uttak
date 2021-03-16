@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-public class KonfigurasjonBuilderTest {
+class KonfigurasjonBuilderTest {
 
     @Test
-    public void konfigurasjon_med_en_verdi() {
+    void konfigurasjon_med_en_verdi() {
         var nå = LocalDate.now();
         var konfigurasjon = KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, null, 75)
@@ -19,7 +19,7 @@ public class KonfigurasjonBuilderTest {
     }
 
     @Test
-    public void konfigurasjon_med_en_verdi_i_to_intervaller() {
+    void konfigurasjon_med_en_verdi_i_to_intervaller() {
         var nå = LocalDate.now();
         var konfigurasjon = KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, nå.plusDays(6), 50)
@@ -31,7 +31,7 @@ public class KonfigurasjonBuilderTest {
     }
 
     @Test
-    public void konfigurasjon_med_en_verdi_i_to_intervaller_med_overlapp() {
+    void konfigurasjon_med_en_verdi_i_to_intervaller_med_overlapp() {
         var nå = LocalDate.now();
         assertThrows(IllegalArgumentException.class, () -> KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, nå.plusDays(6), 50)

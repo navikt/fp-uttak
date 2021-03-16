@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void innvilgelse_fedrekvote_overføring_når_bruker_en_tom_for_sine_konto_skal_gå_automatisk() {
+    void innvilgelse_fedrekvote_overføring_når_bruker_en_tom_for_sine_konto_skal_gå_automatisk() {
         //Mødrekvote og fellesperiode brukes opp før øverføring av fedrekvote
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
@@ -70,7 +70,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     }
 
     @Test
-    public void innvilgelse_mødrekvote_overføring_når_bruker_en_tom_for_sine_konto_skal_gå_automatisk() {
+    void innvilgelse_mødrekvote_overføring_når_bruker_en_tom_for_sine_konto_skal_gå_automatisk() {
         //Fedrekvote og fellesperiode brukes opp før øverføring av mødrekvote
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var fedrekvote = oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1));

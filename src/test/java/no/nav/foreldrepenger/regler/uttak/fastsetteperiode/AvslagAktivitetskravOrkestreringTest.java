@@ -33,19 +33,19 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
-public class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
 
     @ParameterizedTest(name = "Ved mors aktivitet {0} og dokumentasjonvurdering er {1}, forventes resultat {2}")
     @MethodSource("dokumentasjonOgAvslagKombinasjoner")
-    public void test_kombinasjoner_av_MorsAktivitet_PeriodeMedAvklartMorsAktivitetResultat_og_IkkeOppfyltÅrsak(MorsAktivitet morsAktivitet,
+    void test_kombinasjoner_av_MorsAktivitet_PeriodeMedAvklartMorsAktivitetResultat_og_IkkeOppfyltÅrsak(MorsAktivitet morsAktivitet,
                                                                                                                PeriodeMedAvklartMorsAktivitet.Resultat avklartMorsAktivitetResultat,
                                                                                                                IkkeOppfyltÅrsak ikkeOppfyltÅrsak) {
         testAvslag(morsAktivitet, avklartMorsAktivitetResultat, ikkeOppfyltÅrsak);
     }
 
     @Test
-    public void mor_med_uføretrygd_skal_gå_til_manuell() {
+    void mor_med_uføretrygd_skal_gå_til_manuell() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
         var oppgittPeriode = fellesperiode(fødselsdato, MorsAktivitet.UFØRE);
@@ -63,7 +63,7 @@ public class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegel
     }
 
     @Test
-    public void ukjent_mors_aktivitet_skal_gå_til_manuell_hvis_ikke_dokumentert() {
+    void ukjent_mors_aktivitet_skal_gå_til_manuell_hvis_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
         var oppgittPeriode = fellesperiode(fødselsdato, null);
@@ -82,7 +82,7 @@ public class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegel
     }
 
     @Test
-    public void kun_far_har_rett() {
+    void kun_far_har_rett() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), null,
@@ -110,7 +110,7 @@ public class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegel
     }
 
     @Test
-    public void far_søker_utsettelse() {
+    void far_søker_utsettelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),

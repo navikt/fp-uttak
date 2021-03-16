@@ -37,10 +37,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FedrekvoteDelregelTest {
+class FedrekvoteDelregelTest {
 
     @Test
-    public void fedrekvote_etter_6_uker_blir_innvilget() {
+    void fedrekvote_etter_6_uker_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
@@ -58,7 +58,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1020_fedrekvote_før_fødsel_blir_avslått() {
+    void UT1020_fedrekvote_før_fødsel_blir_avslått() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(1));
@@ -72,7 +72,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1292_fedrekvote_uten_at_mor_har_rett_blir_avslått() {
+    void UT1292_fedrekvote_uten_at_mor_har_rett_blir_avslått() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1));
@@ -95,7 +95,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void fedrekvote_bli_avslått_når_søker_ikke_har_omsorg() {
+    void fedrekvote_bli_avslått_når_søker_ikke_har_omsorg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
@@ -109,7 +109,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1025_far_førUke7_etterTermin_utenGyldigGrunn_ikkeOmsorg_flerbarnsdager() {
+    void UT1025_far_førUke7_etterTermin_utenGyldigGrunn_ikkeOmsorg_flerbarnsdager() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), null,
@@ -132,7 +132,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1032_mor_søker_fedrekvote_men_ikke_overføring() {
+    void UT1032_mor_søker_fedrekvote_men_ikke_overføring() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -155,7 +155,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1033_mor_overføring_innleggelse_men_ikke_gyldig() {
+    void UT1033_mor_overføring_innleggelse_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -177,7 +177,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1034_mor_overføring_sykdom_skade_men_ikke_gyldig() {
+    void UT1034_mor_overføring_sykdom_skade_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -200,7 +200,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1296_mor_overføring_aleneomsorg_men_ikke_gyldig() {
+    void UT1296_mor_overføring_aleneomsorg_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -222,7 +222,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1297_mor_overføring_annen_forelder_ikke_rett_men_ikke_gyldig() {
+    void UT1297_mor_overføring_annen_forelder_ikke_rett_men_ikke_gyldig() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -245,7 +245,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1026_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
+    void UT1026_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4),
@@ -261,7 +261,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1217_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
+    void UT1217_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
@@ -284,7 +284,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1031_far_etterUke7_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
+    void UT1031_far_etterUke7_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9));
@@ -299,7 +299,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void fom_akkurat_6_uker_etter_fødsel() {
+    void fom_akkurat_6_uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6).plusDays(1));
@@ -313,7 +313,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void UT1218_far_etterUke7_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
+    void UT1218_far_etterUke7_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15));
@@ -328,7 +328,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void opphold_fedrekvote_annenforelder() {
+    void opphold_fedrekvote_annenforelder() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var periode = OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
@@ -345,7 +345,7 @@ public class FedrekvoteDelregelTest {
     }
 
     @Test
-    public void opphold_fedrekvote_annenforelder_tom_for_konto() {
+    void opphold_fedrekvote_annenforelder_tom_for_konto() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var periode = OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),

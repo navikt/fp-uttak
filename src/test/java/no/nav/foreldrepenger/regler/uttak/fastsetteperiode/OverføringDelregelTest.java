@@ -25,10 +25,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class OverføringDelregelTest {
+class OverføringDelregelTest {
 
     @Test
-    public void UT1172_mor_overføring_sykdom_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
+    void UT1172_mor_overføring_sykdom_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -47,7 +47,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1173_mor_overføring_innleggelse_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
+    void UT1173_mor_overføring_innleggelse_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -66,7 +66,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1174_mor_overføring_aleneomsorg_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
+    void UT1174_mor_overføring_aleneomsorg_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -85,7 +85,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1175_mor_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
+    void UT1175_mor_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -104,7 +104,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1172_mor_overføring_sykdom_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
+    void UT1172_mor_overføring_sykdom_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(8);
@@ -123,7 +123,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1173_mor_overføring_innleggelse_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
+    void UT1173_mor_overføring_innleggelse_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(8);
@@ -142,7 +142,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1174_mor_overføring_aleneomsorg_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
+    void UT1174_mor_overføring_aleneomsorg_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(8);
@@ -161,7 +161,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1175_mor_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
+    void UT1175_mor_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(8);
@@ -180,7 +180,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1172_far_overføring_sykdom_skade_avklart_gyldig_grunn() {
+    void UT1172_far_overføring_sykdom_skade_avklart_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -199,7 +199,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1173_far_overføring_innleggelse_avklart_gyldig_grunn() {
+    void UT1173_far_overføring_innleggelse_avklart_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -218,7 +218,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1174_far_overføring_aleneomsorg_avklart_gyldig_grunn() {
+    void UT1174_far_overføring_aleneomsorg_avklart_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -237,7 +237,7 @@ public class OverføringDelregelTest {
     }
 
     @Test
-    public void UT1175_far_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn() {
+    void UT1175_far_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);

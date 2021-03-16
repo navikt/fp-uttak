@@ -13,10 +13,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
-public class ManglendeSøktPeriodeUtilTest {
+class ManglendeSøktPeriodeUtilTest {
 
     @Test
-    public void skalFinneHullPåBegynnelsenAvEnPeriodOfInterest() {
+    void skalFinneHullPåBegynnelsenAvEnPeriodOfInterest() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(2);
 
@@ -40,7 +40,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalFinneEttHullInniEnPeriodOfInterest() {
+    void skalFinneEttHullInniEnPeriodOfInterest() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(2);
 
@@ -60,7 +60,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalFinneFlereHullInniEnPeriodOfInterest() {
+    void skalFinneFlereHullInniEnPeriodOfInterest() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(4);
 
@@ -84,7 +84,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalFinneHullPåSluttenAvEnPeriodOfInterest() {
+    void skalFinneHullPåSluttenAvEnPeriodOfInterest() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(2);
 
@@ -104,7 +104,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalIkkeFinneHullHvisDetIkkeErNoenHull() {
+    void skalIkkeFinneHullHvisDetIkkeErNoenHull() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(2);
 
@@ -124,7 +124,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalHåndterePerioderSomBegynnnerFørPoi() {
+    void skalHåndterePerioderSomBegynnnerFørPoi() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(2);
 
@@ -143,7 +143,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalHåndterePerioderSomSlutterEtterPoi() {
+    void skalHåndterePerioderSomSlutterEtterPoi() {
         var start = LocalDate.of(2018, 6, 4);
         var slutt = start.plusDays(2);
 
@@ -162,7 +162,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void enDagPerioderSkalIkkeGiHull() {
+    void enDagPerioderSkalIkkeGiHull() {
         var førPeriode = new LukketPeriode(LocalDate.of(2018, 12, 27), LocalDate.of(2018, 12, 31));
         var enDagPeriode = new LukketPeriode(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 1, 1));
         var etterPeriode = new LukketPeriode(LocalDate.of(2019, 1, 2), LocalDate.of(2019, 1, 10));
@@ -174,7 +174,7 @@ public class ManglendeSøktPeriodeUtilTest {
     }
 
     @Test
-    public void skalFinneFlereHull() {
+    void skalFinneFlereHull() {
         var periode1 = new LukketPeriode(LocalDate.of(2018, 12, 27), LocalDate.of(2018, 12, 31));
         var periode2 = new LukketPeriode(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 1, 2));
         var periode3 = new LukketPeriode(LocalDate.of(2019, 1, 3), LocalDate.of(2019, 1, 10));

@@ -61,10 +61,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void skal_innvilge_to_perioder_med_med_mødrekvote_på_under_10_uker() {
+    void skal_innvilge_to_perioder_med_med_mødrekvote_på_under_10_uker() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -83,7 +83,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_knekke_mødrekvote_dersom_det_ikke_er_flere_dager_igjen() {
+    void skal_knekke_mødrekvote_dersom_det_ikke_er_flere_dager_igjen() {
         var fødselsdato = LocalDate.of(2018, 1, 3);
 
         grunnlag.medDatoer(datoer(fødselsdato))
@@ -121,7 +121,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void mødrekvoteMedUtsattOppstartUtenGyldigGrunnSkalTrekkeDagerPåSaldo() {
+    void mødrekvoteMedUtsattOppstartUtenGyldigGrunnSkalTrekkeDagerPåSaldo() {
         var fødselsdato = LocalDate.of(2018, 1, 8);
         var sluttGyldigUtsattPeriode = fødselsdato.plusDays(6);
         var startUgyldigPeriode = fødselsdato.plusDays(7);
@@ -192,7 +192,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void delvisUgyldigUtsattMødrekvote() {
+    void delvisUgyldigUtsattMødrekvote() {
         var fødselsdato = LocalDate.of(2018, 1, 8);
         var gyldigUtsettelseStart = fødselsdato.plusDays(5);
         var gyldigUtsettelseSlutt = fødselsdato.plusDays(10);
@@ -236,7 +236,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void helePeriodenUtenforSøknadsfrist() {
+    void helePeriodenUtenforSøknadsfrist() {
         var fødselsdato = LocalDate.of(2017, 11, 1);
         var sisteUttaksdag = fødselsdato.plusWeeks(6).minusDays(1);
         var søknadsfrist = SøknadsfristUtil.finnSøknadsfrist(sisteUttaksdag);
@@ -280,7 +280,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skalKnekkePeriodenVedGrenseForSøknadsfrist() {
+    void skalKnekkePeriodenVedGrenseForSøknadsfrist() {
         var fødselsdato = LocalDate.of(2017, 11, 1);
         var mottattDato = fødselsdato.plusMonths(4).plusWeeks(1);
         var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
@@ -321,7 +321,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_ikke_innvilge_etter_eller_på_barnets_3årsdag_selv_om_det_er_nok_på_saldoen() {
+    void skal_ikke_innvilge_etter_eller_på_barnets_3årsdag_selv_om_det_er_nok_på_saldoen() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 10000000))
@@ -362,7 +362,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_ikke_innvilge_periode_som_starter_på_barnets_3årsdag_eller_som_starter_senere() {
+    void skal_ikke_innvilge_periode_som_starter_på_barnets_3årsdag_eller_som_starter_senere() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 10000000))
@@ -411,7 +411,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
 
 
     @Test
-    public void skal_avslå_første_del_pga_manglende_omsorg_og_andre_del_pga_tom_på_kvote_siden_dager_trekkes() {
+    void skal_avslå_første_del_pga_manglende_omsorg_og_andre_del_pga_tom_på_kvote_siden_dager_trekkes() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 5));
         var grunnlag = RegelGrunnlagTestBuilder.create()
@@ -447,7 +447,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void hele_perioden_skal_avslås_automatisk_når_det_er_søkt_for_sent() {
+    void hele_perioden_skal_avslås_automatisk_når_det_er_søkt_for_sent() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var periodeFom = fødselsdato.plusYears(1);
         var periodeTom = periodeFom.plusDays(20);
@@ -475,7 +475,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void UT1290_skal_være_ugyldige_stønadskonto_hvis_søker_på_konto_som_man_ikke_har_tilgang_til() {
+    void UT1290_skal_være_ugyldige_stønadskonto_hvis_søker_på_konto_som_man_ikke_har_tilgang_til() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -496,7 +496,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_knekke_periode_og_gå_til_manuell_behandling_ved_ikke_nok_flerbarnsdager() {
+    void skal_knekke_periode_og_gå_til_manuell_behandling_ved_ikke_nok_flerbarnsdager() {
         var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid("1234", "12345");
 
         var fødselsdato = LocalDate.of(2019, 3, 13);
@@ -549,7 +549,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_håndtere_at_både_flerbarnsdager_og_foreldrepenger_kvote_går_tom_i_samme_søknadsperiode_på_forskjellig_dato() {
+    void skal_håndtere_at_både_flerbarnsdager_og_foreldrepenger_kvote_går_tom_i_samme_søknadsperiode_på_forskjellig_dato() {
         var fødselsdato = LocalDate.of(2019, 3, 13);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
@@ -576,7 +576,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skalIkkeKasteExceptionVedUtsettelseFraDerSaldoGårUt() {
+    void skalIkkeKasteExceptionVedUtsettelseFraDerSaldoGårUt() {
         var fødselsdato = LocalDate.of(2018, 8, 20);
         var aktivitetIdentifikator = AktivitetIdentifikator.annenAktivitet();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(MØDREKVOTE, 75)).leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
@@ -600,7 +600,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_gå_til_avslag_når_søker_er_tom_for_sine_konto_mor() {
+    void skal_gå_til_avslag_når_søker_er_tom_for_sine_konto_mor() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15)).leggTilKonto(konto(MØDREKVOTE, 50));
         grunnlag = RegelGrunnlagTestBuilder.create()
@@ -625,7 +625,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_filtrere_bort_perioden_som_kun_er_helg() {
+    void skal_filtrere_bort_perioden_som_kun_er_helg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var periodeSomKunErHelg = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6).plusDays(5),
                 fødselsdato.plusWeeks(6).plusDays(6));
@@ -650,7 +650,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
 
 
     @Test
-    public void skal_gå_til_avslag_når_søker_er_tom_for_sine_konto_far() {
+    void skal_gå_til_avslag_når_søker_er_tom_for_sine_konto_far() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 15)).leggTilKonto(konto(FELLESPERIODE, 50));
         var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
@@ -680,7 +680,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_gå_regne_ubetalingsprosent_ut_fra_samtidig_uttaksprosent_hvis_ikke_gradering() {
+    void skal_gå_regne_ubetalingsprosent_ut_fra_samtidig_uttaksprosent_hvis_ikke_gradering() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
                 .leggTilKonto(konto(MØDREKVOTE, 5 * 15));
@@ -705,7 +705,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_gå_regne_trekkdager_ut_fra_samtidig_uttaksprosent_hvis_ikke_gradering() {
+    void skal_gå_regne_trekkdager_ut_fra_samtidig_uttaksprosent_hvis_ikke_gradering() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
                 .leggTilKonto(konto(MØDREKVOTE, 5 * 15));
@@ -730,7 +730,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void oppholdsperiode_skal_knekke_og_bevare_årsaken() {
+    void oppholdsperiode_skal_knekke_og_bevare_årsaken() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 100))
@@ -756,7 +756,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_knekke_på_riktig_dato_når_konto_går_tom_og_periode_har_samtidig_uttak() {
+    void skal_knekke_på_riktig_dato_når_konto_går_tom_og_periode_har_samtidig_uttak() {
         var fødselsdato = LocalDate.of(2019, 3, 19);
         var sisteUttaksdato = LocalDate.of(2019, 5, 13);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5)).leggTilKonto(konto(MØDREKVOTE, 5));
@@ -778,7 +778,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void far_skal_kunne_få_overført_perioder_fra_mor_i_revurdering_med_endringsdato() {
+    void far_skal_kunne_få_overført_perioder_fra_mor_i_revurdering_med_endringsdato() {
         var fødselsdato = LocalDate.of(2019, 1, 24);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(MØDREKVOTE, 75 - 28));
         grunnlag = RegelGrunnlagTestBuilder.create()
@@ -818,7 +818,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_knekke_på_riktig_dato_når_flerbarnskonto_går_tom() {
+    void skal_knekke_på_riktig_dato_når_flerbarnskonto_går_tom() {
         var fødselsdato = LocalDate.of(2019, 3, 19);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 3 * 5))
                 .leggTilKonto(konto(MØDREKVOTE, 20))
@@ -849,7 +849,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void skal_håndtere_flere_knekk_i_samme_søknadsperiode_ved_flere_arbeidsforhold() {
+    void skal_håndtere_flere_knekk_i_samme_søknadsperiode_ved_flere_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 5, 28);
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
@@ -875,7 +875,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom() {
+    void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom() {
         var fødselsdato = LocalDate.of(2018, 6, 14);
         var grunnlag = basicGrunnlag(fødselsdato).medRettOgOmsorg(aleneomsorg())
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -891,7 +891,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom_manglende_søkt_periode() {
+    void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom_manglende_søkt_periode() {
         var fødselsdato = LocalDate.of(2018, 6, 14);
         var grunnlag = basicGrunnlag(fødselsdato).medRettOgOmsorg(aleneomsorg())
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -916,7 +916,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void utsettelse_som_går_til_manuell_behandling_skal_ikke_trekke_dager_hvis_dager_igjen_på_bare_ett_av_to_arbeidsforhold_selv_om_sluttpunkt_trekker_dager() {
+    void utsettelse_som_går_til_manuell_behandling_skal_ikke_trekke_dager_hvis_dager_igjen_på_bare_ett_av_to_arbeidsforhold_selv_om_sluttpunkt_trekker_dager() {
         var fødselsdato = LocalDate.of(2018, 6, 14);
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1).leggTilEndringIStilling(
                 new EndringAvStilling(fødselsdato, BigDecimal.valueOf(50)));
@@ -943,7 +943,7 @@ public class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     }
 
     @Test
-    public void innvilge_foreldrepenger_14_uker_før_fødsel_men_ikke_12_uker_før_termin_ved_terminsøknad() {
+    void innvilge_foreldrepenger_14_uker_før_fødsel_men_ikke_12_uker_før_termin_ved_terminsøknad() {
         var termin = LocalDate.of(2020, 6, 10);
         var testGrunnlag = grunnlag.medDatoer(new Datoer.Builder().medTermin(termin).medFødsel(termin.plusWeeks(2)))
                 .medRettOgOmsorg(aleneomsorg())

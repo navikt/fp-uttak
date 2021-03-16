@@ -23,10 +23,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 
-public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void skal_starte_arbeidsforhold_fra_startdato() {
+    void skal_starte_arbeidsforhold_fra_startdato() {
         var omsorgsovertakelse = LocalDate.of(2019, 11, 27);
         var arbeidsforhold1 = ARBEIDSFORHOLD;
         var arbeidsforhold2 = AktivitetIdentifikator.annenAktivitet();
@@ -56,7 +56,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
     }
 
     @Test
-    public void nytt_arbeidsforhold_skal_hente_saldo_fra_eksisterende_arbeidsforhold() {
+    void nytt_arbeidsforhold_skal_hente_saldo_fra_eksisterende_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold1 = AktivitetIdentifikator.annenAktivitet();
         var arbeidsforhold2 = AktivitetIdentifikator.forFrilans();
@@ -83,7 +83,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
     }
 
     @Test
-    public void nytt_arbeidsforhold_skal_hente_saldo_fra_arbeidsforholdet_som_har_høyest_saldo_på_startdato() {
+    void nytt_arbeidsforhold_skal_hente_saldo_fra_arbeidsforholdet_som_har_høyest_saldo_på_startdato() {
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold1 = ARBEIDSFORHOLD;
         var arbeidsforhold2 = AktivitetIdentifikator.annenAktivitet();
@@ -122,7 +122,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
     }
 
     @Test
-    public void nytt_arbeidsforhold_skal_hente_saldo_fra_arbeidsforholdet_som_har_høyest_saldo_på_startdato_2() {
+    void nytt_arbeidsforhold_skal_hente_saldo_fra_arbeidsforholdet_som_har_høyest_saldo_på_startdato_2() {
         //Testen sjekker om det nye arbeidsforholdet vinner dager på at begge eksisterende arbeidsforhold graderer to uker hver
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold1 = ARBEIDSFORHOLD;
@@ -150,7 +150,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
     }
 
     @Test
-    public void skal_ikke_ta_hensyn_til_startdato_hvis_bare_ett_arbeidsforhold() {
+    void skal_ikke_ta_hensyn_til_startdato_hvis_bare_ett_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold = AktivitetIdentifikator.annenAktivitet();
         var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold, fødselsdato.plusWeeks(4)));
@@ -169,7 +169,7 @@ public class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePeriode
     }
 
     @Test
-    public void skal_kunne_lage_manglende_søkt_periode_i_periode_uten_at_søker_har_aktive_arbeidsforhold() {
+    void skal_kunne_lage_manglende_søkt_periode_i_periode_uten_at_søker_har_aktive_arbeidsforhold() {
         var fødsel = LocalDate.of(2018, 10, 26);
         var tilkommetArbeidsforhold1 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
         var tilkommetArbeidsforhold2 = AktivitetIdentifikator.forFrilans();

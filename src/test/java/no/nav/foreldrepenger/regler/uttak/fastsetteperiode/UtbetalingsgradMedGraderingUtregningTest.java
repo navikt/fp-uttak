@@ -14,10 +14,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class UtbetalingsgradMedGraderingUtregningTest {
+class UtbetalingsgradMedGraderingUtregningTest {
 
     @Test
-    public void toArbeidsforholdMedEnGradertGirRedusertUtbetalingsgrad() {
+    void toArbeidsforholdMedEnGradertGirRedusertUtbetalingsgrad() {
         var aktivitet1 = AktivitetIdentifikator.annenAktivitet();
         var aktivitet2 = AktivitetIdentifikator.forFrilans();
         var arbeidstidsprosent = BigDecimal.valueOf(20);

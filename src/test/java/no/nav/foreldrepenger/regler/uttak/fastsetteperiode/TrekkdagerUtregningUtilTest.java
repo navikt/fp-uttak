@@ -13,10 +13,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class TrekkdagerUtregningUtilTest {
+class TrekkdagerUtregningUtilTest {
 
     @Test
-    public void skal_runde_ned_ved_gradering() {
+    void skal_runde_ned_ved_gradering() {
 
         var fom = LocalDate.of(2019, 3, 14);
         var tom = LocalDate.of(2019, 3, 15);
@@ -30,7 +30,7 @@ public class TrekkdagerUtregningUtilTest {
     }
 
     @Test
-    public void skal_redusere_trekkdager_ved_samtidig_uttak_uten_gradering() {
+    void skal_redusere_trekkdager_ved_samtidig_uttak_uten_gradering() {
 
         //10 virkdager
         var fom = LocalDate.of(2019, 4, 1);

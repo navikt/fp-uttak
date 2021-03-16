@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public abstract class FastsettePerioderRegelOrkestreringTestBase {
+abstract class FastsettePerioderRegelOrkestreringTestBase {
     static final AktivitetIdentifikator ARBEIDSFORHOLD = ARBEIDSFORHOLD_1;
 
     private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();

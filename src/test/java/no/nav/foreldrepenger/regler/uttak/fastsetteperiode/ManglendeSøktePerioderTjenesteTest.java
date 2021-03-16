@@ -37,7 +37,7 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
-public class ManglendeSøktePerioderTjenesteTest {
+class ManglendeSøktePerioderTjenesteTest {
 
     private final Konfigurasjon konfigurasjon = StandardKonfigurasjon.KONFIGURASJON;
     private final int mødrekvoteDager = konfigurasjon.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
@@ -49,7 +49,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     private final int førFødselDager = konfigurasjon.getParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 6, 1));
 
     @Test
-    public void farMedAleneomsorgSkalHaUttakFraFødsel() {
+    void farMedAleneomsorgSkalHaUttakFraFødsel() {
         // Case: PFP-6988. Far med aleneomsorg, 80% dekningsgrad, søkt uttak 9 uker etter fødsel.
         // Det skal legges til manglende periode fra fødselen og frem til hans første uttaksdag.
         // Skjæringstidspunktet for opptjening og beregning er ved hans første uttaksdag, men vi må trekke dager fra fødselen eller omsorgsovertakelsedatoen ved adopsjon.
@@ -74,7 +74,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void farMedAleneomsorgSkalHaUttakFraAdopsjon() {
+    void farMedAleneomsorgSkalHaUttakFraAdopsjon() {
         // Case: PFP-6988. Far med aleneomsorg, 80% dekningsgrad, søkt uttak 9 uker etter adopsjon.
         // Det skal legges til manglende periode fra fødselen og frem til hans første uttaksdag.
 
@@ -99,7 +99,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void farMedAleneomsorgMedInnvilgetAnnetPartPerioder() {
+    void farMedAleneomsorgMedInnvilgetAnnetPartPerioder() {
         // Gjelder der far først har søkt om aleneomsorg.
         var morTom = LocalDate.of(2020, 12, 3);
         var farFom = morTom.plusDays(10);
@@ -133,7 +133,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeUtledeMspIForeldrepengerFørFødselDersomSøknadstypeErAdopsjon() {
+    void skalIkkeUtledeMspIForeldrepengerFørFødselDersomSøknadstypeErAdopsjon() {
         var familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
         var uttakPeriode = oppgittPeriode(FELLESPERIODE, familiehendelsesDato, familiehendelsesDato.plusWeeks(7));
 
@@ -154,7 +154,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalUtledeMspIFellesperiodeFørFødsel() {
+    void skalUtledeMspIFellesperiodeFørFødsel() {
         var familiehendelsesDato = LocalDate.of(2018, 6, 4);
 
 
@@ -185,7 +185,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_overlappe_msp_fpff_og_msp_fellesperiode_før_fødsel() {
+    void skal_ikke_overlappe_msp_fpff_og_msp_fellesperiode_før_fødsel() {
         var familiehendelsesDato = LocalDate.of(2019, 12, 11);
 
         var fellesperiode1 = oppgittPeriode(FELLESPERIODE, familiehendelsesDato.minusWeeks(10), familiehendelsesDato.minusWeeks(8));
@@ -215,7 +215,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalUtledeMspMødrekvoteEtterFødsel() {
+    void skalUtledeMspMødrekvoteEtterFødsel() {
         var familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                 oppgittPeriode(MØDREKVOTE, sluttMødrekvoteEtterFødsel(familiehendelsesDato),
@@ -238,7 +238,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeUtledeMspIPerioderFørEndringsdato() {
+    void skalIkkeUtledeMspIPerioderFørEndringsdato() {
         var familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder())
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelsesDato))
@@ -252,7 +252,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void finnerHullMellomSøktePerioderOgAnnenPartsUttakperioder() {
+    void finnerHullMellomSøktePerioderOgAnnenPartsUttakperioder() {
         var fødselsdato = LocalDate.of(2018, 6, 6);
         var hullDato = fødselsdato.plusWeeks(6);
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -270,7 +270,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void finnerHullMellomSøktePerioderOgAnnenPartsUttakperioderAvslåttPeriodeUtenTrekkdagerOgUtbetaling() {
+    void finnerHullMellomSøktePerioderOgAnnenPartsUttakperioderAvslåttPeriodeUtenTrekkdagerOgUtbetaling() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse,
@@ -303,7 +303,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void finnerIkkeHullFørRevurderingEndringsdato() {
+    void finnerIkkeHullFørRevurderingEndringsdato() {
         var fødselsdato = LocalDate.of(2018, 6, 6);
         var hullDato = fødselsdato.plusWeeks(6);
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -322,7 +322,7 @@ public class ManglendeSøktePerioderTjenesteTest {
 
 
     @Test
-    public void overlappendePerioderMedAnnenPartUtenHull() {
+    void overlappendePerioderMedAnnenPartUtenHull() {
         var fødselsdato = LocalDate.of(2018, 6, 6);
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
@@ -340,7 +340,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void helgErIkkeHull() {
+    void helgErIkkeHull() {
         var fødselsdato = LocalDate.of(2018, 6, 6);
         var mødrekvoteSlutt = LocalDate.of(2018, 7, 20);
         var annenPartStart = LocalDate.of(2018, 7, 23);
@@ -357,7 +357,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraUke7TilFørsteUttaksdagNårBareFarHarRett() {
+    void skalLageManglendeSøktFraUke7TilFørsteUttaksdagNårBareFarHarRett() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
@@ -376,7 +376,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktSomGårOver6UkerEtterFødsel() {
+    void skalLageManglendeSøktSomGårOver6UkerEtterFødsel() {
         var familiehendelse = LocalDate.of(2018, 12, 27);
 
         var søknadsperiodeFom = familiehendelse.minusWeeks(3);
@@ -403,7 +403,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraUke7FørStpOpptjeningHvisEtterFødselNårBareFarHarRett() {
+    void skalLageManglendeSøktFraUke7FørStpOpptjeningHvisEtterFødselNårBareFarHarRett() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var søknadsperiodeFom = familiehendelse.plusWeeks(9);
@@ -422,7 +422,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjeningAnnenpartAvslåttSistePeriode() {
+    void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjeningAnnenpartAvslåttSistePeriode() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse,
@@ -463,7 +463,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjeningAnnenpartInnvilgetUtsettelseSistePeriode() {
+    void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjeningAnnenpartInnvilgetUtsettelseSistePeriode() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse,
@@ -496,7 +496,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjening() {
+    void skalLageManglendeSøktFraMellomForeldreFørStpForOpptjening() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse,
@@ -521,7 +521,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjon() {
+    void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjon() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -541,7 +541,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjonDerAnnenpartIkkeHarUttaksperioder() {
+    void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjonDerAnnenpartIkkeHarUttaksperioder() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -563,7 +563,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeLageManglendeSøktUke7VedAdopsjonTilFørsteUttaksdagNårBareFarHarRett() {
+    void skalIkkeLageManglendeSøktUke7VedAdopsjonTilFørsteUttaksdagNårBareFarHarRett() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -583,7 +583,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjon() {
+    void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjon() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -603,7 +603,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeLageManglendeSøktFrOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartHarUttakITidsrommet() {
+    void skalIkkeLageManglendeSøktFrOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartHarUttakITidsrommet() {
         var omsorgsovertakelse = LocalDate.of(2018, 12, 4);
 
         var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
@@ -623,7 +623,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartIkkeHarTattHelePeriodenFramTilSøkersFørsteUttaksdato() {
+    void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartIkkeHarTattHelePeriodenFramTilSøkersFørsteUttaksdato() {
         var omsorgsovertakelse = LocalDate.of(2018, 12, 4);
 
         var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
@@ -644,7 +644,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagAnnenpartHvisAnnenpartHarUttakMidtMellomOmsorgsovertakelseOgSøkersFørsteUttaksdag() {
+    void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagAnnenpartHvisAnnenpartHarUttakMidtMellomOmsorgsovertakelseOgSøkersFørsteUttaksdag() {
         var omsorgsovertakelse = LocalDate.of(2018, 12, 4);
 
         var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
@@ -667,7 +667,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjonPlussVanligeHullMellomPerioder() {
+    void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjonPlussVanligeHullMellomPerioder() {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
@@ -692,7 +692,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void manglende_fpff_skal_ikke_slutte_i_helg() {
+    void manglende_fpff_skal_ikke_slutte_i_helg() {
         var fødselsdato = LocalDate.of(2018, 6, 11);
 
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -716,7 +716,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeOppretteManglendeSøktFørSkjæringstidspunktForOpptjening() {
+    void skalIkkeOppretteManglendeSøktFørSkjæringstidspunktForOpptjening() {
         var fødselsdato = LocalDate.of(2018, 6, 11);
 
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -731,7 +731,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalOppretteManglendeSøktFraSkjæringstidspunktForOpptjening() {
+    void skalOppretteManglendeSøktFraSkjæringstidspunktForOpptjening() {
         var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -749,7 +749,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skalIkkeOppretteManglendeSøktBasertPåAnnenPartFørSkjæringstidspunktForOpptjening() {
+    void skalIkkeOppretteManglendeSøktBasertPåAnnenPartFørSkjæringstidspunktForOpptjening() {
         var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
@@ -767,7 +767,7 @@ public class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_opprette_manglende_søkt_før_endringsdato() {
+    void skal_ikke_opprette_manglende_søkt_før_endringsdato() {
         var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22),

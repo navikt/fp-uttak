@@ -38,7 +38,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     private static final int UKER_FPFF = 3;
     private static final int UKER_MK = 15;
@@ -62,7 +62,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
 
     @Test
-    public void far_har_uttak_og_mor_søker_før_og_etter_fars_uttak() {
+    void far_har_uttak_og_mor_søker_før_og_etter_fars_uttak() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK + UKER_FP / 2).minusDays(1);
         var fomMorsFP = fødselsdato.plusWeeks(UKER_MK + UKER_FP / 2);
@@ -105,7 +105,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void far_har_uttak_og_mor_søker_om_uttak_før_fars_uttak_slutter_slik_at_mor_tar_dager_fra_far() {
+    void far_har_uttak_og_mor_søker_om_uttak_før_fars_uttak_slutter_slik_at_mor_tar_dager_fra_far() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK);
         var tomFarsFPorginal = fødselsdato.plusWeeks(UKER_MK + UKER_FP / 2).minusDays(1);
         var fomMorsFP = fødselsdato.plusWeeks(UKER_MK + UKER_FP / 2);
@@ -148,7 +148,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void når_far_har_uttak_og_gradert_i_ett_arbeidsforhold_ser_mors_tilgjengelige_dager_kun_det_arbeidsforholdet_for_far_med_minst_forbruk() {
+    void når_far_har_uttak_og_gradert_i_ett_arbeidsforhold_ser_mors_tilgjengelige_dager_kun_det_arbeidsforholdet_for_far_med_minst_forbruk() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK + UKER_FP / 2).minusDays(1);
         var fomMorsFP = fødselsdato.plusWeeks(UKER_MK + UKER_FP / 2);
@@ -198,7 +198,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder() {
+    void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(1);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(5).minusDays(1);
         var fomMorsFP1 = fødselsdato.plusWeeks(UKER_MK);
@@ -235,7 +235,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder2() {
+    void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder2() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(13).minusDays(1);
         var fomMorsFP1 = fødselsdato.plusWeeks(UKER_MK).plusWeeks(2);
@@ -267,7 +267,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder_medSamtidigUttak() {
+    void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder_medSamtidigUttak() {
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
@@ -297,7 +297,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder_utenSamtidigUttak() {
+    void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioder_utenSamtidigUttak() {
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
@@ -327,7 +327,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioderPeriodenTilSluttSkalIkkeTrekkesFra() {
+    void skalHåndtereAnnenPartPeriodeOverlapperMedFlereSøknadsperioderPeriodenTilSluttSkalIkkeTrekkesFra() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(10);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(40).minusDays(1);
         var fomMorsFP1 = fødselsdato.plusWeeks(UKER_MK);
@@ -355,7 +355,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_tapende_behandling() {
+    void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_tapende_behandling() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(6);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(22).minusDays(1);
         var fomMorsFP1 = fødselsdato.plusWeeks(UKER_MK);
@@ -385,7 +385,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void far_skal_gå_tom_for_dager_når_mor_har_oppholdsperiode_men_far_tar_ikke_uttak_i_perioden() {
+    void far_skal_gå_tom_for_dager_når_mor_har_oppholdsperiode_men_far_tar_ikke_uttak_i_perioden() {
 
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
@@ -414,7 +414,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skal_ikke_trekke_for_opphold_i_tapende_behandling_hvis_søker_har_søkt_i_perioden() {
+    void skal_ikke_trekke_for_opphold_i_tapende_behandling_hvis_søker_har_søkt_i_perioden() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
@@ -445,7 +445,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skal_trekke_for_overlappende_avslått_hos_annenpart_i_tapende_behandling() {
+    void skal_trekke_for_overlappende_avslått_hos_annenpart_i_tapende_behandling() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
@@ -479,7 +479,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void skal_ikke_trekke_for_opphold_hvis_søker_har_søkt_i_perioden() {
+    void skal_ikke_trekke_for_opphold_hvis_søker_har_søkt_i_perioden() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
@@ -513,7 +513,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void oppholdsperioder_som_overlapper_med_annenpart_skal_fjernes() {
+    void oppholdsperioder_som_overlapper_med_annenpart_skal_fjernes() {
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
@@ -545,7 +545,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void oppholdsperioder_som_overlapper_med_annenpart_uten_trekkdager_skal_ikke_fjernes() {
+    void oppholdsperioder_som_overlapper_med_annenpart_uten_trekkdager_skal_ikke_fjernes() {
         var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE,
                 Trekkdager.ZERO, Utbetalingsgrad.ZERO);
         var annenpartPeriodeUtenTrekkdager = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))
@@ -576,7 +576,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void oppholdsperioder_som_overlapper_med_annenpart_innvilget_utsettelse_skal_fjernes() {
+    void oppholdsperioder_som_overlapper_med_annenpart_innvilget_utsettelse_skal_fjernes() {
         var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE,
                 Trekkdager.ZERO, Utbetalingsgrad.ZERO);
         var annenpartPeriodeUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))
@@ -608,7 +608,7 @@ public class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     //FAGSYSTEM-85385
     @Test
-    public void tapende_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perioden() {
+    void tapende_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perioden() {
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(

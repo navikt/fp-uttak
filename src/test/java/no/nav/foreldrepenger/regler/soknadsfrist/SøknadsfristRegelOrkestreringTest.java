@@ -15,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePerioderRegelOrkestrering;
 
-public class SøknadsfristRegelOrkestreringTest {
+class SøknadsfristRegelOrkestreringTest {
 
     @Test
-    public void søknadOmUttakInnenforSøknadsfristSkalGiOppfyltResultat() {
+    void søknadOmUttakInnenforSøknadsfristSkalGiOppfyltResultat() {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
                 .medSøknadMottattDato(nå.with(lastDayOfMonth()))
@@ -32,7 +32,7 @@ public class SøknadsfristRegelOrkestreringTest {
     }
 
     @Test
-    public void resultat_skal_inneholde_sporing_i_json() throws IOException {
+    void resultat_skal_inneholde_sporing_i_json() throws IOException {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
                 .medSøknadMottattDato(nå.with(lastDayOfMonth()))
@@ -47,7 +47,7 @@ public class SøknadsfristRegelOrkestreringTest {
     }
 
     @Test
-    public void søknadOmUttakUtenforSøknadsfristSkalGiIkkeOppfyltOgAksjonskode() {
+    void søknadOmUttakUtenforSøknadsfristSkalGiIkkeOppfyltOgAksjonskode() {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
                 .medSøknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
@@ -66,7 +66,7 @@ public class SøknadsfristRegelOrkestreringTest {
      * Avslag på utsettelse tilbake i tid håndteres av {@link FastsettePerioderRegelOrkestrering}
      */
     @Test
-    public void søknadOmBareUtsettelseSkalGiOppfyltResultat() {
+    void søknadOmBareUtsettelseSkalGiOppfyltResultat() {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
                 .medSøknadMottattDato(nå.with(lastDayOfMonth()))

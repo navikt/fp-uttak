@@ -32,10 +32,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class StebarnsadopsjonDelRegelTest {
+class StebarnsadopsjonDelRegelTest {
 
     @Test
-    public void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
+    void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
@@ -59,7 +59,7 @@ public class StebarnsadopsjonDelRegelTest {
     }
 
     @Test
-    public void UT1241_stebarnsadopsjon_far_omsorg_disponible_dager_og_ingen_gradering() {
+    void UT1241_stebarnsadopsjon_far_omsorg_disponible_dager_og_ingen_gradering() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
@@ -77,7 +77,7 @@ public class StebarnsadopsjonDelRegelTest {
     }
 
     @Test
-    public void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
+    void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = gradertPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2),
                 Set.of(ARBEIDSFORHOLD_1));
@@ -94,7 +94,7 @@ public class StebarnsadopsjonDelRegelTest {
     }
 
     @Test
-    public void UT1244_stebarnsadopsjon_far_omsorg_ikke_disponible_stønadsdager() {
+    void UT1244_stebarnsadopsjon_far_omsorg_ikke_disponible_stønadsdager() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
@@ -114,7 +114,7 @@ public class StebarnsadopsjonDelRegelTest {
     }
 
     @Test
-    public void UT1285_stebarnsadopsjon_uttak_før_omsorgsovertakelse() {
+    void UT1285_stebarnsadopsjon_uttak_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 

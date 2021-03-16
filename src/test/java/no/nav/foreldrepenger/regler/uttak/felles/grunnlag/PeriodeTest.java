@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 
-public class PeriodeTest {
+class PeriodeTest {
 
     @Test
-    public void periode_med_start_og_slutt_og_dato_utenfor_skal_ikke_overlappe() {
+    void periode_med_start_og_slutt_og_dato_utenfor_skal_ikke_overlappe() {
         var testPeriode = new Periode(LocalDate.of(2016, 1, 1), LocalDate.of(2018, 1, 1));
 
         assertThat(testPeriode.overlapper(LocalDate.of(2019, 1, 1))).isFalse();
@@ -19,7 +19,7 @@ public class PeriodeTest {
 
 
     @Test
-    public void periode_uten_start_og_slutt_skal_overlappe() {
+    void periode_uten_start_og_slutt_skal_overlappe() {
         var testPeriode = new Periode(null, null);
 
         assertThat(testPeriode.overlapper(LocalDate.of(2017, 1, 1))).isTrue();
@@ -27,28 +27,28 @@ public class PeriodeTest {
 
 
     @Test
-    public void periode_med_start_og_slutt_skal_overlappe() {
+    void periode_med_start_og_slutt_skal_overlappe() {
         var testPeriode = new Periode(LocalDate.of(2016, 1, 1), LocalDate.of(2018, 1, 1));
 
         assertThat(testPeriode.overlapper(LocalDate.of(2017, 1, 1))).isTrue();
     }
 
     @Test
-    public void periode_med_bare_start_skal_overlappe() {
+    void periode_med_bare_start_skal_overlappe() {
         var testPeriode = new Periode(LocalDate.of(2016, 1, 1), null);
 
         assertThat(testPeriode.overlapper(LocalDate.of(2017, 1, 1))).isTrue();
     }
 
     @Test
-    public void periode_med_bare_start_og_dato_før_start_skal_ikke_overlappe() {
+    void periode_med_bare_start_og_dato_før_start_skal_ikke_overlappe() {
         var testPeriode = new Periode(LocalDate.of(2016, 1, 1), null);
 
         assertThat(testPeriode.overlapper(LocalDate.of(2015, 1, 1))).isFalse();
     }
 
     @Test
-    public void helePeriodenOverlapper() {
+    void helePeriodenOverlapper() {
         var fom = LocalDate.now();
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
@@ -59,7 +59,7 @@ public class PeriodeTest {
     }
 
     @Test
-    public void begynnelsenAvPeriodenOverlapper() {
+    void begynnelsenAvPeriodenOverlapper() {
         var fom = LocalDate.now();
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
@@ -70,7 +70,7 @@ public class PeriodeTest {
     }
 
     @Test
-    public void sluttenAvPeriodenOverlapper() {
+    void sluttenAvPeriodenOverlapper() {
         var fom = LocalDate.now();
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
@@ -81,7 +81,7 @@ public class PeriodeTest {
     }
 
     @Test
-    public void periodenRettFørOverlapperIkke() {
+    void periodenRettFørOverlapperIkke() {
         var fom = LocalDate.now();
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
@@ -90,7 +90,7 @@ public class PeriodeTest {
     }
 
     @Test
-    public void periodenRettEtterOverlapperIkke() {
+    void periodenRettEtterOverlapperIkke() {
         var fom = LocalDate.now();
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);

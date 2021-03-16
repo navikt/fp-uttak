@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
-public class UtbetalingsgradSamtidigUttakUtregningTest {
+class UtbetalingsgradSamtidigUttakUtregningTest {
 
     @Test
-    public void hvis_ugradert_periode_skal_utbetalingsgrad_være_lik_samtidig_uttaksprosent() {
+    void hvis_ugradert_periode_skal_utbetalingsgrad_være_lik_samtidig_uttaksprosent() {
         var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
         var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, null).resultat();
 
@@ -21,7 +21,7 @@ public class UtbetalingsgradSamtidigUttakUtregningTest {
     }
 
     @Test
-    public void hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
+    void hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
         var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
         var graderingArbeidstidsprosent = BigDecimal.ONE;
         var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, graderingArbeidstidsprosent).resultat();

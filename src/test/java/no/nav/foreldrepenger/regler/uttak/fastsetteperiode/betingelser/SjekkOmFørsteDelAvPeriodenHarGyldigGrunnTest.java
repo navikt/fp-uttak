@@ -16,10 +16,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
+class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
 
     @Test
-    public void førsteDelGyldigGrunn() {
+    void førsteDelGyldigGrunn() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 
@@ -34,7 +34,7 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
     }
 
     @Test
-    public void førsteDelIkkeGyldigGrunn() {
+    void førsteDelIkkeGyldigGrunn() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 

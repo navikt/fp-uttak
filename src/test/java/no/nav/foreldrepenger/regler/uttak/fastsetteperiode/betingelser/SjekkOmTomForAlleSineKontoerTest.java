@@ -26,10 +26,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningT
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmTomForAlleSineKontoerTest {
+class SjekkOmTomForAlleSineKontoerTest {
 
     @Test
-    public void når_søknadstype_er_fødsel_og_søker_er_mor_og_begge_har_rett_skal_søker_sine_kontoer_vær_MK_FP_og_FORELDREPENGER() { // 1
+    void når_søknadstype_er_fødsel_og_søker_er_mor_og_begge_har_rett_skal_søker_sine_kontoer_vær_MK_FP_og_FORELDREPENGER() { // 1
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
@@ -47,7 +47,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søker_har_kontoene_FPFF_MK_FP_er_søker_ikke_tom_for_alle_sine_konto_selvom_en_konto_er_tom() {
+    void når_søker_har_kontoene_FPFF_MK_FP_er_søker_ikke_tom_for_alle_sine_konto_selvom_en_konto_er_tom() {
         var periodeStart = LocalDate.of(2018, 1, 8);
         var periodeSlutt = periodeStart.plusWeeks(6);
 
@@ -73,7 +73,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_fødsel_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 2
+    void når_søknadstype_er_fødsel_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 2
 
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(50));
@@ -90,7 +90,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_fødsel_og_søker_er_far_og_begge_har_rett_skal_søker_sine_kontoer_være_FK_FP_og_FORELDREPENGER() { // 3
+    void når_søknadstype_er_fødsel_og_søker_er_far_og_begge_har_rett_skal_søker_sine_kontoer_være_FK_FP_og_FORELDREPENGER() { // 3
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
@@ -104,7 +104,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_fødsel_og_søker_er_far_og_kun_far_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 4
+    void når_søknadstype_er_fødsel_og_søker_er_far_og_kun_far_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 4
 
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(50));
@@ -121,7 +121,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_adopsjon_og_søker_er_mor_og_begge_har_rett_skal_søker_sine_kontoer_være_MK_FP_og_FORELDREPENGER() { // 5
+    void når_søknadstype_er_adopsjon_og_søker_er_mor_og_begge_har_rett_skal_søker_sine_kontoer_være_MK_FP_og_FORELDREPENGER() { // 5
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
@@ -135,7 +135,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_adopsjon_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 6
+    void når_søknadstype_er_adopsjon_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 6
 
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(50));
@@ -152,7 +152,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_adopsjon_og_søker_er_far_og_begge_har_rett_skal_søker_sine_kontoer_være_FK_FP_og_FORELDREPENGER() { // 7
+    void når_søknadstype_er_adopsjon_og_søker_er_far_og_begge_har_rett_skal_søker_sine_kontoer_være_FK_FP_og_FORELDREPENGER() { // 7
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
@@ -166,7 +166,7 @@ public class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    public void når_søknadstype_er_adopsjon_og_søker_er_far_og_kun_en_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 8
+    void når_søknadstype_er_adopsjon_og_søker_er_far_og_kun_en_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 8
 
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER).medTrekkdager(50));

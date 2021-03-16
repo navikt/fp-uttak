@@ -21,10 +21,10 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
+class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
     @Test
-    public void begynnelsenAvPeriodenHarGyldigGrunn() {
+    void begynnelsenAvPeriodenHarGyldigGrunn() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(2);
         var gyldigGrunnStart = periodeStart;
@@ -42,7 +42,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     @Test
-    public void midtenAvPeriodenHarGyldigGrunn() {
+    void midtenAvPeriodenHarGyldigGrunn() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeStart.plusWeeks(3);
@@ -60,7 +60,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     @Test
-    public void sluttenAvPeriodenHarGyldigGrunn() {
+    void sluttenAvPeriodenHarGyldigGrunn() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeStart.plusWeeks(5);
@@ -78,7 +78,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     @Test
-    public void helePeriodenErUgyldig() {
+    void helePeriodenErUgyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 
@@ -95,7 +95,7 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     @Test
-    public void ingenGyldigGrunnPerioder() {
+    void ingenGyldigGrunnPerioder() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 

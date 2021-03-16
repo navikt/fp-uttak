@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
-public class UtbetalingsgradUtenGraderingUtregningTest {
+class UtbetalingsgradUtenGraderingUtregningTest {
 
     @Test
-    public void utbetaling_skal_være_100_prosent() {
+    void utbetaling_skal_være_100_prosent() {
         var utregning = utregning();
         assertThat(utregning.resultat()).isEqualTo(Utbetalingsgrad.HUNDRED);
     }

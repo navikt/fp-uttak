@@ -29,11 +29,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class UtsettelseDelregelTest {
+class UtsettelseDelregelTest {
 
 
     @Test
-    public void UT1101_ferie_innenfor_seks_første_uker() {
+    void UT1101_ferie_innenfor_seks_første_uker() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
                 PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE,
@@ -60,7 +60,7 @@ public class UtsettelseDelregelTest {
     }
 
     @Test
-    public void UT1124_fødsel_mer_enn_7_uker_før_termin() {
+    void UT1124_fødsel_mer_enn_7_uker_før_termin() {
         var fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
@@ -86,7 +86,7 @@ public class UtsettelseDelregelTest {
     }
 
     @Test
-    public void UT1120_fødsel_mer_enn_7_uker_før_termin_perioden_ligger_etter_termin() {
+    void UT1120_fødsel_mer_enn_7_uker_før_termin_perioden_ligger_etter_termin() {
         var fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
@@ -113,7 +113,7 @@ public class UtsettelseDelregelTest {
     }
 
     @Test
-    public void UT1120_fødsel_mindre_enn_7_uker_før_termin() {
+    void UT1120_fødsel_mindre_enn_7_uker_før_termin() {
         var fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();

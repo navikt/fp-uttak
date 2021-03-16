@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.Dekningsgrad;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class StønadskontoRegelOrkestreringTest {
+class StønadskontoRegelOrkestreringTest {
 
     private static final LocalDate DATO = LocalDate.now();
     private final StønadskontoRegelOrkestrering stønadskontoRegelOrkestrering = new StønadskontoRegelOrkestrering();
@@ -32,7 +32,7 @@ public class StønadskontoRegelOrkestreringTest {
     - Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100() {
+    void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -54,7 +54,7 @@ public class StønadskontoRegelOrkestreringTest {
 
 
     @Test
-    public void skal_legge_til_prematurdager_på_fellesperiode() {
+    void skal_legge_til_prematurdager_på_fellesperiode() {
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
@@ -77,7 +77,7 @@ public class StønadskontoRegelOrkestreringTest {
     }
 
     @Test
-    public void skal_legge_til_prematurdager_på_foreldrepenger() {
+    void skal_legge_til_prematurdager_på_foreldrepenger() {
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
@@ -96,7 +96,7 @@ public class StønadskontoRegelOrkestreringTest {
     }
 
     @Test
-    public void skal_ikke_legge_til_prematurdager_på_flerbarnsdager() {
+    void skal_ikke_legge_til_prematurdager_på_flerbarnsdager() {
         LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
@@ -122,7 +122,7 @@ public class StønadskontoRegelOrkestreringTest {
     - Mødrekvote: 15 uker (75 stønadsdager)
 */
     @Test
-    public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100() {
+    void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
@@ -150,7 +150,7 @@ public class StønadskontoRegelOrkestreringTest {
        - Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
    */
     @Test
-    public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80() {
+    void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -179,7 +179,7 @@ public class StønadskontoRegelOrkestreringTest {
         - Mødrekvote: 15 uker (75 stønadsdager)
     */
     @Test
-    public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80() {
+    void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
@@ -208,7 +208,7 @@ public class StønadskontoRegelOrkestreringTest {
         - Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
+    void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
@@ -238,7 +238,7 @@ public class StønadskontoRegelOrkestreringTest {
        - Mødrekvote: 15 uker (75 stønadsdager)
    */
     @Test
-    public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
+    void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
@@ -268,7 +268,7 @@ public class StønadskontoRegelOrkestreringTest {
     - Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
+    void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(3)
@@ -298,7 +298,7 @@ public class StønadskontoRegelOrkestreringTest {
         - Mødrekvote: 15 uker (75 stønadsdager)
     */
     @Test
-    public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
+    void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
@@ -328,7 +328,7 @@ public class StønadskontoRegelOrkestreringTest {
         - Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
+    void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
@@ -358,7 +358,7 @@ public class StønadskontoRegelOrkestreringTest {
        - Mødrekvote: 15 uker (75 stønadsdager)
    */
     @Test
-    public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
+    void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
@@ -388,7 +388,7 @@ public class StønadskontoRegelOrkestreringTest {
     - Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
+    void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
@@ -418,7 +418,7 @@ public class StønadskontoRegelOrkestreringTest {
         - Mødrekvote: 15 uker (75 stønadsdager)
     */
     @Test
-    public void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
+    void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
@@ -444,7 +444,7 @@ public class StønadskontoRegelOrkestreringTest {
         Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_100() {
+    void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -467,7 +467,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: - 46 uker (230 stønadsdager)
     */
     @Test
-    public void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_100() {
+    void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
@@ -490,7 +490,7 @@ public class StønadskontoRegelOrkestreringTest {
         Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_80() {
+    void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -513,7 +513,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 56 uker (280 stønadsdager)
     */
     @Test
-    public void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_80() {
+    void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
@@ -536,7 +536,7 @@ public class StønadskontoRegelOrkestreringTest {
        Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
    */
     @Test
-    public void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_2_barn() {
+    void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
@@ -559,7 +559,7 @@ public class StønadskontoRegelOrkestreringTest {
         Foreldrepenger: - 46 uker (230 stønadsdager) + 17 uker (85 stønadsdager)
     */
     @Test
-    public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
+    void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
@@ -582,7 +582,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
 */
     @Test
-    public void fødsel_bare_mor_rett_dekningsgrad_80_2_barn() {
+    void fødsel_bare_mor_rett_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(2)
@@ -605,7 +605,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 56 uker (280 stønadsdager) + 21 uker (105 stønadsdager)
     */
     @Test
-    public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
+    void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
@@ -628,7 +628,7 @@ public class StønadskontoRegelOrkestreringTest {
        Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
    */
     @Test
-    public void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_3_barn() {
+    void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(3)
@@ -651,7 +651,7 @@ public class StønadskontoRegelOrkestreringTest {
         Foreldrepenger: - 46 uker (230 stønadsdager) + 46 uker (230 stønadsdager)
     */
     @Test
-    public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
+    void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
@@ -674,7 +674,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger før fødsel: 3 uker (15 stønadsdager)
     */
     @Test
-    public void fødsel_bare_mor_rett_dekningsgrad_80_3_barn() {
+    void fødsel_bare_mor_rett_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
@@ -697,7 +697,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 56 uker (280 stønadsdager) + 56 uker (280 stønadsdager)
     */
     @Test
-    public void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
+    void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
@@ -719,7 +719,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 46 uker (230 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100() {
+    void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -741,7 +741,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 56 uker (280 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80() {
+    void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(1)
@@ -763,7 +763,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 46 uker (230 stønadsdager) + 46 uker (230 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
+    void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
@@ -785,7 +785,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 56 uker (280 stønadsdager) + 56 uker (280 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
+    void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
@@ -807,7 +807,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 46 uker (230 stønadsdager) + 17 uker (85 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
+    void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(2)
@@ -829,7 +829,7 @@ public class StønadskontoRegelOrkestreringTest {
     Foreldrepenger: 56 uker (280 stønadsdager) + 21 uker (105 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
+    void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
@@ -851,7 +851,7 @@ public class StønadskontoRegelOrkestreringTest {
        Foreldrepenger: 40 uker (200 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100() {
+    void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(1)
@@ -873,7 +873,7 @@ public class StønadskontoRegelOrkestreringTest {
        Foreldrepenger: 50 uker (250 stønadsdager)
    */
     @Test
-    public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80() {
+    void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -897,7 +897,7 @@ public class StønadskontoRegelOrkestreringTest {
 
     */
     @Test
-    public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_3_barn() {
+    void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(3)
@@ -922,7 +922,7 @@ public class StønadskontoRegelOrkestreringTest {
 
     */
     @Test
-    public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_3_barn() {
+    void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_3_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
@@ -946,7 +946,7 @@ public class StønadskontoRegelOrkestreringTest {
        Flerbarnsdager: 17 uker (85 stønadsdager)
     */
     @Test
-    public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_2_barn() {
+    void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
@@ -971,7 +971,7 @@ public class StønadskontoRegelOrkestreringTest {
 
     */
     @Test
-    public void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_2_barn() {
+    void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_2_barn() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
@@ -993,7 +993,7 @@ public class StønadskontoRegelOrkestreringTest {
     Hverken mor eller far har opptjent rett til foreldrepenger
     */
     @Test
-    public void hverken_mor_eller_far_har_rett() {
+    void hverken_mor_eller_far_har_rett() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(1)
@@ -1010,7 +1010,7 @@ public class StønadskontoRegelOrkestreringTest {
     }
 
     @Test
-    public void bergegn_kontoer_regel_skal_produsere_sporing_med_json() throws IOException {
+    void bergegn_kontoer_regel_skal_produsere_sporing_med_json() throws IOException {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
@@ -1029,7 +1029,7 @@ public class StønadskontoRegelOrkestreringTest {
     }
 
     @Test
-    public void skal_bruke_omsorgsovertakelse_og_ikke_fødselsdato_som_konfig_parameter() {
+    void skal_bruke_omsorgsovertakelse_og_ikke_fødselsdato_som_konfig_parameter() {
         BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
                 //Så tidlig at det vil skape exception hvis bruk ettersom vi ikke har noe konfig for 2016
                 .medFødselsdato(LocalDate.of(2016, 1, 1))

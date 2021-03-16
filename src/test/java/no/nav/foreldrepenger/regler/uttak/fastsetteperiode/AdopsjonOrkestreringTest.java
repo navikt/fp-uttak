@@ -33,11 +33,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     // MØDREKVOTE
     @Test
-    public void UT1230_adopsjon_mor_søker_mødrekvote_før_omsorgsovertakelse() {
+    void UT1230_adopsjon_mor_søker_mødrekvote_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -57,7 +57,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // MØDREKVOTE
     @Test
-    public void UT1006_adopsjon_mor_søker_mødrekvote_etter_omsorgsovertakelse_men_uten_omsorg() {
+    void UT1006_adopsjon_mor_søker_mødrekvote_etter_omsorgsovertakelse_men_uten_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -80,7 +80,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // MØDREKVOTE
     @Test
-    public void UT1230_adopsjon_far_søker_overført_mødrekvote_pga_innleggelse_før_omsorgsovertakelse() {
+    void UT1230_adopsjon_far_søker_overført_mødrekvote_pga_innleggelse_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -104,7 +104,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // MØDREKVOTE
     @Test
-    public void UT1230_adopsjon_far_søker_overført_mødrekvote_pga_sykdom_skade_før_omsorgsovertakelse() {
+    void UT1230_adopsjon_far_søker_overført_mødrekvote_pga_sykdom_skade_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -129,7 +129,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FEDREKVOTE
     @Test
-    public void UT1231_adopsjon_far_søker_fedrekvote_før_omsorgsovertakelse() {
+    void UT1231_adopsjon_far_søker_fedrekvote_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -149,7 +149,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FEDREKVOTE
     @Test
-    public void UT1030_adopsjon_far_søker_fedrekvote_før_omsorgsovertakelse_men_uten_omsorg() {
+    void UT1030_adopsjon_far_søker_fedrekvote_før_omsorgsovertakelse_men_uten_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -172,7 +172,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FEDREKVOTE
     @Test
-    public void UT1231_adopsjon_mor_søker_overført_fedrekvote_pga_innleggelse_før_omsorgsovertakelse() {
+    void UT1231_adopsjon_mor_søker_overført_fedrekvote_pga_innleggelse_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -196,7 +196,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FEDREKVOTE
     @Test
-    public void UT1231_adopsjon_mor_søker_overført_fedrekvote_pga_sykdom_skade_før_omsorgsovertakelse() {
+    void UT1231_adopsjon_mor_søker_overført_fedrekvote_pga_sykdom_skade_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -221,7 +221,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FELLESPERIODE
     @Test
-    public void UT1235_adopsjon_mor_søker_fellesperiode_før_omsorgsovertakelse() {
+    void UT1235_adopsjon_mor_søker_fellesperiode_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -241,7 +241,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FELLESPERIODE
     @Test
-    public void UT1046_adopsjon_mor_søker_fellesperiode_etter_omsorgsovertakelse_men_uten_omsorg() {
+    void UT1046_adopsjon_mor_søker_fellesperiode_etter_omsorgsovertakelse_men_uten_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -264,7 +264,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FELLESPERIODE
     @Test
-    public void UT1232_adopsjon_far_søker_fellesperiode_før_omsorgsovertakelse() {
+    void UT1232_adopsjon_far_søker_fellesperiode_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -284,7 +284,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FELLESPERIODE
     @Test
-    public void UT1060_adopsjon_far_søker_fellesperiode_etter_omsorgsovertakelse_men_uten_omsorg() {
+    void UT1060_adopsjon_far_søker_fellesperiode_etter_omsorgsovertakelse_men_uten_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -307,7 +307,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FORELDREPENGER
     @Test
-    public void UT1236_adopsjon_mor_søker_foreldrepenger_før_omsorgsovertakelse() {
+    void UT1236_adopsjon_mor_søker_foreldrepenger_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
@@ -329,7 +329,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FORELDREPENGER
     @Test
-    public void UT1191_adopsjon_mor_søker_foreldrepenger_etter_omsorgsovertakelse_men_uten_omsorg() {
+    void UT1191_adopsjon_mor_søker_foreldrepenger_etter_omsorgsovertakelse_men_uten_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
@@ -354,7 +354,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FORELDREPENGER
     @Test
-    public void UT1234_adopsjon_far_søker_foreldrepenger_før_omsorgsovertakelse() {
+    void UT1234_adopsjon_far_søker_foreldrepenger_før_omsorgsovertakelse() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
@@ -376,7 +376,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FORELDREPENGER
     @Test
-    public void UT1199_adopsjon_far_søker_foreldrepenger_etter_omsorgsovertakelse_men_uten_omsorg() {
+    void UT1199_adopsjon_far_søker_foreldrepenger_etter_omsorgsovertakelse_men_uten_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
@@ -403,7 +403,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // FORELDREPENGER
     @Test
-    public void adopsjon_far_søker_foreldrepenger_etter_omsorgsovertakelse_men_før_uke_7_skal_innvilges() {
+    void adopsjon_far_søker_foreldrepenger_etter_omsorgsovertakelse_men_før_uke_7_skal_innvilges() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(130));
@@ -431,7 +431,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void UT1082_adopsjon_avslag_perioder_forut_for_førsteLovligeUttaksdag() {
+    void UT1082_adopsjon_avslag_perioder_forut_for_førsteLovligeUttaksdag() {
         var omsorgsovertakelseDato = LocalDate.of(2020, 1, 1);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(100));
@@ -456,7 +456,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     // STEBARNSADOPSJON
     @Test
-    public void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
+    void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -478,7 +478,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void UT1241_stebarnsadopsjon_far_omsorg_disponible_dager_og_ingen_gradering() {
+    void UT1241_stebarnsadopsjon_far_omsorg_disponible_dager_og_ingen_gradering() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -498,7 +498,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
+    void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelseDato))
@@ -518,7 +518,7 @@ public class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestrering
     }
 
     @Test
-    public void UT1244_stebarnsadopsjon_far_omsorg_ikke_disponible_stønadsdager() {
+    void UT1244_stebarnsadopsjon_far_omsorg_ikke_disponible_stønadsdager() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))

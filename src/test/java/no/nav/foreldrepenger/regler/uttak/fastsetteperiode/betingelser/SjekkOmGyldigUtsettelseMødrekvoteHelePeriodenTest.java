@@ -18,11 +18,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
-public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
+class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
 
 
     @Test
-    public void ingenGyldigGrunnPeriode() {
+    void ingenGyldigGrunnPeriode() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(2);
 
@@ -36,7 +36,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void helePeriodeErUgyldig() {
+    void helePeriodeErUgyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(2);
         var gyldigGrunnStart = periodeStart.minusWeeks(1);
@@ -56,7 +56,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
 
 
     @Test
-    public void bareBegynnelseAvPeriodeErGyldig() {
+    void bareBegynnelseAvPeriodeErGyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeStart.minusWeeks(1);
@@ -75,7 +75,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void sisteDagIPeriodenErUgyldig() {
+    void sisteDagIPeriodenErUgyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeStart.minusWeeks(1);
@@ -94,7 +94,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void bareMidtenAvPeriodenErGyldig() {
+    void bareMidtenAvPeriodenErGyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeStart.plusWeeks(1);
@@ -113,7 +113,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void bareSluttenAvPeriodenErGyldig() {
+    void bareSluttenAvPeriodenErGyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeSlutt.minusWeeks(1);
@@ -132,7 +132,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void bareBegynnelsenOgSluttenAvPeriodenErGyldig() {
+    void bareBegynnelsenOgSluttenAvPeriodenErGyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 
@@ -150,7 +150,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void helePeriodenGyldig() {
+    void helePeriodenGyldig() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
         var gyldigGrunnStart = periodeStart;
@@ -169,7 +169,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void helePeriodenGyldigMedFlereGyldigGrunnPerioder() {
+    void helePeriodenGyldigMedFlereGyldigGrunnPerioder() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 
@@ -187,7 +187,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
     }
 
     @Test
-    public void helePeriodenGyldigMedFlereGyldigGrunnPerioderSomOverlapper() {
+    void helePeriodenGyldigMedFlereGyldigGrunnPerioderSomOverlapper() {
         var periodeStart = LocalDate.now().plusMonths(1);
         var periodeSlutt = periodeStart.plusWeeks(6);
 

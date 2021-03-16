@@ -50,7 +50,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
-public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     protected final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
@@ -63,7 +63,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void periode_med_gradering_og_10_prosent_arbeid_skal_få_riktig_antall_trekkdager() {
+    void periode_med_gradering_og_10_prosent_arbeid_skal_få_riktig_antall_trekkdager() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
@@ -107,7 +107,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void når_graderingsperiode_går_tom_skal_perioden_dras_til_søkers_fordel() {
+    void når_graderingsperiode_går_tom_skal_perioden_dras_til_søkers_fordel() {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FLERBARNSDAGER, 17 * 5)).leggTilKonto(konto(FORELDREPENGER, 57 * 5));
         var søknadsperiode1 = oppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 1, 23), LocalDate.of(2019, 3, 1));
         //Søker vil gå tom for dager i løpet av 19. sept, derfor får søker en ekstra trekkdager (Søkers fordel)
@@ -132,7 +132,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void samtidig_uttaksprosent_skal_settes_til_100_minus_gradering_arbeidstidsprosent_hvis_samtidig_uttak_og_gradering() {
+    void samtidig_uttaksprosent_skal_settes_til_100_minus_gradering_arbeidstidsprosent_hvis_samtidig_uttak_og_gradering() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);
@@ -164,7 +164,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void uttak_på_to_arbeidsforhold_hvor_den_ene_går_tom_for_fellesperiode_skal_føre_0_utbetaling_og_0_trekkdager_for_den_som_går_tom() {
+    void uttak_på_to_arbeidsforhold_hvor_den_ene_går_tom_for_fellesperiode_skal_føre_0_utbetaling_og_0_trekkdager_for_den_som_går_tom() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var prosent50 = new BigDecimal("50.00");
         var grunnlag = RegelGrunnlagTestBuilder.create();
@@ -209,7 +209,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void uttak_på_to_arbeidsforhold_hvor_den_ene_går_tom_for_mødrekvote_skal_føre_0_utbetaling_og_0_trekkdager_for_den_som_går_tom() {
+    void uttak_på_to_arbeidsforhold_hvor_den_ene_går_tom_for_mødrekvote_skal_føre_0_utbetaling_og_0_trekkdager_for_den_som_går_tom() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var prosent50 = new BigDecimal("50.00");
         var grunnlag = RegelGrunnlagTestBuilder.create();
@@ -269,7 +269,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
 
 
     @Test
-    public void utbetalingsgrad_og_trekkdager_skal_ta_utgangspunkt_samtidig_uttaksprosent_for_aktiviteter_uten_gradering_hvis_det_finnes_gradering() {
+    void utbetalingsgrad_og_trekkdager_skal_ta_utgangspunkt_samtidig_uttaksprosent_for_aktiviteter_uten_gradering_hvis_det_finnes_gradering() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         var arbeidstidsprosent = BigDecimal.TEN;
@@ -301,7 +301,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void trekkdager_med_desimaler_når_en_periode_er_en_dag() {
+    void trekkdager_med_desimaler_når_en_periode_er_en_dag() {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 1));
         var søknadsperiode = gradertoppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 4, 19), LocalDate.of(2019, 4, 19),
                 BigDecimal.valueOf(75));
@@ -322,7 +322,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void periode_med_gradering_og_90_prosent_arbeid_skal_få_riktig_antall_trekkdager() {
+    void periode_med_gradering_og_90_prosent_arbeid_skal_få_riktig_antall_trekkdager() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
@@ -367,7 +367,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void periode_med_gradering_og_90_prosent_arbeid_og_lite_igjen_på_saldo_skal_bli_innvilget() {
+    void periode_med_gradering_og_90_prosent_arbeid_og_lite_igjen_på_saldo_skal_bli_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
@@ -417,7 +417,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void periode_med_gradering_og_80_prosent_arbeid_og_det_er_for_lite_igjen_på_saldo_slik_at_perioden_knekkes() {
+    void periode_med_gradering_og_80_prosent_arbeid_og_det_er_for_lite_igjen_på_saldo_slik_at_perioden_knekkes() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
@@ -486,7 +486,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void fellesperiode_før_fødsel_skal_ikke_kunne_ha_gradering() {
+    void fellesperiode_før_fødsel_skal_ikke_kunne_ha_gradering() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = create();
         leggPåKvoter(grunnlag);
@@ -527,7 +527,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void skal_ha_en_desimal_på_trekkdager_ved_gradering() {
+    void skal_ha_en_desimal_på_trekkdager_ved_gradering() {
         var omsorgsovertakelse = LocalDate.of(2019, 4, 8);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var grunnlag = new RegelGrunnlag.Builder().medArbeid(
@@ -553,7 +553,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void skal_knekke_riktig_ved_flere_graderingsperioder_og_flere_arbeidsforhold() {
+    void skal_knekke_riktig_ved_flere_graderingsperioder_og_flere_arbeidsforhold() {
         var omsorgsovertakelse = LocalDate.of(2019, 4, 8);
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
@@ -597,7 +597,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void skal_knekke_riktig_når_arbeidsforhold_som_ikke_er_gradert_går_tom_for_dager() {
+    void skal_knekke_riktig_når_arbeidsforhold_som_ikke_er_gradert_går_tom_for_dager() {
         var omsorgsovertakelse = LocalDate.of(2019, 4, 8);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
@@ -634,7 +634,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void skal_sette_trekkdager_lik_lengden_på_perioden_før_knekk() {
+    void skal_sette_trekkdager_lik_lengden_på_perioden_før_knekk() {
         var omsorgsovertakelse = LocalDate.of(2019, 4, 8);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var grunnlag = new RegelGrunnlag.Builder().medArbeid(
@@ -659,7 +659,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void skal_ikke_få_innvilget_en_hel_ekstra_trekkdag() {
+    void skal_ikke_få_innvilget_en_hel_ekstra_trekkdag() {
         var fødselsdato = LocalDate.of(2019, 2, 11);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(FELLESPERIODE, 80))
@@ -693,7 +693,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void graderingsperiode_før_søknad_mottatt_dato_skal_gå_til_manuell() {
+    void graderingsperiode_før_søknad_mottatt_dato_skal_gå_til_manuell() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);
@@ -715,7 +715,7 @@ public class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestrerin
     }
 
     @Test
-    public void opphevet_gradering_skal_ikke_endre_på_hvilket_arbeidsforhold_det_er_søkt_gradering_for() {
+    void opphevet_gradering_skal_ikke_endre_på_hvilket_arbeidsforhold_det_er_søkt_gradering_for() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);

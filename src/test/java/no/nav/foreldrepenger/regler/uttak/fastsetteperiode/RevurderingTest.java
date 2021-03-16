@@ -33,12 +33,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class RevurderingTest {
+class RevurderingTest {
 
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
 
     @Test
-    public void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilAvslagPgaSamtykke() {
+    void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilAvslagPgaSamtykke() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(false))
@@ -56,7 +56,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
+    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
@@ -71,7 +71,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
+    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
@@ -86,7 +86,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
+    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
@@ -101,7 +101,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
+    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
@@ -116,7 +116,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurdering_søknad_der_opphørsdato_ligger_i_perioden() {
+    void revurdering_søknad_der_opphørsdato_ligger_i_perioden() {
         var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
 
@@ -132,7 +132,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurdering_søknad_der_opphørsdato_ligger_før_perioden() {
+    void revurdering_søknad_der_opphørsdato_ligger_før_perioden() {
         var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
 
@@ -148,7 +148,7 @@ public class RevurderingTest {
     }
 
     @Test
-    public void revurdering_søknad_der_opphørsdato_ligger_etter_perioden() {
+    void revurdering_søknad_der_opphørsdato_ligger_etter_perioden() {
         var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
 

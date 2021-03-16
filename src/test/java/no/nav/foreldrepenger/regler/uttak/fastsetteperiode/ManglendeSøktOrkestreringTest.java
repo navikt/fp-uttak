@@ -29,10 +29,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void skal_avslå_og_trekke_mødrekvote_for_mor_hvis_dager_igjen() {
+    void skal_avslå_og_trekke_mødrekvote_for_mor_hvis_dager_igjen() {
 
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
@@ -62,7 +62,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     }
 
     @Test
-    public void skal_avslå_og_trekke_foreldrepenger_for_far_med_enerett_hvis_dager_igjen() {
+    void skal_avslå_og_trekke_foreldrepenger_for_far_med_enerett_hvis_dager_igjen() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var oppgittPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12));
         var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
@@ -87,7 +87,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     }
 
     @Test
-    public void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom() {
+    void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -108,7 +108,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     }
 
     @Test
-    public void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode() {
+    void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -135,7 +135,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     }
 
     @Test
-    public void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode_flere_knekk() {
+    void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode_flere_knekk() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -170,7 +170,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     }
 
     @Test
-    public void skal_kunne_håndtere_ulikt_antall_dager_gjenværende_på_arbeidsforhold_ved_manglende_søkt_periode() {
+    void skal_kunne_håndtere_ulikt_antall_dager_gjenværende_på_arbeidsforhold_ved_manglende_søkt_periode() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 75))
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 1));
@@ -200,7 +200,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     }
 
     @Test
-    public void manglende_søkt_periode_før_nytt_arbeidsforhold_tilkommer() {
+    void manglende_søkt_periode_før_nytt_arbeidsforhold_tilkommer() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var arbeidsforhold = AktivitetIdentifikator.forArbeid("000000001", null);

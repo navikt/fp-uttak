@@ -27,10 +27,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
-public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
+class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    public void tom_for_dager_skal_gi_null_utbetaling() {
+    void tom_for_dager_skal_gi_null_utbetaling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
@@ -61,7 +61,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
     }
 
     @Test
-    public void gyldig_utsettelse_gir_ingen_utbetaling() {
+    void gyldig_utsettelse_gir_ingen_utbetaling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
@@ -103,7 +103,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
     }
 
     @Test
-    public void gradering_gir_redusert_utbetalingsgrad() {
+    void gradering_gir_redusert_utbetalingsgrad() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktiviteter = Set.of(ARBEIDSFORHOLD_1);
         leggPåKvoter(grunnlag);
@@ -137,7 +137,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
     }
 
     @Test
-    public void gradering_gir_redusert_utbetalingsgrad_avrunding() {
+    void gradering_gir_redusert_utbetalingsgrad_avrunding() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktivititeter = Set.of(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2);
         leggPåKvoter(grunnlag);

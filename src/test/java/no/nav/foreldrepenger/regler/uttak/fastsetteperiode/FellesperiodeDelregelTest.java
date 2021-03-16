@@ -39,12 +39,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-public class FellesperiodeDelregelTest {
+class FellesperiodeDelregelTest {
 
     private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
 
     @Test
-    public void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_ved_3_uker_før_fødsel_blir_innvilget() {
+    void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_ved_3_uker_før_fødsel_blir_innvilget() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -59,7 +59,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_7_uker_blir_avslått() {
+    void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_7_uker_blir_avslått() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -73,7 +73,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_fødsel_blir_avslått() {
+    void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_fødsel_blir_avslått() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -87,7 +87,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void fellesperiode_mor_uttak_starter_ved_7_uker_etter_fødsel_blir_innvilget() {
+    void fellesperiode_mor_uttak_starter_ved_7_uker_etter_fødsel_blir_innvilget() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -101,7 +101,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void fellesperiode_far_før_fødsel_slutter_før_fødsel_blir_avslått_uten_knekk() {
+    void fellesperiode_far_før_fødsel_slutter_før_fødsel_blir_avslått_uten_knekk() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(10), fødselsdato.minusWeeks(5), null, false);
         var kontoer = enFellesperiodeKonto(10 * 5);
         var grunnlag = basicGrunnlagFar().medSøknad(søknad(søknadsperiode))
@@ -119,7 +119,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg() {
+    void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(
@@ -134,7 +134,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void fellesperiode_før_fødsel_innvilges_uavhengig_av_om_søker_har_omsorg_da_det_ikke_er_mulig_å_ha_omsorg_fordi_barnet_ikke_er_født() {
+    void fellesperiode_før_fødsel_innvilges_uavhengig_av_om_søker_har_omsorg_da_det_ikke_er_mulig_å_ha_omsorg_fordi_barnet_ikke_er_født() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(
@@ -149,7 +149,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1041_mor_før3UkerFørFamilieHendelse_ikkeGradert() {
+    void UT1041_mor_før3UkerFørFamilieHendelse_ikkeGradert() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -163,7 +163,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1064_mor_før3UkerFørFamilieHendelse_gradert() {
+    void UT1064_mor_før3UkerFørFamilieHendelse_gradert() {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4),
                 PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
@@ -179,7 +179,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1219_mor_tidligstUke7_omsorg_disponibleStønadsdager_gradert_avklart() {
+    void UT1219_mor_tidligstUke7_omsorg_disponibleStønadsdager_gradert_avklart() {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9),
                 PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
@@ -194,7 +194,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1047_mor_fellesperioder_etter_uke7() {
+    void UT1047_mor_fellesperioder_etter_uke7() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -208,7 +208,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1048_mor_fellesperiode_før_uke7() {
+    void UT1048_mor_fellesperiode_før_uke7() {
         var søknadsperiode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().medSøknad(søknad(søknadsperiode))
@@ -222,7 +222,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1255_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
+    void UT1255_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
                 PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
@@ -237,7 +237,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1054_far_førUke7_etterFamileHendelse_utenGyldigGrunn_flerbarnsdager_ikkeOmsorg() {
+    void UT1054_far_førUke7_etterFamileHendelse_utenGyldigGrunn_flerbarnsdager_ikkeOmsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().medSøknad(
@@ -252,7 +252,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1256_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
+    void UT1256_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false,
                 PeriodeVurderingType.PERIODE_OK);
         var kontoer = enFellesperiodeKonto(100);
@@ -267,7 +267,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void opphold_fellesperiode_annenforelder() {
+    void opphold_fellesperiode_annenforelder() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var søknadsperiode = oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
@@ -287,7 +287,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void opphold_fellesperiode_annenforelder_tom_for_konto() {
+    void opphold_fellesperiode_annenforelder_tom_for_konto() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var søknadsperiode = oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
@@ -308,7 +308,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
+    void far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9),
                 PeriodeVurderingType.PERIODE_OK, null, false);
         var kontoer = enFellesperiodeKonto(100);
@@ -327,7 +327,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1270_far_etterUke7_omsorg_disponibleStønadsdager_gradering_flerbarnsdager() {
+    void UT1270_far_etterUke7_omsorg_disponibleStønadsdager_gradering_flerbarnsdager() {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9),
                 PeriodeVurderingType.PERIODE_OK, null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
@@ -342,7 +342,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
+    void far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
@@ -360,7 +360,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1271_far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_flerbarnsdager() {
+    void UT1271_far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_flerbarnsdager() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().medSøknad(søknad(søknadsperiode))
@@ -374,7 +374,7 @@ public class FellesperiodeDelregelTest {
     }
 
     @Test
-    public void UT1293_fellesperiode_uten_at_mor_har_rett_blir_avslått() {
+    void UT1293_fellesperiode_uten_at_mor_har_rett_blir_avslått() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FELLESPERIODE, 10 * 5));

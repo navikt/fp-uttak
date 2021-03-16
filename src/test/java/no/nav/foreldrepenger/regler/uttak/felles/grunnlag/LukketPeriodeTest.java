@@ -6,10 +6,10 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-public class LukketPeriodeTest {
+class LukketPeriodeTest {
 
     @Test
-    public void omsluttet() {
+    void omsluttet() {
         var dag1 = LocalDate.of(2018, 1, 1);
         var dag2 = dag1.plusDays(1);
         var dag3 = dag1.plusDays(2);
