@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -266,8 +267,8 @@ class SaldoUtregningTjenesteTest {
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100));
 
         var utregningsdato = LocalDate.MAX;
-        var identifikator = AktivitetIdentifikator.forArbeid("123", "456");
-        var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forArbeid("123", "789");
+        var identifikator = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), "456");
+        var identifikatorNyttArbeidsforhold = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), "789");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().medTidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 19))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medAktiviteter(
@@ -291,9 +292,9 @@ class SaldoUtregningTjenesteTest {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 155));
 
         var utregningsdato = LocalDate.MAX;
-        var identifikator = AktivitetIdentifikator.forArbeid("123", "456");
-        var identifikatorNyttArbeidsforhold1 = AktivitetIdentifikator.forArbeid("123", "789");
-        var identifikatorNyttArbeidsforhold2 = AktivitetIdentifikator.forArbeid("345", null);
+        var identifikator = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), "456");
+        var identifikatorNyttArbeidsforhold1 = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), "789");
+        var identifikatorNyttArbeidsforhold2 = AktivitetIdentifikator.forArbeid(new Orgnummer("345"), null);
         var fastsattPeriode1 = new FastsattUttakPeriode.Builder().medTidsperiode(LocalDate.of(2019, 12, 18),
                 LocalDate.of(2019, 12, 18))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
@@ -335,13 +336,13 @@ class SaldoUtregningTjenesteTest {
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 100))
                 .leggTilKonto(konto(Stønadskontotype.FLERBARNSDAGER, 50));
 
-        var søkersArbeidsforhold = AktivitetIdentifikator.forArbeid("123", "456");
+        var søkersArbeidsforhold = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), "456");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().medTidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 18))
                 .medPeriodeResultatType(Perioderesultattype.INNVILGET)
                 .medAktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), Stønadskontotype.FELLESPERIODE,
                         søkersArbeidsforhold)))
                 .build();
-        var annenpartsArbeidsforhold1 = AktivitetIdentifikator.forArbeid("123", "789");
+        var annenpartsArbeidsforhold1 = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), "789");
         var annenpartsArbeidsforhold2 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
         var annenpartPeriode1 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 17), LocalDate.of(2019, 12, 17))
                 .medFlerbarnsdager(true)

@@ -18,9 +18,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -203,8 +203,8 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void manglende_søkt_periode_før_nytt_arbeidsforhold_tilkommer() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        var arbeidsforhold = AktivitetIdentifikator.forArbeid("000000001", null);
-        var arbeidsforholdMedId = AktivitetIdentifikator.forArbeid("000000001", "1234");
+        var arbeidsforhold = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
+        var arbeidsforholdMedId = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), "1234");
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))

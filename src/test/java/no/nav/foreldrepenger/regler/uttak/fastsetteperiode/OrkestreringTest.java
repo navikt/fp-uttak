@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktørId;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
@@ -42,6 +43,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -497,7 +499,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
     void skal_knekke_periode_og_gå_til_manuell_behandling_ved_ikke_nok_flerbarnsdager() {
-        var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid("1234", "12345");
+        var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid(new Orgnummer("1234"), "12345");
 
         var fødselsdato = LocalDate.of(2019, 3, 13);
         var tom = Virkedager.plusVirkedager(fødselsdato.plusWeeks(6), 5);
@@ -965,5 +967,24 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         assertThat(resultater.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
         assertThat(resultater.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+    }
+
+    @Test
+    public void skal_innvilge_med_privatperson_som_arbeidsgiver() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid(new AktørId("123"), "345");
+        grunnlag.medDatoer(datoer(fødselsdato))
+                .medRettOgOmsorg(beggeRett())
+                .medBehandling(morBehandling())
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+                .medSøknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                        oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                        gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), BigDecimal.TEN,
+                                Set.of(aktivitetIdentifikator))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat.stream()).allMatch(p -> p.getUttakPeriode().getPerioderesultattype().equals(Perioderesultattype.INNVILGET));
     }
 }

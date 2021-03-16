@@ -15,15 +15,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 
 
 public class RegelGrunnlagTestBuilder {
 
-    public static final AktivitetIdentifikator ARBEIDSFORHOLD_1 = AktivitetIdentifikator.forArbeid("000000001", null);
-    public static final AktivitetIdentifikator ARBEIDSFORHOLD_2 = AktivitetIdentifikator.forArbeid("000000002", null);
-    public static final AktivitetIdentifikator ARBEIDSFORHOLD_3 = AktivitetIdentifikator.forArbeid("000000003", null);
+    public static final AktivitetIdentifikator ARBEIDSFORHOLD_1 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
+    public static final AktivitetIdentifikator ARBEIDSFORHOLD_2 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000002"), null);
+    public static final AktivitetIdentifikator ARBEIDSFORHOLD_3 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000003"), null);
 
     public static RegelGrunnlag.Builder create() {
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))

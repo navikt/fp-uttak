@@ -4,66 +4,49 @@ import java.util.Objects;
 
 public class AktivitetIdentifikator {
 
-    public enum ArbeidsgiverType {
-        PERSON,
-        VIRKSOMHET
-    }
-
     private final AktivitetType aktivitetType;
     private final String arbeidsforholdId;
-    private final String arbeidsgiverIdentifikator;
-    private final ArbeidsgiverType arbeidsgiverType;
+    private final ArbeidsgiverIdentifikator arbeidsgiverIdentifikator;
 
     private AktivitetIdentifikator(AktivitetType aktivitetType,
-                                   String arbeidsforholdIdentifikator,
-                                   String arbeidsforholdId,
-                                   ArbeidsgiverType arbeidsgiverType) {
+                                   ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+                                   String arbeidsforholdId) {
         this.aktivitetType = aktivitetType;
-        this.arbeidsgiverType = arbeidsgiverType;
         this.arbeidsforholdId = arbeidsforholdId;
-        this.arbeidsgiverIdentifikator = arbeidsforholdIdentifikator;
+        this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
     }
 
-    private AktivitetIdentifikator(AktivitetType aktivitetType, ArbeidsgiverType arbeidsgiverType) {
-        this(aktivitetType, null, null, arbeidsgiverType);
+    private AktivitetIdentifikator(AktivitetType aktivitetType) {
+        this(aktivitetType, null, null);
     }
 
-    public static AktivitetIdentifikator forArbeid(String arbeidsgiverIdentifikator, String arbeidsforholdId) {
-        return forArbeid(arbeidsgiverIdentifikator, arbeidsforholdId, ArbeidsgiverType.VIRKSOMHET);
-    }
-
-    public static AktivitetIdentifikator forArbeid(String arbeidsgiverIdentifikator,
-                                                   String arbeidsforholdId,
-                                                   ArbeidsgiverType arbeidsgiverType) {
-        return new AktivitetIdentifikator(AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId, arbeidsgiverType);
+    public static AktivitetIdentifikator forArbeid(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+                                                   String arbeidsforholdId) {
+        return new AktivitetIdentifikator(AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId);
     }
 
     public static AktivitetIdentifikator forSelvstendigNæringsdrivende() {
-        return new AktivitetIdentifikator(AktivitetType.SELVSTENDIG_NÆRINGSDRIVENDE, null, null, null);
+        return new AktivitetIdentifikator(AktivitetType.SELVSTENDIG_NÆRINGSDRIVENDE, null, null);
     }
 
     public static AktivitetIdentifikator forFrilans() {
-        return new AktivitetIdentifikator(AktivitetType.FRILANS, null, null, null);
+        return new AktivitetIdentifikator(AktivitetType.FRILANS, null, null);
     }
 
     public static AktivitetIdentifikator annenAktivitet() {
-        return new AktivitetIdentifikator(AktivitetType.ANNET, null);
+        return new AktivitetIdentifikator(AktivitetType.ANNET);
     }
 
     public AktivitetType getAktivitetType() {
         return aktivitetType;
     }
 
-    public String getArbeidsgiverIdentifikator() {
+    public ArbeidsgiverIdentifikator getArbeidsgiverIdentifikator() {
         return arbeidsgiverIdentifikator;
     }
 
     public String getArbeidsforholdId() {
         return arbeidsforholdId;
-    }
-
-    public ArbeidsgiverType getArbeidsgiverType() {
-        return arbeidsgiverType;
     }
 
     @Override
@@ -75,19 +58,18 @@ public class AktivitetIdentifikator {
             return false;
         }
         var that = (AktivitetIdentifikator) o;
-        return arbeidsgiverType == that.arbeidsgiverType && aktivitetType == that.aktivitetType && Objects.equals(
+        return aktivitetType == that.aktivitetType && Objects.equals(
                 arbeidsgiverIdentifikator, that.arbeidsgiverIdentifikator) && Objects.equals(arbeidsforholdId, that.arbeidsforholdId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(aktivitetType, arbeidsgiverIdentifikator, arbeidsforholdId, arbeidsgiverType);
+        return Objects.hash(aktivitetType, arbeidsgiverIdentifikator, arbeidsforholdId);
     }
 
     @Override
     public String toString() {
-        return "AktivitetIdentifikator{" + "aktivitetType=" + aktivitetType + ", arbeidsgiverIdentifikator='"
-                + arbeidsgiverIdentifikator + '\'' + ", arbeidsforholdId='" + arbeidsforholdId + '\'' + ", arbeidsgiverType="
-                + arbeidsgiverType + '}';
+        return "AktivitetIdentifikator{" + "aktivitetType=" + aktivitetType + ", arbeidsforholdId='" + arbeidsforholdId + '\''
+                + ", arbeidsgiverIdentifikator=" + arbeidsgiverIdentifikator + '}';
     }
 }

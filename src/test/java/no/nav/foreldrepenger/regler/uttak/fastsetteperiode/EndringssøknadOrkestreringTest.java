@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -57,7 +58,7 @@ class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var fødselsdato = LocalDate.of(2020, 1, 16);
         var aktivitet1 = AktivitetIdentifikator.forFrilans();
         var aktivitet2 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
-        var tilkommetAktivitet1 = AktivitetIdentifikator.forArbeid("123", null);
+        var tilkommetAktivitet1 = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), null);
         var opprinnligUttakAktivitet1 = new FastsattUttakPeriodeAktivitet(new Trekkdager(30), Stønadskontotype.MØDREKVOTE, aktivitet1);
         var opprinnligUttakAktivitet2 = new FastsattUttakPeriodeAktivitet(new Trekkdager(20), Stønadskontotype.MØDREKVOTE, aktivitet2);
         var vedtaksperiode = new FastsattUttakPeriode.Builder().medTidsperiode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))

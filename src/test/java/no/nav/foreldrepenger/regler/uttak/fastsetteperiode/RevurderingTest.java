@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -182,8 +183,8 @@ class RevurderingTest {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
                 .medSamtidigUttak(samtidigUttak)
                 .medUttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forArbeid("000000003", null), stønadskontotype,
-                                new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), utbetalingsgrad))
+                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forArbeid(new Orgnummer("000000003"), null),
+                                stønadskontotype, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), utbetalingsgrad))
                 .build();
     }
 
