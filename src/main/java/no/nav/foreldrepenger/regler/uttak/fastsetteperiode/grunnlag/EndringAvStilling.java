@@ -31,7 +31,7 @@ public class EndringAvStilling {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        EndringAvStilling that = (EndringAvStilling) o;
+        var that = (EndringAvStilling) o;
         return Objects.equals(dato, that.dato) && Objects.equals(stillingsprosent, that.stillingsprosent);
     }
 

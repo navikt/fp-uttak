@@ -41,12 +41,12 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     private final Konfigurasjon konfigurasjon = StandardKonfigurasjon.KONFIGURASJON;
     private final int mødrekvoteDager = konfigurasjon.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
-            LocalDate.of(2018, 06, 01));
+            LocalDate.of(2018, 6, 1));
     private final int fedrekvoteDager = konfigurasjon.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT,
-            LocalDate.of(2018, 06, 01));
+            LocalDate.of(2018, 6, 1));
     private final int fellesperiodDedager = konfigurasjon.getParameter(Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER,
-            LocalDate.of(2018, 06, 01));
-    private final int førFødselDager = konfigurasjon.getParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 06, 01));
+            LocalDate.of(2018, 6, 1));
+    private final int førFødselDager = konfigurasjon.getParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 6, 1));
 
     @Test
     public void farMedAleneomsorgSkalHaUttakFraFødsel() {
@@ -54,10 +54,10 @@ public class ManglendeSøktePerioderTjenesteTest {
         // Det skal legges til manglende periode fra fødselen og frem til hans første uttaksdag.
         // Skjæringstidspunktet for opptjening og beregning er ved hans første uttaksdag, men vi må trekke dager fra fødselen eller omsorgsovertakelsedatoen ved adopsjon.
 
-        LocalDate fødsel = LocalDate.of(2018, 12, 4);
-        LocalDate førsteUttakSøktFom = fødsel.plusWeeks(9);
+        var fødsel = LocalDate.of(2018, 12, 4);
+        var førsteUttakSøktFom = fødsel.plusWeeks(9);
 
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, førsteUttakSøktFom, førsteUttakSøktFom.plusWeeks(10))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
@@ -78,10 +78,10 @@ public class ManglendeSøktePerioderTjenesteTest {
         // Case: PFP-6988. Far med aleneomsorg, 80% dekningsgrad, søkt uttak 9 uker etter adopsjon.
         // Det skal legges til manglende periode fra fødselen og frem til hans første uttaksdag.
 
-        LocalDate adopsjonsDato = LocalDate.of(2018, 12, 4);
-        LocalDate førsteUttakSøktFom = adopsjonsDato.plusWeeks(9);
+        var adopsjonsDato = LocalDate.of(2018, 12, 4);
+        var førsteUttakSøktFom = adopsjonsDato.plusWeeks(9);
 
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, førsteUttakSøktFom, førsteUttakSøktFom.plusWeeks(10))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
@@ -134,10 +134,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalIkkeUtledeMspIForeldrepengerFørFødselDersomSøknadstypeErAdopsjon() {
-        LocalDate familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
+        var familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
         var uttakPeriode = oppgittPeriode(FELLESPERIODE, familiehendelsesDato, familiehendelsesDato.plusWeeks(7));
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medOmsorgsovertakelse(familiehendelsesDato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medOmsorgsovertakelse(familiehendelsesDato))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON).leggTilOppgittPeriode(uttakPeriode))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(LocalDate.of(2018, 6, 5)))
                 .build();
@@ -155,12 +155,12 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalUtledeMspIFellesperiodeFørFødsel() {
-        LocalDate familiehendelsesDato = LocalDate.of(2018, 6, 4);
+        var familiehendelsesDato = LocalDate.of(2018, 6, 4);
 
 
         var uttakPeriode = oppgittPeriode(FELLESPERIODE, startForeldrepengerFørFødsel(familiehendelsesDato).minusWeeks(5),
                 startForeldrepengerFørFødsel(familiehendelsesDato).minusWeeks(2));
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(familiehendelsesDato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(familiehendelsesDato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(uttakPeriode))
                 .build();
 
@@ -216,8 +216,8 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalUtledeMspMødrekvoteEtterFødsel() {
-        LocalDate familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
+        var familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                 oppgittPeriode(MØDREKVOTE, sluttMødrekvoteEtterFødsel(familiehendelsesDato),
                         sluttMødrekvoteEtterFødsel(familiehendelsesDato).plusWeeks(1))))
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelsesDato))
@@ -239,8 +239,8 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalIkkeUtledeMspIPerioderFørEndringsdato() {
-        LocalDate familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder())
+        var familiehendelsesDato = LocalDate.of(2018, 6, 4).plusWeeks(4);
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder())
                 .medDatoer(new Datoer.Builder().medFødsel(familiehendelsesDato))
                 .medBehandling(new Behandling.Builder())
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(LocalDate.of(2019, 6, 4)))
@@ -253,9 +253,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void finnerHullMellomSøktePerioderOgAnnenPartsUttakperioder() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 6);
-        LocalDate hullDato = fødselsdato.plusWeeks(6);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var fødselsdato = LocalDate.of(2018, 6, 6);
+        var hullDato = fødselsdato.plusWeeks(6);
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, hullDato.minusDays(1))))
@@ -304,9 +304,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void finnerIkkeHullFørRevurderingEndringsdato() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 6);
-        LocalDate hullDato = fødselsdato.plusWeeks(6);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var fødselsdato = LocalDate.of(2018, 6, 6);
+        var hullDato = fødselsdato.plusWeeks(6);
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, hullDato.minusDays(1))))
@@ -323,8 +323,8 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void overlappendePerioderMedAnnenPartUtenHull() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 6);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var fødselsdato = LocalDate.of(2018, 6, 6);
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10))))
@@ -341,10 +341,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void helgErIkkeHull() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 6);
-        LocalDate mødrekvoteSlutt = LocalDate.of(2018, 7, 20);
-        LocalDate annenPartStart = LocalDate.of(2018, 7, 23);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var fødselsdato = LocalDate.of(2018, 6, 6);
+        var mødrekvoteSlutt = LocalDate.of(2018, 7, 20);
+        var annenPartStart = LocalDate.of(2018, 7, 23);
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, mødrekvoteSlutt)))
@@ -358,9 +358,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraUke7TilFørsteUttaksdagNårBareFarHarRett() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(8))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
@@ -377,10 +377,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktSomGårOver6UkerEtterFødsel() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 27);
+        var familiehendelse = LocalDate.of(2018, 12, 27);
 
-        LocalDate søknadsperiodeFom = familiehendelse.minusWeeks(3);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+        var søknadsperiodeFom = familiehendelse.minusWeeks(3);
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, søknadsperiodeFom, familiehendelse.minusDays(1)))
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(3)))
                 .leggTilOppgittPeriode(
@@ -404,10 +404,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraUke7FørStpOpptjeningHvisEtterFødselNårBareFarHarRett() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        LocalDate søknadsperiodeFom = familiehendelse.plusWeeks(9);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+        var søknadsperiodeFom = familiehendelse.plusWeeks(9);
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                 .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, søknadsperiodeFom, familiehendelse.plusWeeks(10))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
@@ -522,9 +522,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjon() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse.plusWeeks(1), familiehendelse.plusWeeks(3))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
@@ -542,9 +542,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagVedAdopsjonDerAnnenpartIkkeHarUttaksperioder() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse.plusWeeks(1), familiehendelse.plusWeeks(3))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
@@ -564,9 +564,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalIkkeLageManglendeSøktUke7VedAdopsjonTilFørsteUttaksdagNårBareFarHarRett() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(8))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
@@ -584,9 +584,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjon() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse.plusWeeks(1), familiehendelse.plusWeeks(3))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
@@ -604,10 +604,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalIkkeLageManglendeSøktFrOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartHarUttakITidsrommet() {
-        LocalDate omsorgsovertakelse = LocalDate.of(2018, 12, 4);
+        var omsorgsovertakelse = LocalDate.of(2018, 12, 4);
 
         var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, førsteUttaksdato, førsteUttaksdato.plusWeeks(2))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
@@ -624,10 +624,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagHvisAnnenpartIkkeHarTattHelePeriodenFramTilSøkersFørsteUttaksdato() {
-        LocalDate omsorgsovertakelse = LocalDate.of(2018, 12, 4);
+        var omsorgsovertakelse = LocalDate.of(2018, 12, 4);
 
         var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, førsteUttaksdato, førsteUttaksdato.plusWeeks(2))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
@@ -645,10 +645,10 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraOmsorgsovertakelseTilFørsteUttaksdagAnnenpartHvisAnnenpartHarUttakMidtMellomOmsorgsovertakelseOgSøkersFørsteUttaksdag() {
-        LocalDate omsorgsovertakelse = LocalDate.of(2018, 12, 4);
+        var omsorgsovertakelse = LocalDate.of(2018, 12, 4);
 
         var førsteUttaksdato = omsorgsovertakelse.plusWeeks(5);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, førsteUttaksdato, førsteUttaksdato.plusWeeks(2))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
@@ -668,9 +668,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalLageManglendeSøktFraAnkomstNorgeDatoTilFørsteUttaksdagVedAdopsjonPlussVanligeHullMellomPerioder() {
-        LocalDate familiehendelse = LocalDate.of(2018, 12, 4);
+        var familiehendelse = LocalDate.of(2018, 12, 4);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
+        var grunnlag = grunnlagMedKontoer().medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse.plusWeeks(1), familiehendelse.plusWeeks(3)))
                 .leggTilOppgittPeriode(oppgittPeriode(FELLESPERIODE, familiehendelse.plusWeeks(5), familiehendelse.plusWeeks(7))))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
@@ -693,9 +693,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void manglende_fpff_skal_ikke_slutte_i_helg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 11);
+        var fødselsdato = LocalDate.of(2018, 6, 11);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 5, 21), LocalDate.of(2018, 6, 7)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, LocalDate.of(2018, 6, 11), LocalDate.of(2018, 8, 17)))
@@ -717,9 +717,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalIkkeOppretteManglendeSøktFørSkjæringstidspunktForOpptjening() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 11);
+        var fødselsdato = LocalDate.of(2018, 6, 11);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(
                         new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6))))
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
@@ -732,9 +732,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalOppretteManglendeSøktFraSkjæringstidspunktForOpptjening() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 13);
+        var fødselsdato = LocalDate.of(2018, 6, 13);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(2)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6))))
@@ -750,9 +750,9 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skalIkkeOppretteManglendeSøktBasertPåAnnenPartFørSkjæringstidspunktForOpptjening() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 13);
+        var fødselsdato = LocalDate.of(2018, 6, 13);
 
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6))))
@@ -768,11 +768,11 @@ public class ManglendeSøktePerioderTjenesteTest {
 
     @Test
     public void skal_ikke_opprette_manglende_søkt_før_endringsdato() {
-        LocalDate fødselsdato = LocalDate.of(2018, 6, 13);
+        var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22),
                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(17), null);
-        RegelGrunnlag grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato.plusWeeks(7)))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(false))

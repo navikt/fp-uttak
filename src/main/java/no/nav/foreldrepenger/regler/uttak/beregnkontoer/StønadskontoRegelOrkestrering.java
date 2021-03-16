@@ -25,15 +25,15 @@ public class StønadskontoRegelOrkestrering {
     }
 
     public StønadskontoResultat beregnKontoer(BeregnKontoerGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        String grunnlagJson = toJson(grunnlag);
+        var grunnlagJson = toJson(grunnlag);
 
-        BeregnKontoer beregnKontoer = new BeregnKontoer(konfigurasjon);
-        Evaluation evaluation = beregnKontoer.evaluer(grunnlag);
-        String evaluationJson = EvaluationSerializer.asJson(evaluation);
+        var beregnKontoer = new BeregnKontoer(konfigurasjon);
+        var evaluation = beregnKontoer.evaluer(grunnlag);
+        var evaluationJson = EvaluationSerializer.asJson(evaluation);
 
-        Map<Stønadskontotype, Integer> stønadskontoer = hentStønadskontoer(evaluation);
-        Integer antallFlerbarnsdager = hentAntallFlerbarnsdager(evaluation);
-        Integer antallPrematurDager = hentAntallPrematurDager(evaluation);
+        var stønadskontoer = hentStønadskontoer(evaluation);
+        var antallFlerbarnsdager = hentAntallFlerbarnsdager(evaluation);
+        var antallPrematurDager = hentAntallPrematurDager(evaluation);
 
         return new StønadskontoResultat(stønadskontoer, antallFlerbarnsdager, evaluationJson, grunnlagJson, antallPrematurDager);
     }
@@ -52,7 +52,7 @@ public class StønadskontoRegelOrkestrering {
     }
 
     private Integer hentAntallFlerbarnsdager(Evaluation evaluation) {
-        Regelresultat regelresultat = new Regelresultat(evaluation);
+        var regelresultat = new Regelresultat(evaluation);
         if (regelresultat.oppfylt()) {
             return regelresultat.getProperty(BeregnKontoerPropertyType.ANTALL_FLERBARN_DAGER, Integer.class);
         }
@@ -60,7 +60,7 @@ public class StønadskontoRegelOrkestrering {
     }
 
     private Integer hentAntallPrematurDager(Evaluation evaluation) {
-        Regelresultat regelresultat = new Regelresultat(evaluation);
+        var regelresultat = new Regelresultat(evaluation);
         if (regelresultat.oppfylt()) {
             return regelresultat.getProperty(BeregnKontoerPropertyType.ANTALL_PREMATUR_DAGER, Integer.class);
         }

@@ -74,7 +74,7 @@ public class AktivitetIdentifikator {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AktivitetIdentifikator that = (AktivitetIdentifikator) o;
+        var that = (AktivitetIdentifikator) o;
         return arbeidsgiverType == that.arbeidsgiverType && aktivitetType == that.aktivitetType && Objects.equals(
                 arbeidsgiverIdentifikator, that.arbeidsgiverIdentifikator) && Objects.equals(arbeidsforholdId, that.arbeidsforholdId);
     }

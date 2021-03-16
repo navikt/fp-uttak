@@ -29,228 +29,228 @@ public class OverføringDelregelTest {
 
     @Test
     public void UT1172_mor_overføring_sykdom_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_SYKDOM_SKADE);
     }
 
     @Test
     public void UT1173_mor_overføring_innleggelse_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_INNLAGT);
     }
 
     @Test
     public void UT1174_mor_overføring_aleneomsorg_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ALENEOMSORG);
     }
 
     @Test
     public void UT1175_mor_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn_før_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_IKKE_RETT);
     }
 
     @Test
     public void UT1172_mor_overføring_sykdom_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(8);
-        LocalDate tom = fødselsdato.plusWeeks(9);
+        var fom = fødselsdato.plusWeeks(8);
+        var tom = fødselsdato.plusWeeks(9);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_SYKDOM_SKADE);
     }
 
     @Test
     public void UT1173_mor_overføring_innleggelse_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(8);
-        LocalDate tom = fødselsdato.plusWeeks(9);
+        var fom = fødselsdato.plusWeeks(8);
+        var tom = fødselsdato.plusWeeks(9);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_INNLAGT);
     }
 
     @Test
     public void UT1174_mor_overføring_aleneomsorg_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(8);
-        LocalDate tom = fødselsdato.plusWeeks(9);
+        var fom = fødselsdato.plusWeeks(8);
+        var tom = fødselsdato.plusWeeks(9);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ALENEOMSORG);
     }
 
     @Test
     public void UT1175_mor_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn_etter_7uker_etter_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(8);
-        LocalDate tom = fødselsdato.plusWeeks(9);
+        var fom = fødselsdato.plusWeeks(8);
+        var tom = fødselsdato.plusWeeks(9);
         var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_IKKE_RETT);
     }
 
     @Test
     public void UT1172_far_overføring_sykdom_skade_avklart_gyldig_grunn() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_SYKDOM_SKADE);
     }
 
     @Test
     public void UT1173_far_overføring_innleggelse_avklart_gyldig_grunn() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_INNLAGT);
     }
 
     @Test
     public void UT1174_far_overføring_aleneomsorg_avklart_gyldig_grunn() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ALENEOMSORG);
     }
 
     @Test
     public void UT1175_far_overføring_annen_forelder_ikke_rett_avklart_gyldig_grunn() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
                 PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
+        var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
                 søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.OVERFØRING_ANNEN_PART_IKKE_RETT);
     }

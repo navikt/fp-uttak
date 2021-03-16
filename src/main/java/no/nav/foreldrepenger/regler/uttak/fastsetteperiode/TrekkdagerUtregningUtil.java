@@ -16,7 +16,7 @@ public final class TrekkdagerUtregningUtil {
                                            boolean gradert,
                                            BigDecimal gradertArbeidstidsprosent,
                                            SamtidigUttaksprosent samtidigUttaksprosent) {
-        int trekkdagerUtenGradering = Virkedager.beregnAntallVirkedager(periode);
+        var trekkdagerUtenGradering = Virkedager.beregnAntallVirkedager(periode);
         if (gradert) {
             return trekkdagerMedGradering(trekkdagerUtenGradering, gradertArbeidstidsprosent);
         } else if (samtidigUttaksprosent != null) {
@@ -32,7 +32,7 @@ public final class TrekkdagerUtregningUtil {
         if (gradertArbeidstidsprosent.compareTo(BigDecimal.valueOf(100)) >= 0) {
             return Trekkdager.ZERO;
         }
-        BigDecimal trekkdager = BigDecimal.valueOf(trekkdagerUtenGradering)
+        var trekkdager = BigDecimal.valueOf(trekkdagerUtenGradering)
                 .multiply(BigDecimal.valueOf(100).subtract(gradertArbeidstidsprosent))
                 .divide(BigDecimal.valueOf(100), 1, RoundingMode.DOWN);
         return new Trekkdager(trekkdager);

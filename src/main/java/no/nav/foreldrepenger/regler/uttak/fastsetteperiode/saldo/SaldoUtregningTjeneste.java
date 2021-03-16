@@ -55,7 +55,7 @@ public final class SaldoUtregningTjeneste {
 
     private static Stream<AnnenpartUttakPeriode> finnDelerAvOppholdsperiode(List<LukketPeriode> søktePerioder,
                                                                             AnnenpartUttakPeriode ap) {
-        for (LukketPeriode søktPeriode : søktePerioder) {
+        for (var søktPeriode : søktePerioder) {
             if (ap.isOppholdsperiode() && ap.overlapper(søktPeriode.getFom())) {
                 if (søktPeriode.getFom().isEqual(ap.getFom()) && søktPeriode.getTom().isEqual(ap.getTom())) {
                     return Stream.of();

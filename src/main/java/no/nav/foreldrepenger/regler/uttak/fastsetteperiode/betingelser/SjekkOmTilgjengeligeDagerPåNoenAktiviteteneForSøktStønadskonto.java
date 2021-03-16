@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -23,11 +21,11 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto e
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var stønadskontotype = aktuellPeriode.getStønadskontotype();
 
-        for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-            Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
+        for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
+            var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (saldo.merEnn0()) {
                 if (aktuellPeriode.isFlerbarnsdager()) {
-                    Trekkdager saldoFlerbarnsdager = grunnlag.getSaldoUtregning()
+                    var saldoFlerbarnsdager = grunnlag.getSaldoUtregning()
                             .saldoITrekkdager(Stønadskontotype.FLERBARNSDAGER, aktivitet);
                     if (saldoFlerbarnsdager.merEnn0()) {
                         return ja();

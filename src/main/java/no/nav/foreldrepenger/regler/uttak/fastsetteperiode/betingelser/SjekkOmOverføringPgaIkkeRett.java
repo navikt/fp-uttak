@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -18,7 +17,7 @@ public class SjekkOmOverføringPgaIkkeRett extends LeafSpecification<FastsettePe
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
         if (OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT.equals(oppgittPeriode.getOverføringÅrsak())) {
             return ja();
         }

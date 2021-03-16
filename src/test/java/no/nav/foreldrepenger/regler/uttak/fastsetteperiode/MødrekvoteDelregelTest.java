@@ -36,51 +36,51 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void mødrekvoteperiode_med_nok_dager_på_konto() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }
 
     @Test
     public void mødrekvote_slutter_på_fredag_og_første_uker_slutter_på_søndag_blir_innvilget() {
-        LocalDate fødselsdato = LocalDate.of(2017, 12, 31);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(2));
+        var fødselsdato = LocalDate.of(2017, 12, 31);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(2));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isTrue();
     }
 
     @Test
     public void mødrekvote_de_første_6_ukene_etter_fødsel_skal_innvilges_også_når_mor_ikke_har_omsorg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }
 
     @Test
     public void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_nok_på_kvoten_men_ikke_har_omsorg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
@@ -93,26 +93,26 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void mødrekvote_etter_første_6_ukene_etter_fødsel_skal_ikke_innvilges_når_mor_har_noe_men_ikke_nok_på_kvoten_og_ikke_har_omsorg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 1);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
     }
 
     @Test
     public void UT1007_mor_etterTermin_innenFor6Uker_ikkeGradering_disponibleDager() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isTrue();
@@ -121,13 +121,13 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1008_mor_innenFor6UkerEtterFødsel_gradering() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(3),
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(3),
                 fødselsdato.plusWeeks(4));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isTrue();
@@ -138,13 +138,13 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1221_mor_etterTermin_etter6Uker_omsorg_disponibleDager_gradering_avklart() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10),
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = gradertPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10),
                 fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isTrue();
@@ -153,15 +153,15 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1251_fødselsvilkår_ikke_oppfylt() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medInngangsvilkår(new Inngangsvilkår.Builder().medFødselOppfylt(false))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -173,15 +173,15 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1252_adopsjonsvilkår_ikke_oppfylt() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medInngangsvilkår(new Inngangsvilkår.Builder().medFødselOppfylt(true).medAdopsjonOppfylt(false))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -193,16 +193,16 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1253_foreldreansvarsvilkår_ikke_oppfylt() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medInngangsvilkår(
                         new Inngangsvilkår.Builder().medFødselOppfylt(true).medAdopsjonOppfylt(true).medForeldreansvarnOppfylt(false))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -214,10 +214,10 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1254_opptjeningsvilkår_ikke_oppfylt() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medInngangsvilkår(new Inngangsvilkår.Builder().medFødselOppfylt(true)
                         .medAdopsjonOppfylt(true)
@@ -225,7 +225,7 @@ public class MødrekvoteDelregelTest {
                         .medOpptjeningOppfylt(false))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -237,15 +237,15 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void opphold_mødrekvote_annenforelder() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppholdsperiode = DelRegelTestUtil.oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30),
                 OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
                 .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 100));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppholdsperiode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppholdsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppholdsperiode, grunnlag);
+        var regelresultat = kjørRegel(oppholdsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -255,15 +255,15 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void opphold_mødrekvote_annenforelder_tom_for_konto() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppholdsperiode = DelRegelTestUtil.oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30),
                 OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100))
                 .leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 0));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppholdsperiode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppholdsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppholdsperiode, grunnlag);
+        var regelresultat = kjørRegel(oppholdsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -273,16 +273,16 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1275_søkte_mødrekvoteperiode_men_søker_døde_i_mellomtiden() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(6).minusDays(1));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato)
                         .medDødsdatoer(new Dødsdatoer.Builder().medSøkersDødsdato(fødselsdato.plusDays(3))))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.DØDSFALL);
@@ -291,16 +291,16 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1289_søkte_mødrekvoteperiode_men_barn_døde_i_mellomtiden() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato)
                         .medDødsdatoer(new Dødsdatoer.Builder().medBarnsDødsdato(fødselsdato.plusDays(3)).medErAlleBarnDøde(true)))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARN_DØD);
@@ -308,17 +308,17 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_og_barn_døde_men_mindre_enn_6_uker_siden() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        LocalDate barnsDødsdato = fødselsdato.plusDays(1);
-        OppgittPeriode oppgittPeriode = oppgittMødrekvote(fødselsdato, barnsDødsdato.plusWeeks(6).minusDays(2));
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var barnsDødsdato = fødselsdato.plusDays(1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato, barnsDødsdato.plusWeeks(6).minusDays(2));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato)
                         .medDødsdatoer(new Dødsdatoer.Builder().medBarnsDødsdato(barnsDødsdato).medErAlleBarnDøde(true)))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE);
@@ -326,16 +326,16 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void Innvilge_ikke_UT1289_søkte_mødrekvoteperiode_barn_døde_i_mellomtiden_men_alle_barn_er_ikke_døde() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(13).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
                 .medSøknad(søknad(oppgittPeriode))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato)
                         .medDødsdatoer(new Dødsdatoer.Builder().medBarnsDødsdato(fødselsdato.plusDays(3)).medErAlleBarnDøde(false)))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE);
@@ -347,17 +347,17 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1015_far_søker_mødrekvote_men_ikke_overføring() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var oppgittPeriode = oppgittMødrekvote(fom, tom);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -369,17 +369,17 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1016_far_overføring_innleggelse_men_ikke_gyldig() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -391,17 +391,17 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1017_far_overføring_sykdom_skade_men_ikke_gyldig() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -413,17 +413,17 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1294_far_overføring_aleneomsorg_men_ikke_gyldig() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -442,17 +442,17 @@ public class MødrekvoteDelregelTest {
 
     @Test
     public void UT1295_far_overføring_ikke_rett_men_ikke_gyldig() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        LocalDate fom = fødselsdato.plusWeeks(3);
-        LocalDate tom = fødselsdato.plusWeeks(4);
+        var fom = fødselsdato.plusWeeks(3);
+        var tom = fødselsdato.plusWeeks(4);
         var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
-        Kontoer.Builder kontoer = new Kontoer.Builder().leggTilKonto(
+        var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer).medSøknad(søknad(oppgittPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();

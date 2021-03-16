@@ -31,39 +31,39 @@ public class ForeldrepengerFørFødselDelregelTest {
 
     @Test
     public void UT1070_mor_utenFor3UkerFørFødsel() {
-        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8),
+        var familiehendelseDato = LocalDate.of(2018, 1, 1);
+        var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8),
                 familiehendelseDato.plusWeeks(9));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuell(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
     }
 
     @Test
     public void UT1071_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_ikkeGradering() {
-        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+        var familiehendelseDato = LocalDate.of(2018, 1, 1);
+        var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL);
     }
 
     @Test
     public void UT1072_mor_innenFor3UkerFørFødsel_ikkeManglendeSøktPeriode_gradering() {
-        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+        var familiehendelseDato = LocalDate.of(2018, 1, 1);
+        var uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_FØR_FØDSEL);
         assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
@@ -72,13 +72,13 @@ public class ForeldrepengerFørFødselDelregelTest {
 
     @Test
     public void UT1073_mor_innenFor3UkerFørFødsel_manglendeSøktPeriode() {
-        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
+        var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(msp)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(msp)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(msp, grunnlag);
+        var regelresultat = kjørRegel(msp, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -88,18 +88,18 @@ public class ForeldrepengerFørFødselDelregelTest {
 
     @Test
     public void UT1076_far_søker_fpff() {
-        LocalDate familiehendelseDato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
+        var familiehendelseDato = LocalDate.of(2018, 1, 1);
+        var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
                 .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
-        RegelGrunnlag grunnlag = basicGrunnlag(familiehendelseDato).medKontoer(kontoer)
+        var grunnlag = basicGrunnlag(familiehendelseDato).medKontoer(kontoer)
                 .medBehandling(søkerErFarBehandling())
                 .medSøknad(søknad(uttakPeriode))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertManuell(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO,
                 false, false);

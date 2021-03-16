@@ -32,12 +32,12 @@ public class TomKontoIdentifiserer {
                                                            boolean skalTrekkeDager) {
 
         Map<LocalDate, TomKontoKnekkpunkt> knekkpunkter = new HashMap<>();
-        for (AktivitetIdentifikator aktivitet : aktiviteter) {
-            Optional<LocalDate> datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
+        for (var aktivitet : aktiviteter) {
+            var datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
                     stønadskontotype, skalTrekkeDager);
             datoKontoGårTomIPeriode.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             if (uttakPeriode.isFlerbarnsdager()) {
-                Optional<LocalDate> knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
+                var knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
                         Stønadskontotype.FLERBARNSDAGER, skalTrekkeDager);
                 knekkpunktFlerbarnsdager.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
@@ -46,7 +46,7 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        LocalDate tidligstDato = tidligst(knekkpunkter.keySet());
+        var tidligstDato = tidligst(knekkpunkter.keySet());
         return Optional.of(knekkpunkter.get(tidligstDato));
     }
 
@@ -60,7 +60,7 @@ public class TomKontoIdentifiserer {
         }
 
         var saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
-        int saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
+        var saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
 
         var trekkdagerIPeriodeFom = justerHelgTilMandag(oppgittPeriode.getFom());
         var datoKontoGårTom = Virkedager.plusVirkedager(trekkdagerIPeriodeFom, saldoTilVirkedager);
@@ -100,11 +100,11 @@ public class TomKontoIdentifiserer {
     }
 
     private static int saldoTilVirkedagerVedRedusertUttak(Trekkdager saldo, BigDecimal uttaksprosent) {
-        BigDecimal trekkdagerPerVirkedag = uttaksprosent.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
+        var trekkdagerPerVirkedag = uttaksprosent.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
         if (saldo.gårAkkuratOppIHeleVirkedager(trekkdagerPerVirkedag)) {
             return saldo.decimalValue().divide(trekkdagerPerVirkedag, 0, RoundingMode.DOWN).intValue();
         }
-        BigDecimal virkedager = saldo.decimalValue().add(BigDecimal.ONE).divide(trekkdagerPerVirkedag, 4, RoundingMode.DOWN);
+        var virkedager = saldo.decimalValue().add(BigDecimal.ONE).divide(trekkdagerPerVirkedag, 4, RoundingMode.DOWN);
         if (virkedager.remainder(BigDecimal.valueOf(virkedager.intValue(), 0)).compareTo(BigDecimal.ZERO) == 0) {
             return virkedager.subtract(BigDecimal.ONE).intValue();
         }

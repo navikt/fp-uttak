@@ -30,7 +30,7 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
         var hendelseDato = hendelseDato(grunnlag);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        int ukerFørFamiliehendelseUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
+        var ukerFørFamiliehendelseUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
         if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFamiliehendelseUttaksgrense))) {
             return ja();
         }

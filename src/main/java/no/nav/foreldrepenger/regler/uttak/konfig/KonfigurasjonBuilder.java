@@ -24,14 +24,14 @@ public class KonfigurasjonBuilder {
                     "Utvikler-feil: kan legge til verdi fra klasse " + verdi.getClass() + " for " + parametertype);
         }
 
-        Collection<Parameter> parameterListe = parameterMap.get(parametertype);
+        var parameterListe = parameterMap.get(parametertype);
         if (parameterListe == null) {
             Collection<Parameter> coll = new ArrayList<>();
             coll.add(new Parameter(fom, tom, verdi));
             parameterMap.put(parametertype, coll);
         } else {
-            Parameter nyttParameter = new Parameter(fom, tom, verdi);
-            long count = parameterListe.stream()
+            var nyttParameter = new Parameter(fom, tom, verdi);
+            var count = parameterListe.stream()
                     .filter(p -> p.overlapper(nyttParameter.getFom()) || (nyttParameter.getTom() != null && p.overlapper(
                             nyttParameter.getTom())))
                     .count();

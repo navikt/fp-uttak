@@ -26,15 +26,15 @@ class RegelResultatBehandler {
     private final RegelGrunnlag regelGrunnlag;
     private final Konfigurasjon konfigurasjon;
 
-    public RegelResultatBehandler(SaldoUtregning saldoUtregning, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
+    RegelResultatBehandler(SaldoUtregning saldoUtregning, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
         this.saldoUtregning = saldoUtregning;
         this.regelGrunnlag = regelGrunnlag;
         this.konfigurasjon = konfigurasjon;
     }
 
-    public RegelResultatBehandlerResultat innvilgAktuellPeriode(OppgittPeriode oppgittPeriode,
-                                                                Optional<TomKontoKnekkpunkt> knekkpunktOpt,
-                                                                FastsettePerioderRegelresultat regelresultat) {
+    RegelResultatBehandlerResultat innvilgAktuellPeriode(OppgittPeriode oppgittPeriode,
+                                                         Optional<TomKontoKnekkpunkt> knekkpunktOpt,
+                                                         FastsettePerioderRegelresultat regelresultat) {
         if (knekkpunktOpt.isEmpty()) {
             var resultat = new UttakPeriode(oppgittPeriode.getFom(), oppgittPeriode.getTom(), Perioderesultattype.INNVILGET, null,
                     regelresultat.getAvklaringÅrsak(), regelresultat.getGraderingIkkeInnvilgetÅrsak(),
@@ -58,10 +58,10 @@ class RegelResultatBehandler {
         return RegelResultatBehandlerResultat.medKnekk(førKnekk, etterKnekk);
     }
 
-    public RegelResultatBehandlerResultat avslåAktuellPeriode(OppgittPeriode oppgittPeriode,
-                                                              FastsettePerioderRegelresultat regelresultat,
-                                                              Optional<TomKontoKnekkpunkt> knekkpunktOpt,
-                                                              boolean overlapperInnvilgetAnnenpartsPeriode) {
+    RegelResultatBehandlerResultat avslåAktuellPeriode(OppgittPeriode oppgittPeriode,
+                                                       FastsettePerioderRegelresultat regelresultat,
+                                                       Optional<TomKontoKnekkpunkt> knekkpunktOpt,
+                                                       boolean overlapperInnvilgetAnnenpartsPeriode) {
         if (!overlapperInnvilgetAnnenpartsPeriode && knekkpunktOpt.isPresent()) {
             validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
             var oppgittPeriodeFørKnekk = oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(),

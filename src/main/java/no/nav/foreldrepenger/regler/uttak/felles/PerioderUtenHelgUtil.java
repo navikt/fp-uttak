@@ -12,10 +12,10 @@ public final class PerioderUtenHelgUtil {
     }
 
     public static boolean periodeUtenHelgOmslutter(LukketPeriode omsluttendePeriode, LukketPeriode omsluttetPeriode) {
-        LocalDate fom1 = justerFom(omsluttendePeriode.getFom());
-        LocalDate tom1 = justerTom(omsluttendePeriode.getTom());
-        LocalDate fom2 = justerFom(omsluttetPeriode.getFom());
-        LocalDate tom2 = justerTom(omsluttetPeriode.getTom());
+        var fom1 = justerFom(omsluttendePeriode.getFom());
+        var tom1 = justerTom(omsluttendePeriode.getTom());
+        var fom2 = justerFom(omsluttetPeriode.getFom());
+        var tom2 = justerTom(omsluttetPeriode.getTom());
 
         return !fom2.isBefore(fom1) && !tom2.isAfter(tom1);
     }
@@ -29,13 +29,13 @@ public final class PerioderUtenHelgUtil {
     }
 
     public static boolean perioderUtenHelgOverlapper(LocalDate fom1, LocalDate tom1, LocalDate fom2, LocalDate tom2) {
-        LocalDate justertFom1 = justerFom(fom1);
-        LocalDate justertTom1 = justerTom(tom1);
+        var justertFom1 = justerFom(fom1);
+        var justertTom1 = justerTom(tom1);
         if (periodeErTom(justertFom1, justertTom1)) {
             return false;
         }
-        LocalDate justertFom2 = justerFom(fom2);
-        LocalDate justertTom2 = justerTom(tom2);
+        var justertFom2 = justerFom(fom2);
+        var justertTom2 = justerTom(tom2);
         if (periodeErTom(justertFom2, justertTom2)) {
             return false;
         }

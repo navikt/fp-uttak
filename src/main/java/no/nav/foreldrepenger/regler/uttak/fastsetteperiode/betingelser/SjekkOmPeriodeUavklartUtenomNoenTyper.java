@@ -24,7 +24,7 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
         // Filtrer ut perioder hvor det er søkt om gradering, overføring og far som søker fellesperiode&FK før uke 7 på termin&fødsel
         // fordi de håndteres i sine delregler.
         if (oppgittPeriode.erSøktGradering() || oppgittPeriode.harSøktOmOverføringAvKvote() || tidligOppstart(grunnlag,
@@ -37,7 +37,7 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
     }
 
     private boolean tidligOppstart(FastsettePeriodeGrunnlag grunnlag, OppgittPeriode oppgittPeriode) {
-        int ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+        var ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
                 grunnlag.getFamiliehendelse());
 
         return !grunnlag.isSøkerMor() && (Stønadskontotype.FEDREKVOTE.equals(oppgittPeriode.getStønadskontotype())

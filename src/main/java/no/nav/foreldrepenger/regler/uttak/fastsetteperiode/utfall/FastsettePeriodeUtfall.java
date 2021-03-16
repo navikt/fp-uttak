@@ -33,7 +33,7 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        SingleEvaluation utfall = getHovedUtfall();
+        var utfall = getHovedUtfall();
         spesifiserUtfall(utfall, grunnlag);
         return utfall;
     }

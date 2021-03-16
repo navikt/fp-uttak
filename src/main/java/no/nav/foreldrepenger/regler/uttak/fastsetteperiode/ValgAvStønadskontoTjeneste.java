@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -53,7 +52,7 @@ final class ValgAvStønadskontoTjeneste {
     private static Optional<Stønadskontotype> velgStønadskonto(OppgittPeriode periode,
                                                                RegelGrunnlag regelGrunnlag,
                                                                SaldoUtregning saldoUtregning) {
-        for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
+        for (var stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
             if (!erTomForKonto(periode, stønadskontotype, saldoUtregning)) {
                 return Optional.of(stønadskontotype);
             }
@@ -85,7 +84,7 @@ final class ValgAvStønadskontoTjeneste {
 
     private static List<Stønadskontotype> hentSøkerSineKontoer(RegelGrunnlag regelGrunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
-        Set<Stønadskontotype> gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
+        var gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
         if (regelGrunnlag.getBehandling().isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
             søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE,
                     Stønadskontotype.FORELDREPENGER);
@@ -99,9 +98,9 @@ final class ValgAvStønadskontoTjeneste {
     }
 
     private static boolean erTomForKonto(OppgittPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
-        boolean tomForKonto = true;
+        var tomForKonto = true;
         for (var arbeidsforhold : periode.getAktiviteter()) {
-            Trekkdager saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, arbeidsforhold);
+            var saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, arbeidsforhold);
             if (saldo.merEnn0()) {
                 tomForKonto = false;
             } else {

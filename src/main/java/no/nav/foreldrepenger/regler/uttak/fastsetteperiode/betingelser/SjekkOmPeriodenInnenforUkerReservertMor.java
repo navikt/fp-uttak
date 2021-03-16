@@ -1,9 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
@@ -25,13 +22,13 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
 
-        LocalDate familiehendelse = grunnlag.getFamiliehendelse();
+        var familiehendelse = grunnlag.getFamiliehendelse();
 
-        int antallUkerEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
 
-        LukketPeriode periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse,
+        var periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse,
                 familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));
         if (periodeEtterFødselNormaltReservertMor.overlapper(aktuellPeriode)) {
             if (aktuellPeriode.erOmsluttetAv(periodeEtterFødselNormaltReservertMor)) {

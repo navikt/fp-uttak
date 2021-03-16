@@ -16,9 +16,6 @@ public class SjekkOmSøkerErMor extends LeafSpecification<FastsettePeriodeGrunnl
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSøkerMor()) {
-            return ja();
-        }
-        return nei();
+        return grunnlag.isSøkerMor() ? ja() : nei();
     }
 }

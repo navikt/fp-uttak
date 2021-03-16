@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 import java.math.BigDecimal;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
@@ -16,8 +15,8 @@ public class SjekkOmFulltArbeidForUtsettelse extends LeafSpecification<Fastsette
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        BigDecimal stillingsprosent = grunnlag.getArbeid().getStillingsprosent(oppgittPeriode.getFom());
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        var stillingsprosent = grunnlag.getArbeid().getStillingsprosent(oppgittPeriode.getFom());
         if (stillingsprosent.compareTo(BigDecimal.valueOf(100)) >= 0) {
             return ja();
         }

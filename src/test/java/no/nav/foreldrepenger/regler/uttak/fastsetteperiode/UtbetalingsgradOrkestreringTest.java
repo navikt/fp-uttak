@@ -11,7 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -33,13 +31,13 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
     @Test
     public void tom_for_dager_skal_gi_null_utbetaling() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        OppgittPeriode fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(20).minusDays(1));
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(20).minusDays(1));
         basicGrunnlag(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
@@ -64,12 +62,12 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
     @Test
     public void gyldig_utsettelse_gir_ingen_utbetaling() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
-        OppgittPeriode fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
-        OppgittPeriode utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
+        var utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
                 UtsettelseÅrsak.FERIE);
-        OppgittPeriode fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12),
+        var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12),
                 fødselsdato.plusWeeks(14).minusDays(1));
         basicGrunnlag(fødselsdato).medSøknad(new Søknad.Builder().leggTilOppgittPeriode(fpff)
                 .leggTilOppgittPeriode(mødrekvote)
@@ -77,7 +75,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
                 .leggTilOppgittPeriode(fellesperiode)
                 .medType(Søknadstype.FØDSEL));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);
 
@@ -106,12 +104,12 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
     @Test
     public void gradering_gir_redusert_utbetalingsgrad() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktiviteter = Set.of(ARBEIDSFORHOLD_1);
         leggPåKvoter(grunnlag);
-        OppgittPeriode fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), BigDecimal.valueOf(20), aktiviteter);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -121,7 +119,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
                         .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -140,12 +138,12 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
 
     @Test
     public void gradering_gir_redusert_utbetalingsgrad_avrunding() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktivititeter = Set.of(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2);
         leggPåKvoter(grunnlag);
-        OppgittPeriode fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
-        OppgittPeriode mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        OppgittPeriode gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), new BigDecimal("17.55"), aktivititeter);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -155,7 +153,7 @@ public class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkes
                         .leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
                 .medInngangsvilkår(oppfyltAlleVilkår());
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         var uttakPeriode = perioder.get(2).getUttakPeriode();
         assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(82.45));

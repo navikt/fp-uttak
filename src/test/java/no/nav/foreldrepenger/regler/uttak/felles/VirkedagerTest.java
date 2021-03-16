@@ -16,15 +16,15 @@ public class VirkedagerTest {
 
     @BeforeEach
     public void setUp() {
-        LocalDate iDag = LocalDate.now();
-        LocalDate mandag = iDag.minusDays(iDag.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue());
+        var iDag = LocalDate.now();
+        var mandag = iDag.minusDays(iDag.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue());
         uke = Stream.of(DayOfWeek.values()).collect(Collectors.toMap(day -> day, day -> mandag.plusDays(day.ordinal())));
     }
 
     @Test
     public void skalBeregneAntallVirkedager() {
-        LocalDate mandag = getDayOfWeek(DayOfWeek.MONDAY);
-        LocalDate søndag = getDayOfWeek(DayOfWeek.SUNDAY);
+        var mandag = getDayOfWeek(DayOfWeek.MONDAY);
+        var søndag = getDayOfWeek(DayOfWeek.SUNDAY);
 
         assertThat(Virkedager.beregnAntallVirkedager(mandag, søndag)).isEqualTo(5);
         assertThat(Virkedager.beregnAntallVirkedager(mandag, søndag.plusDays(1))).isEqualTo(6);
@@ -42,14 +42,14 @@ public class VirkedagerTest {
 
     @Test
     public void skalLeggeTilVirkedager() {
-        LocalDate mandag = getDayOfWeek(DayOfWeek.MONDAY);
-        LocalDate tirsdag = getDayOfWeek(DayOfWeek.TUESDAY);
-        LocalDate onsdag = getDayOfWeek(DayOfWeek.WEDNESDAY);
-        LocalDate fredag = getDayOfWeek(DayOfWeek.FRIDAY);
-        LocalDate lørdag = getDayOfWeek(DayOfWeek.SATURDAY);
-        LocalDate søndag = getDayOfWeek(DayOfWeek.SUNDAY);
-        LocalDate nesteMandag = mandag.plusWeeks(1);
-        LocalDate nesteTirsdag = tirsdag.plusWeeks(1);
+        var mandag = getDayOfWeek(DayOfWeek.MONDAY);
+        var tirsdag = getDayOfWeek(DayOfWeek.TUESDAY);
+        var onsdag = getDayOfWeek(DayOfWeek.WEDNESDAY);
+        var fredag = getDayOfWeek(DayOfWeek.FRIDAY);
+        var lørdag = getDayOfWeek(DayOfWeek.SATURDAY);
+        var søndag = getDayOfWeek(DayOfWeek.SUNDAY);
+        var nesteMandag = mandag.plusWeeks(1);
+        var nesteTirsdag = tirsdag.plusWeeks(1);
 
         assertThat(Virkedager.plusVirkedager(mandag, 1)).isEqualTo(tirsdag);
         assertThat(Virkedager.plusVirkedager(mandag, 4)).isEqualTo(fredag);
@@ -79,7 +79,7 @@ public class VirkedagerTest {
     }
 
     private LocalDate getDayOfWeek(DayOfWeek dayOfWeek) {
-        LocalDate date = uke.get(dayOfWeek);
+        var date = uke.get(dayOfWeek);
         assertThat(date.getDayOfWeek()).isEqualTo(dayOfWeek);
         return date;
     }

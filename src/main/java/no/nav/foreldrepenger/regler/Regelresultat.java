@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler;
 
-import java.util.Optional;
-
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
@@ -19,7 +17,7 @@ public class Regelresultat {
     }
 
     public <T> T getProperty(String tag, Class<T> clazz) {
-        Object obj = getProperty(tag);
+        var obj = getProperty(tag);
         if (obj != null && !clazz.isAssignableFrom(obj.getClass())) {
             throw new IllegalArgumentException(
                     "Kan ikke hente property " + tag + ". Forventet " + clazz.getSimpleName() + " men fant " + obj.getClass());
@@ -28,7 +26,7 @@ public class Regelresultat {
     }
 
     public String sluttpunktId() {
-        Optional<Evaluation> first = evaluationSummary.leafEvaluations()
+        var first = evaluationSummary.leafEvaluations()
                 .stream()
                 .filter(e -> e.ruleIdentification() != null)
                 .findFirst();
@@ -37,7 +35,7 @@ public class Regelresultat {
     }
 
     private Object getProperty(String tag) {
-        Optional<Evaluation> first = evaluationSummary.leafEvaluations()
+        var first = evaluationSummary.leafEvaluations()
                 .stream()
                 .filter(e -> e.getEvaluationProperties() != null)
                 .findFirst();

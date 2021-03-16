@@ -39,14 +39,14 @@ public class RevurderingTest {
 
     @Test
     public void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilAvslagPgaSamtykke() {
-        OppgittPeriode oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
-        RegelGrunnlag grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(false))
+        var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(false))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false)))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_SAMTYKKE);
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
@@ -57,73 +57,73 @@ public class RevurderingTest {
 
     @Test
     public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
-        OppgittPeriode oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
-        RegelGrunnlag grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
+        var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12)).medInnvilget(true).build()))
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE);
     }
 
     @Test
     public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
-        OppgittPeriode oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
-        RegelGrunnlag grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
+        var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false)))
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK);
     }
 
     @Test
     public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
-        OppgittPeriode oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
-        RegelGrunnlag grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
+        var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false)))
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK);
     }
 
     @Test
     public void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
-        OppgittPeriode oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
-        RegelGrunnlag grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
+        var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, true)))
                 .medBehandling(tapendeBehandling())
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
     }
 
     @Test
     public void revurdering_søknad_der_opphørsdato_ligger_i_perioden() {
-        OppgittPeriode uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
 
-        RegelGrunnlag grunnlag = basicBuilder(uttaksperiode).medMedlemskap(
+        var grunnlag = basicBuilder(uttaksperiode).medMedlemskap(
                 new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().plusWeeks(1))).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttaksperiode, grunnlag);
+        var regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -133,13 +133,13 @@ public class RevurderingTest {
 
     @Test
     public void revurdering_søknad_der_opphørsdato_ligger_før_perioden() {
-        OppgittPeriode uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
 
-        RegelGrunnlag grunnlag = basicBuilder(uttaksperiode).medMedlemskap(
+        var grunnlag = basicBuilder(uttaksperiode).medMedlemskap(
                 new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getFom().minusWeeks(1))).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttaksperiode, grunnlag);
+        var regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -149,15 +149,15 @@ public class RevurderingTest {
 
     @Test
     public void revurdering_søknad_der_opphørsdato_ligger_etter_perioden() {
-        OppgittPeriode uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
 
-        RegelGrunnlag grunnlag = basicBuilder(uttaksperiode).medRevurdering(new Revurdering.Builder())
+        var grunnlag = basicBuilder(uttaksperiode).medRevurdering(new Revurdering.Builder())
                 .medRettOgOmsorg(samtykke(true))
                 .medMedlemskap(new Medlemskap.Builder().medOpphørsdato(uttaksperiode.getTom().plusWeeks(1)))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttaksperiode, grunnlag);
+        var regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
     }

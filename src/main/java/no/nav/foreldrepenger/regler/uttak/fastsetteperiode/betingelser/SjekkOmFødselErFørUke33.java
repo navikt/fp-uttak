@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -23,8 +21,8 @@ public class SjekkOmFødselErFørUke33 extends LeafSpecification<FastsettePeriod
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        LocalDate fødselsdato = grunnlag.getFødselsdato();
-        LocalDate termindato = grunnlag.getTermindato();
+        var fødselsdato = grunnlag.getFødselsdato();
+        var termindato = grunnlag.getTermindato();
         if (PrematurukerUtil.oppfyllerKravTilPrematuruker(fødselsdato, termindato, konfigurasjon)) {
             return ja();
         }

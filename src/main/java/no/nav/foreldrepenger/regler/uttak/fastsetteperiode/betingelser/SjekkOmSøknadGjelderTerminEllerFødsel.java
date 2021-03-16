@@ -17,10 +17,7 @@ public class SjekkOmSøknadGjelderTerminEllerFødsel extends LeafSpecification<F
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.getSøknadstype().gjelderTerminFødsel()) {
-            return ja();
-        }
-        return nei();
+        return grunnlag.getSøknadstype().gjelderTerminFødsel() ? ja() : nei();
     }
 
 }

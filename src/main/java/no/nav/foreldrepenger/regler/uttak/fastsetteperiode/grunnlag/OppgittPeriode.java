@@ -79,7 +79,7 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public boolean erSøktGradering(AktivitetIdentifikator aktivitetIdentifikator) {
-        for (AktivitetIdentifikator gradertAktivitet : gradertAktiviteter) {
+        for (var gradertAktivitet : gradertAktiviteter) {
             if (Objects.equals(gradertAktivitet, aktivitetIdentifikator)) {
                 return true;
             }
@@ -220,7 +220,7 @@ public final class OppgittPeriode extends LukketPeriode {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        OppgittPeriode that = (OppgittPeriode) o;
+        var that = (OppgittPeriode) o;
         return flerbarnsdager == that.flerbarnsdager && manglendeSøktPeriode == that.manglendeSøktPeriode
                 && stønadskontotype == that.stønadskontotype && Objects.equals(arbeidsprosent, that.arbeidsprosent)
                 && overføringÅrsak == that.overføringÅrsak && periodeVurderingType == that.periodeVurderingType && Objects.equals(

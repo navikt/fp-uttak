@@ -1,9 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -24,9 +21,9 @@ public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel extends Le
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
-        LocalDate startDatoUttak = aktuellPeriode.getFom();
-        int ukerFørFødselUttaksgrenseForeldrepenger = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
+        var startDatoUttak = aktuellPeriode.getFom();
+        var ukerFørFødselUttaksgrenseForeldrepenger = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
                 grunnlag.getFamiliehendelse());
         if (startDatoUttak.isBefore(grunnlag.getFamiliehendelse().minusWeeks(ukerFørFødselUttaksgrenseForeldrepenger))) {
             return ja();

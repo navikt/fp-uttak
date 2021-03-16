@@ -22,7 +22,7 @@ public class Manuellbehandling {
                                                  boolean trekkDagerFraSaldo,
                                                  boolean utbetal,
                                                  Optional<GraderingIkkeInnvilgetÅrsak> graderingIkkeInnvilgetÅrsak) {
-        FastsettePeriodeUtfall.Builder builder = FastsettePeriodeUtfall.builder()
+        var builder = FastsettePeriodeUtfall.builder()
                 .manuellBehandling(periodeResultatÅrsak, manuellbehandlingårsak)
                 .utbetal(utbetal)
                 .medTrekkDagerFraSaldo(trekkDagerFraSaldo)

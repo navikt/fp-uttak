@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetType;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -16,7 +15,7 @@ public class SjekkOmSøkerErArbeidstaker extends LeafSpecification<FastsettePeri
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        for (AktivitetIdentifikator aktiviteter : grunnlag.getAktuellPeriode().getAktiviteter()) {
+        for (var aktiviteter : grunnlag.getAktuellPeriode().getAktiviteter()) {
             if (AktivitetType.ARBEID.equals(aktiviteter.getAktivitetType())) {
                 return ja();
             }

@@ -197,18 +197,16 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForTidligUttak() {
 
-        Specification<FastsettePeriodeGrunnlag> graderingIPeriodenNode = rs.hvisRegel(SjekkOmGradertPeriode.ID,
-                SjekkOmGradertPeriode.BESKRIVELSE)
+        var graderingIPeriodenNode = rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(),
                         Oppfylt.opprett("UT1217", InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, true))
                 .ellers(Oppfylt.opprett("UT1026", InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, true));
 
-        Specification<FastsettePeriodeGrunnlag> erSøkerFar = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
+        var erSøkerFar = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
                 .hvis(new SjekkOmSøkerErMor(), new OverføringDelregel().getSpecification())
                 .ellers(graderingIPeriodenNode);
 
-        Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode = rs.hvisRegel(
-                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+        var noenDisponibleDagerNode = rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
                 "Er det disponibelt antall stønadsdager på fedrekvoten?")
                 .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), erSøkerFar)
                 .ellers(Manuellbehandling.opprett("UT1022", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
@@ -221,18 +219,16 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForVanligUttak() {
 
-        Specification<FastsettePeriodeGrunnlag> graderingIPeriodenNode = rs.hvisRegel(SjekkOmGradertPeriode.ID,
-                SjekkOmGradertPeriode.BESKRIVELSE)
+        var graderingIPeriodenNode = rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(),
                         Oppfylt.opprett("UT1218", InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, true))
                 .ellers(Oppfylt.opprett("UT1031", InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, true));
 
-        Specification<FastsettePeriodeGrunnlag> erSøkerFar = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
+        var erSøkerFar = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
                 .hvis(new SjekkOmSøkerErMor(), new OverføringDelregel().getSpecification())
                 .ellers(graderingIPeriodenNode);
 
-        Specification<FastsettePeriodeGrunnlag> noenDisponibleDagerNode = rs.hvisRegel(
-                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+        var noenDisponibleDagerNode = rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
                 "Er det disponibelt antall stønadsdager på fedrekvoten?")
                 .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), erSøkerFar)
                 .ellers(Manuellbehandling.opprett("UT1178", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,

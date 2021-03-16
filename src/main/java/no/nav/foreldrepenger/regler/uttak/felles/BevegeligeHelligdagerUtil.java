@@ -17,7 +17,7 @@ public class BevegeligeHelligdagerUtil {
     public static List<LocalDate> finnBevegeligeHelligdagerUtenHelg(LukketPeriode uttaksperiode) {
         List<LocalDate> bevegeligeHelligdager = new ArrayList<>();
 
-        for (Integer år : utledÅreneDetSkalFinnesHelligdagerFor(uttaksperiode)) {
+        for (var år : utledÅreneDetSkalFinnesHelligdagerFor(uttaksperiode)) {
             bevegeligeHelligdager.addAll(finnBevegeligeHelligdagerUtenHelgPerÅr(år));
         }
         return bevegeligeHelligdager;
@@ -34,7 +34,7 @@ public class BevegeligeHelligdagerUtil {
         bevegeligeHelligdager.add(LocalDate.of(år, 12, 26));
 
         // regner ut påskedag
-        LocalDate påskedag = utledPåskedag(år);
+        var påskedag = utledPåskedag(år);
 
         // søndag før påske; Palmesøndag
         bevegeligeHelligdager.add(påskedag.minusDays(7));
@@ -66,7 +66,7 @@ public class BevegeligeHelligdagerUtil {
 
     private static List<LocalDate> fjernHelg(List<LocalDate> bevegeligeHelligdager) {
         List<LocalDate> utenHelg = new ArrayList<>();
-        for (LocalDate helligdag : bevegeligeHelligdager) {
+        for (var helligdag : bevegeligeHelligdager) {
             if (!DayOfWeek.SATURDAY.equals(helligdag.getDayOfWeek()) && !DayOfWeek.SUNDAY.equals(helligdag.getDayOfWeek())) {
                 utenHelg.add(helligdag);
             }
@@ -76,28 +76,28 @@ public class BevegeligeHelligdagerUtil {
     }
 
     private static LocalDate utledPåskedag(int år) {
-        int a = år % 19;
-        int b = år / 100;
-        int c = år % 100;
-        int d = b / 4;
-        int e = b % 4;
-        int f = (b + 8) / 25;
-        int g = (b - f + 1) / 3;
-        int h = ((19 * a) + b - d - g + 15) % 30;
-        int i = c / 4;
-        int k = c % 4;
-        int l = (32 + (2 * e) + (2 * i) - h - k) % 7;
-        int m = (a + (11 * h) + (22 * l)) / 451;
-        int n = (h + l - (7 * m) + 114) / 31; // Tallet på måneden
-        int p = (h + l - (7 * m) + 114) % 31; // Tallet på dagen
+        var a = år % 19;
+        var b = år / 100;
+        var c = år % 100;
+        var d = b / 4;
+        var e = b % 4;
+        var f = (b + 8) / 25;
+        var g = (b - f + 1) / 3;
+        var h = ((19 * a) + b - d - g + 15) % 30;
+        var i = c / 4;
+        var k = c % 4;
+        var l = (32 + (2 * e) + (2 * i) - h - k) % 7;
+        var m = (a + (11 * h) + (22 * l)) / 451;
+        var n = (h + l - (7 * m) + 114) / 31; // Tallet på måneden
+        var p = (h + l - (7 * m) + 114) % 31; // Tallet på dagen
 
         return LocalDate.of(år, n, p + 1);
     }
 
     private static List<Integer> utledÅreneDetSkalFinnesHelligdagerFor(LukketPeriode uttaksperiode) {
         List<Integer> årene = new ArrayList<>();
-        int antall = uttaksperiode.getTom().getYear() - uttaksperiode.getFom().getYear();
-        for (int i = 0; i <= antall; i++) {
+        var antall = uttaksperiode.getTom().getYear() - uttaksperiode.getFom().getYear();
+        for (var i = 0; i <= antall; i++) {
             årene.add(uttaksperiode.getFom().getYear() + i);
         }
         return årene;

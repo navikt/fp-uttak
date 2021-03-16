@@ -34,13 +34,13 @@ public class UtsettelseDelregelTest {
 
     @Test
     public void UT1101_ferie_innenfor_seks_første_uker() {
-        LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
+        var fødselsdato = LocalDate.of(2019, 7, 1);
         var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
                 PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE,
                 fødselsdato.minusWeeks(1), null); // innenfor seks uker etter fødsel
-        AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
+        var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+        var grunnlag = new RegelGrunnlag.Builder().medArbeid(
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(periode))
@@ -50,7 +50,7 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        FastsettePerioderRegelresultat resultat = kjørRegel(periode, grunnlag);
+        var resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1101");
         assertThat(resultat.oppfylt()).isFalse();
@@ -61,11 +61,11 @@ public class UtsettelseDelregelTest {
 
     @Test
     public void UT1124_fødsel_mer_enn_7_uker_før_termin() {
-        LocalDate fom = LocalDate.of(2019, 7, 1);
+        var fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
-        AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
+        var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+        var grunnlag = new RegelGrunnlag.Builder().medArbeid(
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
@@ -80,18 +80,18 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        FastsettePerioderRegelresultat resultat = kjørRegel(periode, grunnlag);
+        var resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1124");
     }
 
     @Test
     public void UT1120_fødsel_mer_enn_7_uker_før_termin_perioden_ligger_etter_termin() {
-        LocalDate fom = LocalDate.of(2019, 7, 1);
+        var fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN);
-        AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
+        var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+        var grunnlag = new RegelGrunnlag.Builder().medArbeid(
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
@@ -107,18 +107,18 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        FastsettePerioderRegelresultat resultat = kjørRegel(periode, grunnlag);
+        var resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1120");
     }
 
     @Test
     public void UT1120_fødsel_mindre_enn_7_uker_før_termin() {
-        LocalDate fom = LocalDate.of(2019, 7, 1);
+        var fom = LocalDate.of(2019, 7, 1);
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
-        AktivitetIdentifikator aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
+        var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
-        RegelGrunnlag grunnlag = new RegelGrunnlag.Builder().medArbeid(
+        var grunnlag = new RegelGrunnlag.Builder().medArbeid(
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
@@ -133,7 +133,7 @@ public class UtsettelseDelregelTest {
                 .medInngangsvilkår(oppfylt())
                 .build();
 
-        FastsettePerioderRegelresultat resultat = kjørRegel(periode, grunnlag);
+        var resultat = kjørRegel(periode, grunnlag);
 
         assertThat(resultat.sluttpunktId()).isEqualTo("UT1120");
     }

@@ -17,7 +17,7 @@ public final class PrematurukerUtil {
             return false;
         }
         if (erEtterRegelendringStartdato(fødselsdato)) {
-            int antallDagerFørTermin = konfigurasjon.getParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, fødselsdato);
+            var antallDagerFørTermin = konfigurasjon.getParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, fødselsdato);
             return fødselsdato.plusDays(antallDagerFørTermin).isBefore(termindato);
         }
         return false;

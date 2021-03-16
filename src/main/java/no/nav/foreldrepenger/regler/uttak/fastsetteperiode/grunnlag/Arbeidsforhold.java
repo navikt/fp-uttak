@@ -64,7 +64,7 @@ public class Arbeidsforhold {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Arbeidsforhold that = (Arbeidsforhold) o;
+        var that = (Arbeidsforhold) o;
         return Objects.equals(identifikator, that.identifikator);
     }
 

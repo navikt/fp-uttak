@@ -34,15 +34,15 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
     @Test
     public void skal_avslå_og_trekke_mødrekvote_for_mor_hvis_dager_igjen() {
 
-        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
+        var fødselsdato = LocalDate.of(2019, 9, 3);
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 //manglende søkt i mellom
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9))))
                 .medKontoer(kontoer(konto(Stønadskontotype.MØDREKVOTE, 1000), konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15)))
                 .build();
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
         assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
@@ -55,7 +55,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     private Kontoer.Builder kontoer(Konto.Builder... konto) {
         var kontoer = new Kontoer.Builder();
-        for (Konto.Builder k : konto) {
+        for (var k : konto) {
             kontoer.leggTilKonto(k);
         }
         return kontoer;
@@ -63,7 +63,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     @Test
     public void skal_avslå_og_trekke_foreldrepenger_for_far_med_enerett_hvis_dager_igjen() {
-        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
+        var fødselsdato = LocalDate.of(2019, 9, 3);
         var oppgittPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12));
         var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), I_AKTIVITET));
@@ -71,12 +71,12 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
                 //manglende søkt blir opprettet før foreldrepenger-perioder
                 oppgittPeriode)
                 .medDokumentasjon(dokumentasjon);
-        RegelGrunnlag grunnlag = basicGrunnlagFar(fødselsdato)
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .medRettOgOmsorg(bareFarRett())
                 .medSøknad(søknad)
                 .medKontoer(kontoer(konto(Stønadskontotype.FORELDREPENGER, 1000)))
                 .build();
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
         assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
@@ -88,15 +88,15 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     @Test
     public void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom() {
-        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
+        var fødselsdato = LocalDate.of(2019, 9, 3);
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 //manglende søkt i mellom
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9))))
                 .medKontoer(kontoer(konto(Stønadskontotype.MØDREKVOTE, 30), konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15)))
                 .build();
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
         assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
@@ -109,15 +109,15 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     @Test
     public void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode() {
-        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
+        var fødselsdato = LocalDate.of(2019, 9, 3);
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 //manglende søkt i mellom
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12))))
                 .medKontoer(kontoer(konto(Stønadskontotype.MØDREKVOTE, 32), konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15)))
                 .build();
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);
         assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
@@ -136,8 +136,8 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     @Test
     public void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode_flere_knekk() {
-        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
-        RegelGrunnlag grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
+        var fødselsdato = LocalDate.of(2019, 9, 3);
+        var grunnlag = basicGrunnlagMor(fødselsdato).medSøknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 //manglende søkt i mellom
@@ -145,7 +145,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
                 .medKontoer(kontoer(konto(Stønadskontotype.MØDREKVOTE, 32), konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15),
                         konto(Stønadskontotype.FELLESPERIODE, 5)))
                 .build();
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         //Går tom for mødrekvote først, deretter fellesperiode
         assertThat(perioder).hasSize(6);
@@ -171,7 +171,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     @Test
     public void skal_kunne_håndtere_ulikt_antall_dager_gjenværende_på_arbeidsforhold_ved_manglende_søkt_periode() {
-        LocalDate fødselsdato = LocalDate.of(2019, 9, 3);
+        var fødselsdato = LocalDate.of(2019, 9, 3);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.MØDREKVOTE, 75))
                 .leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 1));
         var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
@@ -201,12 +201,12 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
 
     @Test
     public void manglende_søkt_periode_før_nytt_arbeidsforhold_tilkommer() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var arbeidsforhold = AktivitetIdentifikator.forArbeid("000000001", null);
         var arbeidsforholdMedId = AktivitetIdentifikator.forArbeid("000000001", "1234");
 
-        RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
                 .medBehandling(morBehandling())
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold))
@@ -224,7 +224,7 @@ public class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkest
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(11),
                                 fødselsdato.plusWeeks(15).minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(6);
 

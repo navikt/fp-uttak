@@ -25,7 +25,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
 
     @Test
     public void mødrekvoteperiode_før_familiehendelse() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -35,7 +35,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.minusWeeks(1),
                                 fødselsdato.plusWeeks(6).minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -60,7 +60,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
 
     @Test
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_innvilges() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -73,7 +73,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -100,7 +100,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
 
     @Test
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
@@ -111,7 +111,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -122,7 +122,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
 
     @Test
     public void overføring_av_mødrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -133,7 +133,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
@@ -158,7 +158,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
 
     @Test
     public void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -172,7 +172,7 @@ public class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestrer
                                 new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 

@@ -47,7 +47,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(4);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET,
@@ -76,7 +76,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         //Siste del av søknadsperioden blir avslått pga tom for dager
         assertThat(resultater).hasSize(2);
@@ -90,7 +90,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                 PeriodeVurderingType.PERIODE_OK);
         basicGrunnlagFar().medSøknad(søknad(Søknadstype.FØDSEL, periode));
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(3);
         verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(5),
@@ -115,7 +115,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(4);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
@@ -138,7 +138,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                 oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10).minusDays(1))))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(3);
         verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(3).minusDays(3), MØDREKVOTE,
@@ -157,7 +157,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                 søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.minusWeeks(13), fødselsdato)))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(5);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(13), fødselsdato.minusWeeks(12).minusDays(1),
@@ -184,7 +184,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                                 OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false,
                                         PeriodeVurderingType.IKKE_VURDERT, null, null))));
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultater.get(0).getUttakPeriode().getFom()).isEqualTo(termin.minusWeeks(15));
@@ -207,7 +207,7 @@ public class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestr
                                 OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false,
                                         PeriodeVurderingType.IKKE_VURDERT, null, null))));
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }

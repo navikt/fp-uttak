@@ -11,8 +11,8 @@ public class KonfigurasjonBuilderTest {
 
     @Test
     public void konfigurasjon_med_en_verdi() {
-        LocalDate nå = LocalDate.now();
-        Konfigurasjon konfigurasjon = KonfigurasjonBuilder.create()
+        var nå = LocalDate.now();
+        var konfigurasjon = KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, null, 75)
                 .build();
         assertThat(konfigurasjon.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå)).isEqualTo(75);
@@ -20,8 +20,8 @@ public class KonfigurasjonBuilderTest {
 
     @Test
     public void konfigurasjon_med_en_verdi_i_to_intervaller() {
-        LocalDate nå = LocalDate.now();
-        Konfigurasjon konfigurasjon = KonfigurasjonBuilder.create()
+        var nå = LocalDate.now();
+        var konfigurasjon = KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, nå.plusDays(6), 50)
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå.plusDays(7), null, 75)
                 .build();
@@ -32,7 +32,7 @@ public class KonfigurasjonBuilderTest {
 
     @Test
     public void konfigurasjon_med_en_verdi_i_to_intervaller_med_overlapp() {
-        LocalDate nå = LocalDate.now();
+        var nå = LocalDate.now();
         assertThrows(IllegalArgumentException.class, () -> KonfigurasjonBuilder.create()
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå, nå.plusDays(6), 50)
                 .leggTilParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, nå.plusDays(5), null, 75));

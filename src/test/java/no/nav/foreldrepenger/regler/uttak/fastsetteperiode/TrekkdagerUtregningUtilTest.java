@@ -18,13 +18,13 @@ public class TrekkdagerUtregningUtilTest {
     @Test
     public void skal_runde_ned_ved_gradering() {
 
-        LocalDate fom = LocalDate.of(2019, 3, 14);
-        LocalDate tom = LocalDate.of(2019, 3, 15);
+        var fom = LocalDate.of(2019, 3, 14);
+        var tom = LocalDate.of(2019, 3, 15);
         //periode på 2 dager, 1% gradering
-        BigDecimal arbeidstidsprosent = BigDecimal.valueOf(1);
-        OppgittPeriode periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, arbeidstidsprosent, null,
+        var arbeidstidsprosent = BigDecimal.valueOf(1);
+        var periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, arbeidstidsprosent, null,
                 false, Set.of(), PeriodeVurderingType.IKKE_VURDERT, null, null);
-        Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
+        var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(1.9));
     }
@@ -33,13 +33,13 @@ public class TrekkdagerUtregningUtilTest {
     public void skal_redusere_trekkdager_ved_samtidig_uttak_uten_gradering() {
 
         //10 virkdager
-        LocalDate fom = LocalDate.of(2019, 4, 1);
-        LocalDate tom = LocalDate.of(2019, 4, 12);
+        var fom = LocalDate.of(2019, 4, 1);
+        var tom = LocalDate.of(2019, 4, 12);
 
-        SamtidigUttaksprosent samtidigUttaksprosent = new SamtidigUttaksprosent(50);
-        OppgittPeriode periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, samtidigUttaksprosent,
+        var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
+        var periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, samtidigUttaksprosent,
                 false, PeriodeVurderingType.IKKE_VURDERT, null, null);
-        Trekkdager trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
+        var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(5));
     }

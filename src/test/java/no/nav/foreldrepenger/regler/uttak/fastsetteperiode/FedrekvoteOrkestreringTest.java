@@ -8,7 +8,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +32,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_fra_første_dag_til_midten_av_perioden_blir_innvilget_med_knekkpunkt() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(farBehandling())
@@ -41,7 +40,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), PeriodeVurderingType.PERIODE_OK),
                         oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2), PeriodeVurderingType.UAVKLART_PERIODE)));
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(2);
 
@@ -57,7 +56,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void skal_gi_ikke_innvilget_når_far_har_gyldig_grunn_til_tidlig_oppstart_men_ikke_omsorg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(100));
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -70,7 +69,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 .leggPeriodeUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> periodeResultater = fastsettPerioder(grunnlag);
+        var periodeResultater = fastsettPerioder(grunnlag);
 
         assertThat(periodeResultater).hasSize(1);
         var perioder = periodeResultater.stream()
@@ -84,8 +83,8 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void fedrekvote_fra_1_dag_før_6_uker_skal_behandles_manuelt() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 3);
-        LocalDate førsteLovligeUttaksdag = fødselsdato.withDayOfMonth(1).minusMonths(3);
+        var fødselsdato = LocalDate.of(2018, 1, 3);
+        var førsteLovligeUttaksdag = fødselsdato.withDayOfMonth(1).minusMonths(3);
 
         var grunnlag = this.grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -95,7 +94,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 PeriodeVurderingType.UAVKLART_PERIODE)))
                 .build();
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(2);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.plusWeeks(6).minusDays(1),
@@ -107,7 +106,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void fedrekvote_før_6_uker_blir_avslått() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var periode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE);
         grunnlag.medDatoer(datoer(fødselsdato))
@@ -115,7 +114,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                 .medBehandling(farBehandling())
                 .medSøknad(søknad(Søknadstype.FØDSEL, periode));
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(2);
         verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MANUELL_BEHANDLING,
@@ -126,7 +125,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void fedrekvote_bli_ikke_innvilget_når_søker_ikke_har_omsorg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(100));
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
@@ -138,7 +137,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100)))))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> resultater = fastsettPerioder(grunnlag);
+        var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
         verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
@@ -147,7 +146,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_innvilges() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
@@ -162,7 +161,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)))));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
@@ -197,7 +196,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -209,7 +208,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 fødselsdato.plusWeeks(12).minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE,
                                 PeriodeVurderingType.PERIODE_OK)));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
@@ -240,7 +239,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void overføring_av_fedrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
@@ -251,7 +250,7 @@ public class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreri
                         overføringPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1), null, PeriodeVurderingType.UAVKLART_PERIODE)));
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 

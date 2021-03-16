@@ -233,8 +233,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelseFørFamiliehendelse = rs.hvisRegel(
-                SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Er utsettelse før familiehendelse?")
+        var sjekkOmUtsettelseFørFamiliehendelse = rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID,
+                "Er utsettelse før familiehendelse?")
                 .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
                         Manuellbehandling.opprett("UT1151", IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL,
                                 Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
@@ -267,28 +267,24 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriode() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeUavklart = rs.hvisRegel(SjekkOmPeriodeUavklartUtenomNoenTyper.ID,
-                "Er uttaksperioden uavklart?")
+        var sjekkOmPeriodeUavklart = rs.hvisRegel(SjekkOmPeriodeUavklartUtenomNoenTyper.ID, "Er uttaksperioden uavklart?")
                 .hvis(new SjekkOmPeriodeUavklartUtenomNoenTyper(konfigurasjon),
                         Manuellbehandling.opprett("UT1148", null, Manuellbehandlingårsak.PERIODE_UAVKLART, true, false))
                 .ellers(sjekkOmSøktGradering());
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmSøktOverføringAvKvoteNode = rs.hvisRegel(SjekkOmSøktOmOverføringAvKvote.ID,
-                "Er det søkt om overføring av kvote")
+        var sjekkOmSøktOverføringAvKvoteNode = rs.hvisRegel(SjekkOmSøktOmOverføringAvKvote.ID, "Er det søkt om overføring av kvote")
                 .hvis(new SjekkOmSøktOmOverføringAvKvote(), sjekkOmPeriodeUavklart)
                 .ellers(IkkeOppfylt.opprett("UT1160", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false));
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmTomForAlleSineKontoerNode = rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID,
-                SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+        var sjekkOmTomForAlleSineKontoerNode = rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
                 .hvis(new SjekkOmTomForAlleSineKontoer(), sjekkOmSøktOverføringAvKvoteNode)
                 .ellers(sjekkOmPeriodeUavklart);
 
-        Specification<FastsettePeriodeGrunnlag> sjekkOmForeldrepengerFørFødselNode = rs.hvisRegel(
-                SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
+        var sjekkOmForeldrepengerFørFødselNode = rs.hvisRegel(SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
                 .hvis(new SjekkOmPeriodeErForeldrepengerFørFødsel(), sjekkOmPeriodeUavklart)
                 .ellers(sjekkOmTomForAlleSineKontoerNode);
 
-        Specification<FastsettePeriodeGrunnlag> sjekkKontoErOpprettet = rs.hvisRegel(SjekkOmKontoErOpprettet.ID,
+        var sjekkKontoErOpprettet = rs.hvisRegel(SjekkOmKontoErOpprettet.ID,
                 "Er det opprettet stønadskonto som tilsvarer stønadskonto i uttaksperioden?")
                 .hvis(new SjekkOmKontoErOpprettet(), sjekkOmForeldrepengerFørFødselNode)
                 .ellers(Manuellbehandling.opprett("UT1290", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,

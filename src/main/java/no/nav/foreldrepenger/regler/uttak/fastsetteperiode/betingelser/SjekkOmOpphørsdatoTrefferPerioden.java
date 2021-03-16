@@ -17,8 +17,8 @@ public class SjekkOmOpphørsdatoTrefferPerioden extends LeafSpecification<Fastse
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        LocalDate opphørsdatoForMedlemskap = grunnlag.getOpphørsdatoForMedlemskap();
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        var opphørsdatoForMedlemskap = grunnlag.getOpphørsdatoForMedlemskap();
 
         if (opphørsdatoForMedlemskap == null) {
             return nei();

@@ -36,16 +36,16 @@ public class StebarnsadopsjonDelRegelTest {
 
     @Test
     public void UT1240_stebarnsadopsjon_far_ikke_omsorg() {
-        LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
+        var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medSøknad(
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medSøknad(
                 new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(
                                 new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100))))).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
@@ -60,14 +60,14 @@ public class StebarnsadopsjonDelRegelTest {
 
     @Test
     public void UT1241_stebarnsadopsjon_far_omsorg_disponible_dager_og_ingen_gradering() {
-        LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
+        var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
 
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -78,13 +78,13 @@ public class StebarnsadopsjonDelRegelTest {
 
     @Test
     public void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
-        LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
+        var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = gradertPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2),
                 Set.of(ARBEIDSFORHOLD_1));
 
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).build();
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -95,16 +95,16 @@ public class StebarnsadopsjonDelRegelTest {
 
     @Test
     public void UT1244_stebarnsadopsjon_far_omsorg_ikke_disponible_stønadsdager() {
-        LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
+        var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medArbeid(
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medArbeid(
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
@@ -115,16 +115,16 @@ public class StebarnsadopsjonDelRegelTest {
 
     @Test
     public void UT1285_stebarnsadopsjon_uttak_før_omsorgsovertakelse() {
-        LocalDate omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
+        var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
                 .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(0))
                 .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
-        RegelGrunnlag grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medArbeid(
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).medArbeid(
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).medKontoer(kontoer).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(uttakPeriode, grunnlag);
+        var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();

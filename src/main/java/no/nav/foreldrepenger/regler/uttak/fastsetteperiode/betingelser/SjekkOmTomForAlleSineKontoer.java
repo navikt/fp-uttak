@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -24,10 +22,10 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        boolean tomForAlleSineKontoer = true;
-        for (Stønadskontotype stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
-            for (AktivitetIdentifikator aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                Trekkdager saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
+        var tomForAlleSineKontoer = true;
+        for (var stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
+            for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
+                var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
                 if (saldo.merEnn0()) {
                     tomForAlleSineKontoer = false;
                 }

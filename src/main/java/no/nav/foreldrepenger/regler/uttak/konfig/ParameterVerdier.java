@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.konfig;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Optional;
 
 public class ParameterVerdier<T> {
     private final Parametertype parametertype;
@@ -14,7 +13,7 @@ public class ParameterVerdier<T> {
     }
 
     public T getParameter(LocalDate dato) {
-        Optional<Parameter> optionalParam = verdier.stream().filter(p -> p.overlapper(dato)).findFirst();
+        var optionalParam = verdier.stream().filter(p -> p.overlapper(dato)).findFirst();
         if (optionalParam.isPresent()) {
             return (T) optionalParam.get().getVerdi();
         }

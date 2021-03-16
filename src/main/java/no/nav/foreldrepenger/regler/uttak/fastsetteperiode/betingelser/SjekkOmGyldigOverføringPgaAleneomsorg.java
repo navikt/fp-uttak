@@ -20,8 +20,8 @@ public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<Fa
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (OppgittPeriode perioderMedAleneomsorg : grunnlag.getPerioderMedAleneomsorg()) {
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (var perioderMedAleneomsorg : grunnlag.getPerioderMedAleneomsorg()) {
             if (oppgittPeriode.erOmsluttetAv(perioderMedAleneomsorg) && harGyldigGrunn(oppgittPeriode,
                     grunnlag.getGyldigGrunnPerioder())) {
                 return ja();
@@ -31,7 +31,7 @@ public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<Fa
     }
 
     private boolean harGyldigGrunn(OppgittPeriode oppgittPeriode, List<GyldigGrunnPeriode> gyldigGrunnPerioder) {
-        for (GyldigGrunnPeriode gyldigGrunnPeriode : gyldigGrunnPerioder) {
+        for (var gyldigGrunnPeriode : gyldigGrunnPerioder) {
             if (oppgittPeriode.erOmsluttetAv(gyldigGrunnPeriode)) {
                 return true;
             }

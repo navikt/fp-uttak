@@ -26,10 +26,10 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void foreldrepengerFørFødssel_søknad_fra_3_uker_før_fødsel_til_og_med_fødsel_blir_knekt_ved_fødsel() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL).medTrekkdager(3 * 5));
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
@@ -39,7 +39,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                 .medKontoer(kontoer)
                 .build();
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3); //3 perioder fordi det også lages en manglende søkt periode for de 6 første ukene.
 
@@ -57,10 +57,10 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void foreldrepengerFørFødsel_periode_dekker_alle_ukene_før_fødsel_slutter_etter_fødsel_blir_hvor_ukene_etter_fødsel_blir_avslått() {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL).medTrekkdager(3 * 5));
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
@@ -70,7 +70,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                 .medKontoer(kontoer)
                 .build();
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3); //3 perioder fordi det også lages en manglende søkt periode for de 6 første ukene.
 
@@ -87,11 +87,11 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void riktig_knekk_ved_tom_for_dager_ifm_helg() {
-        LocalDate fødselsdato = LocalDate.of(2018, 5, 15);
+        var fødselsdato = LocalDate.of(2018, 5, 15);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
                 .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(15 * 5));
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
@@ -103,7 +103,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                 .medKontoer(kontoer)
                 .build();
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);
 
@@ -131,9 +131,9 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void riktig_knekk_ved_tom_for_dager_ifm_helg2() {
-        LocalDate fødselsdato = LocalDate.of(2020, 9, 20);
+        var fødselsdato = LocalDate.of(2020, 9, 20);
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.FEDREKVOTE).medTrekkdager(10));
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(farBehandling())
@@ -143,7 +143,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                 .medKontoer(kontoer)
                 .build();
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2020, 11, 15));
@@ -153,12 +153,12 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void periode_etter_knekk_skal_gå_videre() {
-        LocalDate fødselsdato = LocalDate.of(2018, 5, 15);
+        var fødselsdato = LocalDate.of(2018, 5, 15);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
                 .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(15 * 5))
                 .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.FELLESPERIODE).medTrekkdager(2));
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
@@ -171,7 +171,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                 .medKontoer(kontoer)
                 .build();
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);
 
@@ -185,7 +185,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
 
     @Test
     public void en_lang_manglende_søkt_før_første_uttaksperiode_skal_gå_til_manuell_når_alle_dager_brukes_opp() {
-        LocalDate fødselsdato = LocalDate.of(2018, 2, 13);
+        var fødselsdato = LocalDate.of(2018, 2, 13);
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(200));
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(farBehandling())
@@ -195,7 +195,7 @@ public class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreri
                                 LocalDate.of(2019, 12, 24))))
                 .medKontoer(kontoer);
 
-        List<FastsettePeriodeResultat> perioder = fastsettPerioder(grunnlag);
+        var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);

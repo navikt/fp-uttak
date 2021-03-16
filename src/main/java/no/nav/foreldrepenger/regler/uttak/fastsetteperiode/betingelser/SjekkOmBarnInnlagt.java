@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -17,8 +15,8 @@ public class SjekkOmBarnInnlagt extends LeafSpecification<FastsettePeriodeGrunnl
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (PeriodeMedBarnInnlagt periodeMedBarnInnlagt : grunnlag.getPerioderMedBarnInnlagt()) {
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (var periodeMedBarnInnlagt : grunnlag.getPerioderMedBarnInnlagt()) {
             if (oppgittPeriode.erOmsluttetAv(periodeMedBarnInnlagt)) {
                 return ja();
             }

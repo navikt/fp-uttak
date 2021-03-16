@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -18,8 +16,8 @@ public class SjekkOmPeriodeErFørTermin extends LeafSpecification<FastsettePerio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        LocalDate fom = grunnlag.getAktuellPeriode().getFom();
-        LocalDate termindato = grunnlag.getTermindato();
+        var fom = grunnlag.getAktuellPeriode().getFom();
+        var termindato = grunnlag.getTermindato();
         if (termindato == null) {
             return nei();
         }

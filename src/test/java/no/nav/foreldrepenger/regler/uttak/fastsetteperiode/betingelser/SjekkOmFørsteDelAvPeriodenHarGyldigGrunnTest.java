@@ -14,18 +14,17 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
 
     @Test
     public void førsteDelGyldigGrunn() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
         var msp = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(msp)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(1)))))
@@ -36,11 +35,11 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
 
     @Test
     public void førsteDelIkkeGyldigGrunn() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
         var msp = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(msp)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(periodeSlutt.minusDays(2), periodeSlutt))))
@@ -50,8 +49,8 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
     }
 
     private Resultat evaluer(RegelGrunnlag grunnlag, OppgittPeriode søknadsperiode) {
-        SjekkOmFørsteDelAvPeriodenHarGyldigGrunn sjekkOmFørsteDelHarGyldigGrunn = new SjekkOmFørsteDelAvPeriodenHarGyldigGrunn();
-        Evaluation evaluation = sjekkOmFørsteDelHarGyldigGrunn.evaluate(
+        var sjekkOmFørsteDelHarGyldigGrunn = new SjekkOmFørsteDelAvPeriodenHarGyldigGrunn();
+        var evaluation = sjekkOmFørsteDelHarGyldigGrunn.evaluate(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, null, søknadsperiode));
         return evaluation.result();
     }

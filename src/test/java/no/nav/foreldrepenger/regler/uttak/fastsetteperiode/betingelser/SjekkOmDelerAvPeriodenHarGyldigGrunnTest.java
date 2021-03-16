@@ -25,86 +25,86 @@ public class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
     @Test
     public void begynnelsenAvPeriodenHarGyldigGrunn() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(2);
-        LocalDate gyldigGrunnStart = periodeStart;
-        LocalDate gyldigGrunnSlutt = periodeStart.plusDays(1);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(2);
+        var gyldigGrunnStart = periodeStart;
+        var gyldigGrunnSlutt = periodeStart.plusDays(1);
 
-        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
+        var evaluation = evaluer(søknadsperiode, grunnlag);
         assertThat(evaluation.result()).isEqualTo(Resultat.JA);
     }
 
     @Test
     public void midtenAvPeriodenHarGyldigGrunn() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeStart.plusWeeks(3);
-        LocalDate gyldigGrunnSlutt = periodeStart.plusWeeks(4);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeStart.plusWeeks(3);
+        var gyldigGrunnSlutt = periodeStart.plusWeeks(4);
 
-        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
+        var evaluation = evaluer(søknadsperiode, grunnlag);
         assertThat(evaluation.result()).isEqualTo(Resultat.JA);
     }
 
     @Test
     public void sluttenAvPeriodenHarGyldigGrunn() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeStart.plusWeeks(5);
-        LocalDate gyldigGrunnSlutt = periodeSlutt;
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeStart.plusWeeks(5);
+        var gyldigGrunnSlutt = periodeSlutt;
 
-        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
+        var evaluation = evaluer(søknadsperiode, grunnlag);
         assertThat(evaluation.result()).isEqualTo(Resultat.JA);
     }
 
     @Test
     public void helePeriodenErUgyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
                 .build();
 
-        Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
+        var evaluation = evaluer(søknadsperiode, grunnlag);
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void ingenGyldigGrunnPerioder() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
-        OppgittPeriode søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode))
                 .build();
 
-        Evaluation evaluation = evaluer(søknadsperiode, grunnlag);
+        var evaluation = evaluer(søknadsperiode, grunnlag);
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
     }
 

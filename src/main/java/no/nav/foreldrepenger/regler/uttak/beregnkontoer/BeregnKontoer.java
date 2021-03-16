@@ -57,7 +57,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
 
     @Override
     public Specification<BeregnKontoerGrunnlag> getSpecification() {
-        Ruleset<BeregnKontoerGrunnlag> rs = new Ruleset<>();
+        var rs = new Ruleset<BeregnKontoerGrunnlag>();
 
         return rs.hvisRegel(SjekkOmMorHarAleneomsorg.ID, "Sjekk om mor har aleneomsorg?")
                 .hvis(new SjekkOmMorHarAleneomsorg(),
@@ -118,7 +118,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         }
 
         // Spesifikke for dekningsgrad
-        List<Kontokonfigurasjon> konfigurasjoner = faktorer.er100Prosent() ? byggKonfigurasjon100(faktorer) : byggKonfigurasjon80(
+        var konfigurasjoner = faktorer.er100Prosent() ? byggKonfigurasjon100(faktorer) : byggKonfigurasjon80(
                 faktorer);
 
         // Uavhengig av dekningsgrad

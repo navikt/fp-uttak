@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -18,7 +17,7 @@ public class SjekkGyldigGrunnForTidligOppstartHelePerioden extends LeafSpecifica
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
         if (PeriodeVurderingType.PERIODE_OK.equals(aktuellPeriode.getPeriodeVurderingType())
                 || PeriodeVurderingType.ENDRE_PERIODE.equals(aktuellPeriode.getPeriodeVurderingType())) {
             return ja();

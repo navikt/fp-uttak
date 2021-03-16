@@ -194,7 +194,7 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDisponibleDager() {
-        Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_MOR)
+        var sjekkOmSøkerErMor = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_MOR)
                 .hvis(new SjekkOmSøkerErMor(), erDetGraderingIPeriode2())
                 .ellers(new OverføringDelregel().getSpecification());
 

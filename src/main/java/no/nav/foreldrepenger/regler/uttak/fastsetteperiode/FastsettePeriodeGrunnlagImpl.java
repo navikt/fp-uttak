@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -52,7 +51,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<GyldigGrunnPeriode> getAktuelleGyldigeGrunnPerioder() {
-        Dokumentasjon dokumentasjon = regelGrunnlag.getSøknad().getDokumentasjon();
+        var dokumentasjon = regelGrunnlag.getSøknad().getDokumentasjon();
         if (dokumentasjon == null) {
             return Collections.emptyList();
         }
@@ -164,7 +163,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<PeriodeUtenOmsorg> getPerioderUtenOmsorg() {
-        Dokumentasjon dokumentasjon = regelGrunnlag.getSøknad().getDokumentasjon();
+        var dokumentasjon = regelGrunnlag.getSøknad().getDokumentasjon();
         if (dokumentasjon == null) {
             return Collections.emptyList();
         }

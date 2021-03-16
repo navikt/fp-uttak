@@ -34,11 +34,11 @@ public class SøknadMottattDatoRegelTest {
 
     @Test
     public void mottattDatoFørSluttAvGraderingBlirSendtManuellBehandling() {
-        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
-        RegelGrunnlag grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var mottattDato = LocalDate.of(2018, 10, 10);
+        var søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
+        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNull();
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
@@ -49,22 +49,22 @@ public class SøknadMottattDatoRegelTest {
 
     @Test
     public void mottattDatoEtterSluttAvGraderingBlirInnvilget() {
-        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = gradertoppgittPeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), mottattDato);
-        RegelGrunnlag grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var mottattDato = LocalDate.of(2018, 10, 10);
+        var søknadsperiode = gradertoppgittPeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), mottattDato);
+        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_GRADERING_ETTER_PERIODEN_HAR_BEGYNT);
     }
 
     @Test
     public void mottattDatoFørSluttAvFerieBlirAvslått() {
-        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
-        RegelGrunnlag grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var mottattDato = LocalDate.of(2018, 10, 10);
+        var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
+        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -74,23 +74,23 @@ public class SøknadMottattDatoRegelTest {
 
     @Test
     public void mottattDatoEtterSluttAvFerieBlirInnvilget() {
-        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE,
+        var mottattDato = LocalDate.of(2018, 10, 10);
+        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE,
                 mottattDato);
-        RegelGrunnlag grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
     }
 
     @Test
     public void mottattDatoFørSluttAvArbeidBlirAvslått() {
-        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
-        RegelGrunnlag grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var mottattDato = LocalDate.of(2018, 10, 10);
+        var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
+        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -100,12 +100,12 @@ public class SøknadMottattDatoRegelTest {
 
     @Test
     public void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
-        LocalDate mottattDato = LocalDate.of(2018, 10, 10);
-        OppgittPeriode søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID,
+        var mottattDato = LocalDate.of(2018, 10, 10);
+        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID,
                 mottattDato);
-        RegelGrunnlag grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(søknadsperiode, grunnlag);
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
     }

@@ -23,7 +23,7 @@ public class SøknadsfristRegel implements RuleService<SøknadsfristGrunnlag> {
     @SuppressWarnings("unchecked")
     @Override
     public Specification<SøknadsfristGrunnlag> getSpecification() {
-        Ruleset<SøknadsfristGrunnlag> rs = new Ruleset<>();
+        var rs = new Ruleset<SøknadsfristGrunnlag>();
         return rs.hvisRegel(SjekkOmFørsteUttakErInnenforSøknadsfrist.ID, "Er første uttaksdag innenfor søknadsfristen?")
                 .hvis(new SjekkOmFørsteUttakErInnenforSøknadsfrist(), new Oppfylt<>())
                 .ellers(new KanIkkeVurdere<>(

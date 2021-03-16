@@ -32,36 +32,36 @@ public class FellesperiodeMedGraderingTest {
 
     @Test
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {
-        LocalDate graderingFom = fødselsdato.plusWeeks(10);
-        LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
+        var graderingFom = fødselsdato.plusWeeks(10);
+        var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
                 BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        RegelGrunnlag grunnlag = basicGrunnlag().medKontoer(kontoer)
+        var grunnlag = basicGrunnlag().medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(aktuellPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
+        var regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }
 
     @Test
     public void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_4_uker_igjen_på_saldo() {
-        LocalDate graderingFom = fødselsdato.plusWeeks(10);
-        LocalDate graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
+        var graderingFom = fødselsdato.plusWeeks(10);
+        var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
                 BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        RegelGrunnlag grunnlag = basicGrunnlag().medKontoer(kontoer)
+        var grunnlag = basicGrunnlag().medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(aktuellPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
                 .build();
 
-        FastsettePerioderRegelresultat regelresultat = kjørRegel(aktuellPeriode, grunnlag);
+        var regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.INNVILGET);
     }

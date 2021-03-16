@@ -1,10 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.util.List;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -21,14 +17,14 @@ public class SjekkOmFørsteDelAvPeriodenHarGyldigGrunn extends LeafSpecification
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode aktuellPeriode = grunnlag.getAktuellPeriode();
-        List<GyldigGrunnPeriode> aktuelleGyldigGrunnPeriode = grunnlag.getAktuelleGyldigeGrunnPerioder();
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
+        var aktuelleGyldigGrunnPeriode = grunnlag.getAktuelleGyldigeGrunnPerioder();
 
         if (aktuelleGyldigGrunnPeriode.isEmpty()) {
             return nei();
         }
 
-        GyldigGrunnPeriode periode = aktuelleGyldigGrunnPeriode.get(0);
+        var periode = aktuelleGyldigGrunnPeriode.get(0);
 
         if (starterGyldigGrunnEtterAktuellPeriode(periode, aktuellPeriode)) {
             return nei();

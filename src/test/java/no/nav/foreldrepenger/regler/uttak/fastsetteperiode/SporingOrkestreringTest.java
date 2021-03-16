@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ public class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
     @Test
     public void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() throws JsonProcessingException {
-        LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+        var fødselsdato = LocalDate.of(2018, 1, 1);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
@@ -31,10 +30,10 @@ public class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                         oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                         oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))));
 
-        List<FastsettePeriodeResultat> resultatListe = fastsettPerioder(grunnlag);
+        var resultatListe = fastsettPerioder(grunnlag);
 
         assertThat(resultatListe).hasSize(3);
-        for (FastsettePeriodeResultat resultat : resultatListe) {
+        for (var resultat : resultatListe) {
             assertThat(new ObjectMapper().readValue(resultat.getInnsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
             assertThat(new ObjectMapper().readValue(resultat.getEvalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
         }

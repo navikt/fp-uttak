@@ -20,27 +20,27 @@ final class ManglendeSøktPeriodeUtil {
 
     static List<OppgittPeriode> finnManglendeSøktePerioder(List<LukketPeriode> perioder, LukketPeriode periode) {
         Objects.requireNonNull(periode, "periode");
-        List<LukketPeriode> sortertePerioder = perioder.stream()
+        var sortertePerioder = perioder.stream()
                 .filter(p -> !p.getTom().isBefore(periode.getFom()) && !p.getFom().isAfter(periode.getTom()))
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
 
         List<OppgittPeriode> msp = new ArrayList<>();
-        LocalDate hullFom = periode.getFom();
-        for (LukketPeriode lukketPeriode : sortertePerioder) {
+        var hullFom = periode.getFom();
+        for (var lukketPeriode : sortertePerioder) {
             if (hullFom.isBefore(lukketPeriode.getFom())) {
-                LocalDate hullTom = lukketPeriode.getFom().minusDays(1);
+                var hullTom = lukketPeriode.getFom().minusDays(1);
                 if (Virkedager.beregnAntallVirkedager(hullFom, hullTom) > 0) {
                     msp.add(lagManglendeSøktPeriode(hullFom, hullTom));
                 }
             }
-            LocalDate nesteDatoFom = lukketPeriode.getTom().plusDays(1);
+            var nesteDatoFom = lukketPeriode.getTom().plusDays(1);
             if (nesteDatoFom.isAfter(hullFom)) {
                 hullFom = nesteDatoFom;
             }
         }
         if (!hullFom.isAfter(periode.getTom())) {
-            LocalDate hullTom = periode.getTom();
+            var hullTom = periode.getTom();
             if (Virkedager.beregnAntallVirkedager(hullFom, hullTom) > 0) {
                 msp.add(lagManglendeSøktPeriode(hullFom, hullTom));
             }

@@ -21,7 +21,7 @@ public class SjekkOmSamtidigUttak extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
         if (oppgittPeriode.erSøktSamtidigUttak() || harAnnenForelderHuketAvForSamtidigUttak(oppgittPeriode,
                 grunnlag.getAnnenPartUttaksperioder())) {
             return ja();
@@ -31,7 +31,7 @@ public class SjekkOmSamtidigUttak extends LeafSpecification<FastsettePeriodeGrun
 
     private boolean harAnnenForelderHuketAvForSamtidigUttak(OppgittPeriode oppgittPeriode,
                                                             List<AnnenpartUttakPeriode> perioderAnnenPart) {
-        for (AnnenpartUttakPeriode periodeAnnenPart : perioderAnnenPart) {
+        for (var periodeAnnenPart : perioderAnnenPart) {
             if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(oppgittPeriode, periodeAnnenPart)
                     && periodeAnnenPart.isSamtidigUttak()) {
                 return true;

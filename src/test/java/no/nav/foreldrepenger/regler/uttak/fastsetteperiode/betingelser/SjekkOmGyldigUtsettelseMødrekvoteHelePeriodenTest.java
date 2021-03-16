@@ -23,121 +23,121 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
 
     @Test
     public void ingenGyldigGrunnPeriode() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(2);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(2);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(uttakPeriode))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void helePeriodeErUgyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(2);
-        LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
-        LocalDate gyldigGrunnSlutt = periodeStart.minusDays(1);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(2);
+        var gyldigGrunnStart = periodeStart.minusWeeks(1);
+        var gyldigGrunnSlutt = periodeStart.minusDays(1);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
 
     @Test
     public void bareBegynnelseAvPeriodeErGyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
-        LocalDate gyldigGrunnSlutt = periodeStart.plusWeeks(1);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeStart.minusWeeks(1);
+        var gyldigGrunnSlutt = periodeStart.plusWeeks(1);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void sisteDagIPeriodenErUgyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeStart.minusWeeks(1);
-        LocalDate gyldigGrunnSlutt = periodeSlutt.minusDays(1);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeStart.minusWeeks(1);
+        var gyldigGrunnSlutt = periodeSlutt.minusDays(1);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void bareMidtenAvPeriodenErGyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeStart.plusWeeks(1);
-        LocalDate gyldigGrunnSlutt = gyldigGrunnStart.plusDays(5);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeStart.plusWeeks(1);
+        var gyldigGrunnSlutt = gyldigGrunnStart.plusDays(5);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void bareSluttenAvPeriodenErGyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeSlutt.minusWeeks(1);
-        LocalDate gyldigGrunnSlutt = periodeSlutt.plusDays(5);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeSlutt.minusWeeks(1);
+        var gyldigGrunnSlutt = periodeSlutt.plusDays(5);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void bareBegynnelsenOgSluttenAvPeriodenErGyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
@@ -145,36 +145,36 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.minusDays(5), periodeSlutt.plusDays(1)))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.NEI);
     }
 
     @Test
     public void helePeriodenGyldig() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
-        LocalDate gyldigGrunnStart = periodeStart;
-        LocalDate gyldigGrunnSlutt = periodeSlutt;
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
+        var gyldigGrunnStart = periodeStart;
+        var gyldigGrunnSlutt = periodeSlutt;
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.JA);
     }
 
     @Test
     public void helePeriodenGyldigMedFlereGyldigGrunnPerioder() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
@@ -182,17 +182,17 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.plusDays(8), periodeSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.JA);
     }
 
     @Test
     public void helePeriodenGyldigMedFlereGyldigGrunnPerioderSomOverlapper() {
-        LocalDate periodeStart = LocalDate.now().plusMonths(1);
-        LocalDate periodeSlutt = periodeStart.plusWeeks(6);
+        var periodeStart = LocalDate.now().plusMonths(1);
+        var periodeSlutt = periodeStart.plusWeeks(6);
 
         var uttakPeriode = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
-        RegelGrunnlag grunnlag = RegelGrunnlagTestBuilder.create()
+        var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(uttakPeriode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
@@ -200,7 +200,7 @@ public class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
                                 .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeStart.plusDays(7), periodeSlutt))))
                 .build();
 
-        Resultat resultat = evaluer(uttakPeriode, grunnlag);
+        var resultat = evaluer(uttakPeriode, grunnlag);
         assertThat(resultat).isEqualTo(Resultat.JA);
     }
 

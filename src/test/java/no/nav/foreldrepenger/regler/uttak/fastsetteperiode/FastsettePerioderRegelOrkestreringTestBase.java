@@ -104,8 +104,8 @@ public abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Søknad.Builder søknad(Søknadstype søknadstype, OppgittPeriode... perioder) {
-        Søknad.Builder builder = new Søknad.Builder().medType(søknadstype);
-        for (OppgittPeriode oppgittPeriode : perioder) {
+        var builder = new Søknad.Builder().medType(søknadstype);
+        for (var oppgittPeriode : perioder) {
             builder.leggTilOppgittPeriode(oppgittPeriode);
         }
         return builder;
