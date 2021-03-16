@@ -42,7 +42,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>navit</sonar.organization>
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
-        <java.version>11</java.version>
+        <java.version>15</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,7 +51,6 @@
         <jupiter.version>5.7.1</jupiter.version>
         <assertj.version>3.19.0</assertj.version>
     </properties>
-
 
     <dependencies>
         <dependency>
@@ -143,40 +142,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <rules>
-                        <requireJavaVersion>
-                            <version>[1.8,)</version>
-                        </requireJavaVersion>
-                        <requireMavenVersion>
-                            <version>[3.5.3,)</version>
-                        </requireMavenVersion>
-                        <bannedDependencies>
-                            <excludes>
-                                <exclude>commons-logging:commons-logging</exclude>
-                            </excludes>
-                        </bannedDependencies>
-                        <dependencyConvergence>
-                        </dependencyConvergence>
-                        <!-- Ikke kommenter inn denne. Det brekker muligheten til å bygge bare deler av prosjektet
-                        https://issues.apache.org/jira/browse/MENFORCER-189 -> "ReactorModuleConvergence is not compatible with 'advanced' reactor options: -pl, -rf"
-                        <reactorModuleConvergence />
-                        -->
-                    </rules>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

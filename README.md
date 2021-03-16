@@ -17,7 +17,7 @@ Inneholder tre tjenester for foreldrepenger:
 
 # Komme i gang
 
-Bygges med maven, java 11
+Bygges med maven, java 15
 
 ## For NAV-ansatte
 
