@@ -17,15 +17,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 class SaldoUtregningTest {
 
-    private static final AktivitetIdentifikator AKTIVITET1_SØKER = AktivitetIdentifikator.forArbeid("111", "222");
-    private static final AktivitetIdentifikator AKTIVITET2_SØKER = AktivitetIdentifikator.forArbeid("333", "444");
-    private static final AktivitetIdentifikator AKTIVITET1_ANNENPART = AktivitetIdentifikator.forArbeid("555", "666");
-    private static final AktivitetIdentifikator AKTIVITET2_ANNENPART = AktivitetIdentifikator.forArbeid("777", "888");
+    private static final AktivitetIdentifikator AKTIVITET1_SØKER = AktivitetIdentifikator.forArbeid(new Orgnummer("111"), "222");
+    private static final AktivitetIdentifikator AKTIVITET2_SØKER = AktivitetIdentifikator.forArbeid(new Orgnummer("333"), "444");
+    private static final AktivitetIdentifikator AKTIVITET1_ANNENPART = AktivitetIdentifikator.forArbeid(new Orgnummer("555"), "666");
+    private static final AktivitetIdentifikator AKTIVITET2_ANNENPART = AktivitetIdentifikator.forArbeid(new Orgnummer("777"), "888");
     private final LocalDate enTirsdag = LocalDate.of(2019, 2, 19);
 
 
