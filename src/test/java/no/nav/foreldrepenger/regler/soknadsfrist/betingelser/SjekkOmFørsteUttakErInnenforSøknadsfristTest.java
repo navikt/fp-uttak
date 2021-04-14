@@ -9,7 +9,6 @@ import java.time.Month;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.soknadsfrist.grunnlag.SøknadsfristGrunnlag;
-import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SjekkOmFørsteUttakErInnenforSøknadsfristTest {

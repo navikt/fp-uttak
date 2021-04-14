@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
