@@ -62,8 +62,8 @@ public class BeregnKontoerGrunnlag {
         if (omsorgsovertakelseDato != null) {
             return omsorgsovertakelseDato;
         }
-        Optional<LocalDate> fd = getFødselsdato();
-        LocalDate td = getTermindato().orElse(null);
+        var fd = getFødselsdato();
+        var td = getTermindato().orElse(null);
         return fd.orElse(td);
     }
 

@@ -149,7 +149,7 @@ public class RegelGrunnlag {
                 validerDatoerOppMotSøknad();
             }
             //Hindre gjenbruk
-            RegelGrunnlag regelGrunnlag = this.kladd;
+            var regelGrunnlag = this.kladd;
             kladd = null;
             return regelGrunnlag;
         }
@@ -160,9 +160,11 @@ public class RegelGrunnlag {
 
             if (type == Søknadstype.TERMIN && datoer.getTermin() == null) {
                 throw new IllegalStateException("Forventer termindato ved terminsøknad");
-            } else if (type == Søknadstype.FØDSEL && datoer.getFødsel() == null && datoer.getTermin() == null) {
+            }
+            if (type == Søknadstype.FØDSEL && datoer.getFødsel() == null && datoer.getTermin() == null) {
                 throw new IllegalStateException("Forventer fødselsdato eller termindato eller begge ved fødselsøknad");
-            } else if (type == Søknadstype.ADOPSJON && datoer.getOmsorgsovertakelse() == null) {
+            }
+            if (type == Søknadstype.ADOPSJON && datoer.getOmsorgsovertakelse() == null) {
                 throw new IllegalStateException("Forventer omsorgsovertakelsesdato ved adopsjonssøknad");
             }
         }

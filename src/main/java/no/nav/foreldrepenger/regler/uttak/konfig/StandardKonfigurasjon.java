@@ -12,7 +12,7 @@ public class StandardKonfigurasjon {
     public static final Konfigurasjon SØKNADSDIALOG;
 
     static {
-        LocalDate d_2017_01_01 = LocalDate.of(2017, Month.JANUARY, 1);
+        var d_2017_01_01 = LocalDate.of(2017, Month.JANUARY, 1);
         KONFIGURASJON = KonfigurasjonBuilder.create()
                 //Stønadskontoer
                 .leggTilParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, d_2017_01_01, null, 85)
@@ -41,9 +41,9 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO, d_2017_01_01, null, Period.ofYears(3))
                 .leggTilParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, LocalDate.of(2019, 7, 1), null, 52)
                 .build();
-        LocalDate d_2010_01_01 = LocalDate.of(2010, Month.JANUARY, 1);
-        LocalDate d_2018_12_31 = LocalDate.of(2018, Month.DECEMBER, 31);
-        LocalDate d_2019_01_01 = LocalDate.of(2019, Month.JANUARY, 1);
+        var d_2010_01_01 = LocalDate.of(2010, Month.JANUARY, 1);
+        var d_2018_12_31 = LocalDate.of(2018, Month.DECEMBER, 31);
+        var d_2019_01_01 = LocalDate.of(2019, Month.JANUARY, 1);
         SØKNADSDIALOG = KonfigurasjonBuilder.create()
                 //Stønadskontoer
                 .leggTilParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, d_2019_01_01, null, 85)

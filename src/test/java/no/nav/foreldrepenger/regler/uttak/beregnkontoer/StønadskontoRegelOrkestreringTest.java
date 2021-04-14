@@ -33,7 +33,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -43,8 +43,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -55,8 +55,8 @@ class StønadskontoRegelOrkestreringTest {
 
     @Test
     void skal_legge_til_prematurdager_på_fellesperiode() {
-        LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var fødselsdato = LocalDate.of(2019, 7, 1);
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
                 .medTermindato(fødselsdato.plusWeeks(7).plusDays(4))
                 .medAntallBarn(1)
@@ -65,10 +65,10 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        int forventetFellesperiode =
+        var forventetFellesperiode =
                 80 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(forventetFellesperiode);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -78,8 +78,8 @@ class StønadskontoRegelOrkestreringTest {
 
     @Test
     void skal_legge_til_prematurdager_på_foreldrepenger() {
-        LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var fødselsdato = LocalDate.of(2019, 7, 1);
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
                 .medTermindato(fødselsdato.plusWeeks(8))
                 .medAntallBarn(1)
@@ -87,18 +87,18 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        int forventetForeldrepenger = 80 + 75 + 75 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(),
+        var forventetForeldrepenger = 80 + 75 + 75 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(),
                 grunnlag.getTermindato().get().minusDays(1));
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(forventetForeldrepenger);
     }
 
     @Test
     void skal_ikke_legge_til_prematurdager_på_flerbarnsdager() {
-        LocalDate fødselsdato = LocalDate.of(2019, 7, 1);
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var fødselsdato = LocalDate.of(2019, 7, 1);
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(fødselsdato)
                 .medTermindato(fødselsdato.plusWeeks(7).plusDays(1))
                 .medAntallBarn(2)
@@ -109,8 +109,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
     }
 
@@ -123,7 +123,7 @@ class StønadskontoRegelOrkestreringTest {
 */
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -133,8 +133,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(3);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -151,7 +151,7 @@ class StønadskontoRegelOrkestreringTest {
    */
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -161,8 +161,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
@@ -180,7 +180,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -190,8 +190,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(3);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
@@ -209,7 +209,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -219,8 +219,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 230);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -239,7 +239,7 @@ class StønadskontoRegelOrkestreringTest {
    */
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -249,8 +249,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 230);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -269,7 +269,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -279,8 +279,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 280);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
@@ -299,7 +299,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -309,8 +309,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 280);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
@@ -329,7 +329,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -339,8 +339,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 85);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -359,7 +359,7 @@ class StønadskontoRegelOrkestreringTest {
    */
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -369,8 +369,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 85);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
@@ -389,7 +389,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -399,8 +399,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 105);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
@@ -419,7 +419,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -429,8 +429,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
         assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 105);
         assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
@@ -445,7 +445,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_100() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(false)
@@ -455,8 +455,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
         assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
@@ -468,7 +468,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_100() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
                 .farRett(false)
@@ -478,8 +478,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
     }
@@ -491,7 +491,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_80() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(false)
@@ -501,8 +501,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
         assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
@@ -514,7 +514,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_80() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(1)
                 .farRett(false)
@@ -524,8 +524,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
     }
@@ -537,7 +537,7 @@ class StønadskontoRegelOrkestreringTest {
    */
     @Test
     void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
                 .farRett(false)
@@ -547,8 +547,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
         assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
@@ -560,7 +560,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
                 .farRett(false)
@@ -570,8 +570,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
     }
@@ -583,7 +583,7 @@ class StønadskontoRegelOrkestreringTest {
 */
     @Test
     void fødsel_bare_mor_rett_dekningsgrad_80_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(2)
                 .farRett(false)
@@ -593,8 +593,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL)).isEqualTo(15);
@@ -606,7 +606,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(2)
                 .farRett(false)
@@ -616,8 +616,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
     }
@@ -629,7 +629,7 @@ class StønadskontoRegelOrkestreringTest {
    */
     @Test
     void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(3)
                 .farRett(false)
@@ -639,8 +639,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
         assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
@@ -652,7 +652,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
                 .farRett(false)
@@ -662,8 +662,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
     }
@@ -675,7 +675,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_mor_rett_dekningsgrad_80_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
                 .farRett(false)
@@ -685,8 +685,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL)).isEqualTo(15);
@@ -698,7 +698,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medOmsorgsovertakelseDato(DATO)
                 .medAntallBarn(3)
                 .farRett(false)
@@ -708,8 +708,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
     }
@@ -720,7 +720,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -730,8 +730,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
     }
@@ -742,7 +742,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -752,8 +752,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
     }
@@ -764,7 +764,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -774,8 +774,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
     }
@@ -786,7 +786,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -796,8 +796,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
     }
@@ -808,7 +808,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -818,8 +818,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
     }
@@ -830,7 +830,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -840,8 +840,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
     }
@@ -852,7 +852,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -862,8 +862,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(50 + 75 + 75);
     }
@@ -874,7 +874,7 @@ class StønadskontoRegelOrkestreringTest {
    */
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -884,8 +884,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(100 + 75 + 75);
     }
@@ -898,7 +898,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -908,8 +908,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(50 + 230 + 75 + 75);
         assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
@@ -923,7 +923,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_3_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(3)
                 .farRett(true)
@@ -933,8 +933,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(100 + 280 + 75 + 75);
         assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
@@ -947,7 +947,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -957,8 +957,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(50 + 85 + 75 + 75);
         assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
@@ -972,7 +972,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_2_barn() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(2)
                 .farRett(true)
@@ -982,8 +982,8 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
         assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(100 + 105 + 75 + 75);
         assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
@@ -994,7 +994,7 @@ class StønadskontoRegelOrkestreringTest {
     */
     @Test
     void hverken_mor_eller_far_har_rett() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medTermindato(DATO)
                 .medAntallBarn(1)
                 .farRett(false)
@@ -1004,14 +1004,14 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
-        Map<Stønadskontotype, Integer> stønadskontoer = stønadskontoResultat.getStønadskontoer();
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(0);
     }
 
     @Test
     void bergegn_kontoer_regel_skal_produsere_sporing_med_json() throws IOException {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 .medFødselsdato(DATO)
                 .medAntallBarn(1)
                 .farRett(true)
@@ -1021,7 +1021,7 @@ class StønadskontoRegelOrkestreringTest {
                 .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
-        StønadskontoResultat stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
+        var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
 
         assertThat(new ObjectMapper().readValue(stønadskontoResultat.getInnsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
         assertThat(new ObjectMapper().readValue(stønadskontoResultat.getEvalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
@@ -1030,7 +1030,7 @@ class StønadskontoRegelOrkestreringTest {
 
     @Test
     void skal_bruke_omsorgsovertakelse_og_ikke_fødselsdato_som_konfig_parameter() {
-        BeregnKontoerGrunnlag grunnlag = BeregnKontoerGrunnlag.builder()
+        var grunnlag = BeregnKontoerGrunnlag.builder()
                 //Så tidlig at det vil skape exception hvis bruk ettersom vi ikke har noe konfig for 2016
                 .medFødselsdato(LocalDate.of(2016, 1, 1))
                 .medOmsorgsovertakelseDato(LocalDate.of(2020, 2, 10))

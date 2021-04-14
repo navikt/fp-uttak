@@ -56,8 +56,8 @@ public final class Søknad {
         }
 
         private void validerOverlapp() {
-            for (int i = 0; i < kladd.oppgittePerioder.size(); i++) {
-                for (int j = i + 1; j < kladd.oppgittePerioder.size(); j++) {
+            for (var i = 0; i < kladd.oppgittePerioder.size(); i++) {
+                for (var j = i + 1; j < kladd.oppgittePerioder.size(); j++) {
                     if (kladd.oppgittePerioder.get(i).overlapper(kladd.oppgittePerioder.get(j))) {
                         throw new IllegalStateException("Overlapp i søknad");
                     }

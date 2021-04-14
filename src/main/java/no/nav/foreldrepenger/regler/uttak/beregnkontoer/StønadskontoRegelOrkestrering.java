@@ -44,9 +44,8 @@ public class StønadskontoRegelOrkestrering {
             var kontoer = resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);
             if (kontoer != null) {
                 return kontoer;
-            } else {
-                throw new IllegalStateException("Noe har gått galt, har ikke fått beregnet noen stønadskontoer");
             }
+            throw new IllegalStateException("Noe har gått galt, har ikke fått beregnet noen stønadskontoer");
         }
         return Collections.emptyMap();
     }

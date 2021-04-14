@@ -179,11 +179,10 @@ class RegelResultatBehandler {
     private UtbetalingsgradUtregning bestemUtbetalingsgradUtregning(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet) {
         if (oppgittPeriode.erSøktGradering(aktivitet)) {
             return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet);
-        } else {
-            var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(oppgittPeriode);
-            if (samtidigUttaksprosent != null) {
-                return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent());
-            }
+        }
+        var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(oppgittPeriode);
+        if (samtidigUttaksprosent != null) {
+            return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent());
         }
         return new UtbetalingsgradUtenGraderingUtregning();
     }

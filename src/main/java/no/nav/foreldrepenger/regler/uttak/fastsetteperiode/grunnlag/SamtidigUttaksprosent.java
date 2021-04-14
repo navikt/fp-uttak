@@ -53,7 +53,7 @@ public class SamtidigUttaksprosent implements Comparable<SamtidigUttaksprosent> 
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SamtidigUttaksprosent that = (SamtidigUttaksprosent) o;
+        var that = (SamtidigUttaksprosent) o;
         return Objects.equals(decimalValue(), that.decimalValue());
     }
 

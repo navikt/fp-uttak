@@ -19,13 +19,13 @@ public final class TrekkdagerUtregningUtil {
         var trekkdagerUtenGradering = Virkedager.beregnAntallVirkedager(periode);
         if (gradert) {
             return trekkdagerMedGradering(trekkdagerUtenGradering, gradertArbeidstidsprosent);
-        } else if (samtidigUttaksprosent != null) {
+        }
+        if (samtidigUttaksprosent != null) {
             //Samme utregning som med gradering
             return trekkdagerMedGradering(trekkdagerUtenGradering,
                     BigDecimal.valueOf(100).subtract(samtidigUttaksprosent.decimalValue()));
-        } else {
-            return new Trekkdager(trekkdagerUtenGradering);
         }
+        return new Trekkdager(trekkdagerUtenGradering);
     }
 
     private static Trekkdager trekkdagerMedGradering(int trekkdagerUtenGradering, BigDecimal gradertArbeidstidsprosent) {

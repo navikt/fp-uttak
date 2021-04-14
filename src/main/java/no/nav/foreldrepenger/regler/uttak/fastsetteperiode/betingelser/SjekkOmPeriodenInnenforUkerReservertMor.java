@@ -33,13 +33,11 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
         if (periodeEtterFødselNormaltReservertMor.overlapper(aktuellPeriode)) {
             if (aktuellPeriode.erOmsluttetAv(periodeEtterFødselNormaltReservertMor)) {
                 return ja();
-            } else {
-                throw new IllegalArgumentException(
-                        "Utvikler-feil: periode er ikke knekt riktig fom=" + aktuellPeriode.getFom() + " tom="
-                                + aktuellPeriode.getTom());
             }
-        } else {
-            return nei();
+            throw new IllegalArgumentException(
+                    "Utvikler-feil: periode er ikke knekt riktig fom=" + aktuellPeriode.getFom() + " tom="
+                            + aktuellPeriode.getTom());
         }
+        return nei();
     }
 }

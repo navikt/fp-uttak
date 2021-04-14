@@ -12,7 +12,7 @@ public class Konfigurasjon {
     private final Map<Parametertype, ParameterVerdier> parameterMap = new EnumMap<>(Parametertype.class);
 
     Konfigurasjon(Map<Parametertype, Collection<Parameter>> parameterMap) {
-        for (Map.Entry<Parametertype, Collection<Parameter>> entry : parameterMap.entrySet()) {
+        for (var entry : parameterMap.entrySet()) {
             this.parameterMap.put(entry.getKey(), new ParameterVerdier(entry.getKey(), entry.getValue()));
         }
     }

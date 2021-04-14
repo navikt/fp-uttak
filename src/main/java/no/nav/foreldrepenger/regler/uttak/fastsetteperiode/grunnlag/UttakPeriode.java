@@ -146,7 +146,7 @@ public final class UttakPeriode extends LukketPeriode {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UttakPeriode that = (UttakPeriode) o;
+        var that = (UttakPeriode) o;
         return flerbarnsdager == that.flerbarnsdager && perioderesultattype == that.perioderesultattype
                 && manuellbehandlingårsak == that.manuellbehandlingårsak && Objects.equals(periodeResultatÅrsak,
                 that.periodeResultatÅrsak) && graderingIkkeInnvilgetÅrsak == that.graderingIkkeInnvilgetÅrsak && Objects.equals(

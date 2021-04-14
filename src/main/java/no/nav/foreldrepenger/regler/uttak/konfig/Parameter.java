@@ -29,14 +29,14 @@ class Parameter extends Periode {
             return false;
         }
 
-        Parameter parameter = (Parameter) o;
+        var parameter = (Parameter) o;
 
         return verdi.equals(parameter.verdi);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
+        var result = super.hashCode();
         result = 31 * result + verdi.hashCode();
         return result;
     }

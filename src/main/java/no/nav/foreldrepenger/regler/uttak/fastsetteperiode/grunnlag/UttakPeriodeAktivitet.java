@@ -45,7 +45,7 @@ public class UttakPeriodeAktivitet {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UttakPeriodeAktivitet that = (UttakPeriodeAktivitet) o;
+        var that = (UttakPeriodeAktivitet) o;
         return søktGradering == that.søktGradering && Objects.equals(identifikator, that.identifikator) && Objects.equals(
                 utbetalingsgrad, that.utbetalingsgrad) && Objects.equals(trekkdager, that.trekkdager);
     }

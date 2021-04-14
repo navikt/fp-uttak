@@ -57,31 +57,31 @@ public final class PerioderUtenHelgUtil {
     public static LocalDate helgBlirMandag(LocalDate dato) {
         if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
             return dato.plusDays(2);
-        } else if (dato.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return dato.plusDays(1);
-        } else {
-            return dato;
         }
+        if (dato.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            return dato.plusDays(1);
+        }
+        return dato;
     }
 
     public static LocalDate helgBlirFredag(LocalDate dato) {
         if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
             return dato.minusDays(1);
-        } else if (dato.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return dato.minusDays(2);
-        } else {
-            return dato;
         }
+        if (dato.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            return dato.minusDays(2);
+        }
+        return dato;
     }
 
     public static LocalDate fredagLørdagBlirSøndag(LocalDate dato) {
         if (dato.getDayOfWeek() == DayOfWeek.FRIDAY) {
             return dato.plusDays(2);
-        } else if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            return dato.plusDays(1);
-        } else {
-            return dato;
         }
+        if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            return dato.plusDays(1);
+        }
+        return dato;
     }
 
 }

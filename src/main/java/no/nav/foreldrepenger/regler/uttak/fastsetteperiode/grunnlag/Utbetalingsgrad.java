@@ -58,7 +58,7 @@ public class Utbetalingsgrad implements Comparable<Utbetalingsgrad> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Utbetalingsgrad that = (Utbetalingsgrad) o;
+        var that = (Utbetalingsgrad) o;
         return Objects.equals(decimalValue(), that.decimalValue());
     }
 

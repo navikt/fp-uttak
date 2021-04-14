@@ -61,7 +61,7 @@ public class Trekkdager {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Trekkdager that = (Trekkdager) o;
+        var that = (Trekkdager) o;
         return Objects.equals(value, that.value);
     }
 

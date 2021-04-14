@@ -151,7 +151,7 @@ public class FastsettePerioderRegelOrkestrering {
         List<OppgittPeriode> samlet = new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder());
         samlet.addAll(orkestreringTillegg.getManglendeSøktPerioder());
 
-        for (LocalDate knekkpunkt : orkestreringTillegg.getKnekkpunkter()) {
+        for (var knekkpunkt : orkestreringTillegg.getKnekkpunkter()) {
             samlet = knekk(samlet, knekkpunkt);
         }
 
@@ -160,7 +160,7 @@ public class FastsettePerioderRegelOrkestrering {
 
     private List<OppgittPeriode> knekk(List<OppgittPeriode> førKnekk, LocalDate knekkpunkt) {
         List<OppgittPeriode> etterKnekk = new ArrayList<>();
-        for (OppgittPeriode oppgittPeriode : førKnekk) {
+        for (var oppgittPeriode : førKnekk) {
             if (oppgittPeriode.overlapper(knekkpunkt) && !oppgittPeriode.getFom().equals(knekkpunkt)) {
                 etterKnekk.add(oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkpunkt.minusDays(1)));
                 etterKnekk.add(oppgittPeriode.kopiMedNyPeriode(knekkpunkt, oppgittPeriode.getTom()));

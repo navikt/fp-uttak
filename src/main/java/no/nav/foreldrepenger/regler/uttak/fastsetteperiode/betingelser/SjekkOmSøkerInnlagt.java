@@ -17,8 +17,8 @@ public class SjekkOmSøkerInnlagt extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        OppgittPeriode oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (PeriodeMedInnleggelse periodeMedInnleggelse : grunnlag.getPerioderMedInnleggelse()) {
+        var oppgittPeriode = grunnlag.getAktuellPeriode();
+        for (var periodeMedInnleggelse : grunnlag.getPerioderMedInnleggelse()) {
             if (oppgittPeriode.erOmsluttetAv(periodeMedInnleggelse)) {
                 return ja();
             }

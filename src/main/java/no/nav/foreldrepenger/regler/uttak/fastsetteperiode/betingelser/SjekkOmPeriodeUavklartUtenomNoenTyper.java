@@ -30,7 +30,8 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
         if (oppgittPeriode.erSøktGradering() || oppgittPeriode.harSøktOmOverføringAvKvote() || tidligOppstart(grunnlag,
                 oppgittPeriode)) {
             return nei();
-        } else if (PeriodeVurderingType.UAVKLART_PERIODE.equals(oppgittPeriode.getPeriodeVurderingType())) {
+        }
+        if (PeriodeVurderingType.UAVKLART_PERIODE.equals(oppgittPeriode.getPeriodeVurderingType())) {
             return ja();
         }
         return nei();
