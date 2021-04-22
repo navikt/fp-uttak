@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
