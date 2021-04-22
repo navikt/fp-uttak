@@ -18,7 +18,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     private boolean oppholdsperiode;
     private OppholdÅrsak oppholdÅrsak;
     private boolean innvilget;
-    private LocalDate mottattDato;
+    private LocalDate senestMottattDato;
 
     private AnnenpartUttakPeriode(LocalDate fom, LocalDate tom) {
         super(fom, tom);
@@ -63,7 +63,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                 .medInnvilget(this.innvilget)
                 .medOppholdsårsak(this.oppholdÅrsak)
                 .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
-                .medMottattDato(this.mottattDato)
+                .medSenestMottattDato(this.senestMottattDato)
                 .build();
     }
 
@@ -75,8 +75,8 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().harUtbetaling());
     }
 
-    public Optional<LocalDate> getMottattDato() {
-        return Optional.ofNullable(mottattDato);
+    public Optional<LocalDate> getSenestMottattDato() {
+        return Optional.ofNullable(senestMottattDato);
     }
 
     public static class Builder {
@@ -139,8 +139,8 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             return this;
         }
 
-        public Builder medMottattDato(LocalDate mottattDato) {
-            kladd.mottattDato = mottattDato;
+        public Builder medSenestMottattDato(LocalDate senestMottattDato) {
+            kladd.senestMottattDato = senestMottattDato;
             return this;
         }
 

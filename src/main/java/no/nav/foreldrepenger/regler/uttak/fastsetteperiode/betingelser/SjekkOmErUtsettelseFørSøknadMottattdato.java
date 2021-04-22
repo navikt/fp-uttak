@@ -28,6 +28,6 @@ public class SjekkOmErUtsettelseFørSøknadMottattdato extends LeafSpecification
     }
 
     static boolean mottattFørSisteDag(OppgittPeriode periode) {
-        return !periode.getTom().isAfter(periode.getMottattDato().orElse(LocalDate.MIN));
+        return !periode.getTom().isAfter(periode.getTidligstMottattDato().orElse(LocalDate.MIN));
     }
 }

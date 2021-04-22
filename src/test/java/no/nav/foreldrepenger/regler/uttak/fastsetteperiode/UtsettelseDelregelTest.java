@@ -37,7 +37,7 @@ class UtsettelseDelregelTest {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
                 PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE,
-                fødselsdato.minusWeeks(1), null); // innenfor seks uker etter fødsel
+                fødselsdato.minusWeeks(1), null, null); // innenfor seks uker etter fødsel
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medTrekkdager(100).medType(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().medArbeid(

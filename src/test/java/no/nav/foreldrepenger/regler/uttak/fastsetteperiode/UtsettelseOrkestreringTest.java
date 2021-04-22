@@ -571,7 +571,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //Søkt om ferieutsettelse innenfor seks uker etter fødsel. Utsettelsen skal avlås og det skal trekkes dager fra mødrekvote
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-                PeriodeVurderingType.PERIODE_OK, FERIE, fødselsdato.plusWeeks(8), null);
+                PeriodeVurderingType.PERIODE_OK, FERIE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(8), null);
         basicUtsettelseGrunnlag(fødselsdato).medSøknad(
                 fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .leggTilOppgittPeriode(utsettelse));
@@ -758,7 +758,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .medRettOgOmsorg(bareFarRett())
                 .medSøknad(søknad(FØDSEL, OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8),
-                        PeriodeVurderingType.IKKE_VURDERT, ARBEID, fødselsdato.plusWeeks(80), MorsAktivitet.UTDANNING)));
+                        PeriodeVurderingType.IKKE_VURDERT, ARBEID, fødselsdato.plusWeeks(80), fødselsdato.plusWeeks(80),
+                        MorsAktivitet.UTDANNING)));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -777,7 +778,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 new PeriodeMedAvklartMorsAktivitet(fom, tom, PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_DOKUMENTERT));
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
-                ARBEID, fødselsdato, MorsAktivitet.ARBEID);
+                ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         basicGrunnlagFar(fødselsdato)
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(bareFarRett())

@@ -236,9 +236,4 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     public boolean isTapendeBehandling() {
         return regelGrunnlag.getBehandling().isTapende();
     }
-
-    @Override
-    public Optional<LocalDate> getMottattDato() {
-        return aktuellPeriode.getMottattDato();
-    }
 }

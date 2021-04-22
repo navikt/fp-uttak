@@ -89,7 +89,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(MØDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
                                 omsorgsovertakelseDato.minusDays(1), PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.INNLEGGELSE,
-                                null))
+                                null, null))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
@@ -113,7 +113,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(MØDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
                                 omsorgsovertakelseDato.minusDays(1), PeriodeVurderingType.PERIODE_OK,
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
@@ -181,7 +181,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(FEDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
                                 omsorgsovertakelseDato.minusDays(1), PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.INNLEGGELSE,
-                                null))
+                                null, null))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
@@ -205,7 +205,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(FEDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
                                 omsorgsovertakelseDato.minusDays(1), PeriodeVurderingType.PERIODE_OK,
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(null))
@@ -444,7 +444,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         //Mottatt mer enn 3 mnd etter start
                         .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, omsorgsovertakelseDato,
                                 omsorgsovertakelseDato.plusWeeks(1).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT,
-                                omsorgsovertakelseDato.plusMonths(4), null)))
+                                omsorgsovertakelseDato.plusMonths(4), omsorgsovertakelseDato.plusMonths(4), null)))
                 .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(omsorgsovertakelseDato))
                 .build();
 

@@ -181,7 +181,8 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null,
+                null);
     }
 
     @Test
@@ -385,7 +386,7 @@ class ManglendeSøktePerioderTjenesteTest {
                 .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(3)))
                 .leggTilOppgittPeriode(
                         OppgittPeriode.forUtsettelse(familiehendelse.plusWeeks(6).plusDays(1), familiehendelse.plusWeeks(8),
-                                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.ARBEID, null, null)))
+                                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.ARBEID, null, null, null)))
                 .medBehandling(new Behandling.Builder().medSøkerErMor(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true))
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(søknadsperiodeFom))
@@ -771,7 +772,7 @@ class ManglendeSøktePerioderTjenesteTest {
         var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22),
-                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(17), null);
+                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(17), null, null);
         var grunnlag = grunnlagMedKontoer().medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato.plusWeeks(7)))

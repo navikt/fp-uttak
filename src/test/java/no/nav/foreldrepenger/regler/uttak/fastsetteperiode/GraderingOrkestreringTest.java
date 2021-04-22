@@ -139,7 +139,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1),
-                PeriodeVurderingType.IKKE_VURDERT, null, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 50))
                 .leggTilKonto(konto(FEDREKVOTE, 50))
@@ -276,7 +276,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         //10 virkedager
         var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1),
-                PeriodeVurderingType.IKKE_VURDERT, null, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .leggTilKonto(konto(MØDREKVOTE, 50))
                 .leggTilKonto(konto(FEDREKVOTE, 50))
@@ -698,7 +698,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         leggPåKvoter(grunnlag);
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN,
-                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, mottattDato, null);
+                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, mottattDato, mottattDato, null);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medBehandling(morBehandling())
@@ -721,7 +721,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(MØDREKVOTE, 200));
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN,
-                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, mottattDato, null);
+                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, mottattDato, mottattDato, null);
         grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))

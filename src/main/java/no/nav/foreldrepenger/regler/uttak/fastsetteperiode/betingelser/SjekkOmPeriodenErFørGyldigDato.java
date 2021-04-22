@@ -18,11 +18,11 @@ public class SjekkOmPeriodenErFørGyldigDato extends LeafSpecification<Fastsette
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        var mottattDato = oppgittPeriode.getMottattDato();
-        if (mottattDato.isEmpty()) {
+        var tidligstMottattDato = oppgittPeriode.getTidligstMottattDato();
+        if (tidligstMottattDato.isEmpty()) {
             return nei();
         }
-        if (oppgittPeriode.getTom().isBefore(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(mottattDato.get()))) {
+        if (oppgittPeriode.getTom().isBefore(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(tidligstMottattDato.get()))) {
             return ja();
         }
         return nei();

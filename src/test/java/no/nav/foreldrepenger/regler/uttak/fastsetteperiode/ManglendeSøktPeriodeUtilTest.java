@@ -36,7 +36,8 @@ class ManglendeSøktPeriodeUtilTest {
     }
 
     private OppgittPeriode periode(LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null);
+        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null,
+                null);
     }
 
     @Test

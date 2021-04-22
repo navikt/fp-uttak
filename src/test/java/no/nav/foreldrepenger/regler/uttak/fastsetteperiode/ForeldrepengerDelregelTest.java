@@ -117,7 +117,7 @@ class ForeldrepengerDelregelTest {
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager) {
         return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN, samtidigUttaksprosent,
-                flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType, null, null);
+                flerbarnsdager, Set.of(aktivitetIdentifikator), vurderingType, null, null, null);
     }
 
     @Test
@@ -454,7 +454,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false,
-                PeriodeVurderingType.UAVKLART_PERIODE, null, null);
+                PeriodeVurderingType.UAVKLART_PERIODE, null, null, null);
         var grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(foreldrepengerKonto(100))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(false))
@@ -602,7 +602,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true,
-                PeriodeVurderingType.IKKE_VURDERT, null, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(40, 17);
         var grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -640,7 +640,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true,
-                PeriodeVurderingType.IKKE_VURDERT, null, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(100, 0);
         var grunnlag = grunnlagFar(familiehendelseDato).medSøknad(søknad(oppgittPeriode))
                 .medKontoer(kontoer)
