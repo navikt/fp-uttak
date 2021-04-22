@@ -46,7 +46,7 @@ final class DelRegelTestUtil {
                                              LocalDate tom,
                                              OverføringÅrsak årsak,
                                              PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, vurderingType, årsak, null);
+        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, vurderingType, årsak, null, null);
     }
 
     static OppgittPeriode gradertPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -66,7 +66,7 @@ final class DelRegelTestUtil {
                                          Set<AktivitetIdentifikator> gradertAktiviteter,
                                          PeriodeVurderingType vurderingType) {
         return OppgittPeriode.forGradering(stønadskontotype, fom, tom, BigDecimal.TEN, null, false, gradertAktiviteter, vurderingType,
-                null, null);
+                null, null, null);
     }
 
     static OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -77,14 +77,14 @@ final class DelRegelTestUtil {
                                          LocalDate fom,
                                          LocalDate tom,
                                          PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, vurderingType, null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, vurderingType, null, null, null);
     }
 
     static OppgittPeriode oppholdPeriode(LocalDate fom, LocalDate tom, OppholdÅrsak årsak) {
-        return OppgittPeriode.forOpphold(fom, tom, årsak, null);
+        return OppgittPeriode.forOpphold(fom, tom, årsak, null, null);
     }
 
     static OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelsesÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, utsettelsesÅrsak, null, null);
+        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, utsettelsesÅrsak, null, null, null);
     }
 }

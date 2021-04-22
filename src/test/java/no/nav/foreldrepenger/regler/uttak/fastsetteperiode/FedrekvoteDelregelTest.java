@@ -113,7 +113,7 @@ class FedrekvoteDelregelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), null,
-                true, PeriodeVurderingType.UAVKLART_PERIODE, null, null);
+                true, PeriodeVurderingType.UAVKLART_PERIODE, null, null, null);
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(
                 søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
@@ -332,7 +332,7 @@ class FedrekvoteDelregelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var periode = OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
-                OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null);
+                OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FEDREKVOTE));
@@ -349,7 +349,7 @@ class FedrekvoteDelregelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var periode = OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
-                OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null);
+                OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(0).medType(Stønadskontotype.FEDREKVOTE));

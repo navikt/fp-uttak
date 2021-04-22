@@ -178,11 +178,11 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var grunnlag = basicGrunnlagMor().medDatoer(new Datoer.Builder().medTermin(termin).medFødsel(termin.plusWeeks(2)))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.TERMIN)
                         .medOppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(15),
-                                termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null),
+                                termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
-                                        null, false, PeriodeVurderingType.IKKE_VURDERT, null, null),
+                                        null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false,
-                                        PeriodeVurderingType.IKKE_VURDERT, null, null))));
+                                        PeriodeVurderingType.IKKE_VURDERT, null, null, null))));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -201,11 +201,11 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var grunnlag = basicGrunnlagMor().medDatoer(new Datoer.Builder().medTermin(termin).medFødsel(termin.plusWeeks(2)))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .medOppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(12),
-                                termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null),
+                                termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
-                                        null, false, PeriodeVurderingType.IKKE_VURDERT, null, null),
+                                        null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false,
-                                        PeriodeVurderingType.IKKE_VURDERT, null, null))));
+                                        PeriodeVurderingType.IKKE_VURDERT, null, null, null))));
 
         var resultater = fastsettPerioder(grunnlag);
 

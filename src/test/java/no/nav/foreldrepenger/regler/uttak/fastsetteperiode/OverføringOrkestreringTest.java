@@ -42,7 +42,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11), PERIODE_OK,
-                INNLEGGELSE, fødselsdato);
+                INNLEGGELSE, fødselsdato, fødselsdato);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10))
                 .leggTilKonto(konto(MØDREKVOTE, 30))
                 .leggTilKonto(konto(FELLESPERIODE, 15))
@@ -75,7 +75,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var fedrekvote = oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(14), PERIODE_OK,
-                SYKDOM_ELLER_SKADE, fødselsdato);
+                SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10))
                 .leggTilKonto(konto(MØDREKVOTE, 40))
                 .leggTilKonto(konto(FELLESPERIODE, 15))

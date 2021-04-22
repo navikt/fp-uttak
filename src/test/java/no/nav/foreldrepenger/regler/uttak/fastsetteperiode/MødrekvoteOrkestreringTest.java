@@ -66,7 +66,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
@@ -106,7 +106,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
@@ -128,7 +128,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE,
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
@@ -164,7 +164,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
                         .leggTilOppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1)))
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(

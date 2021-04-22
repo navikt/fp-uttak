@@ -37,7 +37,7 @@ class RegelResultatBehandlerTest {
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom, null, false,
-                PeriodeVurderingType.IKKE_VURDERT, null, null);
+                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(false))

@@ -58,7 +58,7 @@ class TomKontoIdentifisererTest {
         var idag = LocalDate.of(2019, 3, 14);
 
         var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, idag, idag.plusDays(søktOmDag - 1),
-                arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null);
+                arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var kontoer = new Kontoer.Builder().leggTilKonto(
                 new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(saldo));
         var grunnlag = RegelGrunnlagTestBuilder.create()

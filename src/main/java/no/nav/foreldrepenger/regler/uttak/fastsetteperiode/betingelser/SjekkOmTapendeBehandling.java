@@ -31,12 +31,12 @@ public class SjekkOmTapendeBehandling extends LeafSpecification<FastsettePeriode
             var annenpartMottattDato = grunnlag.getAnnenPartUttaksperioder()
                     .stream()
                     .filter(aup -> aktuellPeriode.erOmsluttetAv(aup))
-                    .map(aup -> aup.getMottattDato())
+                    .map(aup -> aup.getSenestMottattDato())
                     .findFirst()
                     .orElse(null);
             LOG.info("Endring i sjekk om hvilken forelder som taper for periode {} - {}. Gammelt resultat: {}, N"
-                            + "ytt resultat: {}. Mottatt dato søker {}, annenpart {}", aktuellPeriode.getFom(), aktuellPeriode.getTom(),
-                    gammeltResultat, nyttResultat, aktuellPeriode.getMottattDato(), annenpartMottattDato);
+                            + "ytt resultat: {}. Siste mottatt dato søker {}, annenpart {}", aktuellPeriode.getFom(), aktuellPeriode.getTom(),
+                    gammeltResultat, nyttResultat, aktuellPeriode.getSenestMottattDato(), annenpartMottattDato);
         }
         return grunnlag.isTapendeBehandling() ? ja() : nei();
     }
@@ -62,9 +62,9 @@ public class SjekkOmTapendeBehandling extends LeafSpecification<FastsettePeriode
         if (overlappende.isEmpty()) {
             return false;
         }
-        var mottattDato = aktuellPeriode.getMottattDato();
+        var mottattDato = aktuellPeriode.getSenestMottattDato();
         return mottattDato.map(
-                md -> overlappende.get().getMottattDato().map(aupMottattDato -> aupMottattDato.isAfter(md)).orElse(false))
+                md -> overlappende.get().getSenestMottattDato().map(aupMottattDato -> aupMottattDato.isAfter(md)).orElse(false))
                 .orElse(true);
     }
 

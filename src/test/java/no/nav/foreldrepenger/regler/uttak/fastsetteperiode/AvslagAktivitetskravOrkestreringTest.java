@@ -85,8 +85,9 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     void kun_far_har_rett() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), null,
-                false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, MorsAktivitet.UTDANNING);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
+                fødselsdato.plusWeeks(10), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                MorsAktivitet.UTDANNING);
         var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(),
                         IKKE_I_AKTIVITET_IKKE_DOKUMENTERT));
@@ -114,7 +115,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, MorsAktivitet.ARBEID);
+                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), IKKE_I_AKTIVITET_DOKUMENTERT));
         var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL)
@@ -142,7 +143,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
     private OppgittPeriode fellesperiode(LocalDate fødselsdato, MorsAktivitet utdanning) {
         return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null,
-                false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, utdanning);
+                false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, utdanning);
     }
 
 

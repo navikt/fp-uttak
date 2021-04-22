@@ -83,9 +83,9 @@ class KnekkpunktIdentifiserer {
         return grunnlag.getSøknad()
                 .getOppgittePerioder()
                 .stream()
-                .filter(p -> p.getMottattDato().isPresent())
-                .filter(p -> p.overlapper(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getMottattDato().get())))
-                .map(p -> SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getMottattDato().get()))
+                .filter(p -> p.getTidligstMottattDato().isPresent())
+                .filter(p -> p.overlapper(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getTidligstMottattDato().get())))
+                .map(p -> SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getTidligstMottattDato().get()))
                 .collect(Collectors.toSet());
     }
 
@@ -165,7 +165,7 @@ class KnekkpunktIdentifiserer {
     private static void leggTilKnekkpunkterVedGradering(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
         for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
             if (oppgittPeriode.erSøktGradering()) {
-                var mottattDato = oppgittPeriode.getMottattDato();
+                var mottattDato = oppgittPeriode.getTidligstMottattDato();
                 if (mottattDato.isPresent()) {
                     if (!oppgittPeriode.getFom().isAfter(mottattDato.get())) {
                         knekkpunkter.add(mottattDato.get());
@@ -178,7 +178,7 @@ class KnekkpunktIdentifiserer {
     private static void leggTilKnekkpunkterVedUtsettelse(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
         for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
             if (oppgittPeriode.isUtsettelse()) {
-                var mottattDato = oppgittPeriode.getMottattDato();
+                var mottattDato = oppgittPeriode.getTidligstMottattDato();
                 if (mottattDato.isPresent()) {
                     if (!oppgittPeriode.getFom().isAfter(mottattDato.get())) {
                         knekkpunkter.add(mottattDato.get());

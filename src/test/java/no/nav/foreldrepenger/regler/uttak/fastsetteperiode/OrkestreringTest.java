@@ -243,9 +243,9 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var sisteUttaksdag = fødselsdato.plusWeeks(6).minusDays(1);
         var søknadsfrist = SøknadsfristUtil.finnSøknadsfrist(sisteUttaksdag);
         var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                null, false, PeriodeVurderingType.IKKE_VURDERT, søknadsfrist.plusWeeks(1), null);
+                null, false, PeriodeVurderingType.IKKE_VURDERT, søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1), null);
         var mødrekvote = OppgittPeriode.forVanligPeriode(MØDREKVOTE, fødselsdato, sisteUttaksdag, null, false,
-                PeriodeVurderingType.IKKE_VURDERT, søknadsfrist.plusWeeks(1), null);
+                PeriodeVurderingType.IKKE_VURDERT, søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1), null);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
@@ -286,10 +286,10 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var fødselsdato = LocalDate.of(2017, 11, 1);
         var mottattDato = fødselsdato.plusMonths(4).plusWeeks(1);
         var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                null, false, PeriodeVurderingType.IKKE_VURDERT, mottattDato, null);
+                null, false, PeriodeVurderingType.IKKE_VURDERT, mottattDato, mottattDato, null);
         //Mødrekvote skal knekkes på for at første delen skal avlås pga søknadsfrist
         var mødrekvote = OppgittPeriode.forVanligPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false,
-                PeriodeVurderingType.IKKE_VURDERT, mottattDato, null);
+                PeriodeVurderingType.IKKE_VURDERT, mottattDato, mottattDato, null);
         grunnlag.medDatoer(datoer(fødselsdato))
                 .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
@@ -455,7 +455,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var periodeTom = periodeFom.plusDays(20);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 15));
         var fedrekvote = OppgittPeriode.forVanligPeriode(FEDREKVOTE, periodeFom, periodeTom, null, false,
-                PeriodeVurderingType.IKKE_VURDERT, periodeTom.plusYears(2), null);
+                PeriodeVurderingType.IKKE_VURDERT, periodeTom.plusYears(2), periodeTom.plusYears(2), null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(datoer(fødselsdato))
                 .medBehandling(farBehandling())
@@ -748,7 +748,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         //Går tom for fedrekvote i oppholdsperioden
                         .leggTilOppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8),
-                                OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null)));
+                                OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -952,11 +952,11 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                 .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER).medTrekkdager(1000)))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.TERMIN)
                         .medOppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FORELDREPENGER, termin.minusWeeks(15),
-                                termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null),
+                                termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
-                                        null, false, PeriodeVurderingType.IKKE_VURDERT, null, null),
+                                        null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(FORELDREPENGER, termin, termin.plusWeeks(4), null, false,
-                                        PeriodeVurderingType.IKKE_VURDERT, null, null))));
+                                        PeriodeVurderingType.IKKE_VURDERT, null, null, null))));
 
         var resultater = fastsettPerioder(testGrunnlag);
 

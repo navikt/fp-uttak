@@ -51,7 +51,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurderingType, null, null);
+        return OppgittPeriode.forVanligPeriode(FEDREKVOTE, fom, tom, null, false, vurderingType, null, null, null);
     }
 
     @Test
@@ -284,7 +284,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                                              LocalDate tom,
                                              OverføringÅrsak årsak,
                                              PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, vurderingType, årsak, null);
+        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, vurderingType, årsak, null, null);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {

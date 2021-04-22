@@ -529,9 +529,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(15).minusDays(1)))
                         .leggTilOppgittPeriode(
                                 OppgittPeriode.forOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1),
-                                        OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null))
+                                        OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null, null))
                         .leggTilOppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(20),
-                                OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null)));
+                                OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -565,7 +565,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         .leggTilOppgittPeriode(
                                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(15).minusDays(1)))
                         .leggTilOppgittPeriode(OppgittPeriode.forOpphold(annenpartPeriodeUtenTrekkdager.getFom(),
-                                annenpartPeriodeUtenTrekkdager.getTom(), OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null)));
+                                annenpartPeriodeUtenTrekkdager.getTom(), OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -597,7 +597,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(15).minusDays(1)))
                         .leggTilOppgittPeriode(
                                 OppgittPeriode.forOpphold(annenpartPeriodeUtsettelse.getFom(), annenpartPeriodeUtsettelse.getTom(),
-                                        OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null)));
+                                        OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER, null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
 

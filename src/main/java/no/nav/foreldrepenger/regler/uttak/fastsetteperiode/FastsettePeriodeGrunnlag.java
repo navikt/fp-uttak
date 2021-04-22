@@ -224,9 +224,4 @@ public interface FastsettePeriodeGrunnlag {
     boolean isTapendeBehandling();
 
     List<PeriodeMedHV> getPerioderHV();
-
-    /**
-     * Dato denne perioden ble søkt om
-     */
-    Optional<LocalDate> getMottattDato();
 }

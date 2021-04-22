@@ -23,7 +23,7 @@ class TrekkdagerUtregningUtilTest {
         //periode på 2 dager, 1% gradering
         var arbeidstidsprosent = BigDecimal.valueOf(1);
         var periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, arbeidstidsprosent, null,
-                false, Set.of(), PeriodeVurderingType.IKKE_VURDERT, null, null);
+                false, Set.of(), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(1.9));
@@ -38,7 +38,7 @@ class TrekkdagerUtregningUtilTest {
 
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         var periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, samtidigUttaksprosent,
-                false, PeriodeVurderingType.IKKE_VURDERT, null, null);
+                false, PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(5));
