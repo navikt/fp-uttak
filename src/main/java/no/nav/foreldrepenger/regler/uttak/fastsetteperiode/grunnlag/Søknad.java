@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -10,6 +11,7 @@ public final class Søknad {
     private List<OppgittPeriode> oppgittePerioder = new ArrayList<>();
     private Dokumentasjon dokumentasjon = new Dokumentasjon.Builder().build();
     private Søknadstype type = Søknadstype.FØDSEL;
+    private LocalDateTime mottattTidspunkt;
 
     private Søknad() {
     }
@@ -24,6 +26,10 @@ public final class Søknad {
 
     public Søknadstype getType() {
         return type;
+    }
+
+    public LocalDateTime getMottattTidspunkt() {
+        return mottattTidspunkt;
     }
 
     public static class Builder {
@@ -47,6 +53,11 @@ public final class Søknad {
 
         public Builder medType(Søknadstype type) {
             kladd.type = type;
+            return this;
+        }
+
+        public Builder medMottattTidspunkt(LocalDateTime mottattTidspunkt) {
+            kladd.mottattTidspunkt = mottattTidspunkt;
             return this;
         }
 

@@ -57,13 +57,13 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
+    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12)).medInnvilget(true).build()))
-                .medBehandling(tapendeBehandling())
+                .medBehandling(berørtBehandling())
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -72,13 +72,13 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
+    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false)))
-                .medBehandling(tapendeBehandling())
+                .medBehandling(berørtBehandling())
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -87,13 +87,13 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
+    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false)))
-                .medBehandling(tapendeBehandling())
+                .medBehandling(berørtBehandling())
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -102,13 +102,13 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvTapendeBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
+    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
                 .medAnnenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, true)))
-                .medBehandling(tapendeBehandling())
+                .medBehandling(berørtBehandling())
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -163,8 +163,8 @@ class RevurderingTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
     }
 
-    private Behandling.Builder tapendeBehandling() {
-        return new Behandling.Builder().medErTapende(true);
+    private Behandling.Builder berørtBehandling() {
+        return new Behandling.Builder().medErBerørtBehandling(true);
     }
 
     private AnnenPart.Builder annenPart(AnnenpartUttakPeriode periode) {

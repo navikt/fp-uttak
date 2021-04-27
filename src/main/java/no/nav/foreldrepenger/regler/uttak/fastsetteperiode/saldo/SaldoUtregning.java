@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,18 +29,24 @@ public class SaldoUtregning {
     private final List<FastsattUttakPeriode> søkersPerioder;
     private final Set<AktivitetIdentifikator> søkersAktiviteter;
     private final List<FastsattUttakPeriode> annenpartsPerioder;
-    private final boolean tapendeBehandling;
+    private final boolean berørtBehandling;
+    private final LocalDateTime sisteSøknadMottattTidspunktSøker;
+    private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer,
                    List<FastsattUttakPeriode> søkersPerioder,
                    List<FastsattUttakPeriode> annenpartsPerioder,
-                   boolean tapendeBehandling,
-                   Set<AktivitetIdentifikator> søkersAktiviteter) {
+                   boolean berørtBehandling,
+                   Set<AktivitetIdentifikator> søkersAktiviteter,
+                   LocalDateTime sisteSøknadMottattTidspunktSøker,
+                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
         this.stønadskontoer = stønadskontoer;
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
+        this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
+        this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
-        this.tapendeBehandling = tapendeBehandling;
+        this.berørtBehandling = berørtBehandling;
     }
 
     /**
@@ -183,13 +190,13 @@ public class SaldoUtregning {
             for (var overlappendePeriode : overlappendePerioder) {
                 if (erOpphold(periode) && innvilgetMedTrekkdager(overlappendePeriode)) {
                     sum += trekkdagerForOppholdsperiode(stønadskonto, periode).intValue();
-                } else if (!tapendeBehandling && innvilgetMedTrekkdager(periode)) {
+                } else if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)) {
                     if (Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER)) {
                         sum += frigitteDagerFlerbarnsdager(stønadskonto, periode, overlappendePeriode);
                     } else {
                         sum += frigitteDagerVanligeStønadskontoer(stønadskonto, periode, overlappendePeriode);
                     }
-                } else if (tapendeBehandling && erOpphold(overlappendePeriode)) {
+                } else if (tapendePeriode(periode, overlappendePeriode) && erOpphold(overlappendePeriode)) {
                     var delFom = overlappendePeriode.getFom()
                             .isBefore(periode.getFom()) ? periode.getFom() : overlappendePeriode.getFom();
                     var delTom = overlappendePeriode.getTom()
@@ -200,6 +207,19 @@ public class SaldoUtregning {
             }
         }
         return sum;
+    }
+
+    private boolean tapendePeriode(FastsattUttakPeriode periode, FastsattUttakPeriode overlappendePeriode) {
+        if (berørtBehandling) {
+            return true;
+        }
+        if (periode.getMottattDato().isEmpty() || overlappendePeriode.getMottattDato().isEmpty()) {
+            return false;
+        }
+        if (periode.getMottattDato().get().isEqual(overlappendePeriode.getMottattDato().get())) {
+            return sisteSøknadMottattTidspunktSøker.isBefore(sisteSøknadMottattTidspunktAnnenpart);
+        }
+        return periode.getMottattDato().get().isBefore(overlappendePeriode.getMottattDato().get());
     }
 
     private boolean innvilgetMedTrekkdager(FastsattUttakPeriode periode) {

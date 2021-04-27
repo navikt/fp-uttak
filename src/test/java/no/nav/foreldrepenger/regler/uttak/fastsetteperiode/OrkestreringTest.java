@@ -787,7 +787,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .medKontoer(kontoer)
                 .medDatoer(datoer(fødselsdato))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErTapende(true))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErBerørtBehandling(true))
                 .medRettOgOmsorg(beggeRett())
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(LocalDate.of(2019, 3, 4)))
                 //far har fått overført mange dager av mor. Det er noen dager igjen til mor. Skal avslå alle mors perioder og ikke trekk dager

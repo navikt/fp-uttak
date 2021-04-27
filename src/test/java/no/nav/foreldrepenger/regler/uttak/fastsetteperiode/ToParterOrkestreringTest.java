@@ -354,7 +354,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     }
 
     @Test
-    void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_tapende_behandling() {
+    void når_far_har_brukt_all_fellesperiode_må_mor_avslås_i_berørt_behandling() {
         var fomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(6);
         var tomFarsFP = fødselsdato.plusWeeks(UKER_MK).plusWeeks(22).minusDays(1);
         var fomMorsFP1 = fødselsdato.plusWeeks(UKER_MK);
@@ -364,7 +364,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         leggPåKvoter(grunnlag).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(
                         new AnnenPart.Builder().leggTilUttaksperiode(lagPeriodeForFar(FELLESPERIODE, fomFarsFP, tomFarsFP, true)))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErTapende(true))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErBerørtBehandling(true))
                 .medRevurdering(new Revurdering.Builder())
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
@@ -413,7 +413,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     }
 
     @Test
-    void skal_ikke_trekke_for_opphold_i_tapende_behandling_hvis_søker_har_søkt_i_perioden() {
+    void skal_ikke_trekke_for_opphold_i_berørt_behandling_hvis_søker_har_søkt_i_perioden() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(75))
@@ -429,7 +429,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         .leggTilUttaksperiode(
                                 annenpartPeriodeOpphold(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(19).minusDays(1),
                                         OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErTapende(true))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErBerørtBehandling(true))
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(fødselsdato.plusWeeks(10)))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
@@ -444,7 +444,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     }
 
     @Test
-    void skal_trekke_for_overlappende_avslått_hos_annenpart_i_tapende_behandling() {
+    void skal_trekke_for_overlappende_avslått_hos_annenpart_i_berørt_behandling() {
         var fødselsdato = LocalDate.of(2019, 9, 25);
 
         var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(75))
@@ -461,7 +461,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE,
                                                 new Trekkdager(80), Utbetalingsgrad.ZERO))
                                 .build()))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErTapende(true))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medErBerørtBehandling(true))
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(fødselsdato))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
@@ -607,7 +607,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
     //FAGSYSTEM-85385
     @Test
-    void tapende_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perioden() {
+    void berørt_behandling_som_har_annenpart_med_overlappende_oppholdsperiode_skal_ikke_tape_perioden() {
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
@@ -616,7 +616,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         .leggTilUttaksperiode(
                                 annenpartPeriodeOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1),
                                         OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)))
-                .medBehandling(farBehandling().medErTapende(true))
+                .medBehandling(farBehandling().medErBerørtBehandling(true))
                 .medRettOgOmsorg(beggeRett())
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(

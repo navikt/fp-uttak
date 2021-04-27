@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class FastsattUttakPeriode {
     private Perioderesultattype perioderesultattype;
@@ -11,6 +12,7 @@ public class FastsattUttakPeriode {
     private LocalDate fom;
     private LocalDate tom;
     private boolean samtidigUttak;
+    private LocalDate mottattDato;
 
     private FastsattUttakPeriode() {
     }
@@ -23,6 +25,7 @@ public class FastsattUttakPeriode {
         this.fom = periode.fom;
         this.tom = periode.tom;
         this.samtidigUttak = periode.samtidigUttak;
+        this.mottattDato = periode.mottattDato;
     }
 
     public Perioderesultattype getPerioderesultattype() {
@@ -51,6 +54,10 @@ public class FastsattUttakPeriode {
 
     public boolean isSamtidigUttak() {
         return samtidigUttak;
+    }
+
+    public Optional<LocalDate> getMottattDato() {
+        return Optional.ofNullable(mottattDato);
     }
 
     public static class Builder {
@@ -93,6 +100,11 @@ public class FastsattUttakPeriode {
 
         public Builder medSamtidigUttak(boolean samtidigUttak) {
             kladd.samtidigUttak = samtidigUttak;
+            return this;
+        }
+
+        public Builder medMottattDato(LocalDate mottattDato) {
+            kladd.mottattDato = mottattDato;
             return this;
         }
 

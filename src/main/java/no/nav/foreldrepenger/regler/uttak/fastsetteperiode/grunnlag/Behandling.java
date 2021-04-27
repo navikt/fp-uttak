@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 public final class Behandling {
 
     private boolean søkerMor;
-    private boolean tapende;
+    private boolean berørtBehandling;
 
     private Behandling() {
     }
@@ -12,8 +12,8 @@ public final class Behandling {
         return søkerMor;
     }
 
-    public boolean isTapende() {
-        return tapende;
+    public boolean isBerørtBehandling() {
+        return berørtBehandling;
     }
 
     public static class Builder {
@@ -26,8 +26,8 @@ public final class Behandling {
             return this;
         }
 
-        public Builder medErTapende(boolean erTapende) {
-            kladd.tapende = erTapende;
+        public Builder medErBerørtBehandling(boolean berørtBehandling) {
+            kladd.berørtBehandling = berørtBehandling;
             return this;
         }
 

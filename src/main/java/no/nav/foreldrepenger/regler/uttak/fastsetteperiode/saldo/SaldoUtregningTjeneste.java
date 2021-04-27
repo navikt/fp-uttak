@@ -24,20 +24,21 @@ public final class SaldoUtregningTjeneste {
     }
 
     public static SaldoUtregning lagUtregning(SaldoUtregningGrunnlag grunnlag) {
-        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), grunnlag.getUtregningsdato(),
+        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isBerørtBehandling(), grunnlag.getUtregningsdato(),
                 grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
         var søkersFastsattePerioder = grunnlag.getSøkersFastsattePerioder();
         var stønadskontoer = lagStønadskontoer(grunnlag);
-        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isTapendeBehandling(),
-                grunnlag.getAktiviteter());
+        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(),
+                grunnlag.getAktiviteter(), grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null),
+                grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null));
     }
 
-    private static List<FastsattUttakPeriode> finnRelevanteAnnenpartsPerioder(boolean isTapendeBehandling,
+    private static List<FastsattUttakPeriode> finnRelevanteAnnenpartsPerioder(boolean isBerørtBehandling,
                                                                               LocalDate utregningsdato,
                                                                               List<AnnenpartUttakPeriode> annenPartUttaksperioder,
                                                                               List<LukketPeriode> søktePerioder) {
         var annenpartsPerioder = annenPartUttaksperioder;
-        if (isTapendeBehandling) {
+        if (isBerørtBehandling) {
             annenpartsPerioder = annenpartsPerioder.stream()
                     .flatMap(ap -> finnDelerAvOppholdsperiode(søktePerioder, ap))
                     .collect(Collectors.toList());
@@ -93,6 +94,7 @@ public final class SaldoUtregningTjeneste {
                 .medOppholdÅrsak(annenpartsPeriode.getOppholdÅrsak())
                 .medTidsperiode(annenpartsPeriode.getFom(), annenpartsPeriode.getTom())
                 .medAktiviteter(mapAktiviteter(annenpartsPeriode))
+                .medMottattDato(annenpartsPeriode.getSenestMottattDato().orElse(null))
                 .build();
     }
 

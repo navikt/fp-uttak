@@ -6,6 +6,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAd
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
@@ -31,7 +32,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGradering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTapendeBehandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTapendePeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtterSøkersDødsdato;
@@ -214,13 +215,19 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {
         return rs.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
-                .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmTapendeBehandling())
+                .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmBerørtBehandling())
                 .ellers(IkkeOppfylt.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmTapendeBehandling() {
-        return rs.hvisRegel(SjekkOmTapendeBehandling.ID, SjekkOmTapendeBehandling.BESKRIVELSE)
-                .hvis(new SjekkOmTapendeBehandling(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmBerørtBehandling() {
+        return rs.hvisRegel(SjekkOmBerørtBehandling.ID, SjekkOmBerørtBehandling.BESKRIVELSE)
+                .hvis(new SjekkOmBerørtBehandling(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
+                .ellers(sjekkOmTapendePeriode());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmTapendePeriode() {
+        return rs.hvisRegel(SjekkOmTapendePeriode.ID, SjekkOmTapendePeriode.BESKRIVELSE)
+                .hvis(new SjekkOmTapendePeriode(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
                 .ellers(sjekkOmGradertEtterSøknadMottattdato());
     }
 

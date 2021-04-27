@@ -714,6 +714,27 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
     }
 
     @Test
+    void skal_bruke_tidligst_mottatt_dato_når_søknadsfrist_vurderes() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var grunnlag = RegelGrunnlagTestBuilder.create();
+        leggPåKvoter(grunnlag);
+        var senestMottattDato = fødselsdato.plusWeeks(8).minusDays(1);
+        var tidligstMottattDato = fødselsdato.plusWeeks(6);
+        var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), senestMottattDato.plusWeeks(1), BigDecimal.TEN,
+                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, senestMottattDato, tidligstMottattDato, null);
+        grunnlag.medDatoer(new Datoer.Builder()
+                .medFødsel(fødselsdato))
+                .medRettOgOmsorg(beggeRett())
+                .medBehandling(morBehandling())
+                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
+                        .leggTilOppgittPeriode(gradering));
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
     void opphevet_gradering_skal_ikke_endre_på_hvilket_arbeidsforhold_det_er_søkt_gradering_for() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();

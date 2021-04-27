@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -173,6 +174,8 @@ public interface FastsettePeriodeGrunnlag {
      */
     List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder();
 
+    LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt();
+
     boolean harAleneomsorg();
 
     /**
@@ -220,7 +223,9 @@ public interface FastsettePeriodeGrunnlag {
      */
     LocalDate getTermindato();
 
-    boolean isTapendeBehandling();
-
     List<PeriodeMedHV> getPerioderHV();
+
+    boolean isBerørtBehandling();
+
+    LocalDateTime getSisteSøknadMottattTidspunkt();
 }
