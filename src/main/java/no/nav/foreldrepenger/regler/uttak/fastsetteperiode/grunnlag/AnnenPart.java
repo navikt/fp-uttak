@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,8 @@ import java.util.stream.Collectors;
 public final class AnnenPart {
 
     private List<AnnenpartUttakPeriode> uttaksperioder = new ArrayList<>();
+    private LocalDateTime sisteSøknadMottattTidspunkt;
+
 
     private AnnenPart() {
     }
@@ -32,6 +35,10 @@ public final class AnnenPart {
         return sisteInnvilgetPeriode.map(p -> p.getTom());
     }
 
+    public LocalDateTime getSisteSøknadMottattTidspunkt() {
+        return sisteSøknadMottattTidspunkt;
+    }
+
     public static class Builder {
 
         private final AnnenPart kladd = new AnnenPart();
@@ -43,6 +50,11 @@ public final class AnnenPart {
 
         public Builder medUttaksperioder(List<AnnenpartUttakPeriode> uttaksperioder) {
             kladd.uttaksperioder = uttaksperioder;
+            return this;
+        }
+
+        public Builder medSisteSøknadMottattTidspunkt(LocalDateTime sisteSøknadMottattTidspunkt) {
+            kladd.sisteSøknadMottattTidspunkt = sisteSøknadMottattTidspunkt;
             return this;
         }
 

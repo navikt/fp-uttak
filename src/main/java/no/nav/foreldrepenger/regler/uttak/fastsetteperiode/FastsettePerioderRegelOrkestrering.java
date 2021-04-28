@@ -191,19 +191,15 @@ public class FastsettePerioderRegelOrkestrering {
 
         final RegelResultatBehandlerResultat regelResultatBehandlerResultat;
         switch (utfallType) {
-            case AVSLÅTT:
+            case AVSLÅTT -> {
                 var annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
                 regelResultatBehandlerResultat = behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
                         overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
-                break;
-            case INNVILGET:
-                regelResultatBehandlerResultat = behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat);
-                break;
-            case MANUELL_BEHANDLING:
-                regelResultatBehandlerResultat = behandler.manuellBehandling(aktuellPeriode, regelresultat);
-                break;
-            default:
-                throw new UnsupportedOperationException(String.format("Ukjent utfalltype: %s", utfallType.name()));
+            }
+            case INNVILGET -> regelResultatBehandlerResultat = behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt,
+                    regelresultat);
+            case MANUELL_BEHANDLING -> regelResultatBehandlerResultat = behandler.manuellBehandling(aktuellPeriode, regelresultat);
+            default -> throw new UnsupportedOperationException(String.format("Ukjent utfalltype: %s", utfallType.name()));
         }
 
         return regelResultatBehandlerResultat;
@@ -266,13 +262,15 @@ public class FastsettePerioderRegelOrkestrering {
         var utregningsdato = aktuellPeriode.getFom();
         var kontoer = grunnlag.getKontoer();
         var alleAktiviteter = grunnlag.getArbeid().getAktiviteter();
-        if (grunnlag.getBehandling().isTapende()) {
+        if (grunnlag.getBehandling().isBerørtBehandling()) {
             var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
-            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(søkersFastsattePerioder, annenpartPerioder,
+            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(søkersFastsattePerioder, annenpartPerioder,
                     kontoer, utregningsdato, søktePerioder, alleAktiviteter);
         }
+        var sisteSøknadMottattTidspunktAnnenpart =
+                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt();
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder, kontoer, utregningsdato,
-                alleAktiviteter);
+                alleAktiviteter, grunnlag.getSøknad().getMottattTidspunkt(), sisteSøknadMottattTidspunktAnnenpart);
     }
 
     private List<FastsattUttakPeriode> vedtaksperioder(RegelGrunnlag grunnlag) {

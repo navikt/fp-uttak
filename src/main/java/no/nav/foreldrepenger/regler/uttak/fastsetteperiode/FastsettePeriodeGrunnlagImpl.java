@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -180,6 +181,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
+    public LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt() {
+        return regelGrunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt();
+    }
+
+    @Override
     public boolean harAleneomsorg() {
         return regelGrunnlag.getRettOgOmsorg().getAleneomsorg();
     }
@@ -232,7 +238,12 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public boolean isTapendeBehandling() {
-        return regelGrunnlag.getBehandling().isTapende();
+    public boolean isBerørtBehandling() {
+        return regelGrunnlag.getBehandling().isBerørtBehandling();
+    }
+
+    @Override
+    public LocalDateTime getSisteSøknadMottattTidspunkt() {
+        return regelGrunnlag.getSøknad().getMottattTidspunkt();
     }
 }

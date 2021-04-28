@@ -34,7 +34,9 @@ final class DelRegelTestUtil {
                                                     RegelGrunnlag grunnlag,
                                                     List<FastsattUttakPeriode> søkersFastsattePerioder) {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
-                grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter());
+                grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(),
+                grunnlag.getSøknad().getMottattTidspunkt(),
+                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt());
         oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
