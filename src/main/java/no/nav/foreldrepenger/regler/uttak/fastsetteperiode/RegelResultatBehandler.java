@@ -130,8 +130,8 @@ class RegelResultatBehandler {
         var søktGradering = oppgittPeriode.erSøktGradering(identifikator);
         var periodeAktivitetResultat = finnPeriodeAktivitetResultat(oppgittPeriode, overlapperMedInnvilgetPeriodeHosAnnenpart,
                 identifikator, regelresultat);
-        return new UttakPeriodeAktivitet(identifikator, periodeAktivitetResultat.getUtbetalingsgrad(),
-                periodeAktivitetResultat.getTrekkdager(), søktGradering);
+        return new UttakPeriodeAktivitet(identifikator, periodeAktivitetResultat.utbetalingsgrad(),
+                periodeAktivitetResultat.trekkdager(), søktGradering);
     }
 
     private PeriodeAktivitetResultat finnPeriodeAktivitetResultat(OppgittPeriode oppgittPeriode,
@@ -187,22 +187,6 @@ class RegelResultatBehandler {
         return new UtbetalingsgradUtenGraderingUtregning();
     }
 
-    private static class PeriodeAktivitetResultat {
-
-        private final Utbetalingsgrad utbetalingsgrad;
-        private final Trekkdager trekkdager;
-
-        private PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {
-            this.utbetalingsgrad = utbetalingsgrad;
-            this.trekkdager = trekkdager;
-        }
-
-        public Utbetalingsgrad getUtbetalingsgrad() {
-            return utbetalingsgrad;
-        }
-
-        public Trekkdager getTrekkdager() {
-            return trekkdager;
-        }
+    private static record PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {
     }
 }
