@@ -168,28 +168,28 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //3 uker foreldrepenger før fødsel innvilges
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
-        //assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
+        //assertThat(perioder.get(0).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
         assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(3));
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
 
         //6 første uker mødrekvote innvilges
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        //assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
+        //assertThat(perioder.get(1).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
 
         //3 neste uker mødrekvote innvilges
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        //assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
+        //assertThat(perioder.get(2).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
 
         //2 neste uker fedrekvote innvilges
         assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FEDREKVOTE);
-        //assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
+        //assertThat(perioder.get(3).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
         assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(12).minusDays(1));
     }
@@ -215,21 +215,21 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //3 uker foreldrepenger før fødsel innvilges
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
-        //assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
+        //assertThat(perioder.get(0).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
         assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(3));
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
 
         //6 første uker mødrekvote innvilges
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        //assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
+        //assertThat(perioder.get(1).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
 
         //3 neste uker mødrekvote innvilges
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        //assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
+        //assertThat(perioder.get(2).getUttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
 

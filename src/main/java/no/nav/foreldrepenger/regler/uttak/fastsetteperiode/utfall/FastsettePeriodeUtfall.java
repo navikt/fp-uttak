@@ -47,15 +47,11 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
     }
 
     private SingleEvaluation getHovedUtfall() {
-        switch (utfallType) {
-            case INNVILGET:
-                return ja();
-            case AVSLÅTT:
-            case MANUELL_BEHANDLING:
-                return nei(ruleReasonRef);
-            default:
-                throw new IllegalStateException("Ugyldig UtfallType: " + utfallType);
-        }
+        return switch (utfallType) {
+            case INNVILGET -> ja();
+            case AVSLÅTT, MANUELL_BEHANDLING -> nei(ruleReasonRef);
+            default -> throw new IllegalStateException("Ugyldig UtfallType: " + utfallType);
+        };
     }
 
     public static Builder builder() {
