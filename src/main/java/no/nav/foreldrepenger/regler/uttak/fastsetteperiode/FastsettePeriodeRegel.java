@@ -240,15 +240,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
-        var sjekkOmUtsettelseFørFamiliehendelse = rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID,
-                "Er utsettelse før familiehendelse?")
-                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
-                        Manuellbehandling.opprett("UT1151", IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL,
-                                Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
-                .ellers(new UtsettelseDelregel(konfigurasjon).getSpecification());
-
         return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodeErUtsettelse(), sjekkOmUtsettelseFørFamiliehendelse)
+                .hvis(new SjekkOmPeriodeErUtsettelse(), new UtsettelseDelregel(konfigurasjon).getSpecification())
                 .ellers(sjekkOmManglendeSøktPeriode());
     }
 
