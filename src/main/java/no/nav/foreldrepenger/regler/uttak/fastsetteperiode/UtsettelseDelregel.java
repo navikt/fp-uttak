@@ -52,6 +52,14 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(),
+                        Manuellbehandling.opprett("UT1151", IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL,
+                                Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false))
+                .ellers(sjekkOmTomPåKonto());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKonto() {
         return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
                 .hvis(new SjekkOmTomForAlleSineKontoer(),
                         IkkeOppfylt.opprett("UT1125", IkkeOppfyltÅrsak.INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE, false, false))
