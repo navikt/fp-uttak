@@ -26,7 +26,11 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID(2011, "Utsettelse pga 100% arbeid"),
     UTSETTELSE_GYLDIG_PGA_INNLEGGELSE(2012, "Utsettelse pga innleggelse"),
     UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT(2013, "Utsettelse pga innleggelse barn"),
-    UTSETTELSE_GYLDIG_PGA_SYKDOM(2014, "Utsettelse pga sykdom");
+    UTSETTELSE_GYLDIG_PGA_SYKDOM(2014, "Utsettelse pga sykdom"),
+
+
+    UTSETTELSE_GYLDIG(2024, "Gyldig utsettelse")
+    ;
 
     private final int id;
     private final String beskrivelse;

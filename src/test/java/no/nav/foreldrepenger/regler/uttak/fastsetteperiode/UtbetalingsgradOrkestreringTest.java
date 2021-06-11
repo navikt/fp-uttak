@@ -75,6 +75,8 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
                 .leggTilOppgittPeriode(fellesperiode)
                 .medType(Søknadstype.FØDSEL));
 
+        //Krever sammenhengende pga søkt om ferie som innvilges, dette er gamle regler
+        var grunnlag = this.grunnlag.medBehandling(morBehandling().medKreverSammenhengendeUttak(true));
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);

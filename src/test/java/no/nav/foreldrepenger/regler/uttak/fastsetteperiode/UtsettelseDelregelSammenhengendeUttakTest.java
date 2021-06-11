@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
-class UtsettelseDelregelTest {
+class UtsettelseDelregelSammenhengendeUttakTest {
 
 
     @Test
@@ -44,7 +44,7 @@ class UtsettelseDelregelTest {
                 new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(periode))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
+                .medBehandling(morBehandling())
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato).medTermin(fødselsdato))
                 .medInngangsvilkår(oppfylt())
@@ -71,7 +71,7 @@ class UtsettelseDelregelTest {
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(periode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))))
-                .medBehandling(behandlingMor())
+                .medBehandling(morBehandling())
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(fom))
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
@@ -98,7 +98,7 @@ class UtsettelseDelregelTest {
                         .leggTilOppgittPeriode(periode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeMedBarnInnlagt(
                                 new PeriodeMedBarnInnlagt(fom.plusWeeks(10), fom.plusWeeks(10)))))
-                .medBehandling(behandlingMor())
+                .medBehandling(morBehandling())
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(fom))
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
@@ -124,7 +124,7 @@ class UtsettelseDelregelTest {
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(periode)
                         .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))))
-                .medBehandling(behandlingMor())
+                .medBehandling(morBehandling())
                 .medRevurdering(new Revurdering.Builder().medEndringsdato(fom))
                 .medRettOgOmsorg(beggeRett())
                 .medDatoer(new Datoer.Builder()
@@ -142,8 +142,8 @@ class UtsettelseDelregelTest {
         return new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true).medSamtykke(true);
     }
 
-    private Behandling.Builder behandlingMor() {
-        return new Behandling.Builder().medSøkerErMor(true);
+    private Behandling.Builder morBehandling() {
+        return new Behandling.Builder().medSøkerErMor(true).medKreverSammenhengendeUttak(true);
     }
 
     private Inngangsvilkår.Builder oppfylt() {

@@ -6,6 +6,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAd
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
@@ -241,8 +242,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
         return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodeErUtsettelse(), new UtsettelseDelregel(konfigurasjon).getSpecification())
+                .hvis(new SjekkOmPeriodeErUtsettelse(), kreverBehandlingenSammenhengendeUttak())
                 .ellers(sjekkOmManglendeSøktPeriode());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> kreverBehandlingenSammenhengendeUttak() {
+        return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
+                .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), new UtsettelseDelregelSammenhengendeUttak(konfigurasjon).getSpecification())
+                .ellers(new UtsettelseDelregel(konfigurasjon).getSpecification());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmForeldrepengerFørFødsel() {

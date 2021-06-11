@@ -583,7 +583,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var aktivitetIdentifikator = AktivitetIdentifikator.annenAktivitet();
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(MØDREKVOTE, 75)).leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
         var grunnlag = new RegelGrunnlag.Builder().medDatoer(datoer(fødselsdato))
-                .medBehandling(morBehandling())
+                .medBehandling(morBehandling().medKreverSammenhengendeUttak(true))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medKontoer(kontoer)
@@ -924,7 +924,9 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                 new EndringAvStilling(fødselsdato, BigDecimal.valueOf(50)));
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2).leggTilEndringIStilling(
                 new EndringAvStilling(fødselsdato, BigDecimal.valueOf(25)));
-        var grunnlag = basicGrunnlag(fødselsdato).medRettOgOmsorg(aleneomsorg())
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .medBehandling(morBehandling().medKreverSammenhengendeUttak(true))
+                .medRettOgOmsorg(aleneomsorg())
                 //50% prosent stilling, men søker utsettelse. Går til manuell behandling
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold1).leggTilArbeidsforhold(arbeidsforhold2))
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)

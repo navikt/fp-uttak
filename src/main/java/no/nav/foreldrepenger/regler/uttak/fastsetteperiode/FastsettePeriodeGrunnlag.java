@@ -228,4 +228,6 @@ public interface FastsettePeriodeGrunnlag {
     boolean isBerørtBehandling();
 
     LocalDateTime getSisteSøknadMottattTidspunkt();
+
+    boolean kreverBehandlingSammenhengendeUttak();
 }

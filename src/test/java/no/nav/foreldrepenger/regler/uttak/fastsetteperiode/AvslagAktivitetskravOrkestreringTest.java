@@ -122,7 +122,9 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .leggTilOppgittPeriode(oppgittPeriode)
                 .medDokumentasjon(dokumentasjon);
 
-        var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
+        var grunnlag = new RegelGrunnlag.Builder()
+                //TODO fritt uttak: Passe på at vi har en test for begge regelflyter BFHR + avslag utsettelse pga ikke oppfylt aktkrav
+                .medBehandling(farBehandling().medKreverSammenhengendeUttak(true))
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(bareFarRett())

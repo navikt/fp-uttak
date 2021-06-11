@@ -246,4 +246,9 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     public LocalDateTime getSisteSøknadMottattTidspunkt() {
         return regelGrunnlag.getSøknad().getMottattTidspunkt();
     }
+
+    @Override
+    public boolean kreverBehandlingSammenhengendeUttak() {
+        return regelGrunnlag.getBehandling().isKreverSammenhengendeUttak();
+    }
 }
