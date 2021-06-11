@@ -533,7 +533,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void skal_trekke_fra_foreldrepengekvote_ved_avslag_ferie_innenfor_første_seks_uker_ved_aleneomsorg_far() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
-        var grunnlag = aleneomsorgUtsettelseGrunnlag(fødselsdato, farBehandling()).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = aleneomsorgUtsettelseGrunnlag(fødselsdato, farBehandling())
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8),
                                 FERIE)));
@@ -551,7 +552,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void skal_trekke_fra_foreldrepengekvote_ved_avslag_ferie_innenfor_første_seks_uker_ved_aleneomsorg_mor() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
-        var grunnlag = aleneomsorgUtsettelseGrunnlag(fødselsdato, morBehandling()).medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+        var grunnlag = aleneomsorgUtsettelseGrunnlag(fødselsdato, morBehandling())
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medSøknad(fødselSøknad().leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
                         .leggTilOppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(4).plusDays(1), fødselsdato.plusWeeks(8),
                                 FERIE)));
@@ -860,5 +862,15 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
     private Søknad.Builder fødselSøknad() {
         return new Søknad.Builder().medType(FØDSEL);
+    }
+
+    @Override
+    Behandling.Builder morBehandling() {
+        return super.morBehandling().medKreverSammenhengendeUttak(true);
+    }
+
+    @Override
+    Behandling.Builder farBehandling() {
+        return super.farBehandling().medKreverSammenhengendeUttak(true);
     }
 }

@@ -27,6 +27,8 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 class ManglendeSøktePerioderTjeneste {
 
+    //TODO fritt uttak: ny implementasjon? Burde kunne forenkle en del
+
     private ManglendeSøktePerioderTjeneste() {
         // Skal ikke instansieres
     }

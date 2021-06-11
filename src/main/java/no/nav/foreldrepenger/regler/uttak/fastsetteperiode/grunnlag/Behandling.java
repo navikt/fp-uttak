@@ -4,6 +4,7 @@ public final class Behandling {
 
     private boolean søkerMor;
     private boolean berørtBehandling;
+    private boolean kreverSammenhengendeUttak;
 
     private Behandling() {
     }
@@ -14,6 +15,10 @@ public final class Behandling {
 
     public boolean isBerørtBehandling() {
         return berørtBehandling;
+    }
+
+    public boolean isKreverSammenhengendeUttak() {
+        return kreverSammenhengendeUttak;
     }
 
     public static class Builder {
@@ -28,6 +33,11 @@ public final class Behandling {
 
         public Builder medErBerørtBehandling(boolean berørtBehandling) {
             kladd.berørtBehandling = berørtBehandling;
+            return this;
+        }
+
+        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+            kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

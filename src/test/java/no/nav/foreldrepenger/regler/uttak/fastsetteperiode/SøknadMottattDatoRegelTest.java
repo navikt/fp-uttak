@@ -127,7 +127,7 @@ class SøknadMottattDatoRegelTest {
                 .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .medDatoer(new Datoer.Builder().medFødsel(FAMILIEHENDELSE_DATO))
                 .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
+                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medKreverSammenhengendeUttak(true))
                 .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
                         .medForeldreansvarnOppfylt(true)
                         .medFødselOppfylt(true)
