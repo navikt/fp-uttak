@@ -8,4 +8,8 @@ public enum Søknadstype {
     public boolean gjelderTerminFødsel() {
         return this == TERMIN || this == FØDSEL;
     }
+
+    public boolean gjelderAdopsjon() {
+        return !gjelderTerminFødsel();
+    }
 }

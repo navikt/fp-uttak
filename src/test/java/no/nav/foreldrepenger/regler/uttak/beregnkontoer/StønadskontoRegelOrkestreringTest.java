@@ -1005,7 +1005,7 @@ class StønadskontoRegelOrkestreringTest {
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
-        assertThat(stønadskontoer.size()).isEqualTo(0);
+        assertThat(stønadskontoer).isEmpty();
     }
 
     @Test

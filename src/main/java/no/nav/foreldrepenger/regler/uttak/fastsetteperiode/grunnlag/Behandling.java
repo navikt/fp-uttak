@@ -13,6 +13,10 @@ public final class Behandling {
         return søkerMor;
     }
 
+    public boolean isSøkerFarMedMor() {
+        return !isSøkerMor();
+    }
+
     public boolean isBerørtBehandling() {
         return berørtBehandling;
     }
