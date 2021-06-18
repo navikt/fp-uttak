@@ -1,23 +1,22 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.bareFarRett;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.fjernHelg;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.fjernPerioderFørEndringsdatoVedRevurdering;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.slåSammenUttakForBeggeParter;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ManglendeSøktPeriodeUtil.utledSenesteLovligeStartdatoVedAdopsjon;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
@@ -25,240 +24,72 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
-class ManglendeSøktePerioderTjeneste {
-
-    //TODO fritt uttak: ny implementasjon? Burde kunne forenkle en del
+final class ManglendeSøktePerioderTjeneste {
 
     private ManglendeSøktePerioderTjeneste() {
         // Skal ikke instansieres
     }
 
     static List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        var manglendePerioderIUkerForbeholdtMor = finnManglendeSøktIUkerForbeholdtMor(grunnlag, konfigurasjon);
-        var manglendePerioderIUkerFarMedAleneomsorg = finnManglendeSøktePerioderTilFarMedAleneomsorg(grunnlag);
-        List<OppgittPeriode> manglendePerioder = new ArrayList<>();
-        manglendePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
-        manglendePerioder.addAll(manglendePerioderIUkerForbeholdtMor);
-
-        var manglendeSøktePerioder = finnManglendeMellomliggendePerioder(
-                grunnlag, manglendePerioder);
-        manglendeSøktePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
-        manglendeSøktePerioder.addAll(finnPerioderVedAdopsjon(grunnlag));
-        manglendeSøktePerioder.addAll(manglendePerioderIUkerForbeholdtMor);
-
-        var trimmedePerioder = trimPerioder(grunnlag, manglendeSøktePerioder);
-        List<OppgittPeriode> samlet = new ArrayList<>();
-        for (var msp : trimmedePerioder) {
-            if (!contains(samlet, msp.getFom(), msp.getTom())) {
-                samlet.add(msp);
-            }
+        if (grunnlag.getSøknad().getOppgittePerioder().isEmpty()) {
+            throw new IllegalArgumentException("Krever minst en oppgitt periode");
         }
-
-        return samlet;
+        final List<OppgittPeriode> msPerioder;
+        if (bareFarRett(grunnlag)) {
+            msPerioder = finnManglendeSøktPeriodeBareFarHarRett(grunnlag, konfigurasjon).stream().toList();
+        } else if (grunnlag.getSøknad().gjelderAdopsjon()) {
+            msPerioder = List.of();
+        } else {
+            msPerioder = finnManglendeSøktePerioderITidsprommetForbeholdtMor(grunnlag, konfigurasjon);
+        }
+        return fellesFilter(grunnlag, msPerioder);
     }
 
-    private static List<OppgittPeriode> trimPerioder(RegelGrunnlag grunnlag, List<OppgittPeriode> manglendeSøktePerioder) {
-        return manglendeSøktePerioder.stream()
-                .map(ManglendeSøktePerioderTjeneste::fjernHelgFraBegynnelseOgSlutt)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(p -> fjernPerioderFørSkjæringstidspunktOpptjening(p, grunnlag))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+    private static List<OppgittPeriode> fellesFilter(RegelGrunnlag grunnlag, List<OppgittPeriode> msPerioder) {
+        return msPerioder.stream()
                 .map(p -> fjernPerioderFørEndringsdatoVedRevurdering(p, grunnlag))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .map(p -> fjernHelg(p))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
     }
 
-    private static boolean contains(List<OppgittPeriode> list, LocalDate fom, LocalDate tom) {
-        return list.stream().anyMatch(item -> item.getFom().isEqual(fom) && item.getTom().isEqual(tom));
-    }
+    /**
+     * Gjelder ikke bare far har rett, se egen metode
+     */
+    private static List<OppgittPeriode> finnManglendeSøktePerioderITidsprommetForbeholdtMor(RegelGrunnlag grunnlag,
+                                                                                            Konfigurasjon konfigurasjon) {
+        var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
 
-    private static List<OppgittPeriode> finnPerioderVedAdopsjon(RegelGrunnlag grunnlag) {
-        if (Søknadstype.ADOPSJON.equals(grunnlag.getSøknad().getType())) {
-            var mspAdopsjon = utledManglendeSøktVedAdopsjon(grunnlag);
-            if (mspAdopsjon.isPresent()) {
-                return List.of(mspAdopsjon.get());
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    private static List<OppgittPeriode> finnManglendeSøktIUkerForbeholdtMor(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        if (grunnlag.getBehandling().isSøkerMor() && grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
-            return utledManglendeForMorFraOppgittePerioder(grunnlag, konfigurasjon);
-        }
-        if (farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) && !grunnlag.getRettOgOmsorg().getAleneomsorg()) {
-            var oppholdFar = utledManglendeSøktForFar(grunnlag.getDatoer().getFamiliehendelse(),
-                    grunnlag.getSøknad().getOppgittePerioder(), konfigurasjon);
-            if (oppholdFar.isPresent()) {
-                return List.of(oppholdFar.get());
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    private static List<OppgittPeriode> finnManglendeSøktePerioderTilFarMedAleneomsorg(RegelGrunnlag grunnlag) {
-        if (!grunnlag.getBehandling().isSøkerMor() && grunnlag.getRettOgOmsorg().getAleneomsorg()) {
-            var førstePeriode = grunnlag.getSøknad().getOppgittePerioder().get(0);
-            if (grunnlag.getDatoer().getFamiliehendelse().isBefore(førstePeriode.getFom())) {
-                var nyPeriode = lagManglendeSøktPeriode(grunnlag.getDatoer().getFamiliehendelse(),
-                        førstePeriode.getFom().minusDays(1), Stønadskontotype.FORELDREPENGER);
-                return List.of(nyPeriode);
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    private static Optional<OppgittPeriode> utledManglendeSøktVedAdopsjon(RegelGrunnlag grunnlag) {
-        var senesteLovligeStartdatoVedAdopsjon = utledSenesteLovligeStartdatoVedAdopsjon(grunnlag);
-
-        var førsteUttaksdatoSøknad = førsteUttaksdatoSøknad(grunnlag);
-        var førsteUttaksdatoAnnenpart = førsteUttaksdatoAnnenpart(grunnlag);
-        if (førsteUttaksdatoSøknad.isAfter(senesteLovligeStartdatoVedAdopsjon) && (førsteUttaksdatoAnnenpart.isEmpty()
-                || førsteUttaksdatoAnnenpart.get().isAfter(senesteLovligeStartdatoVedAdopsjon))) {
-            LocalDate tom;
-            if (førsteUttaksdatoAnnenpart.isEmpty() || førsteUttaksdatoSøknad.isBefore(førsteUttaksdatoAnnenpart.get())) {
-                tom = førsteUttaksdatoSøknad.minusDays(1);
-            } else {
-                tom = førsteUttaksdatoAnnenpart.get().minusDays(1);
-            }
-            return Optional.of(lagManglendeSøktPeriode(senesteLovligeStartdatoVedAdopsjon, tom));
-        }
-        return Optional.empty();
-    }
-
-    private static Optional<LocalDate> førsteUttaksdatoAnnenpart(RegelGrunnlag grunnlag) {
-        if (grunnlag.getAnnenPart() == null || grunnlag.getAnnenPart().getUttaksperioder().isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(førsteFom(grunnlag.getAnnenPart().getUttaksperioder()));
-    }
-
-    private static LocalDate førsteUttaksdatoSøknad(RegelGrunnlag grunnlag) {
-        return førsteFom(grunnlag.getSøknad().getOppgittePerioder());
-    }
-
-    private static LocalDate førsteFom(List<? extends LukketPeriode> perioder) {
-        return perioder.stream().min(Comparator.comparing(LukketPeriode::getFom)).orElseThrow().getFom();
-    }
-
-    private static LocalDate utledSenesteLovligeStartdatoVedAdopsjon(RegelGrunnlag grunnlag) {
-        var omsorgsovertakelseDato = grunnlag.getDatoer().getFamiliehendelse();
-        var ankomstNorgeDato = grunnlag.getAdopsjon().getAnkomstNorgeDato();
-
-        if (ankomstNorgeDato != null) {
-            return ankomstNorgeDato;
-        }
-        return omsorgsovertakelseDato;
-    }
-
-    private static Optional<OppgittPeriode> utledManglendeSøktForFar(LocalDate familiehendelse,
-                                                                     List<OppgittPeriode> uttaksperioder,
-                                                                     Konfigurasjon konfigurasjon) {
-        var førstePeriode = uttaksperioder.get(0);
-        var ukerForbeholdtMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
-        if (familiehendelse.plusWeeks(ukerForbeholdtMor).isBefore(førstePeriode.getFom())) {
-            var nyPeriode = lagManglendeSøktPeriode(familiehendelse.plusWeeks(ukerForbeholdtMor), førstePeriode.getFom().minusDays(1),
-                    Stønadskontotype.FORELDREPENGER);
-            return Optional.of(nyPeriode);
-        }
-        return Optional.empty();
-    }
-
-    private static boolean farSøkerFødselEllerTermin(RegelGrunnlag grunnlag) {
-        return !grunnlag.getBehandling().isSøkerMor() && erFødselEllerTermin(grunnlag);
-    }
-
-    private static boolean erFødselEllerTermin(RegelGrunnlag grunnlag) {
-        return grunnlag.getSøknad().getType().gjelderTerminFødsel();
-    }
-
-    private static boolean bareFarRett(RegelGrunnlag grunnlag) {
-        return grunnlag.getRettOgOmsorg().getFarHarRett() && !grunnlag.getRettOgOmsorg().getMorHarRett();
-    }
-
-    private static List<OppgittPeriode> utledManglendeForMorFraOppgittePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
-        var uttakPerioder = slåSammenUttakForBeggeParter(grunnlag).stream()
-                .sorted(Comparator.comparing(Periode::getFom))
+        var fellesUttakBeggeParter = slåSammenUttakForBeggeParter(grunnlag)
+                .stream()
+                .flatMap(p -> splitPåTidsperiodeForbeholdtMor(familiehendelse, p, konfigurasjon).stream())
                 .collect(Collectors.toList());
-        var mspFørFødsel = finnManglendeSøktFørFødsel(uttakPerioder, familiehendelseDato,
-                grunnlag.getSøknad().getType(), grunnlag.getGyldigeStønadskontotyper(), konfigurasjon);
-        var mspEtterFødsel = finnPerioderEtterFødsel(uttakPerioder, familiehendelseDato,
-                grunnlag.getGyldigeStønadskontotyper(), konfigurasjon);
+        var førsteFellesUttaksdato = fellesUttakBeggeParter.get(0).getFom();
+        var sisteFellesUttaksdato = fellesUttakBeggeParter.get(fellesUttakBeggeParter.size() - 1).getTom();
 
-        return Stream.of(mspFørFødsel, mspEtterFødsel)
-                .flatMap(Collection::stream)
-                .map(ManglendeSøktePerioderTjeneste::fjernHelgFraBegynnelseOgSlutt)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        if (grunnlag.getBehandling().isSøkerMor()) {
+            if (førsteFellesUttaksdato.isAfter(familiehendelse)) {
+                //Feks mor søker ikke om uke 1-3, men fra uke 4 og utover. Legger til periode for at det skal opprettes msp
+                fellesUttakBeggeParter.add(new LukketPeriode(familiehendelse.minusDays(1), familiehendelse.minusDays(1)));
+            }
+            if (sisteFellesUttaksdato.isBefore(tomTidsperiodeForbeholdtMor)) {
+                //Feks mor søker bare om de første 4 ukene, må ha msp på resten av ukene forbeholdt mor. Legger til periode for at det skal opprettes msp
+                fellesUttakBeggeParter.add(new LukketPeriode(tomTidsperiodeForbeholdtMor.plusDays(1), tomTidsperiodeForbeholdtMor.plusDays(1)));
+            }
+        }
+        return finnManglendeMellomliggendePerioder(fellesUttakBeggeParter, familiehendelse).stream()
+                .flatMap(p -> split(tomTidsperiodeForbeholdtMor, p))
+                .filter(p -> periodeLiggerITidsrommetForbeholdtMor(grunnlag, konfigurasjon, p))
+                .sorted(Comparator.comparing(OppgittPeriode::getFom))
                 .collect(Collectors.toList());
     }
 
-    private static Optional<OppgittPeriode> fjernPerioderFørEndringsdatoVedRevurdering(OppgittPeriode msp, RegelGrunnlag grunnlag) {
-        if (!grunnlag.erRevurdering()) {
-            return Optional.of(msp);
-        }
-        var endringsdato = grunnlag.getRevurdering().getEndringsdato();
-        return fjernPerioderFørDato(msp, endringsdato);
-    }
-
-    private static Optional<OppgittPeriode> fjernPerioderFørSkjæringstidspunktOpptjening(OppgittPeriode msp, RegelGrunnlag grunnlag) {
-        var skjæringstidspunkt = grunnlag.getOpptjening().getSkjæringstidspunkt();
-        // Skal ikke fjerne periode før skjæringstidspunkt for far med aleneomsorg eller enerett (fødsel eller adopsjon)
-        if ((farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag)
-                || (!grunnlag.getBehandling().isSøkerMor() && (grunnlag.getRettOgOmsorg().getAleneomsorg()))
-                && skjæringstidspunkt.isAfter(grunnlag.getDatoer().getFamiliehendelse()))) {
-            return Optional.of(msp);
-        }
-        if (mspFyllerHullMellomForeldrene(msp, grunnlag)) {
-            return Optional.of(msp);
-        }
-        return fjernPerioderFørDato(msp, skjæringstidspunkt);
-    }
-
-    private static boolean mspFyllerHullMellomForeldrene(OppgittPeriode msp, RegelGrunnlag grunnlag) {
-        if (grunnlag.getAnnenPart() == null) {
-            return false;
-        }
-        var sisteDagAnnenpart = grunnlag.getAnnenPart().sisteUttaksdag();
-        var førsteDagSøknad = grunnlag.getSøknad().getOppgittePerioder().get(0).getFom();
-        if (sisteDagAnnenpart.isPresent() && sisteDagAnnenpart.get().isBefore(førsteDagSøknad)) {
-            return msp.overlapper(new LukketPeriode(sisteDagAnnenpart.get(), førsteDagSøknad));
-        }
-        return false;
-    }
-
-    private static Optional<OppgittPeriode> fjernPerioderFørDato(OppgittPeriode msp, LocalDate dato) {
-        if (msp.getTom().isBefore(dato)) {
-            return Optional.empty();
-        }
-        if (msp.overlapper(dato)) {
-            return Optional.of(msp.kopiMedNyPeriode(dato, msp.getTom()));
-        }
-        return Optional.of(msp);
-    }
-
-    private static boolean farSøkerFødselEllerTerminOgBareFarHarRett(RegelGrunnlag grunnlag) {
-        return farSøkerFødselEllerTermin(grunnlag) && bareFarRett(grunnlag);
-    }
-
-    private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(RegelGrunnlag grunnlag,
-                                                                            List<OppgittPeriode> ekskludertePerioder) {
-        var allePerioder = slåSammenUttakForBeggeParter(grunnlag);
-        //legge inn ikke søkte perioder til uker som er Forbeholdt til Mor etter fødsel
-        allePerioder.addAll(ekskludertePerioder);
-        return finnManglendeMellomliggendePerioder(allePerioder).stream()
-                .map(ManglendeSøktePerioderTjeneste::fjernHelgFraBegynnelseOgSlutt)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-    }
-
-    private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder) {
+    private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder, LocalDate familieHendelse) {
         var sortertePerioder = perioder.stream()
                 .sorted(Comparator.comparing(LukketPeriode::getFom))
                 .collect(Collectors.toList());
@@ -271,7 +102,18 @@ class ManglendeSøktePerioderTjeneste {
             } else if (mspFom.isBefore(lukketPeriode.getFom())) {
                 var mspTom = lukketPeriode.getFom().minusDays(1);
                 if (Virkedager.beregnAntallVirkedager(mspFom, mspTom) > 0) {
-                    mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom));
+                    if (new LukketPeriode(mspFom, mspTom).overlapper(familieHendelse) && !mspFom.isEqual(familieHendelse)) {
+                        //Splitter opp msp for å få riktig konto før og etter familiehendelse
+                        mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, familieHendelse.minusDays(1),
+                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL));
+                        mellomliggendePerioder.add(lagManglendeSøktPeriode(familieHendelse, mspTom,
+                                Stønadskontotype.MØDREKVOTE));
+
+                    } else if (mspFom.isBefore(familieHendelse)) {
+                        mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom, Stønadskontotype.FORELDREPENGER_FØR_FØDSEL));
+                    } else {
+                        mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom, Stønadskontotype.MØDREKVOTE));
+                    }
                 }
             }
             if (!lukketPeriode.getTom().isBefore(mspFom)) {
@@ -281,101 +123,82 @@ class ManglendeSøktePerioderTjeneste {
         return mellomliggendePerioder;
     }
 
-    private static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
-        List<LukketPeriode> allePerioder = new ArrayList<>();
-        if (grunnlag.getAnnenPart() != null) {
-            allePerioder.addAll(grunnlag.getAnnenPart()
-                    .getUttaksperioder()
-                    .stream()
-                    .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
-                    .collect(Collectors.toList()));
+    private static Stream<OppgittPeriode> split(LocalDate dato, OppgittPeriode periode) {
+        if (periode.overlapper(dato) && !periode.getFom().isEqual(dato) && !periode.getTom().isEqual(dato)) {
+            return Stream.of(periode.kopiMedNyPeriode(periode.getFom(), dato),
+                    periode.kopiMedNyPeriode(dato.plusDays(1), periode.getTom()));
         }
-        allePerioder.addAll(grunnlag.getSøknad().getOppgittePerioder());
-        return allePerioder;
+        return Stream.of(periode);
     }
 
-
-    private static List<OppgittPeriode> finnManglendeSøktFørFødsel(List<LukketPeriode> søktePerioder,
-                                                                   LocalDate familiehendelseDato,
-                                                                   Søknadstype søknadstype,
-                                                                   Set<Stønadskontotype> gyldigeStønadskontotyper,
-                                                                   Konfigurasjon konfigurasjon) {
-        if (Søknadstype.ADOPSJON.equals(søknadstype)) {
-            return List.of();
+    private static Optional<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRett(RegelGrunnlag grunnlag,
+                                                                                   Konfigurasjon konfigurasjon) {
+        //Kommer sortert
+        var søktFom = grunnlag.getSøknad().getOppgittePerioder().get(0).getFom();
+        if (grunnlag.getSøknad().gjelderAdopsjon()) {
+            return finnManglendeSøktPeriodeBareFarHarRettAdopsjon(grunnlag, søktFom);
         }
-        var antallUkerFpffFørFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
-                familiehendelseDato);
-        var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
-
-        var førsteUttaksdagSøknad = sorterteSøktePerioder.get(0).getFom();
-
-        if (!førsteUttaksdagSøknad.isBefore(familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel))) {
-            return List.of();
-        }
-        var startdatoBegingetFpff = førsteUttaksdagSøknad.isBefore(
-                familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel)) ? familiehendelseDato.minusWeeks(
-                antallUkerFpffFørFødsel) : førsteUttaksdagSøknad;
-        var betingetFpffPeriode = new LukketPeriode(startdatoBegingetFpff, familiehendelseDato.minusDays(1));
-        var mspFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(sorterteSøktePerioder, betingetFpffPeriode)
-                .stream()
-                .map(msp -> lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
-                .collect(Collectors.toList());
-        var betingetFellesperiode = new LukketPeriode(førsteUttaksdagSøknad,
-                familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel).minusDays(1));
-        var mspForFellesperiodeFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(sorterteSøktePerioder,
-                betingetFellesperiode).stream().map(msp -> {
-            var type = gyldigeStønadskontotyper.contains(
-                    Stønadskontotype.FELLESPERIODE) ? Stønadskontotype.FELLESPERIODE : Stønadskontotype.FORELDREPENGER;
-            return lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), type);
-        }).collect(Collectors.toList());
-        return Stream.of(mspForFellesperiodeFørFødsel, mspFørFødsel)
-                .flatMap(Collection::stream)
-                .filter(p -> p.virkedager() > 0)
-                .collect(Collectors.toList());
+        return finnManglendeSøktPeriodeBareFarHarRettFødselTermin(grunnlag, konfigurasjon, søktFom);
     }
 
-
-    private static List<OppgittPeriode> finnPerioderEtterFødsel(List<LukketPeriode> søktePerioder,
-                                                                LocalDate familiehendelseDato,
-                                                                Set<Stønadskontotype> gyldigeStønadskontotyper,
-                                                                Konfigurasjon konfigurasjon) {
-        var mødrekvoteEtterFødselUker = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
-                familiehendelseDato);
-        var betingetPeriodeEtterFødsel = new LukketPeriode(familiehendelseDato,
-                familiehendelseDato.plusWeeks(mødrekvoteEtterFødselUker).minusDays(1));
-        var stønadskontotype = gyldigeStønadskontotyper.contains(
-                Stønadskontotype.MØDREKVOTE) ? Stønadskontotype.MØDREKVOTE : Stønadskontotype.FORELDREPENGER;
-        return ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(søktePerioder, betingetPeriodeEtterFødsel)
-                .stream()
-                .map(msp -> lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), stønadskontotype))
-                .collect(Collectors.toList());
+    private static Optional<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettAdopsjon(RegelGrunnlag grunnlag, LocalDate søktFom) {
+        var senesteLovligeStartdatoVedAdopsjon = utledSenesteLovligeStartdatoVedAdopsjon(grunnlag);
+        if (søktFom.isAfter(senesteLovligeStartdatoVedAdopsjon)) {
+            return Optional.of(lagManglendeSøktPeriode(senesteLovligeStartdatoVedAdopsjon, søktFom.minusDays(1),
+                    Stønadskontotype.FORELDREPENGER));
+        }
+        return Optional.empty();
     }
 
-
-    /**
-     * Fjern helgedager i begynnelse og slutt av msp.
-     *
-     * @param msp perioder som skal strippes.
-     * @return periode uten helg i begynnelsen og slutten. Optional.empty() dersom perioden bare besto av helgedager.
-     */
-    private static Optional<OppgittPeriode> fjernHelgFraBegynnelseOgSlutt(OppgittPeriode msp) {
-        Predicate<LocalDate> sjekkOmHelg = dato -> dato.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dato.getDayOfWeek()
-                .equals(DayOfWeek.SUNDAY);
-
-        var fom = msp.getFom();
-        var tom = msp.getTom();
-
-        while (sjekkOmHelg.test(fom)) {
-            fom = fom.plusDays(1);
+    private static Optional<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettFødselTermin(RegelGrunnlag grunnlag,
+                                                                                               Konfigurasjon konfigurasjon,
+                                                                                               LocalDate søktFom) {
+        var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
+        var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        var bareFarSomHarRettMåHaStartdato = Virkedager.plusVirkedager(tomTidsperiodeForbeholdtMor, 1);
+        if (grunnlag.getSøknad().gjelderTerminFødsel() && søktFom.isAfter(bareFarSomHarRettMåHaStartdato)) {
+            return Optional.of(lagManglendeSøktPeriode(bareFarSomHarRettMåHaStartdato, søktFom.minusDays(1),
+                    Stønadskontotype.FORELDREPENGER));
         }
-        while (sjekkOmHelg.test(tom)) {
-            tom = tom.minusDays(1);
-        }
-
-        if (fom.isAfter(tom)) {
-            return Optional.empty();
-        }
-        return Optional.of(msp.kopiMedNyPeriode(fom, tom));
+        return Optional.empty();
     }
 
+    private static List<LukketPeriode> splitPåTidsperiodeForbeholdtMor(LocalDate familiehendelse,
+                                                                       LukketPeriode periode,
+                                                                       Konfigurasjon konfigurasjon) {
+
+        var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        //Regner allerede med at perioden er splittet på familiehendelse
+        if (periode.overlapper(tomTidsperiodeForbeholdtMor) && periode.getTom().isAfter(tomTidsperiodeForbeholdtMor)) {
+            return List.of(new LukketPeriode(periode.getFom(), tomTidsperiodeForbeholdtMor),
+                    new LukketPeriode(tomTidsperiodeForbeholdtMor.plusDays(1), periode.getTom()));
+        }
+        var fomTidsperiodeForbeholdtMor = fomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        if (periode.overlapper(fomTidsperiodeForbeholdtMor) && periode.getFom().isBefore(fomTidsperiodeForbeholdtMor)) {
+            return List.of(new LukketPeriode(periode.getFom(), fomTidsperiodeForbeholdtMor.minusDays(1)),
+                    new LukketPeriode(fomTidsperiodeForbeholdtMor, periode.getTom()));
+        }
+        return List.of(periode);
+    }
+
+    private static boolean periodeLiggerITidsrommetForbeholdtMor(RegelGrunnlag grunnlag,
+                                                                 Konfigurasjon konfigurasjon,
+                                                                 LukketPeriode periode) {
+        var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
+        var fomTidsperiodeForbeholdtMor = fomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        //Regner med at periodene som kommer inne aldri overlapper med fom og tom forbeholdt mor. Altså at splittingen allerede er gjort
+        return periode.overlapper(new LukketPeriode(fomTidsperiodeForbeholdtMor, tomTidsperiodeForbeholdtMor));
+    }
+
+    private static LocalDate tomTidsperiodeForbeholdtMor(Konfigurasjon konfigurasjon, LocalDate familiehendelse) {
+        return familiehendelse.plusWeeks(
+                konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse))
+                .minusDays(1);
+    }
+
+    private static LocalDate fomTidsperiodeForbeholdtMor(Konfigurasjon konfigurasjon, LocalDate familiehendelse) {
+        return familiehendelse.minusWeeks(
+                konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse));
+    }
 }

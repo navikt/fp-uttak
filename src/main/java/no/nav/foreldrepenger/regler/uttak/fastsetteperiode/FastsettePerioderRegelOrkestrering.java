@@ -174,8 +174,15 @@ public class FastsettePerioderRegelOrkestrering {
 
     private OrkestreringTillegg lagOrkestreringTillegg(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, konfigurasjon);
-        var manglendeSøktPerioder = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
+        var manglendeSøktPerioder = finnManglendeSøktePerioder(grunnlag, konfigurasjon);
         return new OrkestreringTillegg(manglendeSøktPerioder, knekkpunkter);
+    }
+
+    private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+        if (grunnlag.getBehandling().isKreverSammenhengendeUttak()) {
+            return ManglendeSøktePerioderForSammenhengendeUttakTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
+        }
+        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
     }
 
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,

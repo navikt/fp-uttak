@@ -134,9 +134,9 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
                 new Konto.Builder().medTrekkdager(15).medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(50).medType(Stønadskontotype.MØDREKVOTE))
                 .leggTilKonto(new Konto.Builder().medTrekkdager(13 * 5).medType(Stønadskontotype.FELLESPERIODE));
-        basicGrunnlagMor().medSøknad(søknad(Søknadstype.FØDSEL,
-                oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10).minusDays(1))))
-                .medKontoer(kontoer);
+        var søknad = søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10).minusDays(1)));
+        var grunnlag = basicGrunnlagMor().medSøknad(søknad).medKontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 

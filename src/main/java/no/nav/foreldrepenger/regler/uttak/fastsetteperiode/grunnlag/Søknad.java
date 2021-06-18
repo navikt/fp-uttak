@@ -28,6 +28,14 @@ public final class Søknad {
         return type;
     }
 
+    public boolean gjelderTerminFødsel() {
+        return getType().gjelderTerminFødsel();
+    }
+
+    public boolean gjelderAdopsjon() {
+        return getType().gjelderAdopsjon();
+    }
+
     public LocalDateTime getMottattTidspunkt() {
         return mottattTidspunkt;
     }

@@ -36,7 +36,7 @@ final class ValgAvStønadskontoTjeneste {
     private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(OppgittPeriode periode,
                                                                             RegelGrunnlag regelGrunnlag,
                                                                             SaldoUtregning saldoUtregning) {
-        return velgStønadskonto(periode, regelGrunnlag, saldoUtregning);
+        return velg(periode, regelGrunnlag, saldoUtregning);
     }
 
     private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(OppgittPeriode periode,
@@ -46,12 +46,12 @@ final class ValgAvStønadskontoTjeneste {
         if (periodeErPleiepenger(periode, regelGrunnlag, konfigurasjon)) {
             return stønadskontoVedPleiepenger(regelGrunnlag);
         }
-        return velgStønadskonto(periode, regelGrunnlag, saldoUtregning);
+        return velg(periode, regelGrunnlag, saldoUtregning);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskonto(OppgittPeriode periode,
-                                                               RegelGrunnlag regelGrunnlag,
-                                                               SaldoUtregning saldoUtregning) {
+    private static Optional<Stønadskontotype> velg(OppgittPeriode periode,
+                                                   RegelGrunnlag regelGrunnlag,
+                                                   SaldoUtregning saldoUtregning) {
         for (var stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
             if (!erTomForKonto(periode, stønadskontotype, saldoUtregning)) {
                 return Optional.of(stønadskontotype);

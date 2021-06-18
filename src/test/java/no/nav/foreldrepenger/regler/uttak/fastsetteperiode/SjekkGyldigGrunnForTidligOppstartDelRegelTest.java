@@ -149,8 +149,12 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1),
                 PeriodeVurderingType.UAVKLART_PERIODE);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).medSøknad(
-                new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(uttakPeriode)).medKontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .medSøknad(new Søknad.Builder()
+                        .medType(Søknadstype.FØDSEL)
+                        .leggTilOppgittPeriode(uttakPeriode))
+                .medKontoer(kontoer)
+                .build();
 
         var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
                 new FeatureTogglesForTester());
