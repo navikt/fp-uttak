@@ -168,13 +168,13 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaSykdomSkade() {
-        return rs.hvisRegel(SjekkOmUtsettelsePgaSykdomSkade.ID, "Er det utsettelse pga søkers sykdom eller skade?")
+        return rs.hvisRegel(SjekkOmUtsettelsePgaSykdomSkade.ID, SjekkOmUtsettelsePgaSykdomSkade.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSykdomSkade(), delregelForSøkerSykdomEllerSkade())
                 .ellers(sjekkOmUtsettelsePgaSøkerInnleggelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaSøkerInnleggelse() {
-        return rs.hvisRegel(SjekkOmUtsettelsePgaSøkerInnleggelse.ID, "Er det utsettelse pga søkers innleggelse i helseinstitusjon?")
+        return rs.hvisRegel(SjekkOmUtsettelsePgaSøkerInnleggelse.ID, SjekkOmUtsettelsePgaSøkerInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSøkerInnleggelse(), delregelForSøkerInnlagt())
                 .ellers(sjekkOmUtsettelsePgaHV());
     }
@@ -200,7 +200,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
                 .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1116", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false));
 
-        return rs.hvisRegel(SjekkOmSykdomSkade.ID, "Er søker vurdert til ute av stand til å ta seg av barnet i perioden?")
+        return rs.hvisRegel(SjekkOmSykdomSkade.ID, SjekkOmSykdomSkade.BESKRIVELSE)
                 .hvis(new SjekkOmSykdomSkade(), sjekkOmBareFarHarRettNode)
                 .ellers(Manuellbehandling.opprett("UT1115", IkkeOppfyltÅrsak.SØKERS_SYKDOM_SKADE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
@@ -216,7 +216,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
                 .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
                 .ellers(Oppfylt.opprett("UT1118", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false));
 
-        return rs.hvisRegel(SjekkOmSøkerInnlagt.ID, "Var søker innlagt på helseinstitusjon i perioden?")
+        return rs.hvisRegel(SjekkOmSøkerInnlagt.ID, SjekkOmSøkerInnlagt.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerInnlagt(), sjekkOmBareFarHarRettNode)
                 .ellers(Manuellbehandling.opprett("UT1117", IkkeOppfyltÅrsak.SØKERS_INNLEGGELSE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
@@ -241,7 +241,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
                 .hvis(new SjekkOmFødselErFørUke33(konfigurasjon), sjekkOmFørTermin)
                 .ellers(sjekkOmBareFarHarRettNode);
 
-        return rs.hvisRegel(SjekkOmBarnInnlagt.ID, "Var barnet innlagt på helseinstitusjon i perioden?")
+        return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
                 .hvis(new SjekkOmBarnInnlagt(), sjekkOmUttakFørUke33)
                 .ellers(Manuellbehandling.opprett("UT1119", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));

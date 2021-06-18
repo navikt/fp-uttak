@@ -120,6 +120,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse() {
+        //TODO fritt uttak. Skal gå greit å overlappe med annenparts utsettelse
         return rs.hvisRegel(SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse.ID,
                 "Sammenfaller uttaksperioden med en periode hos den andre parten som er en innvilget utsettelse?")
                 .hvis(new SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse(),

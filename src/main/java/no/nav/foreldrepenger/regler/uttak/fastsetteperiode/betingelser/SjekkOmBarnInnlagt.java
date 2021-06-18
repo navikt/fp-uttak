@@ -8,6 +8,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmBarnInnlagt.ID)
 public class SjekkOmBarnInnlagt extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "FP_VK 18.4.1";
+    public static final String BESKRIVELSE = "Var barnet innlagt på helseinstitusjon i perioden?";
 
     public SjekkOmBarnInnlagt() {
         super(ID);
