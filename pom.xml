@@ -49,7 +49,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <fpsak.nare.version>2.1.5</fpsak.nare.version>
         <jupiter.version>5.7.2</jupiter.version>
-        <assertj.version>3.20.1</assertj.version>
+        <assertj.version>3.20.2</assertj.version>
     </properties>
 
     <dependencies>
