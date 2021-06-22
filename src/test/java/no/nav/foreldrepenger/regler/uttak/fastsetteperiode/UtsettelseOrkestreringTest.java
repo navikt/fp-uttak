@@ -1,11 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.utsettelse;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.uttak;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.ARBEID;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.FERIE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_BARN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_SØKER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.SYKDOM_SKADE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -379,11 +383,47 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
+    @Test
+    void skal_avslå_periode_hvis_overlapp_med_innvilget_utsettelse_i_tidsperiode_forbeholdt_mor_i_berørt_behandling() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(uttak(fødselsdato, fødselsdato.plusWeeks(2).minusDays(1)).build())
+                        .leggTilUttaksperiode(utsettelse(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(6)).build()))
+                .medBehandling(farBehandling().medErBerørtBehandling(true))
+                .medSøknad(fødselSøknad()
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(4).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(1);
+
+        var uttakPeriode = resultat.get(0).getUttakPeriode();
+        assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(uttakPeriode.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE);
+    }
+
+    @Test
+    void skal_innvilge_periode_hvis_overlapp_med_innvilget_utsettelse_etter_tidsperiode_forbeholdt_mor_i_berørt_behandling() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .medAnnenPart(new AnnenPart.Builder()
+                        .leggTilUttaksperiode(uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)).build())
+                        .leggTilUttaksperiode(utsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10)).build()))
+                .medBehandling(farBehandling().medErBerørtBehandling(true))
+                .medSøknad(fødselSøknad()
+                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(1);
+
+        var uttakPeriode = resultat.get(0).getUttakPeriode();
+        assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
     //FAGSYSTEM-151437
-    @Disabled
+    @Disabled("TODO fritt uttak")
     @Test
     void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_manuell() {
-        //TODO fritt uttak
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .medRettOgOmsorg(bareFarRett())
@@ -398,8 +438,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
     }
 
-    //TODO fritt uttak. Hvilke caser kan må gå tom for dager ved avslag utsettelse? Kanskje bare far har rett og utsettelse uten årsak
-    @Disabled
+    @Disabled("TODO fritt uttak. Hvilke caser kan må gå tom for dager ved avslag utsettelse? Kanskje bare far har rett og utsettelse uten årsak")
     @Test
     void avslag_utsettelse_med_trekkdager_skal_knekkes_når_saldo_går_tom() {
         var fødselsdato = LocalDate.of(2021, 1, 20);
