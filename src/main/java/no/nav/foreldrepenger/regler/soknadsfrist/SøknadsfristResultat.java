@@ -42,17 +42,17 @@ public class SøknadsfristResultat {
             kladd = new SøknadsfristResultat(evalueringResultat, innsendtGrunnlag);
         }
 
-        Builder medTidligsteLovligeUttak(LocalDate tidligsteLovligeUttak) {
+        Builder tidligsteLovligeUttak(LocalDate tidligsteLovligeUttak) {
             kladd.tidligsteLovligeUttak = tidligsteLovligeUttak;
             return this;
         }
 
-        Builder medSøknadsfristOppfylt() {
+        Builder søknadsfristOppfylt() {
             kladd.regelOppfylt = true;
             return this;
         }
 
-        Builder medSøknadsfristIkkeOppfylt(String årsakKode) {
+        Builder søknadsfristIkkeOppfylt(String årsakKode) {
             kladd.regelOppfylt = false;
             kladd.årsakKodeIkkeVurdert = årsakKode;
             return this;

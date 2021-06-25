@@ -59,12 +59,12 @@ class TomKontoIdentifisererTest {
 
         var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, idag, idag.plusDays(søktOmDag - 1),
                 arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
-        var kontoer = new Kontoer.Builder().leggTilKonto(
-                new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(saldo));
+        var kontoer = new Kontoer.Builder().konto(
+                new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(saldo));
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
-                .medKontoer(kontoer)
+                .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .kontoer(kontoer)
                 .build();
 
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),

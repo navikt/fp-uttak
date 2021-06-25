@@ -56,14 +56,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                                                   LocalDate tom,
                                                   List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
         return Builder.uttak(fom, tom)
-                .medSamtidigUttak(this.samtidigUttak)
-                .medFlerbarnsdager(this.flerbarnsdager)
-                .medUtsettelse(this.innvilget)
-                .medOppholdsperiode(this.oppholdsperiode)
-                .medInnvilget(this.innvilget)
-                .medOppholdsårsak(this.oppholdÅrsak)
-                .medUttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
-                .medSenestMottattDato(this.senestMottattDato)
+                .samtidigUttak(this.samtidigUttak)
+                .flerbarnsdager(this.flerbarnsdager)
+                .utsettelse(this.innvilget)
+                .oppholdsperiode(this.oppholdsperiode)
+                .innvilget(this.innvilget)
+                .oppholdsårsak(this.oppholdÅrsak)
+                .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
+                .senestMottattDato(this.senestMottattDato)
                 .build();
     }
 
@@ -83,11 +83,11 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         private final AnnenpartUttakPeriode kladd;
 
         public static Builder utsettelse(LocalDate fom, LocalDate tom) {
-            return new Builder(fom, tom).medUtsettelse(true);
+            return new Builder(fom, tom).utsettelse(true);
         }
 
         public static Builder opphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak) {
-            return new Builder(fom, tom).medOppholdsperiode(true).medOppholdsårsak(oppholdÅrsak);
+            return new Builder(fom, tom).oppholdsperiode(true).oppholdsårsak(oppholdÅrsak);
         }
 
         public static Builder uttak(LocalDate fom, LocalDate tom) {
@@ -99,47 +99,47 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             kladd.innvilget = true;
         }
 
-        public Builder medUttakPeriodeAktivitet(AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
+        public Builder uttakPeriodeAktivitet(AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
             kladd.aktiviteter.add(annenpartUttakPeriodeAktivitet);
             return this;
         }
 
-        public Builder medUttakPeriodeAktiviteter(List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+        public Builder uttakPeriodeAktiviteter(List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
             kladd.aktiviteter.addAll(annenpartUttakPeriodeAktiviteter);
             return this;
         }
 
-        public Builder medSamtidigUttak(boolean samtidigUttak) {
+        public Builder samtidigUttak(boolean samtidigUttak) {
             kladd.samtidigUttak = samtidigUttak;
             return this;
         }
 
-        private Builder medUtsettelse(boolean utsettelse) {
+        private Builder utsettelse(boolean utsettelse) {
             kladd.utsettelse = utsettelse;
             return this;
         }
 
-        private Builder medOppholdsperiode(boolean oppholdsperiode) {
+        private Builder oppholdsperiode(boolean oppholdsperiode) {
             kladd.oppholdsperiode = oppholdsperiode;
             return this;
         }
 
-        public Builder medInnvilget(boolean innvilget) {
+        public Builder innvilget(boolean innvilget) {
             kladd.innvilget = innvilget;
             return this;
         }
 
-        public Builder medOppholdsårsak(OppholdÅrsak oppholdÅrsak) {
+        public Builder oppholdsårsak(OppholdÅrsak oppholdÅrsak) {
             kladd.oppholdÅrsak = oppholdÅrsak;
             return this;
         }
 
-        public Builder medFlerbarnsdager(boolean flerbarnsdager) {
+        public Builder flerbarnsdager(boolean flerbarnsdager) {
             kladd.flerbarnsdager = flerbarnsdager;
             return this;
         }
 
-        public Builder medSenestMottattDato(LocalDate senestMottattDato) {
+        public Builder senestMottattDato(LocalDate senestMottattDato) {
             kladd.senestMottattDato = senestMottattDato;
             return this;
         }

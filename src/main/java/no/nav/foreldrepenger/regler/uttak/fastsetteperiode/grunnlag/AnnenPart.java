@@ -43,17 +43,17 @@ public final class AnnenPart {
 
         private final AnnenPart kladd = new AnnenPart();
 
-        public Builder leggTilUttaksperiode(AnnenpartUttakPeriode uttaksperiode) {
+        public Builder uttaksperiode(AnnenpartUttakPeriode uttaksperiode) {
             kladd.uttaksperioder.add(uttaksperiode);
             return this;
         }
 
-        public Builder medUttaksperioder(List<AnnenpartUttakPeriode> uttaksperioder) {
+        public Builder uttaksperioder(List<AnnenpartUttakPeriode> uttaksperioder) {
             kladd.uttaksperioder = uttaksperioder;
             return this;
         }
 
-        public Builder medSisteSøknadMottattTidspunkt(LocalDateTime sisteSøknadMottattTidspunkt) {
+        public Builder sisteSøknadMottattTidspunkt(LocalDateTime sisteSøknadMottattTidspunkt) {
             kladd.sisteSøknadMottattTidspunkt = sisteSøknadMottattTidspunkt;
             return this;
         }

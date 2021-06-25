@@ -16,8 +16,8 @@ class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
     @Test
     void startAvUttakErInnenforSøknadsfrist() {
         var grunnlag = SøknadsfristGrunnlag.builder()
-                .medFørsteUttaksdato(LocalDate.of(2017, Month.FEBRUARY, 1))
-                .medSøknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
+                .førsteUttaksdato(LocalDate.of(2017, Month.FEBRUARY, 1))
+                .søknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
                 .build();
 
         var betingelse = new SjekkOmFørsteUttakErInnenforSøknadsfrist();
@@ -28,8 +28,8 @@ class SjekkOmFørsteUttakErInnenforSøknadsfristTest {
     @Test
     void startAvUttakErIkkeInnenforSøknadsfrist() {
         var grunnlag = SøknadsfristGrunnlag.builder()
-                .medFørsteUttaksdato(LocalDate.of(2017, Month.JANUARY, 31))
-                .medSøknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
+                .førsteUttaksdato(LocalDate.of(2017, Month.JANUARY, 31))
+                .søknadMottattDato(LocalDate.of(2017, Month.MAY, 31))
                 .build();
 
         var betingelse = new SjekkOmFørsteUttakErInnenforSøknadsfrist();

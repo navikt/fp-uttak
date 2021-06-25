@@ -44,27 +44,27 @@ public final class Søknad {
 
         private final Søknad kladd = new Søknad();
 
-        public Builder leggTilOppgittPeriode(OppgittPeriode oppgittPeriode) {
+        public Builder oppgittPeriode(OppgittPeriode oppgittPeriode) {
             kladd.oppgittePerioder.add(oppgittPeriode);
             return this;
         }
 
-        public Builder medOppgittePerioder(List<OppgittPeriode> oppgittPerioder) {
+        public Builder oppgittePerioder(List<OppgittPeriode> oppgittPerioder) {
             kladd.oppgittePerioder = oppgittPerioder;
             return this;
         }
 
-        public Builder medDokumentasjon(Dokumentasjon.Builder dokumentasjon) {
+        public Builder dokumentasjon(Dokumentasjon.Builder dokumentasjon) {
             kladd.dokumentasjon = dokumentasjon.build();
             return this;
         }
 
-        public Builder medType(Søknadstype type) {
+        public Builder type(Søknadstype type) {
             kladd.type = type;
             return this;
         }
 
-        public Builder medMottattTidspunkt(LocalDateTime mottattTidspunkt) {
+        public Builder mottattTidspunkt(LocalDateTime mottattTidspunkt) {
             kladd.mottattTidspunkt = mottattTidspunkt;
             return this;
         }

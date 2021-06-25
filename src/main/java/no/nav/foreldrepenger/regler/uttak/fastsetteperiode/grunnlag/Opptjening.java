@@ -18,7 +18,7 @@ public final class Opptjening {
     public static class Builder {
         private final Opptjening kladd = new Opptjening();
 
-        public Builder medSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
+        public Builder skjæringstidspunkt(LocalDate skjæringstidspunkt) {
             kladd.skjæringstidspunkt = skjæringstidspunkt;
             return this;
         }

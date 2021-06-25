@@ -29,23 +29,23 @@ public final class RettOgOmsorg {
     public static class Builder {
         private final RettOgOmsorg kladd = new RettOgOmsorg();
 
-        public Builder medFarHarRett(boolean medFarRett) {
-            kladd.farHarRett = medFarRett;
+        public Builder farHarRett(boolean farHarRett) {
+            kladd.farHarRett = farHarRett;
             return this;
         }
 
-        public Builder medMorHarRett(boolean medMorRett) {
-            kladd.morHarRett = medMorRett;
+        public Builder morHarRett(boolean morHarRett) {
+            kladd.morHarRett = morHarRett;
             return this;
         }
 
-        public Builder medSamtykke(boolean medSamtykke) {
-            kladd.samtykke = medSamtykke;
+        public Builder samtykke(boolean samtykke) {
+            kladd.samtykke = samtykke;
             return this;
         }
 
-        public Builder medAleneomsorg(boolean medAleneomsorg) {
-            kladd.aleneomsorg = medAleneomsorg;
+        public Builder aleneomsorg(boolean aleneomsorg) {
+            kladd.aleneomsorg = aleneomsorg;
             return this;
         }
 

@@ -33,13 +33,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -56,12 +56,12 @@ class StønadskontoRegelOrkestreringTest {
     void skal_legge_til_prematurdager_på_fellesperiode() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(fødselsdato)
-                .medTermindato(fødselsdato.plusWeeks(7).plusDays(4))
-                .medAntallBarn(1)
+                .fødselsdato(fødselsdato)
+                .termindato(fødselsdato.plusWeeks(7).plusDays(4))
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -79,11 +79,11 @@ class StønadskontoRegelOrkestreringTest {
     void skal_legge_til_prematurdager_på_foreldrepenger() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(fødselsdato)
-                .medTermindato(fødselsdato.plusWeeks(8))
-                .medAntallBarn(1)
+                .fødselsdato(fødselsdato)
+                .termindato(fødselsdato.plusWeeks(8))
+                .antallBarn(1)
                 .farAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -98,14 +98,14 @@ class StønadskontoRegelOrkestreringTest {
     void skal_ikke_legge_til_prematurdager_på_flerbarnsdager() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(fødselsdato)
-                .medTermindato(fødselsdato.plusWeeks(7).plusDays(1))
-                .medAntallBarn(2)
+                .fødselsdato(fødselsdato)
+                .termindato(fødselsdato.plusWeeks(7).plusDays(1))
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -123,13 +123,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(1)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -151,13 +151,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -180,13 +180,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(1)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -209,13 +209,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(3)
+                .fødselsdato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -239,13 +239,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(3)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -269,13 +269,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(3)
+                .termindato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -299,13 +299,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(3)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -329,13 +329,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .fødselsdato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -359,13 +359,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_100_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(2)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -389,13 +389,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .fødselsdato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -419,13 +419,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_begge_har_rett_og_omsorg_dekningsgrad_80_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(2)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -445,13 +445,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_100() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -468,13 +468,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_100() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(1)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(1)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -491,13 +491,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_mor_har_rett_begge_omsorg_dekningsgrad_80() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -514,13 +514,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_bare_mor_har_rett_og_aleneomsorg_dekningsgrad_80() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(1)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(1)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -537,13 +537,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .fødselsdato(DATO)
+                .antallBarn(2)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -560,13 +560,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(2)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(2)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -583,13 +583,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_mor_rett_dekningsgrad_80_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(2)
+                .termindato(DATO)
+                .antallBarn(2)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -606,13 +606,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(2)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(2)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -629,13 +629,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_mor_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(3)
+                .termindato(DATO)
+                .antallBarn(3)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -652,13 +652,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(3)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(3)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -675,13 +675,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_mor_rett_dekningsgrad_80_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(3)
+                .fødselsdato(DATO)
+                .antallBarn(3)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -698,13 +698,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void adopsjon_bare_mor_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medOmsorgsovertakelseDato(DATO)
-                .medAntallBarn(3)
+                .omsorgsovertakelseDato(DATO)
+                .antallBarn(3)
                 .farRett(false)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(true)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -720,13 +720,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -742,13 +742,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(1)
+                .termindato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -764,13 +764,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(3)
+                .fødselsdato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -786,13 +786,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(3)
+                .fødselsdato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -808,13 +808,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_100_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(2)
+                .termindato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -830,13 +830,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_og_aleneomsorg_dekningsgrad_80_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .fødselsdato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(true)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -852,13 +852,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(1)
+                .termindato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -874,13 +874,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -898,13 +898,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(3)
+                .termindato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -923,13 +923,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_3_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(3)
+                .fødselsdato(DATO)
+                .antallBarn(3)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -947,13 +947,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_100_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .fødselsdato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -972,13 +972,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void fødsel_bare_far_rett_begge_omsorg_dekningsgrad_80_2_barn() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(2)
+                .fødselsdato(DATO)
+                .antallBarn(2)
                 .farRett(true)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -994,13 +994,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void hverken_mor_eller_far_har_rett() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medTermindato(DATO)
-                .medAntallBarn(1)
+                .termindato(DATO)
+                .antallBarn(1)
                 .farRett(false)
                 .morRett(false)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -1011,13 +1011,13 @@ class StønadskontoRegelOrkestreringTest {
     @Test
     void bergegn_kontoer_regel_skal_produsere_sporing_med_json() throws IOException {
         var grunnlag = BeregnKontoerGrunnlag.builder()
-                .medFødselsdato(DATO)
-                .medAntallBarn(1)
+                .fødselsdato(DATO)
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
@@ -1031,14 +1031,14 @@ class StønadskontoRegelOrkestreringTest {
     void skal_bruke_omsorgsovertakelse_og_ikke_fødselsdato_som_konfig_parameter() {
         var grunnlag = BeregnKontoerGrunnlag.builder()
                 //Så tidlig at det vil skape exception hvis bruk ettersom vi ikke har noe konfig for 2016
-                .medFødselsdato(LocalDate.of(2016, 1, 1))
-                .medOmsorgsovertakelseDato(LocalDate.of(2020, 2, 10))
-                .medAntallBarn(1)
+                .fødselsdato(LocalDate.of(2016, 1, 1))
+                .omsorgsovertakelseDato(LocalDate.of(2020, 2, 10))
+                .antallBarn(1)
                 .farRett(true)
                 .morRett(true)
                 .farAleneomsorg(false)
                 .morAleneomsorg(false)
-                .medDekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
 
         assertThatCode(() -> stønadskontoRegelOrkestrering.beregnKontoer(grunnlag)).doesNotThrowAnyException();

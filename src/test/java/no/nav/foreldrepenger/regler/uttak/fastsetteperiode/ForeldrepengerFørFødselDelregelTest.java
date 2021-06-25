@@ -35,7 +35,7 @@ class ForeldrepengerFørFødselDelregelTest {
         var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.plusWeeks(8),
                 familiehendelseDato.plusWeeks(9));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).kontoer(kontoer).søknad(søknad(uttakPeriode)).build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -48,7 +48,7 @@ class ForeldrepengerFørFødselDelregelTest {
         var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).kontoer(kontoer).søknad(søknad(uttakPeriode)).build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -61,7 +61,7 @@ class ForeldrepengerFørFødselDelregelTest {
         var uttakPeriode = gradertPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(uttakPeriode)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).kontoer(kontoer).søknad(søknad(uttakPeriode)).build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -76,7 +76,7 @@ class ForeldrepengerFørFødselDelregelTest {
         var msp = manglendeSøktPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
         var kontoer = kontoer(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100);
-        var grunnlag = basicGrunnlagMor(familiehendelseDato).medKontoer(kontoer).medSøknad(søknad(msp)).build();
+        var grunnlag = basicGrunnlagMor(familiehendelseDato).kontoer(kontoer).søknad(søknad(msp)).build();
 
         var regelresultat = kjørRegel(msp, grunnlag);
 
@@ -91,12 +91,12 @@ class ForeldrepengerFørFødselDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(2),
                 familiehendelseDato.minusWeeks(1));
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
+        var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 100))
                 //Må ha ellers å faller vi ut på FP_VK 10.5.1 - SjekkOmTomForAlleSineKontoer
-                .leggTilKonto(konto(Stønadskontotype.FEDREKVOTE, 100));
-        var grunnlag = basicGrunnlag(familiehendelseDato).medKontoer(kontoer)
-                .medBehandling(søkerErFarBehandling())
-                .medSøknad(søknad(uttakPeriode))
+                .konto(konto(Stønadskontotype.FEDREKVOTE, 100));
+        var grunnlag = basicGrunnlag(familiehendelseDato).kontoer(kontoer)
+                .behandling(søkerErFarBehandling())
+                .søknad(søknad(uttakPeriode))
                 .build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
@@ -106,7 +106,7 @@ class ForeldrepengerFørFødselDelregelTest {
     }
 
     private Kontoer.Builder kontoer(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Kontoer.Builder().leggTilKonto(konto(stønadskontotype, trekkdager));
+        return new Kontoer.Builder().konto(konto(stønadskontotype, trekkdager));
     }
 
     private OppgittPeriode manglendeSøktPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -114,15 +114,15 @@ class ForeldrepengerFørFødselDelregelTest {
     }
 
     private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(trekkdager);
+        return new Konto.Builder().type(stønadskontotype).trekkdager(trekkdager);
     }
 
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode) {
-        return new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode).medType(Søknadstype.FØDSEL);
+        return new Søknad.Builder().oppgittPeriode(oppgittPeriode).type(Søknadstype.FØDSEL);
     }
 
     private Behandling.Builder søkerErFarBehandling() {
-        return new Behandling.Builder().medSøkerErMor(false);
+        return new Behandling.Builder().søkerErMor(false);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, PeriodeResultatÅrsak innvilgetPeriodeResultatÅrsak) {
@@ -144,15 +144,15 @@ class ForeldrepengerFørFødselDelregelTest {
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate familiehendelseDato) {
-        return create().medDatoer(new Datoer.Builder().medFødsel(familiehendelseDato))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true).medFarHarRett(true).medMorHarRett(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
-                        .medForeldreansvarnOppfylt(true)
-                        .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true));
+        return create().datoer(new Datoer.Builder().fødsel(familiehendelseDato))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
+                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate familiehendelseDato) {
-        return basicGrunnlag(familiehendelseDato).medBehandling(new Behandling.Builder().medSøkerErMor(true));
+        return basicGrunnlag(familiehendelseDato).behandling(new Behandling.Builder().søkerErMor(true));
     }
 }

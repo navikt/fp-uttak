@@ -26,14 +26,14 @@ public class SøknadsfristRegelOrkestrering {
         var evaluationJson = EvaluationSerializer.asJson(evaluation);
         var tidligsteLovligeUttak = SøknadsfristUtil.finnFørsteLoveligeUttaksdag(grunnlag.getSøknadMottattDato());
         var regelResultatBuilder = new SøknadsfristResultat.Builder(evaluationJson, grunnlagJson)
-                .medTidligsteLovligeUttak(tidligsteLovligeUttak);
+                .tidligsteLovligeUttak(tidligsteLovligeUttak);
 
         var regelresultat = new Regelresultat(evaluation);
         if (!regelresultat.oppfylt()) {
             var årsakskode = finnÅrsakskode(evaluation);
-            årsakskode.ifPresent(regelResultatBuilder::medSøknadsfristIkkeOppfylt);
+            årsakskode.ifPresent(regelResultatBuilder::søknadsfristIkkeOppfylt);
         } else {
-            regelResultatBuilder.medSøknadsfristOppfylt();
+            regelResultatBuilder.søknadsfristOppfylt();
         }
         return regelResultatBuilder.build();
     }

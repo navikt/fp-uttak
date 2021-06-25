@@ -53,41 +53,41 @@ public class Dokumentasjon {
 
         private final Dokumentasjon kladd = new Dokumentasjon();
 
-        public Builder leggGyldigGrunnPeriode(GyldigGrunnPeriode gyldigGrunnPeriode) {
+        public Builder gyldigGrunnPeriode(GyldigGrunnPeriode gyldigGrunnPeriode) {
             kladd.gyldigGrunnPerioder.add(gyldigGrunnPeriode);
             return this;
         }
 
-        public Builder leggPeriodeUtenOmsorg(PeriodeUtenOmsorg periodeUtenOmsorg) {
+        public Builder periodeUtenOmsorg(PeriodeUtenOmsorg periodeUtenOmsorg) {
             kladd.perioderUtenOmsorg.add(periodeUtenOmsorg);
             return this;
         }
 
-        public Builder leggPeriodeMedSykdomEllerSkade(PeriodeMedSykdomEllerSkade periodeMedSykdomEllerSkade) {
+        public Builder periodeMedSykdomEllerSkade(PeriodeMedSykdomEllerSkade periodeMedSykdomEllerSkade) {
             kladd.perioderMedSykdomEllerSkade.add(periodeMedSykdomEllerSkade);
             return this;
         }
 
-        public Builder leggPeriodeMedInnleggelse(PeriodeMedInnleggelse periodeMedInnleggelse) {
+        public Builder periodeMedInnleggelse(PeriodeMedInnleggelse periodeMedInnleggelse) {
             kladd.perioderMedInnleggelse.add(periodeMedInnleggelse);
             return this;
         }
 
-        public Builder leggPeriodeMedBarnInnlagt(PeriodeMedBarnInnlagt periodeMedBarnInnlagt) {
+        public Builder periodeMedBarnInnlagt(PeriodeMedBarnInnlagt periodeMedBarnInnlagt) {
             kladd.perioderMedBarnInnlagt.add(periodeMedBarnInnlagt);
             return this;
         }
 
-        public Builder leggTilPeriodeMedHV(PeriodeMedHV periodeMedHV) {
+        public Builder periodeMedHV(PeriodeMedHV periodeMedHV) {
             kladd.perioderMedHv.add(periodeMedHV);
             return this;
         }
 
-        public Builder leggTilPeriodeMedTiltakViaNav(PeriodeMedTiltakIRegiAvNav periodeMedTiltakIRegiAvNav) {
+        public Builder periodeMedTiltakViaNav(PeriodeMedTiltakIRegiAvNav periodeMedTiltakIRegiAvNav) {
             kladd.perioderMedTiltakViaNav.add(periodeMedTiltakIRegiAvNav);
             return this;
         }
-        public Builder leggTilPeriodeMedAvklartMorsAktivitet(PeriodeMedAvklartMorsAktivitet periodeMedAvklartMorsAktivitet) {
+        public Builder periodeMedAvklartMorsAktivitet(PeriodeMedAvklartMorsAktivitet periodeMedAvklartMorsAktivitet) {
             kladd.perioderMedAvklartMorsAktivitet.add(periodeMedAvklartMorsAktivitet);
             return this;
         }

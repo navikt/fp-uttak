@@ -70,22 +70,22 @@ public class Konfigurasjonsfaktorer {
 
         }
 
-        public Konfigurasjonsfaktorer.Builder medEr100Prosent(Boolean er100Prosent) {
+        public Konfigurasjonsfaktorer.Builder er100Prosent(Boolean er100Prosent) {
             this.kladd.er100Prosent = er100Prosent;
             return this;
         }
 
-        public Konfigurasjonsfaktorer.Builder medAntallLevendeBarn(Integer antallLevendeBarn) {
+        public Konfigurasjonsfaktorer.Builder antallLevendeBarn(Integer antallLevendeBarn) {
             this.kladd.antallLevendeBarn = antallLevendeBarn;
             return this;
         }
 
-        public Konfigurasjonsfaktorer.Builder medErFødsel(Boolean erFødsel) {
+        public Konfigurasjonsfaktorer.Builder erFødsel(Boolean erFødsel) {
             this.kladd.erFødsel = erFødsel;
             return this;
         }
 
-        public Konfigurasjonsfaktorer.Builder medBerettiget(Berettiget berettiget) {
+        public Konfigurasjonsfaktorer.Builder berettiget(Berettiget berettiget) {
             this.kladd.berettiget = berettiget;
             return this;
         }

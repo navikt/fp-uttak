@@ -21,12 +21,12 @@ public final class Konto {
     public static class Builder {
         private final Konto kladd = new Konto();
 
-        public Builder medType(Stønadskontotype type) {
+        public Builder type(Stønadskontotype type) {
             kladd.type = type;
             return this;
         }
 
-        public Builder medTrekkdager(int trekkdager) {
+        public Builder trekkdager(int trekkdager) {
             kladd.trekkdager = trekkdager;
             return this;
         }

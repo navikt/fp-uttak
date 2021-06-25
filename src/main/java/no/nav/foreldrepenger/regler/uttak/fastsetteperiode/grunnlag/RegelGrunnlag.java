@@ -84,62 +84,62 @@ public class RegelGrunnlag {
 
         private RegelGrunnlag kladd = new RegelGrunnlag();
 
-        public Builder medSøknad(Søknad.Builder søknad) {
+        public Builder søknad(Søknad.Builder søknad) {
             kladd.søknad = søknad.build();
             return this;
         }
 
-        public Builder medBehandling(Behandling.Builder behandling) {
+        public Builder behandling(Behandling.Builder behandling) {
             kladd.behandling = behandling == null ? null : behandling.build();
             return this;
         }
 
-        public Builder medDatoer(Datoer.Builder datoer) {
+        public Builder datoer(Datoer.Builder datoer) {
             kladd.datoer = datoer == null ? null : datoer.build();
             return this;
         }
 
-        public Builder medRettOgOmsorg(RettOgOmsorg.Builder rettOgOmsorg) {
+        public Builder rettOgOmsorg(RettOgOmsorg.Builder rettOgOmsorg) {
             kladd.rettOgOmsorg = rettOgOmsorg == null ? null : rettOgOmsorg.build();
             return this;
         }
 
-        public Builder medArbeid(Arbeid.Builder arbeid) {
+        public Builder arbeid(Arbeid.Builder arbeid) {
             kladd.arbeid = arbeid == null ? null : arbeid.build();
             return this;
         }
 
-        public Builder medRevurdering(Revurdering.Builder revurdering) {
+        public Builder revurdering(Revurdering.Builder revurdering) {
             kladd.revurdering = revurdering == null ? null : revurdering.build();
             return this;
         }
 
-        public Builder medAnnenPart(AnnenPart.Builder annenPart) {
+        public Builder annenPart(AnnenPart.Builder annenPart) {
             kladd.annenPart = annenPart == null ? null : annenPart.build();
             return this;
         }
 
-        public Builder medMedlemskap(Medlemskap.Builder medlemskap) {
+        public Builder medlemskap(Medlemskap.Builder medlemskap) {
             kladd.medlemskap = medlemskap == null ? null : medlemskap.build();
             return this;
         }
 
-        public Builder medInngangsvilkår(Inngangsvilkår.Builder inngangsvilkår) {
+        public Builder inngangsvilkår(Inngangsvilkår.Builder inngangsvilkår) {
             kladd.inngangsvilkår = inngangsvilkår == null ? null : inngangsvilkår.build();
             return this;
         }
 
-        public Builder medOpptjening(Opptjening.Builder opptjening) {
+        public Builder opptjening(Opptjening.Builder opptjening) {
             kladd.opptjening = opptjening == null ? null : opptjening.build();
             return this;
         }
 
-        public Builder medAdopsjon(Adopsjon.Builder adopsjon) {
+        public Builder adopsjon(Adopsjon.Builder adopsjon) {
             kladd.adopsjon = adopsjon == null ? null : adopsjon.build();
             return this;
         }
 
-        public Builder medKontoer(Kontoer.Builder kontoer) {
+        public Builder kontoer(Kontoer.Builder kontoer) {
             kladd.kontoer = kontoer == null ? null : kontoer.build();
             return this;
         }

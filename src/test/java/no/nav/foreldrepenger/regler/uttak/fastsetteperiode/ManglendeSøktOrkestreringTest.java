@@ -36,10 +36,10 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     @Test
     void skal_avslå_og_trekke_foreldrepenger_for_bare_far_har_rett_hvis_dager_igjen() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
-        var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(søknad(FØDSEL,
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL,
                 oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(52))))
-                .medKontoer(kontoer(konto(FORELDREPENGER, 100)))
-                .medRettOgOmsorg(bareFarRett())
+                .kontoer(kontoer(konto(FORELDREPENGER, 100)))
+                .rettOgOmsorg(bareFarRett())
                 .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -67,7 +67,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     private Kontoer.Builder kontoer(Konto.Builder... konto) {
         var kontoer = new Kontoer.Builder();
         for (var k : konto) {
-            kontoer.leggTilKonto(k);
+            kontoer.konto(k);
         }
         return kontoer;
     }
@@ -75,29 +75,29 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     @Test
     void skal_kunne_håndtere_ulikt_antall_dager_gjenværende_på_arbeidsforhold_ved_manglende_søkt_periode() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 25));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 25));
         var arbeid = new Arbeid.Builder()
-                .leggTilArbeidsforhold(new Arbeidsforhold(forFrilans()))
-                .leggTilArbeidsforhold(new Arbeidsforhold(forSelvstendigNæringsdrivende()));
+                .arbeidsforhold(new Arbeidsforhold(forFrilans()))
+                .arbeidsforhold(new Arbeidsforhold(forSelvstendigNæringsdrivende()));
         //En fastsatt periode for å få ulikt antall saldo
         var fastsattPeriode = new FastsattUttakPeriode.Builder()
-                .medTidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6))
-                .medAktiviteter(List.of(
+                .tidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(6))
+                .aktiviteter(List.of(
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FORELDREPENGER, forFrilans()),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FORELDREPENGER, forSelvstendigNæringsdrivende())))
-                .medPeriodeResultatType(INNVILGET);
+                .periodeResultatType(INNVILGET);
         //SKal gå tom for dager på frilans før aktiviteten med sn
         var periodeMedAvklartMorsAktivitet = new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(100), PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET);
         var søknad = søknad(FØDSEL,
                 oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100)))
-                .medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(periodeMedAvklartMorsAktivitet));
-        var grunnlag = basicGrunnlagFar(fødselsdato).medSøknad(søknad)
-                .medKontoer(kontoer)
-                .medArbeid(arbeid)
-                .medRettOgOmsorg(bareFarRett())
-                .medRevurdering(new Revurdering.Builder().medEndringsdato(fødselsdato)
-                        .medGjeldendeVedtak(new Vedtak.Builder().leggTilPeriode(fastsattPeriode)))
+                .dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(periodeMedAvklartMorsAktivitet));
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad)
+                .kontoer(kontoer)
+                .arbeid(arbeid)
+                .rettOgOmsorg(bareFarRett())
+                .revurdering(new Revurdering.Builder().endringsdato(fødselsdato)
+                        .gjeldendeVedtak(new Vedtak.Builder().leggTilPeriode(fastsattPeriode)))
                 .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -115,19 +115,19 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var tilkommetArbeidsforhold = forArbeid(new Orgnummer("000000001"), "1234");
 
         var startdatoNyttArbeidsforhold = fødselsdato.plusWeeks(12);
-        var dok = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        var dok = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(fødselsdato, fødselsdato.plusWeeks(20), PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medArbeid(new Arbeid.Builder()
-                        .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold))
-                        .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold, startdatoNyttArbeidsforhold)))
-                .medKontoer(kontoer(konto(FORELDREPENGER, 100)))
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(bareFarRett())
-                .medSøknad(new Søknad.Builder().medType(FØDSEL).medDokumentasjon(dok)
-                        .leggTilOppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1))));
+                .arbeid(new Arbeid.Builder()
+                        .arbeidsforhold(new Arbeidsforhold(arbeidsforhold))
+                        .arbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold, startdatoNyttArbeidsforhold)))
+                .kontoer(kontoer(konto(FORELDREPENGER, 100)))
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .behandling(farBehandling())
+                .rettOgOmsorg(bareFarRett())
+                .søknad(new Søknad.Builder().type(FØDSEL).dokumentasjon(dok)
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1))));
 
         var perioder = fastsettPerioder(grunnlag);
 

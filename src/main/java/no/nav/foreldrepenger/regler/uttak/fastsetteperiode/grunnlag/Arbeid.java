@@ -43,7 +43,7 @@ public final class Arbeid {
 
         private final Arbeid kladd = new Arbeid();
 
-        public Builder leggTilArbeidsforhold(Arbeidsforhold arbeidsforhold) {
+        public Builder arbeidsforhold(Arbeidsforhold arbeidsforhold) {
             kladd.arbeidsforholdListe.add(arbeidsforhold);
             return this;
         }

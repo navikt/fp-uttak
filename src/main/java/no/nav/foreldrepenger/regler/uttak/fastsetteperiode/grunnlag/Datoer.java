@@ -46,22 +46,22 @@ public final class Datoer {
     public static class Builder {
         private final Datoer kladd = new Datoer();
 
-        public Builder medFødsel(LocalDate fødsel) {
+        public Builder fødsel(LocalDate fødsel) {
             kladd.fødsel = fødsel;
             return this;
         }
 
-        public Builder medTermin(LocalDate termin) {
+        public Builder termin(LocalDate termin) {
             kladd.termin = termin;
             return this;
         }
 
-        public Builder medOmsorgsovertakelse(LocalDate omsorgsovertakelse) {
+        public Builder omsorgsovertakelse(LocalDate omsorgsovertakelse) {
             kladd.omsorgsovertakelse = omsorgsovertakelse;
             return this;
         }
 
-        public Builder medDødsdatoer(Dødsdatoer.Builder dødsdatoer) {
+        public Builder dødsdatoer(Dødsdatoer.Builder dødsdatoer) {
             kladd.dødsdatoer = dødsdatoer == null ? null : dødsdatoer.build();
             return this;
         }

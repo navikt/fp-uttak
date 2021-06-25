@@ -21,8 +21,8 @@ class SøknadsfristRegelOrkestreringTest {
     void søknadOmUttakInnenforSøknadsfristSkalGiOppfyltResultat() {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
-                .medSøknadMottattDato(nå.with(lastDayOfMonth()))
-                .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
+                .søknadMottattDato(nå.with(lastDayOfMonth()))
+                .førsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
                 .build();
 
         var regelOrkestrering = new SøknadsfristRegelOrkestrering();
@@ -35,8 +35,8 @@ class SøknadsfristRegelOrkestreringTest {
     void resultat_skal_inneholde_sporing_i_json() throws IOException {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
-                .medSøknadMottattDato(nå.with(lastDayOfMonth()))
-                .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
+                .søknadMottattDato(nå.with(lastDayOfMonth()))
+                .førsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
                 .build();
 
         var regelOrkestrering = new SøknadsfristRegelOrkestrering();
@@ -50,8 +50,8 @@ class SøknadsfristRegelOrkestreringTest {
     void søknadOmUttakUtenforSøknadsfristSkalGiIkkeOppfyltOgAksjonskode() {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
-                .medSøknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
-                .medFørsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
+                .søknadMottattDato(nå.plusMonths(1).with(firstDayOfMonth()))
+                .førsteUttaksdato(nå.minusMonths(3).withDayOfMonth(1))
                 .build();
 
         var regelOrkestrering = new SøknadsfristRegelOrkestrering();
@@ -69,8 +69,8 @@ class SøknadsfristRegelOrkestreringTest {
     void søknadOmBareUtsettelseSkalGiOppfyltResultat() {
         var nå = LocalDate.now();
         var grunnlag = SøknadsfristGrunnlag.builder()
-                .medSøknadMottattDato(nå.with(lastDayOfMonth()))
-                .medFørsteUttaksdato(null)
+                .søknadMottattDato(nå.with(lastDayOfMonth()))
+                .førsteUttaksdato(null)
                 .build();
 
         var regelOrkestrering = new SøknadsfristRegelOrkestrering();

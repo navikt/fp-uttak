@@ -291,12 +291,13 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private FastsattUttakPeriode map(UttakPeriode periode) {
-        return new FastsattUttakPeriode.Builder().medTidsperiode(periode.getFom(), periode.getTom())
-                .medAktiviteter(mapAktiviteter(periode))
-                .medFlerbarnsdager(periode.isFlerbarnsdager())
-                .medOppholdÅrsak(periode.getOppholdÅrsak())
-                .medSamtidigUttak(periode.erSamtidigUttak())
-                .medPeriodeResultatType(periode.getPerioderesultattype())
+        return new FastsattUttakPeriode.Builder()
+                .tidsperiode(periode.getFom(), periode.getTom())
+                .aktiviteter(mapAktiviteter(periode))
+                .flerbarnsdager(periode.isFlerbarnsdager())
+                .oppholdÅrsak(periode.getOppholdÅrsak())
+                .samtidigUttak(periode.erSamtidigUttak())
+                .periodeResultatType(periode.getPerioderesultattype())
                 .build();
     }
 

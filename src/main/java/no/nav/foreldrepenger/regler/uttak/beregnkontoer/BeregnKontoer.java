@@ -61,14 +61,14 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
 
         return rs.hvisRegel(SjekkOmMorHarAleneomsorg.ID, "Sjekk om mor har aleneomsorg?")
                 .hvis(new SjekkOmMorHarAleneomsorg(),
-                        opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().medBerettiget(Konfigurasjonsfaktorer.Berettiget.MOR)))
+                        opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.MOR)))
                 .ellers(sjekkFarAleneomsorgNode(rs));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkKunFarRettNode(Ruleset<BeregnKontoerGrunnlag> rs) {
         RuleReasonRef ingenOpptjentRett = new RuleReasonRefImpl("", "Hverken far eller mor har opptjent rett til foreldrepenger.");
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, "Sjekk om kun far har rett til foreldrepenger?")
-                .hvis(new SjekkOmBareFarHarRett(), opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().medBerettiget(
+                .hvis(new SjekkOmBareFarHarRett(), opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().berettiget(
                         Konfigurasjonsfaktorer.Berettiget.FAR))/*opprettKontoerForBareFarHarRettTilForeldrepenger(rs)*/)
                 .ellers(new IkkeOppfylt<>(ingenOpptjentRett));
     }
@@ -76,21 +76,21 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     private Specification<BeregnKontoerGrunnlag> sjekkKunMorRettNode(Ruleset<BeregnKontoerGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBareMorHarRett.ID, "Sjekk om kun mor har rett til foreldrepenger?")
                 .hvis(new SjekkOmBareMorHarRett(),
-                        opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().medBerettiget(Konfigurasjonsfaktorer.Berettiget.MOR)))
+                        opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.MOR)))
                 .ellers(sjekkKunFarRettNode(rs));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkBeggeRettNode(Ruleset<BeregnKontoerGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBådeMorOgFarHarRett.ID, "Sjekk om begge har opptjent rett til foreldrepenger?")
                 .hvis(new SjekkOmBådeMorOgFarHarRett(), opprettKontoer(rs,
-                        new Konfigurasjonsfaktorer.Builder().medBerettiget(Konfigurasjonsfaktorer.Berettiget.BEGGE)))
+                        new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.BEGGE)))
                 .ellers(sjekkKunMorRettNode(rs));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkFarAleneomsorgNode(Ruleset<BeregnKontoerGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmFarHarAleneomsorg.ID, "Sjekk om far har aleneomsorg?")
                 .hvis(new SjekkOmFarHarAleneomsorg(), opprettKontoer(rs,
-                        new Konfigurasjonsfaktorer.Builder().medBerettiget(Konfigurasjonsfaktorer.Berettiget.FAR_ALENE)))
+                        new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.FAR_ALENE)))
                 .ellers(sjekkBeggeRettNode(rs));
     }
 
@@ -99,7 +99,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
 
         return rs.hvisRegel(SjekkOmMerEnnEttBarn.ID, SJEKK_OM_MER_ENN_ETT_BARN)
                 .hvis(new SjekkOmMerEnnEttBarn(), sjekkOmToBarnNode(rs, konfigfaktorBuilder))
-                .ellers(sjekk100ProsentNode(rs, konfigfaktorBuilder.medAntallLevendeBarn(1)));
+                .ellers(sjekk100ProsentNode(rs, konfigfaktorBuilder.antallLevendeBarn(1)));
     }
 
     private Kontokonfigurasjon[] byggKonfigurasjon(Konfigurasjonsfaktorer faktorer) {
@@ -164,22 +164,22 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
                                                                  Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
         return rs.hvisRegel(SjekkOmFødsel.ID, SJEKK_OM_DET_ER_FØDSEL)
                 .hvis(new SjekkOmFødsel(),
-                        new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.medErFødsel(true).build())))
-                .ellers(new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.medErFødsel(false).build())));
+                        new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.erFødsel(true).build())))
+                .ellers(new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.erFødsel(false).build())));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekk100ProsentNode(Ruleset<BeregnKontoerGrunnlag> rs,
                                                                      Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
         return rs.hvisRegel(SjekkOmDekningsgradEr100.ID, SJEKK_OM_100_PROSENT_DEKNINGSGRAD)
-                .hvis(new SjekkOmDekningsgradEr100(), sjekkFødselNode(rs, konfigfaktorBuilder.medEr100Prosent(true)))
-                .ellers(sjekkFødselNode(rs, konfigfaktorBuilder.medEr100Prosent(false)));
+                .hvis(new SjekkOmDekningsgradEr100(), sjekkFødselNode(rs, konfigfaktorBuilder.er100Prosent(true)))
+                .ellers(sjekkFødselNode(rs, konfigfaktorBuilder.er100Prosent(false)));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkOmToBarnNode(Ruleset<BeregnKontoerGrunnlag> rs,
                                                                    Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
         return rs.hvisRegel(SjekkOmToBarn.ID, SJEKK_OM_TO_BARN)
-                .hvis(new SjekkOmToBarn(), sjekk100ProsentNode(rs, konfigfaktorBuilder.medAntallLevendeBarn(2)))
-                .ellers(sjekk100ProsentNode(rs, konfigfaktorBuilder.medAntallLevendeBarn(3)));
+                .hvis(new SjekkOmToBarn(), sjekk100ProsentNode(rs, konfigfaktorBuilder.antallLevendeBarn(2)))
+                .ellers(sjekk100ProsentNode(rs, konfigfaktorBuilder.antallLevendeBarn(3)));
     }
 
 }

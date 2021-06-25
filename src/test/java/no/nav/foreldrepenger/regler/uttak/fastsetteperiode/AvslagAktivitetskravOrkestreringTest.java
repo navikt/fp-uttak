@@ -49,15 +49,15 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
         var oppgittPeriode = fellesperiode(fødselsdato, MorsAktivitet.UFØRE);
-        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(oppgittPeriode);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(søknad)
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(beggeRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
     }
@@ -67,15 +67,15 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
         var oppgittPeriode = fellesperiode(fødselsdato, null);
-        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(oppgittPeriode);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(søknad)
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(beggeRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(
                 Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
@@ -84,25 +84,25 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     @Test
     void kun_far_har_rett() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(10), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
                 MorsAktivitet.UTDANNING);
-        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(),
                         IKKE_I_AKTIVITET_IKKE_DOKUMENTERT));
-        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                .leggTilOppgittPeriode(oppgittPeriode)
-                .medDokumentasjon(dokumentasjon);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode)
+                .dokumentasjon(dokumentasjon);
 
-        var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
-                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(bareFarRett())
-                .medSøknad(søknad)
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
@@ -113,24 +113,24 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     @Test
     void far_søker_utsettelse_sammenhengende_uttak() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
                 PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
-        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), IKKE_I_AKTIVITET_DOKUMENTERT));
-        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                .leggTilOppgittPeriode(oppgittPeriode)
-                .medDokumentasjon(dokumentasjon);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode)
+                .dokumentasjon(dokumentasjon);
 
         var grunnlag = new RegelGrunnlag.Builder()
-                .medBehandling(farBehandling().medKreverSammenhengendeUttak(true))
-                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(bareFarRett())
-                .medSøknad(søknad)
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+                .behandling(farBehandling().kreverSammenhengendeUttak(true))
+                .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
@@ -141,24 +141,24 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     @Test
     void far_søker_utsettelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
                 PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
-        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), IKKE_I_AKTIVITET_DOKUMENTERT));
-        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                .leggTilOppgittPeriode(oppgittPeriode)
-                .medDokumentasjon(dokumentasjon);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode)
+                .dokumentasjon(dokumentasjon);
 
         var grunnlag = new RegelGrunnlag.Builder()
-                .medBehandling(farBehandling())
-                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(bareFarRett())
-                .medSøknad(søknad)
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+                .behandling(farBehandling())
+                .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
@@ -167,7 +167,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     private Kontoer.Builder kontoerMedFellesperiode() {
-        return new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(50));
+        return new Kontoer.Builder().konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(50));
     }
 
     private OppgittPeriode fellesperiode(LocalDate fødselsdato, MorsAktivitet utdanning) {
@@ -218,19 +218,19 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
         var oppgittPeriode = fellesperiode(fødselsdato, morsAktivitet);
-        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(oppgittPeriode);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        søknad.medDokumentasjon(new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        søknad.dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), avklaringsResultat)));
 
 
-        var grunnlag = new RegelGrunnlag.Builder().medBehandling(farBehandling())
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(søknad)
-                .medInngangsvilkår(oppfyltAlleVilkår())
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(beggeRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
 
         assertThat(fastsattePerioder).hasSize(1);
