@@ -37,15 +37,15 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
     @Test
     void fellesperiode_mor_etter_uke_7_etter_fødsel_uten_nok_dager_blir_innvilget_med_knekk_og_avslått_periode_på_resten() {
-        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(1000))
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(1000))
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(4 * 5));
-        basicGrunnlagMor().medSøknad(søknad(Søknadstype.FØDSEL,
+        var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(1000))
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(1000))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(4 * 5));
+        basicGrunnlagMor().søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1))))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -62,19 +62,19 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     }
 
     private Kontoer.Builder fellesperiodeKonto(int trekkdager) {
-        return new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(trekkdager));
+        return new Kontoer.Builder().konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(trekkdager));
     }
 
     @Test
     void fellesperiode_far_etter_uke_6_blir_innvilget_pga_oppfyller_aktivitetskravet() {
         var kontoer = fellesperiodeKonto(4 * 5);
         var oppgittPeriode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15));
-        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), I_AKTIVITET));
-        var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode).medDokumentasjon(dokumentasjon);
-        var grunnlag = basicGrunnlagFar().medSøknad(søknad)
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+        var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode).dokumentasjon(dokumentasjon);
+        var grunnlag = basicGrunnlagFar().søknad(søknad)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -88,7 +88,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     void for_tidlig_fellesperiode_far_blir_knekt_og_må_behandles_manuelt() {
         var periode = oppgittPeriode(FELLESPERIODE, fødselsdato.minusWeeks(5), fødselsdato.plusWeeks(1), false, null,
                 PeriodeVurderingType.PERIODE_OK);
-        basicGrunnlagFar().medSøknad(søknad(Søknadstype.FØDSEL, periode));
+        basicGrunnlagFar().søknad(søknad(Søknadstype.FØDSEL, periode));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -104,16 +104,16 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
     @Test
     void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_etter_3_uker_før_fødsel_blir_innvilget_med_knekk_ved_3_uker_resten_blir_manuell_behandling() {
-        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(3 * 5))
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(15 * 5))
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(16 * 5));
+        var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(3 * 5))
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(15 * 5))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(16 * 5));
 
-        var grunnlag = basicGrunnlagMor().medSøknad(søknad(Søknadstype.FØDSEL,
+        var grunnlag = basicGrunnlagMor().søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(FELLESPERIODE, fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(1).minusDays(1)),
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1)),
                 oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .medKontoer(kontoer);
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -130,13 +130,13 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
     @Test
     void fellesperiode_mor_uttak_starter_ved_3_uker_etter_fødsel_blir_knekt_ved_6_uker_og_må_behandles_manuelt() {
-        var kontoer = new Kontoer.Builder().leggTilKonto(
-                new Konto.Builder().medTrekkdager(15).medType(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
-                .leggTilKonto(new Konto.Builder().medTrekkdager(50).medType(Stønadskontotype.MØDREKVOTE))
-                .leggTilKonto(new Konto.Builder().medTrekkdager(13 * 5).medType(Stønadskontotype.FELLESPERIODE));
+        var kontoer = new Kontoer.Builder().konto(
+                new Konto.Builder().trekkdager(15).type(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
+                .konto(new Konto.Builder().trekkdager(50).type(Stønadskontotype.MØDREKVOTE))
+                .konto(new Konto.Builder().trekkdager(13 * 5).type(Stønadskontotype.FELLESPERIODE));
         var søknad = søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10).minusDays(1)));
-        var grunnlag = basicGrunnlagMor().medSøknad(søknad).medKontoer(kontoer);
+        var grunnlag = basicGrunnlagMor().søknad(søknad).kontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -151,11 +151,11 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
     @Test
     void fellesperiode_mor_uttak_starter_før_12_uker_blir_avslått_med_knekk_ved_12_uker_før_fødsel() {
-        var kontoer = new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(1000))
-                .leggTilKonto(new Konto.Builder().medType(Stønadskontotype.FELLESPERIODE).medTrekkdager(13 * 5));
-        basicGrunnlagMor().medSøknad(
-                søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.minusWeeks(13), fødselsdato)))
-                .medKontoer(kontoer);
+        var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(1000))
+                .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(13 * 5));
+        basicGrunnlagMor()
+                .søknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.minusWeeks(13), fødselsdato)))
+                .kontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -175,9 +175,9 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     @Test
     void innvilge_fellesperiode_14_uker_før_fødsel_men_ikke_12_uker_før_termin_ved_terminsøknad() {
         var termin = LocalDate.of(2020, 6, 10);
-        var grunnlag = basicGrunnlagMor().medDatoer(new Datoer.Builder().medTermin(termin).medFødsel(termin.plusWeeks(2)))
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.TERMIN)
-                        .medOppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(15),
+        var grunnlag = basicGrunnlagMor().datoer(new Datoer.Builder().termin(termin).fødsel(termin.plusWeeks(2)))
+                .søknad(new Søknad.Builder().type(Søknadstype.TERMIN)
+                        .oppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(15),
                                 termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
                                         null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
@@ -198,9 +198,9 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     @Test
     void avslå_fellesperiode_mer_enn_12_uker_før_fødsel_ved_fødselsøknad() {
         var termin = LocalDate.of(2020, 6, 10);
-        var grunnlag = basicGrunnlagMor().medDatoer(new Datoer.Builder().medTermin(termin).medFødsel(termin.plusWeeks(2)))
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .medOppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(12),
+        var grunnlag = basicGrunnlagMor().datoer(new Datoer.Builder().termin(termin).fødsel(termin.plusWeeks(2)))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittePerioder(List.of(OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(12),
                                 termin.minusWeeks(3).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
                                 OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1),
                                         null, false, PeriodeVurderingType.IKKE_VURDERT, null, null, null),
@@ -213,14 +213,14 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor() {
-        return basicGrunnlag().medBehandling(morBehandling());
+        return basicGrunnlag().behandling(morBehandling());
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar() {
-        return basicGrunnlag().medBehandling(farBehandling());
+        return basicGrunnlag().behandling(farBehandling());
     }
 
     private RegelGrunnlag.Builder basicGrunnlag() {
-        return grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato)).medRettOgOmsorg(beggeRett());
+        return grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
     }
 }

@@ -31,18 +31,18 @@ class RegelResultatBehandlerTest {
 
     @Test
     void skal_knekke_på_riktig_datoer_ved_avslag() {
-        var kontoer = new Kontoer.Builder().leggTilKonto(
-                new Konto.Builder().medTrekkdager(1000).medType(Stønadskontotype.FELLESPERIODE));
+        var kontoer = new Kontoer.Builder().konto(
+                new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FELLESPERIODE));
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet());
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom, null, false,
                 PeriodeVurderingType.IKKE_VURDERT, null, null, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(oppgittPeriode))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(false))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
-                .medKontoer(kontoer)
+                .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(false))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
+                .kontoer(kontoer)
                 .build();
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),

@@ -91,10 +91,10 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
     }
 
     private FastsettePeriodeGrunnlagImpl grunnlag(LocalDate familiehendelse, LocalDate periodeFom, LocalDate periodeTom) {
-        var datoer = new Datoer.Builder().medFødsel(familiehendelse);
+        var datoer = new Datoer.Builder().fødsel(familiehendelse);
         var regelGrunnlag = new RegelGrunnlag.Builder()
-                .medDatoer(datoer)
-                .medSøknad(new Søknad.Builder().medType(FØDSEL))
+                .datoer(datoer)
+                .søknad(new Søknad.Builder().type(FØDSEL))
                 .build();
         var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom, IKKE_VURDERT,
                 INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT);

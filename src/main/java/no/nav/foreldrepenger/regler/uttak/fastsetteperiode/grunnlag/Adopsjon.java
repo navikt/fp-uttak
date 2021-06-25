@@ -21,12 +21,12 @@ public final class Adopsjon {
     public static class Builder {
         private final Adopsjon kladd = new Adopsjon();
 
-        public Builder medAnkomstNorge(LocalDate ankomstNorge) {
+        public Builder ankomstNorge(LocalDate ankomstNorge) {
             kladd.ankomstNorge = ankomstNorge;
             return this;
         }
 
-        public Builder medStebarnsadopsjon(boolean stebarnsadopsjon) {
+        public Builder stebarnsadopsjon(boolean stebarnsadopsjon) {
             kladd.stebarnsadopsjon = stebarnsadopsjon;
             return this;
         }

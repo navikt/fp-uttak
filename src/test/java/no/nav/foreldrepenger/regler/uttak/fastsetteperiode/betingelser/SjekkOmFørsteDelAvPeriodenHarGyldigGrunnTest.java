@@ -25,8 +25,8 @@ class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
 
         var msp = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(msp)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                .søknad(new Søknad.Builder().oppgittPeriode(msp)
+                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(periodeStart, periodeStart.plusDays(1)))))
                 .build();
 
@@ -40,8 +40,8 @@ class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
 
         var msp = OppgittPeriode.forManglendeSøkt(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(msp)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                .søknad(new Søknad.Builder().oppgittPeriode(msp)
+                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(periodeSlutt.minusDays(2), periodeSlutt))))
                 .build();
 

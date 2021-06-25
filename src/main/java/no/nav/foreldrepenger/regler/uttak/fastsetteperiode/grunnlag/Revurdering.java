@@ -22,12 +22,12 @@ public final class Revurdering {
 
         private final Revurdering kladd = new Revurdering();
 
-        public Builder medEndringsdato(LocalDate endringsdato) {
+        public Builder endringsdato(LocalDate endringsdato) {
             this.kladd.endringsdato = endringsdato;
             return this;
         }
 
-        public Builder medGjeldendeVedtak(Vedtak.Builder vedtak) {
+        public Builder gjeldendeVedtak(Vedtak.Builder vedtak) {
             kladd.gjeldendeVedtak = vedtak == null ? null : vedtak.build();
             return this;
         }

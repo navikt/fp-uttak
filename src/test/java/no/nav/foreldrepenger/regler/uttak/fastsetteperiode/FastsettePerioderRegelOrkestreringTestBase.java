@@ -42,27 +42,27 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
     protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-            .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL))
-            .medBehandling(morBehandling())
-            .medKontoer(defaultKontoer())
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-            .medInngangsvilkår(oppfyltAlleVilkår());
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .behandling(morBehandling())
+            .kontoer(defaultKontoer())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .inngangsvilkår(oppfyltAlleVilkår());
 
     Kontoer.Builder defaultKontoer() {
-        return new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(FORELDREPENGER_FØR_FØDSEL).medTrekkdager(15))
-                .leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130));
+        return new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
+                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
     }
 
     protected final RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
-            .medSøknad(new Søknad.Builder().medType(Søknadstype.ADOPSJON))
-            .medBehandling(morBehandling())
-            .medKontoer(new Kontoer.Builder().leggTilKonto(new Konto.Builder().medType(MØDREKVOTE).medTrekkdager(50))
-                    .leggTilKonto(new Konto.Builder().medType(FEDREKVOTE).medTrekkdager(50))
-                    .leggTilKonto(new Konto.Builder().medType(FELLESPERIODE).medTrekkdager(130)))
-            .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-            .medInngangsvilkår(oppfyltAlleVilkår());
+            .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
+            .behandling(morBehandling())
+            .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
+                    .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
+                    .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130)))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .inngangsvilkår(oppfyltAlleVilkår());
 
 
     void verifiserPeriode(UttakPeriode periode,
@@ -104,9 +104,9 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Søknad.Builder søknad(Søknadstype søknadstype, OppgittPeriode... perioder) {
-        var builder = new Søknad.Builder().medType(søknadstype);
+        var builder = new Søknad.Builder().type(søknadstype);
         for (var oppgittPeriode : perioder) {
-            builder.leggTilOppgittPeriode(oppgittPeriode);
+            builder.oppgittPeriode(oppgittPeriode);
         }
         return builder;
     }
@@ -147,35 +147,35 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato).medBehandling(morBehandling());
+        return basicGrunnlag(fødselsdato).behandling(morBehandling());
     }
 
     Behandling.Builder morBehandling() {
-        return new Behandling.Builder().medSøkerErMor(true);
+        return new Behandling.Builder().søkerErMor(true);
     }
 
     Behandling.Builder farBehandling() {
-        return new Behandling.Builder().medSøkerErMor(false);
+        return new Behandling.Builder().søkerErMor(false);
     }
 
     RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato).medBehandling(farBehandling());
+        return basicGrunnlag(fødselsdato).behandling(farBehandling());
     }
 
     RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
-        return grunnlag.medDatoer(new Datoer.Builder().medFødsel(fødselsdato)).medRettOgOmsorg(beggeRett());
+        return grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
     }
 
     Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {
-        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(antallDager);
+        return new Konto.Builder().type(stønadskontotype).trekkdager(antallDager);
     }
 
     RettOgOmsorg.Builder beggeRett() {
-        return new RettOgOmsorg.Builder().medSamtykke(true).medMorHarRett(true).medFarHarRett(true);
+        return new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true);
     }
 
     RettOgOmsorg.Builder bareFarRett() {
-        return new RettOgOmsorg.Builder().medSamtykke(true).medMorHarRett(false).medFarHarRett(true);
+        return new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true);
     }
 
     OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
@@ -183,14 +183,14 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {
-        return new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
-                .medForeldreansvarnOppfylt(true)
-                .medFødselOppfylt(true)
-                .medOpptjeningOppfylt(true);
+        return new Inngangsvilkår.Builder().adopsjonOppfylt(true)
+                .foreldreansvarnOppfylt(true)
+                .fødselOppfylt(true)
+                .opptjeningOppfylt(true);
     }
 
     RettOgOmsorg.Builder aleneomsorg() {
-        return beggeRett().medAleneomsorg(true);
+        return beggeRett().aleneomsorg(true);
     }
 
     List<FastsettePeriodeResultat> fastsettPerioder(RegelGrunnlag grunnlag) {

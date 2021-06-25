@@ -74,7 +74,7 @@ public class BeregnKontoerGrunnlag {
     public static class Builder {
         private final BeregnKontoerGrunnlag kladd = new BeregnKontoerGrunnlag();
 
-        public Builder medAntallBarn(int antallBarn) {
+        public Builder antallBarn(int antallBarn) {
             kladd.antallBarn = antallBarn;
             return this;
         }
@@ -89,7 +89,7 @@ public class BeregnKontoerGrunnlag {
             return this;
         }
 
-        public Builder medDekningsgrad(Dekningsgrad dekningsgrad) {
+        public Builder dekningsgrad(Dekningsgrad dekningsgrad) {
             kladd.dekningsgrad = dekningsgrad;
             return this;
         }
@@ -104,17 +104,17 @@ public class BeregnKontoerGrunnlag {
             return this;
         }
 
-        public Builder medFødselsdato(LocalDate dato) {
+        public Builder fødselsdato(LocalDate dato) {
             kladd.fødselsdato = dato;
             return this;
         }
 
-        public Builder medTermindato(LocalDate dato) {
+        public Builder termindato(LocalDate dato) {
             kladd.termindato = dato;
             return this;
         }
 
-        public Builder medOmsorgsovertakelseDato(LocalDate dato) {
+        public Builder omsorgsovertakelseDato(LocalDate dato) {
             kladd.omsorgsovertakelseDato = dato;
             return this;
         }

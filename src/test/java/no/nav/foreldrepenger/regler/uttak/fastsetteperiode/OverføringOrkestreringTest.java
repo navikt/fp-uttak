@@ -43,15 +43,15 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11), PERIODE_OK,
                 INNLEGGELSE, fødselsdato, fødselsdato);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10))
-                .leggTilKonto(konto(MØDREKVOTE, 30))
-                .leggTilKonto(konto(FELLESPERIODE, 15))
-                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
-        var dok = new Dokumentasjon.Builder().leggPeriodeMedInnleggelse(
+        var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
+                .konto(konto(MØDREKVOTE, 30))
+                .konto(konto(FELLESPERIODE, 15))
+                .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
+        var dok = new Dokumentasjon.Builder().periodeMedInnleggelse(
                 new PeriodeMedInnleggelse(overføring.getFom(), overføring.getTom()))
-                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()));
-        var grunnlag = basicGrunnlagMor(fødselsdato).medKontoer(kontoer)
-                .medSøknad(søknad(FØDSEL, mødrekvote, fellesperiode, overføring).medDokumentasjon(dok));
+                .gyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()));
+        var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
+                .søknad(søknad(FØDSEL, mødrekvote, fellesperiode, overføring).dokumentasjon(dok));
         var resultat = fastsettPerioder(grunnlag);
 
         //         1. mk
@@ -76,19 +76,19 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var fedrekvote = oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(14), PERIODE_OK,
                 SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FEDREKVOTE, 10))
-                .leggTilKonto(konto(MØDREKVOTE, 40))
-                .leggTilKonto(konto(FELLESPERIODE, 15))
-                .leggTilKonto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
-        var dok = new Dokumentasjon.Builder().leggPeriodeMedSykdomEllerSkade(
+        var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
+                .konto(konto(MØDREKVOTE, 40))
+                .konto(konto(FELLESPERIODE, 15))
+                .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
+        var dok = new Dokumentasjon.Builder().periodeMedSykdomEllerSkade(
                 new PeriodeMedSykdomEllerSkade(overføring.getFom(), overføring.getTom()))
-                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()));
+                .gyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()));
         var annenPart = new AnnenPart.Builder()
-                .leggTilUttaksperiode(innvilget(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MØDREKVOTE))
-                .leggTilUttaksperiode(innvilget(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1), FELLESPERIODE));
-        var grunnlag = basicGrunnlagFar(fødselsdato).medKontoer(kontoer)
-                .medSøknad(søknad(FØDSEL, fedrekvote, overføring).medDokumentasjon(dok))
-                .medAnnenPart(annenPart);
+                .uttaksperiode(innvilget(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MØDREKVOTE))
+                .uttaksperiode(innvilget(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1), FELLESPERIODE));
+        var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer)
+                .søknad(søknad(FØDSEL, fedrekvote, overføring).dokumentasjon(dok))
+                .annenPart(annenPart);
         var resultat = fastsettPerioder(grunnlag);
 
         //         1. fk
@@ -108,6 +108,6 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     private AnnenpartUttakPeriode innvilget(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype) {
         var aktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), stønadskontotype,
                 new Trekkdager(Virkedager.beregnAntallVirkedager(new Periode(fom, tom))), Utbetalingsgrad.FULL);
-        return AnnenpartUttakPeriode.Builder.uttak(fom, tom).medInnvilget(true).medUttakPeriodeAktivitet(aktivitet).build();
+        return AnnenpartUttakPeriode.Builder.uttak(fom, tom).innvilget(true).uttakPeriodeAktivitet(aktivitet).build();
     }
 }

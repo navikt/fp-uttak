@@ -36,11 +36,11 @@ class FellesperiodeMedGraderingTest {
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
                 BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
+        var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        var grunnlag = basicGrunnlag().medKontoer(kontoer)
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(aktuellPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
+        var grunnlag = basicGrunnlag().kontoer(kontoer)
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(aktuellPeriode))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
                 .build();
 
         var regelresultat = kjørRegel(aktuellPeriode, grunnlag);
@@ -54,11 +54,11 @@ class FellesperiodeMedGraderingTest {
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
                 BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
+        var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        var grunnlag = basicGrunnlag().medKontoer(kontoer)
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(aktuellPeriode))
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(arbeidsforhold))
+        var grunnlag = basicGrunnlag().kontoer(kontoer)
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(aktuellPeriode))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
                 .build();
 
         var regelresultat = kjørRegel(aktuellPeriode, grunnlag);
@@ -67,17 +67,17 @@ class FellesperiodeMedGraderingTest {
     }
 
     private Konto.Builder konto(Stønadskontotype stønadskontotype, int trekkdager) {
-        return new Konto.Builder().medType(stønadskontotype).medTrekkdager(trekkdager);
+        return new Konto.Builder().type(stønadskontotype).trekkdager(trekkdager);
     }
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medFarHarRett(true).medMorHarRett(true).medSamtykke(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
-                        .medForeldreansvarnOppfylt(true)
-                        .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true));
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).samtykke(true))
+                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 }

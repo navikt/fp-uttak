@@ -42,20 +42,20 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
          */
         var periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder().uttaksperiode(
                         annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                                 MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(
+                        .uttaksperiode(
                                 annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD,
                                         true))
-                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
+                        .uttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
                                 MOR_ARBEIDSFORHOLD, true)))
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
+                .behandling(farBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
+                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -69,20 +69,20 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void skal_ikke_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_avslått_samme_tidsrom() {
         var periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder().leggTilUttaksperiode(
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder().uttaksperiode(
                         annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                                 MOR_ARBEIDSFORHOLD, true))
-                        .leggTilUttaksperiode(
+                        .uttaksperiode(
                                 annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), MOR_ARBEIDSFORHOLD,
                                         true))
-                        .leggTilUttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
+                        .uttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
                                 MOR_ARBEIDSFORHOLD, false)))
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggPeriodeUtenOmsorg(periodeUtenOmsorg)));
+                .behandling(farBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
+                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -95,16 +95,16 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void skal_ikke_tape_hvis_søknad_mottatt_i_etterkant() {
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
                                 true, fødselsdato.plusWeeks(10)))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
                                 fødselsdato.plusWeeks(10))))
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
+                .behandling(farBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
                                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
                                 null)));
 
@@ -117,16 +117,16 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void skal_tape_hvis_søknad_mottatt_i_forkant() {
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
                                 true, fødselsdato.plusWeeks(14)))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
                                 fødselsdato.plusWeeks(14))))
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
+                .behandling(farBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
                                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
                                 null)));
 
@@ -140,21 +140,21 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void skal_tape_hvis_mor_søker_etter_far_samme_dag() {
         //Søkt samme dag, men mor har søkt etter far
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
                                 true, fødselsdato.plusWeeks(13)))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
                                 fødselsdato.plusWeeks(13)))
-                        .medSisteSøknadMottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(12, 12, 12)))
+                        .sisteSøknadMottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(12, 12, 12)))
                 )
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
+                .behandling(farBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
                                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
                                 null))
-                .medMottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(10, 10, 10))));
+                .mottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(10, 10, 10))));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -166,21 +166,21 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void skal_ikke_tape_hvis_mor_søker_før_far_samme_dag() {
         //Søkt samme dag, men mor har søkt etter far
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
                                 true, fødselsdato.plusWeeks(13)))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
                                 fødselsdato.plusWeeks(13)))
-                        .medSisteSøknadMottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(10, 10, 10)))
+                        .sisteSøknadMottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(10, 10, 10)))
                 )
-                .medBehandling(farBehandling())
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
+                .behandling(farBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
                                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
                                 null))
-                        .medMottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(12, 12, 12))));
+                        .mottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(12, 12, 12))));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -192,17 +192,17 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void skal_tape_hvis_far_har_søkt_etter_mor_men_det_er_berørt_behandling() {
         //Søkt samme dag, men mor har søkt etter far
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
-                .medAnnenPart(new AnnenPart.Builder()
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
                                 true, fødselsdato.plusWeeks(10)))
-                        .leggTilUttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
                                 fødselsdato.plusWeeks(10)))
                 )
-                .medBehandling(farBehandling().medErBerørtBehandling(true))
-                .medRettOgOmsorg(beggeRett())
-                .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
-                        .leggTilOppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
+                .behandling(farBehandling().berørtBehandling(true))
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
                                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
                                 null))
                 );
@@ -228,10 +228,10 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                                                    boolean innvilget,
                                                    LocalDate senestMottattDato) {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
-                .medUttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype,
+                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype,
                         new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), Utbetalingsgrad.TEN))
-                .medInnvilget(innvilget)
-                .medSenestMottattDato(senestMottattDato)
+                .innvilget(innvilget)
+                .senestMottattDato(senestMottattDato)
                 .build();
     }
 

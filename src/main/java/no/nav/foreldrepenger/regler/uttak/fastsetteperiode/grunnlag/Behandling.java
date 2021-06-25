@@ -30,17 +30,17 @@ public final class Behandling {
         private final Behandling kladd = new Behandling();
 
 
-        public Builder medSøkerErMor(boolean søkerErMor) {
+        public Builder søkerErMor(boolean søkerErMor) {
             kladd.søkerMor = søkerErMor;
             return this;
         }
 
-        public Builder medErBerørtBehandling(boolean berørtBehandling) {
+        public Builder berørtBehandling(boolean berørtBehandling) {
             kladd.berørtBehandling = berørtBehandling;
             return this;
         }
 
-        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+        public Builder kreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
             kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }

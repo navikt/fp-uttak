@@ -72,38 +72,38 @@ public class FastsattUttakPeriode {
             kladd = new FastsattUttakPeriode(periode);
         }
 
-        public Builder medPeriodeResultatType(Perioderesultattype perioderesultattype) {
+        public Builder periodeResultatType(Perioderesultattype perioderesultattype) {
             kladd.perioderesultattype = perioderesultattype;
             return this;
         }
 
-        public Builder medAktiviteter(List<FastsattUttakPeriodeAktivitet> aktiviteter) {
+        public Builder aktiviteter(List<FastsattUttakPeriodeAktivitet> aktiviteter) {
             kladd.aktiviteter = aktiviteter;
             return this;
         }
 
-        public Builder medFlerbarnsdager(boolean flerbarnsdager) {
+        public Builder flerbarnsdager(boolean flerbarnsdager) {
             kladd.flerbarnsdager = flerbarnsdager;
             return this;
         }
 
-        public Builder medOppholdÅrsak(OppholdÅrsak oppholdÅrsak) {
+        public Builder oppholdÅrsak(OppholdÅrsak oppholdÅrsak) {
             kladd.oppholdÅrsak = oppholdÅrsak;
             return this;
         }
 
-        public Builder medTidsperiode(LocalDate fom, LocalDate tom) {
+        public Builder tidsperiode(LocalDate fom, LocalDate tom) {
             kladd.fom = fom;
             kladd.tom = tom;
             return this;
         }
 
-        public Builder medSamtidigUttak(boolean samtidigUttak) {
+        public Builder samtidigUttak(boolean samtidigUttak) {
             kladd.samtidigUttak = samtidigUttak;
             return this;
         }
 
-        public Builder medMottattDato(LocalDate mottattDato) {
+        public Builder mottattDato(LocalDate mottattDato) {
             kladd.mottattDato = mottattDato;
             return this;
         }

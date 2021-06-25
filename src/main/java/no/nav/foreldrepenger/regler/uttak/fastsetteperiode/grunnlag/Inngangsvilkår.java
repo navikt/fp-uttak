@@ -31,22 +31,22 @@ public final class Inngangsvilkår {
 
         private final Inngangsvilkår kladd = new Inngangsvilkår();
 
-        public Builder medAdopsjonOppfylt(boolean oppfylt) {
+        public Builder adopsjonOppfylt(boolean oppfylt) {
             kladd.adopsjonOppfylt = oppfylt;
             return this;
         }
 
-        public Builder medForeldreansvarnOppfylt(boolean oppfylt) {
+        public Builder foreldreansvarnOppfylt(boolean oppfylt) {
             kladd.foreldreansvarOppfylt = oppfylt;
             return this;
         }
 
-        public Builder medFødselOppfylt(boolean oppfylt) {
+        public Builder fødselOppfylt(boolean oppfylt) {
             kladd.fødselOppfylt = oppfylt;
             return this;
         }
 
-        public Builder medOpptjeningOppfylt(boolean oppfylt) {
+        public Builder opptjeningOppfylt(boolean oppfylt) {
             kladd.opptjeningOppfylt = oppfylt;
             return this;
         }

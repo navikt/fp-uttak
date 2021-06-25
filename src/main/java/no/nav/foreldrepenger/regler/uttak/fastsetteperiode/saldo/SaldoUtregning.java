@@ -530,7 +530,7 @@ public class SaldoUtregning {
     }
 
     private FastsattUttakPeriode kopier(FastsattUttakPeriode periode, LocalDate nyFom, LocalDate nyTom) {
-        return new FastsattUttakPeriode.Builder(periode).medTidsperiode(nyFom, nyTom).build();
+        return new FastsattUttakPeriode.Builder(periode).tidsperiode(nyFom, nyTom).build();
     }
 
     private Optional<LocalDate> sisteUttaksdato(List<FastsattUttakPeriode> perioder) {

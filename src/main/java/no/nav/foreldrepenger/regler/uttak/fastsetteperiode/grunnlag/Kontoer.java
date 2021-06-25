@@ -21,12 +21,12 @@ public final class Kontoer {
 
         private final Kontoer kladd = new Kontoer();
 
-        public Builder leggTilKonto(Konto.Builder konto) {
+        public Builder konto(Konto.Builder konto) {
             kladd.kontoList.add(konto.build());
             return this;
         }
 
-        public Builder medKontoList(List<Konto.Builder> kontoList) {
+        public Builder kontoList(List<Konto.Builder> kontoList) {
             kladd.kontoList = kontoList.stream().map(Konto.Builder::build).collect(Collectors.toList());
             return this;
         }

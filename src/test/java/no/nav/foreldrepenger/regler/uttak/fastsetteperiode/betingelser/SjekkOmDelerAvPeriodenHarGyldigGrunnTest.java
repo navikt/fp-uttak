@@ -32,8 +32,8 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                .søknad(new Søknad.Builder().oppgittPeriode(søknadsperiode)
+                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
@@ -50,8 +50,8 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                .søknad(new Søknad.Builder().oppgittPeriode(søknadsperiode)
+                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
@@ -68,8 +68,8 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                .søknad(new Søknad.Builder().oppgittPeriode(søknadsperiode)
+                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(gyldigGrunnStart, gyldigGrunnSlutt))))
                 .build();
 
@@ -84,10 +84,10 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode)
-                        .medDokumentasjon(new Dokumentasjon.Builder().leggGyldigGrunnPeriode(
+                .søknad(new Søknad.Builder().oppgittPeriode(søknadsperiode)
+                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
                                 new GyldigGrunnPeriode(periodeStart.minusWeeks(1), periodeStart.minusDays(1)))
-                                .leggGyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
+                                .gyldigGrunnPeriode(new GyldigGrunnPeriode(periodeSlutt.plusDays(1), periodeSlutt.plusWeeks(1)))))
                 .build();
 
         var evaluation = evaluer(søknadsperiode, grunnlag);
@@ -101,7 +101,7 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
 
         var søknadsperiode = manglendeSøktPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .medSøknad(new Søknad.Builder().leggTilOppgittPeriode(søknadsperiode))
+                .søknad(new Søknad.Builder().oppgittPeriode(søknadsperiode))
                 .build();
 
         var evaluation = evaluer(søknadsperiode, grunnlag);

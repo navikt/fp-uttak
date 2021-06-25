@@ -26,12 +26,12 @@ public class SøknadsfristGrunnlag {
     public static class Builder {
         private final SøknadsfristGrunnlag kladd = new SøknadsfristGrunnlag();
 
-        public Builder medSøknadMottattDato(LocalDate søknadMottattDato) {
+        public Builder søknadMottattDato(LocalDate søknadMottattDato) {
             kladd.søknadMottattDato = søknadMottattDato;
             return this;
         }
 
-        public Builder medFørsteUttaksdato(LocalDate uttaksdato) {
+        public Builder førsteUttaksdato(LocalDate uttaksdato) {
             kladd.førsteUttaksdato = uttaksdato;
             return this;
         }

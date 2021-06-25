@@ -32,16 +32,16 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var arbeidsforhold2 = AktivitetIdentifikator.annenAktivitet();
         var arbeidsforhold3 = AktivitetIdentifikator.forFrilans();
         var arbeidsforhold4 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
-        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1, omsorgsovertakelse.minusYears(1)))
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1, omsorgsovertakelse.minusYears(1)))
                 //Ingen startdato på arbeidsforholdet skal tolkes som at arbeidsforholdet varer hele uttaket
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, omsorgsovertakelse.plusWeeks(8)))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold4, omsorgsovertakelse.plusWeeks(35)));
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold3, omsorgsovertakelse.plusWeeks(8)))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold4, omsorgsovertakelse.plusWeeks(35)));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, omsorgsovertakelse, omsorgsovertakelse.plusWeeks(40));
-        grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad(Søknadstype.ADOPSJON, mødrekvote))
-                .medAdopsjon(new Adopsjon.Builder().medAnkomstNorge(omsorgsovertakelse))
-                .medDatoer(new Datoer.Builder().medOmsorgsovertakelse(omsorgsovertakelse));
+        grunnlag.arbeid(arbeid)
+                .søknad(søknad(Søknadstype.ADOPSJON, mødrekvote))
+                .adopsjon(new Adopsjon.Builder().ankomstNorge(omsorgsovertakelse))
+                .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelse));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -60,16 +60,16 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold1 = AktivitetIdentifikator.annenAktivitet();
         var arbeidsforhold2 = AktivitetIdentifikator.forFrilans();
-        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2, fødselsdato.plusWeeks(8)));
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold2, fødselsdato.plusWeeks(8)));
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var gradertMødrekvote = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
         var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11).minusDays(1));
-        grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote, mødrekvote2))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato));
+        grunnlag.arbeid(arbeid)
+                .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote, mødrekvote2))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -88,16 +88,16 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var arbeidsforhold1 = ARBEIDSFORHOLD;
         var arbeidsforhold2 = AktivitetIdentifikator.annenAktivitet();
         var arbeidsforhold3 = AktivitetIdentifikator.forFrilans();
-        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1));
         var gradertMødrekvote = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(12).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
-        grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato));
+        grunnlag.arbeid(arbeid)
+                .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -128,18 +128,18 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var arbeidsforhold1 = ARBEIDSFORHOLD;
         var arbeidsforhold2 = AktivitetIdentifikator.annenAktivitet();
         var arbeidsforhold3 = AktivitetIdentifikator.forFrilans();
-        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
-                .leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold2))
+                .arbeidsforhold(new Arbeidsforhold(arbeidsforhold3, fødselsdato.plusWeeks(10)));
         var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var gradertMødrekvote1 = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
         var gradertMødrekvote2 = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold2));
         var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
-        grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad(Søknadstype.FØDSEL, mødrekvote1, gradertMødrekvote1, gradertMødrekvote2, mødrekvote2))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato));
+        grunnlag.arbeid(arbeid)
+                .søknad(søknad(Søknadstype.FØDSEL, mødrekvote1, gradertMødrekvote1, gradertMødrekvote2, mødrekvote2))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -153,12 +153,12 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
     void skal_ikke_ta_hensyn_til_startdato_hvis_bare_ett_arbeidsforhold() {
         var fødselsdato = LocalDate.of(2019, 11, 27);
         var arbeidsforhold = AktivitetIdentifikator.annenAktivitet();
-        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(arbeidsforhold, fødselsdato.plusWeeks(4)));
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold, fødselsdato.plusWeeks(4)));
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
-        grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote))
-                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato));
+        grunnlag.arbeid(arbeid)
+                .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -173,18 +173,18 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var fødsel = LocalDate.of(2018, 10, 26);
         var tilkommetArbeidsforhold1 = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
         var tilkommetArbeidsforhold2 = AktivitetIdentifikator.forFrilans();
-        var arbeid = new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold1, LocalDate.of(2019, 5, 1)))
-                .leggTilArbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold2, LocalDate.of(2019, 6, 10)));
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold1, LocalDate.of(2019, 5, 1)))
+                .arbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold2, LocalDate.of(2019, 6, 10)));
         var utsettelseArbeid = utsettelsePeriode(LocalDate.of(2019, 11, 4), LocalDate.of(2019, 12, 6), UtsettelseÅrsak.ARBEID);
         var fpPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 12, 16), LocalDate.of(2020, 1, 3));
-        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(utsettelseArbeid.getFom(), fpPeriode.getTom(), I_AKTIVITET));
-        var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode).medDokumentasjon(dokumentasjon);
-        grunnlag.medArbeid(arbeid)
-                .medSøknad(søknad)
-                .medRettOgOmsorg(bareFarRett())
-                .medBehandling(farBehandling())
-                .medDatoer(new Datoer.Builder().medFødsel(fødsel));
+        var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode).dokumentasjon(dokumentasjon);
+        grunnlag.arbeid(arbeid)
+                .søknad(søknad)
+                .rettOgOmsorg(bareFarRett())
+                .behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødsel));
 
         var resultat = fastsettPerioder(grunnlag);
         //Skal legge inn aktivitet med tidligst startdato hvis alle arbeidsforhold starter etter manglende søkt

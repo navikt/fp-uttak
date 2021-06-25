@@ -26,17 +26,17 @@ public final class Dødsdatoer {
     public static class Builder {
         private final Dødsdatoer kladd = new Dødsdatoer();
 
-        public Builder medSøkersDødsdato(LocalDate søkersDødsdato) {
+        public Builder søkersDødsdato(LocalDate søkersDødsdato) {
             kladd.søkersDødsdato = søkersDødsdato;
             return this;
         }
 
-        public Builder medBarnsDødsdato(LocalDate barnsDødsdato) {
+        public Builder barnsDødsdato(LocalDate barnsDødsdato) {
             kladd.barnsDødsdato = barnsDødsdato;
             return this;
         }
 
-        public Builder medErAlleBarnDøde(boolean alleBarnDøde) {
+        public Builder alleBarnDøde(boolean alleBarnDøde) {
             kladd.alleBarnDøde = alleBarnDøde;
             return this;
         }

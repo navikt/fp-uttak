@@ -36,7 +36,7 @@ class SøknadMottattDatoRegelTest {
     void mottattDatoFørSluttAvGraderingBlirSendtManuellBehandling() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
-        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -51,7 +51,7 @@ class SøknadMottattDatoRegelTest {
     void mottattDatoEtterSluttAvGraderingBlirInnvilget() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = gradertoppgittPeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), mottattDato);
-        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -62,7 +62,7 @@ class SøknadMottattDatoRegelTest {
     void mottattDatoFørSluttAvFerieBlirAvslått() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
-        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -77,7 +77,7 @@ class SøknadMottattDatoRegelTest {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE,
                 mottattDato);
-        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -88,7 +88,7 @@ class SøknadMottattDatoRegelTest {
     void mottattDatoFørSluttAvArbeidBlirAvslått() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
-        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -103,7 +103,7 @@ class SøknadMottattDatoRegelTest {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID,
                 mottattDato);
-        var grunnlag = basicBuilder().medSøknad(søknad(søknadsperiode)).build();
+        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -111,7 +111,7 @@ class SøknadMottattDatoRegelTest {
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {
-        return new Søknad.Builder().medType(Søknadstype.FØDSEL).leggTilOppgittPeriode(søknadsperiode);
+        return new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(søknadsperiode);
     }
 
     private OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, LocalDate mottattDato) {
@@ -121,17 +121,17 @@ class SøknadMottattDatoRegelTest {
 
     private RegelGrunnlag.Builder basicBuilder() {
         var aktivitetIdentifikator = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
-        var konto = new Konto.Builder().medType(Stønadskontotype.MØDREKVOTE).medTrekkdager(50);
-        var kontoer = new Kontoer.Builder().leggTilKonto(konto);
-        return new RegelGrunnlag.Builder().medKontoer(kontoer)
-                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-                .medDatoer(new Datoer.Builder().medFødsel(FAMILIEHENDELSE_DATO))
-                .medRettOgOmsorg(new RettOgOmsorg.Builder().medSamtykke(true))
-                .medBehandling(new Behandling.Builder().medSøkerErMor(true).medKreverSammenhengendeUttak(true))
-                .medInngangsvilkår(new Inngangsvilkår.Builder().medAdopsjonOppfylt(true)
-                        .medForeldreansvarnOppfylt(true)
-                        .medFødselOppfylt(true)
-                        .medOpptjeningOppfylt(true));
+        var konto = new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(50);
+        var kontoer = new Kontoer.Builder().konto(konto);
+        return new RegelGrunnlag.Builder().kontoer(kontoer)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+                .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+                .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {
