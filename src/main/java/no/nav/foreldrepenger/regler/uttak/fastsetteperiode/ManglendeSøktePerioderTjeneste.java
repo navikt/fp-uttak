@@ -102,18 +102,7 @@ final class ManglendeSøktePerioderTjeneste {
             } else if (mspFom.isBefore(lukketPeriode.getFom())) {
                 var mspTom = lukketPeriode.getFom().minusDays(1);
                 if (Virkedager.beregnAntallVirkedager(mspFom, mspTom) > 0) {
-                    if (new LukketPeriode(mspFom, mspTom).overlapper(familieHendelse) && !mspFom.isEqual(familieHendelse)) {
-                        //Splitter opp msp for å få riktig konto før og etter familiehendelse
-                        mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, familieHendelse.minusDays(1),
-                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL));
-                        mellomliggendePerioder.add(lagManglendeSøktPeriode(familieHendelse, mspTom,
-                                Stønadskontotype.MØDREKVOTE));
-
-                    } else if (mspFom.isBefore(familieHendelse)) {
-                        mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom, Stønadskontotype.FORELDREPENGER_FØR_FØDSEL));
-                    } else {
-                        mellomliggendePerioder.add(lagManglendeSøktPeriode(mspFom, mspTom, Stønadskontotype.MØDREKVOTE));
-                    }
+                    mellomliggendePerioder.addAll(finnMsp(familieHendelse, mspFom, mspTom));
                 }
             }
             if (!lukketPeriode.getTom().isBefore(mspFom)) {
@@ -121,6 +110,19 @@ final class ManglendeSøktePerioderTjeneste {
             }
         }
         return mellomliggendePerioder;
+    }
+
+    private static List<OppgittPeriode> finnMsp(LocalDate familieHendelse, LocalDate mspFom, LocalDate mspTom) {
+        if (new LukketPeriode(mspFom, mspTom).overlapper(familieHendelse) && !mspFom.isEqual(familieHendelse)) {
+            //Splitter opp msp for å få riktig konto før og etter familiehendelse
+            var førSplitt = lagManglendeSøktPeriode(mspFom, familieHendelse.minusDays(1), Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
+            var etterSplitt = lagManglendeSøktPeriode(familieHendelse, mspTom, Stønadskontotype.MØDREKVOTE);
+            return List.of(førSplitt, etterSplitt);
+
+        } else if (mspFom.isBefore(familieHendelse)) {
+            return List.of(lagManglendeSøktPeriode(mspFom, mspTom, Stønadskontotype.FORELDREPENGER_FØR_FØDSEL));
+        }
+        return List.of(lagManglendeSøktPeriode(mspFom, mspTom, Stønadskontotype.MØDREKVOTE));
     }
 
     private static Stream<OppgittPeriode> split(LocalDate dato, OppgittPeriode periode) {

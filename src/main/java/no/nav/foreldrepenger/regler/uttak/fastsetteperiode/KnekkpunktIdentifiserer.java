@@ -166,10 +166,8 @@ class KnekkpunktIdentifiserer {
         for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
             if (oppgittPeriode.erSøktGradering()) {
                 var mottattDato = oppgittPeriode.getTidligstMottattDato();
-                if (mottattDato.isPresent()) {
-                    if (!oppgittPeriode.getFom().isAfter(mottattDato.get())) {
-                        knekkpunkter.add(mottattDato.get());
-                    }
+                if (mottattDato.isPresent() && !oppgittPeriode.getFom().isAfter(mottattDato.get())) {
+                    knekkpunkter.add(mottattDato.get());
                 }
             }
         }
@@ -179,10 +177,8 @@ class KnekkpunktIdentifiserer {
         for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
             if (oppgittPeriode.isUtsettelse()) {
                 var mottattDato = oppgittPeriode.getTidligstMottattDato();
-                if (mottattDato.isPresent()) {
-                    if (!oppgittPeriode.getFom().isAfter(mottattDato.get())) {
-                        knekkpunkter.add(mottattDato.get());
-                    }
+                if (mottattDato.isPresent() && !oppgittPeriode.getFom().isAfter(mottattDato.get())) {
+                    knekkpunkter.add(mottattDato.get());
                 }
             }
         }
