@@ -57,13 +57,30 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslås() {
+    void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalInnvilges() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
-        var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
+        var grunnlag = basicBuilder(oppgittPeriode)
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true))
                 .medAnnenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12)).medInnvilget(true).build()))
-                .medBehandling(berørtBehandling())
+                .medBehandling(berørtBehandling().medSøkerErMor(true))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isTrue();
+    }
+
+    @Test
+    void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslåsHvisBehandlingKreverSammenhengendeUttak() {
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var grunnlag = basicBuilder(oppgittPeriode)
+                .medRettOgOmsorg(new RettOgOmsorg.Builder().medMorHarRett(true).medFarHarRett(true).medSamtykke(true))
+                .medAnnenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
+                        FAMILIEHENDELSE_DATO.plusWeeks(12)).medInnvilget(true).build()))
+                .medBehandling(berørtBehandling().medSøkerErMor(true).medKreverSammenhengendeUttak(true))
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -72,7 +89,7 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
+    void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
@@ -87,7 +104,7 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
+    void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))
@@ -102,7 +119,7 @@ class RevurderingTest {
     }
 
     @Test
-    void revurderingsøknadAvBerørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
+    void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAvslås() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).medRettOgOmsorg(samtykke(true))

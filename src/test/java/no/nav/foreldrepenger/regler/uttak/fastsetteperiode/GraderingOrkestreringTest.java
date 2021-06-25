@@ -669,8 +669,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                 .medKontoer(kontoer)
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(beggeRett())
-                //TODO fritt uttak: Her kan vi nok fjerne utsettelseperioden + krever sammenhengelse som er søkt når det ikke opprettes msp
-                .medBehandling(farBehandling().medKreverSammenhengendeUttak(true))
+                .medBehandling(farBehandling())
                 //Søker så at konto akkurat går går opp i 76 trekkdager
                 .medSøknad(new Søknad.Builder().medType(Søknadstype.FØDSEL)
                         .leggTilOppgittPeriode(gradertoppgittPeriode(FEDREKVOTE, LocalDate.of(2019, 5, 3), LocalDate.of(2019, 7, 5),

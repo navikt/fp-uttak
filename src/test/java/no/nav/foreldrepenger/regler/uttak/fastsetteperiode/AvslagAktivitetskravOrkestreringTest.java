@@ -111,6 +111,34 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     @Test
+    void far_søker_utsettelse_sammenhengende_uttak() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
+        var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
+                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+        var dokumentasjon = new Dokumentasjon.Builder().leggTilPeriodeMedAvklartMorsAktivitet(
+                new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), IKKE_I_AKTIVITET_DOKUMENTERT));
+        var søknad = new Søknad.Builder().medType(Søknadstype.FØDSEL)
+                .leggTilOppgittPeriode(oppgittPeriode)
+                .medDokumentasjon(dokumentasjon);
+
+        var grunnlag = new RegelGrunnlag.Builder()
+                .medBehandling(farBehandling().medKreverSammenhengendeUttak(true))
+                .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
+                .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
+                .medRettOgOmsorg(bareFarRett())
+                .medSøknad(søknad)
+                .medInngangsvilkår(oppfyltAlleVilkår())
+                .medArbeid(new Arbeid.Builder().leggTilArbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .medKontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder).hasSize(1);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
+    }
+
+    @Test
     void far_søker_utsettelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().leggTilKonto(konto(FORELDREPENGER, 100));
@@ -123,8 +151,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .medDokumentasjon(dokumentasjon);
 
         var grunnlag = new RegelGrunnlag.Builder()
-                //TODO fritt uttak: Passe på at vi har en test for begge regelflyter BFHR + avslag utsettelse pga ikke oppfylt aktkrav
-                .medBehandling(farBehandling().medKreverSammenhengendeUttak(true))
+                .medBehandling(farBehandling())
                 .medOpptjening(new Opptjening.Builder().medSkjæringstidspunkt(fødselsdato))
                 .medDatoer(new Datoer.Builder().medFødsel(fødselsdato))
                 .medRettOgOmsorg(bareFarRett())

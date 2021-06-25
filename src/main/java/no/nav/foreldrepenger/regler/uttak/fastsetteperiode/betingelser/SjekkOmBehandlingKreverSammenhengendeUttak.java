@@ -7,7 +7,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmBehandlingKreverSammenhengendeUttak.ID)
 public class SjekkOmBehandlingKreverSammenhengendeUttak extends LeafSpecification<FastsettePeriodeGrunnlag> {
-    public static final String ID = "FP_VK TODO fritt uttak";
+    public static final String ID = "SHU.1";
     public static final String BESKRIVELSE = "Krever behandlingen sammenhengende uttak?";
 
     public SjekkOmBehandlingKreverSammenhengendeUttak() {

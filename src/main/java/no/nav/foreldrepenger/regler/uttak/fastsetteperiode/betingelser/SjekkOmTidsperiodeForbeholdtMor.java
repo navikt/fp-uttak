@@ -13,7 +13,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmTidsperiodeForbeholdtMor.ID)
 public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
-    public static final String ID = "TODO fritt uttak";
+    public static final String ID = "FP_VK 10.2.1";
     public static final String BESKRIVELSE = "Er perioden i tidsperioden forbeholdt mor?";
 
     private final Konfigurasjon konfigurasjon;

@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSøkerInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -27,8 +28,6 @@ import no.nav.fpsak.nare.specification.Specification;
 
 @RuleDocumentation(value = UtsettelseDelregel.ID)
 public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag> {
-
-    //TODO fritt uttak
 
     public static final String ID = "FP_VK 18";
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
@@ -51,8 +50,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErFørFamiliehendelseVedAdopsjon() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), Manuellbehandling.opprett("TODO fritt uttak",
-                        //TODO ikkeoppfyltårsak for avslag før familiehendelse ved adopsjon
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), Manuellbehandling.opprett("UT1350",
                         IkkeOppfyltÅrsak.UTSETTELSE_FØR_TERMIN_FØDSEL, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, false, false))
                 .ellers(sjekkOmBareFarHarRett());
     }
@@ -60,12 +58,12 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRett() {
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
                 .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet())
-                .ellers(Oppfylt.opprett("TODO fritt uttak", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false));
+                .ellers(Oppfylt.opprett("UT1351", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitet() {
         return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-                .hvis(new SjekkOmMorErIAktivitet(), Oppfylt.opprett("TODO fritt uttak", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false))
+                .hvis(new SjekkOmMorErIAktivitet(), Oppfylt.opprett("UT1352", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false))
                 .ellers(new AvslagAktivitetskravDelregel().getSpecification());
     }
 
@@ -77,8 +75,8 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSykdomSkade() {
         var erSøkerSykErDokumentert =  rs.hvisRegel(SjekkOmSykdomSkade.ID, SjekkOmSykdomSkade.BESKRIVELSE)
-                .hvis(new SjekkOmSykdomSkade(), Oppfylt.opprett("TODO fritt uttak", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false))
-                .ellers(Manuellbehandling.opprett("TODO fritt uttak", IkkeOppfyltÅrsak.SØKERS_SYKDOM_SKADE_IKKE_OPPFYLT,
+                .hvis(new SjekkOmSykdomSkade(), Oppfylt.opprett("UT1353", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false))
+                .ellers(Manuellbehandling.opprett("UT1354", IkkeOppfyltÅrsak.SØKERS_SYKDOM_SKADE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
         return rs.hvisRegel(SjekkOmUtsettelsePgaSykdomSkade.ID, SjekkOmUtsettelsePgaSykdomSkade.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSykdomSkade(), erSøkerSykErDokumentert)
@@ -87,8 +85,8 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkersInnleggelse() {
         var erSøkerInnlagtErDokumentert =  rs.hvisRegel(SjekkOmSøkerInnlagt.ID, SjekkOmSøkerInnlagt.BESKRIVELSE)
-                .hvis(new SjekkOmSøkerInnlagt(), Oppfylt.opprett("TODO fritt uttak", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false))
-                .ellers(Manuellbehandling.opprett("TODO fritt uttak", IkkeOppfyltÅrsak.SØKERS_INNLEGGELSE_IKKE_OPPFYLT,
+                .hvis(new SjekkOmSøkerInnlagt(), Oppfylt.opprett("UT1355", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false))
+                .ellers(Manuellbehandling.opprett("UT1356", IkkeOppfyltÅrsak.SØKERS_INNLEGGELSE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
         return rs.hvisRegel(SjekkOmUtsettelsePgaSøkerInnleggelse.ID, SjekkOmUtsettelsePgaSøkerInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSøkerInnleggelse(), erSøkerInnlagtErDokumentert)
@@ -98,28 +96,32 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetsInnleggelse() {
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), sjekkOmBarnetVarInnlagt())
-                .ellers(Manuellbehandling.opprett("TODO fritt uttak", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
+                .ellers(Manuellbehandling.opprett("UT1357", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetVarInnlagt() {
         return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
                 .hvis(new SjekkOmBarnInnlagt(), sjekkOmFødselFørUke33())
-                .ellers(Manuellbehandling.opprett("TODO fritt uttak", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_IKKE_OPPFYLT,
+                .ellers(Manuellbehandling.opprett("UT1358", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselFørUke33() {
         return rs.hvisRegel(SjekkOmFødselErFørUke33.ID, SjekkOmFødselErFørUke33.BESKRIVELSE)
                 .hvis(new SjekkOmFødselErFørUke33(konfigurasjon), sjekkOmPeriodenErFørTermin())
-                .ellers(Oppfylt.opprett("TODO fritt uttak", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false));
+                .ellers(innvilgUT1359());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenErFørTermin() {
         return rs.hvisRegel(SjekkOmPeriodeErFørTermin.ID, SjekkOmPeriodeErFørTermin.BESKRIVELSE)
                 //prematuruker
-                .hvis(new SjekkOmPeriodeErFørTermin(), IkkeOppfylt.opprett("TODO fritt uttak", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER,
+                .hvis(new SjekkOmPeriodeErFørTermin(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER,
                         true, false))
-                .ellers(Oppfylt.opprett("TODO fritt uttak", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false));
+                .ellers(innvilgUT1359());
+    }
+
+    private FastsettePeriodeUtfall innvilgUT1359() {
+        return Oppfylt.opprett("UT1359", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false);
     }
 }
