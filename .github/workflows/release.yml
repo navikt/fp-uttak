@@ -15,9 +15,10 @@ jobs:
           ref: 'master'
 
       - name: Set up JDK 16
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
-          java-version: 16
+          distribution: 'adopt'
+          java-version: '16'
 
       - name: Setup build cache
         uses: actions/cache@v2.1.6
