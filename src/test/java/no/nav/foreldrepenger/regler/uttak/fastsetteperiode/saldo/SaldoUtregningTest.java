@@ -36,8 +36,8 @@ class SaldoUtregningTest {
 
     @Test
     void ingen_max_dag_og_ingen_trekkdager_skal_alltid_gi_0_i_saldo() {
-        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -50,8 +50,8 @@ class SaldoUtregningTest {
 
     @Test
     void max_dager_minus_trekkdag_skal_bli_saldo() {
-        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -64,13 +64,13 @@ class SaldoUtregningTest {
 
     @Test
     void flere_trekk_gir_riktig_saldo() {
-        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
-        var fastsattUttakPeriode2 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -83,8 +83,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_runde_opp_hvis_ikke_brukt_mer_enn_maks() {
-        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10.5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10.5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -96,8 +96,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_runde_opp_hvis_brukt_mer_enn_maks() {
-        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(13.5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(13.5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -109,8 +109,8 @@ class SaldoUtregningTest {
 
     @Test
     void for_stort_trekk_gir_riktig_saldo() {
-        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_SØKER)))
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -123,8 +123,8 @@ class SaldoUtregningTest {
 
     @Test
     void for_stort_trekk_på_flere_aktiviteter_gir_riktig_saldo() {
-        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_SØKER),
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(20), MØDREKVOTE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
@@ -139,8 +139,8 @@ class SaldoUtregningTest {
 
     @Test
     void flere_trekk_på_forskjellig_aktivitet_gir_forskjellig_saldo() {
-        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), MØDREKVOTE, AKTIVITET1_SØKER),
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), MØDREKVOTE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
@@ -155,14 +155,14 @@ class SaldoUtregningTest {
 
     @Test
     void trekkdager_på_annen_part_skal_telle_med_i_saldo() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(enTirsdag.plusDays(1), enTirsdag.plusDays(1))
                 .build();
@@ -178,14 +178,14 @@ class SaldoUtregningTest {
 
     @Test
     void minste_trekkdager_på_annen_part_skal_telle_med_i_saldo() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(7), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(7), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(enTirsdag.plusDays(1), enTirsdag.plusDays(1))
@@ -202,20 +202,20 @@ class SaldoUtregningTest {
 
     @Test
     void flere_trekk_på_annen_part_skal_telle_med_i_saldo() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
-        var annenpartPeriode1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var annenpartPeriode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(enTirsdag.plusDays(1), enTirsdag.plusDays(1))
                 .build();
-        var annenpartPeriode2 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var annenpartPeriode2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(enTirsdag.plusDays(1), enTirsdag.plusDays(1))
@@ -232,15 +232,15 @@ class SaldoUtregningTest {
 
     @Test
     void ikke_stjele_men_summere_begge_parter_hvis_berørt_behandling() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .mottattDato(LocalDate.MAX)
                 .samtidigUttak(false)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .mottattDato(LocalDate.MIN)
@@ -254,15 +254,15 @@ class SaldoUtregningTest {
 
     @Test
     void ikke_stjele_men_summere_begge_parter_hvis_tapende_periode() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .samtidigUttak(false)
                 .mottattDato(LocalDate.MIN)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .mottattDato(LocalDate.MAX)
@@ -276,15 +276,15 @@ class SaldoUtregningTest {
 
     @Test
     void ikke_stjele_men_summere_begge_parter_hvis_tapende_periode_søkt_samme_dag_søker_søkt_først() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .samtidigUttak(false)
                 .mottattDato(LocalDate.MIN)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .mottattDato(LocalDate.MIN)
@@ -298,15 +298,15 @@ class SaldoUtregningTest {
 
     @Test
     void stjele_hvis_tapende_periode_søkt_samme_dag_og_annenpart_har_søkt_til_slutt() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .samtidigUttak(false)
                 .mottattDato(LocalDate.MIN)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .mottattDato(LocalDate.MIN)
@@ -320,14 +320,14 @@ class SaldoUtregningTest {
 
     @Test
     void stjele_fra_annenpart_hvis_ikke_berørt_behandling_og_ikke_samtidig_uttak() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .samtidigUttak(false)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -340,14 +340,14 @@ class SaldoUtregningTest {
 
     @Test
     void skal_summere_trekkdager_for_begge_parter_hvis_overlapp_og_samtidig_uttak_og_ikke_berørt_behandling() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .samtidigUttak(true)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -365,8 +365,8 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 15))
                 .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .build();
-        var periodeSøker2 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periodeSøker2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(LocalDate.of(2019, 2, 18), LocalDate.of(2019, 2, 18))
                 .build();
@@ -378,8 +378,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_trekke_oppholdsperioder_for_annenpart() {
-        var periodeSøker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periodeSøker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
                 .build();
@@ -388,8 +388,8 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 22))
                 .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
                 .build();
-        var periodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(LocalDate.of(2019, 2, 25), LocalDate.of(2019, 2, 25))
                 .build();
@@ -407,13 +407,13 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
                 .oppholdÅrsak(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)
                 .build();
-        var periodeSøker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periodeSøker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 15))
                 .build();
-        var periodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), MØDREKVOTE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
                 .build();
@@ -428,14 +428,14 @@ class SaldoUtregningTest {
 
     @Test
     void skal_ikke_knekke_hvis_periode_er_i_en_helg() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 16), LocalDate.of(2019, 2, 16))
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(LocalDate.of(2019, 2, 17), LocalDate.of(2019, 2, 17))
                 .build();
@@ -451,8 +451,8 @@ class SaldoUtregningTest {
 
     @Test
     void overlappende_oppholdsperioder_skal_trekke_fra_annenparts_periode_ved() {
-        var periodeSøker1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periodeSøker1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
                 .build();
@@ -466,8 +466,8 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 15))
                 .oppholdÅrsak(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)
                 .build();
-        var periodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 18), LocalDate.of(2019, 2, 18))
                 .build();
@@ -482,13 +482,13 @@ class SaldoUtregningTest {
 
     @Test
     void overlapp_med_avslått_perioder_på_søker_skal_telles_dobbelt() {
-        var søkerPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var søkerPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
-        var annenpartPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(12), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
@@ -501,8 +501,8 @@ class SaldoUtregningTest {
 
     @Test
     void hvis_søkers_innvilget_periode_overlapper_med_annenparts_oppholdsperiode_skal_det_ikke_trekkes_dobbelt() {
-        var periodeSøker1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), MØDREKVOTE, AKTIVITET1_SØKER)))
+        var periodeSøker1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), MØDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
                 .build();
@@ -516,8 +516,8 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 2, 11), LocalDate.of(2019, 2, 13))
                 .oppholdÅrsak(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER)
                 .build();
-        var periodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 15))
                 .build();
@@ -532,24 +532,24 @@ class SaldoUtregningTest {
 
     @Test
     void hvis_alle_søkers_perioder_er_etter_annenpart_skal_det_ikke_være_nok_dager_å_frigi() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 15), LocalDate.of(2019, 2, 15))
                 .build();
-        var periode2Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode2Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 16), LocalDate.of(2019, 2, 16))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 13), LocalDate.of(2019, 2, 13))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 14), LocalDate.of(2019, 2, 14))
                 .build();
@@ -564,19 +564,19 @@ class SaldoUtregningTest {
 
     @Test
     void hvis_ikke_alle_søkers_perioder_er_etter_annenpart_skal_det_være_nok_dager_å_frigi() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 15), LocalDate.of(2019, 2, 20))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 10), LocalDate.of(2019, 2, 14))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 2, 15), LocalDate.of(2019, 2, 20))
                 .build();
@@ -591,19 +591,19 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_ikke_nok_dager_å_frigi_selv_med_perioder_etter_søkers_siste_periode_med_trekkdager() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 1))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 3), LocalDate.of(2019, 3, 3))
                 .build();
@@ -618,20 +618,20 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_ikke_nok_dager_å_frigi_selv_med_perioder_etter_søkers_siste_periode_med_trekkdager_flere_arbeidsforhold_hos_annenpart() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 1))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 3), LocalDate.of(2019, 3, 3))
@@ -647,19 +647,19 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 1))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 3), LocalDate.of(2019, 3, 3))
                 .build();
@@ -674,14 +674,14 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_hvis_søkers_siste_periode_starter_samme_dag_som_annenparts_siste_periode() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 5))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(30), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(30), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 12))
                 .build();
@@ -696,20 +696,20 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_flere_arbeidsforhold_hos_annenpart() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 1))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART),
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 3), LocalDate.of(2019, 3, 3))
@@ -725,14 +725,14 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager_oppholdsperiode() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 1))
                 .build();
@@ -751,25 +751,25 @@ class SaldoUtregningTest {
 
     @Test
     void annenpart_har_ikke_nok_dager_å_frigi_etter_søkers_siste_periode_med_trekkdager() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
 
-        var periode2Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FEDREKVOTE, AKTIVITET1_SØKER)))
+        var periode2Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 4))
                 .build();
 
-        var periode1Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode1Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 1))
                 .build();
-        var periode2Annenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periode2Annenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 3), LocalDate.of(2019, 3, 3))
                 .build();
@@ -785,8 +785,8 @@ class SaldoUtregningTest {
 
     @Test
     void har_søkt_samtidig_uttak() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .samtidigUttak(true)
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
@@ -802,8 +802,8 @@ class SaldoUtregningTest {
 
     @Test
     void har_ikke_søkt_samtidig_uttak() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 3, 2), LocalDate.of(2019, 3, 2))
                 .build();
@@ -818,8 +818,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_støtte_en_søknadsperiode_overlapper_med_flere_oppholdsperioder_hos_annenpart() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 10, 10))
                 .build();
@@ -834,8 +834,8 @@ class SaldoUtregningTest {
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 8), LocalDate.of(2019, 10, 8))
                 .build();
-        var uttakAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
+        var uttakAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 11), LocalDate.of(2019, 10, 11))
                 .build();
@@ -851,14 +851,14 @@ class SaldoUtregningTest {
 
     @Test
     void skal_støtte_flere_søknadsperioder_overlapper_med_opphold_hos_annenpart() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 10, 7))
                 .build();
 
-        var periode2Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode2Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 8), LocalDate.of(2019, 10, 10))
                 .build();
@@ -868,8 +868,8 @@ class SaldoUtregningTest {
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 10, 9))
                 .build();
-        var uttakAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
+        var uttakAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 11), LocalDate.of(2019, 10, 11))
                 .build();
@@ -884,18 +884,18 @@ class SaldoUtregningTest {
 
     @Test
     void skal_ikke_telle_dobbelt_når_oppholdsperiode_annenpart_overlapper_mer_flere_søknadsperioder_i_berørt_behandling() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(42), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(42), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 1, 2), LocalDate.of(2020, 3, 1))
                 .build();
-        var periode2Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode2Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 3, 2), LocalDate.of(2020, 3, 5))
                 .build();
-        var periode3Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode3Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 3, 6), LocalDate.of(2020, 3, 12))
                 .build();
@@ -904,8 +904,8 @@ class SaldoUtregningTest {
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(LocalDate.of(2020, 1, 2), LocalDate.of(2020, 3, 12))
                 .build();
-        var uttakAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+        var uttakAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 3, 13), LocalDate.of(2020, 3, 20))
                 .build();
@@ -921,8 +921,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_ikke_frigi_dager_fra_oppholdsperiode_hvis_overlapp_med_avslått_periode_annenpart() {
-        var periode1Søker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(6), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1Søker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(6), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 21), LocalDate.of(2019, 10, 23))
                 .build();
@@ -931,13 +931,13 @@ class SaldoUtregningTest {
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 24), LocalDate.of(2019, 10, 25))
                 .build();
-        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 24), LocalDate.of(2019, 10, 24))
                 .build();
-        var avslåttPeriodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+        var avslåttPeriodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.AVSLÅTT)
                 .tidsperiode(LocalDate.of(2019, 10, 25), LocalDate.of(2019, 10, 25))
                 .build();
@@ -952,13 +952,13 @@ class SaldoUtregningTest {
 
     @Test
     void skal_ikke_trekke_dager_for_oppholdsperioder_på_annenpart_som_ligger_etter_søkers_siste_periode() {
-        var periodeSøker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FEDREKVOTE, AKTIVITET1_SØKER)))
+        var periodeSøker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 29), LocalDate.of(2019, 10, 30))
                 .build();
-        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET1_ANNENPART)))
+        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 28), LocalDate.of(2019, 10, 28))
                 .build();
@@ -985,13 +985,13 @@ class SaldoUtregningTest {
 
     @Test
     void riktig_saldo_ved_delvis_overlapp_og_gradering_på_annenpart_der_annenpart_har_flere_arbeidsforhold() {
-        var periodeSøker = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periodeSøker = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 1, 27), LocalDate.of(2020, 1, 31))
                 .build();
-        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET2_ANNENPART),
+        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET2_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(8), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 1, 29))
@@ -1012,8 +1012,8 @@ class SaldoUtregningTest {
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
-        var annenpartsPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartsPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag.plusDays(1), enTirsdag.plusDays(1))
                 .build();
@@ -1030,8 +1030,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_finne_saldo_for_søker_uten_uttaksperioder() {
-        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET1_ANNENPART)))
+        var innvilgetPeriodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), MØDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 28), LocalDate.of(2019, 10, 28))
                 .build();
@@ -1046,13 +1046,13 @@ class SaldoUtregningTest {
     //FAGSYSTEM-81103
     @Test
     void skal_finnes_nok_dager_å_frigi_hvis_annenparts_uttaksperiode_starter_før_men_overlapper_med_søkers_periode() {
-        var søkersPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(32), FEDREKVOTE, AKTIVITET1_SØKER)))
+        var søkersPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(32), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 17), LocalDate.of(2019, 11, 29))
                 .build();
-        var annenpartsPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75.2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+        var annenpartsPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75.2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
                 .build();
@@ -1066,13 +1066,13 @@ class SaldoUtregningTest {
 
     @Test
     void skal_ikke_finnes_nok_dager_å_frigi_hvis_annenparts_uttaksperiode_starter_før_men_overlapper_med_søkers_periode_og_ikke_nok_dager_etter_søkers_fom() {
-        var søkersPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(32), FEDREKVOTE, AKTIVITET1_SØKER)))
+        var søkersPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(32), FEDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 2, 10))
                 .build();
-        var annenpartsPeriode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75.2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
+        var annenpartsPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75.2), FEDREKVOTE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
                 .build();
@@ -1087,13 +1087,13 @@ class SaldoUtregningTest {
 
     @Test
     void skal_telle_riktig_antall_dager_på_annenpart_når_det_er_tilkommet_nytt_arbeidsforhold() {
-        var annenpartsPeriode1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(80), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var annenpartsPeriode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(80), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
                 .build();
-        var annenpartsPeriode2 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75), MØDREKVOTE, AKTIVITET1_ANNENPART),
+        var annenpartsPeriode2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75), MØDREKVOTE, AKTIVITET1_ANNENPART),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(75), MØDREKVOTE, AKTIVITET2_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
@@ -1107,8 +1107,8 @@ class SaldoUtregningTest {
 
     @Test
     void skal_telle_riktig_antall_dager_når_det_er_tilkommet_nytt_arbeidsforhold_og_siste_periode_før_tilkommet_er_opphold() {
-        var periodeUtenNyttArbeidsforhold = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(40), MØDREKVOTE, AKTIVITET1_SØKER)))
+        var periodeUtenNyttArbeidsforhold = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(40), MØDREKVOTE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2019, 10, 1), LocalDate.of(2020, 10, 13))
                 .build();
@@ -1117,8 +1117,8 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 10, 14), LocalDate.of(2020, 2, 20))
                 .oppholdÅrsak(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)
                 .build();
-        var periodeMedNyttArbeidsforhold = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(35), MØDREKVOTE, AKTIVITET1_SØKER),
+        var periodeMedNyttArbeidsforhold = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(35), MØDREKVOTE, AKTIVITET1_SØKER),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(35), MØDREKVOTE, AKTIVITET2_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
@@ -1133,13 +1133,13 @@ class SaldoUtregningTest {
 
     @Test
     void innvilget_utsettelse_overlapper_med_annenpart() {
-        var periode = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), null, AKTIVITET1_SØKER)))
+        var periode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(0), null, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
                 .build();
-        var periodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(75), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
                 .build();
@@ -1153,28 +1153,28 @@ class SaldoUtregningTest {
 
     @Test
     void skal_ta_med_overlappende_perioder_i_utregningen_av_dager_å_frigi_på_annenpart() {
-        var periode1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 5, 17), LocalDate.of(2020, 5, 17))
                 .build();
-        var periode2 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
+        var periode2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 5, 18), LocalDate.of(2020, 5, 22))
                 .build();
-        var periodeAnnenpart1 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 5, 18), LocalDate.of(2020, 5, 20))
                 .build();
-        var periodeAnnenpart2 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 5, 21), LocalDate.of(2020, 5, 22))
                 .build();
-        var periodeAnnenpart3 = new FastsattUttakPeriode.Builder().aktiviteter(
-                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+        var periodeAnnenpart3 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FELLESPERIODE, AKTIVITET1_ANNENPART)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(LocalDate.of(2020, 5, 23), LocalDate.of(2020, 5, 23))
                 .build();
