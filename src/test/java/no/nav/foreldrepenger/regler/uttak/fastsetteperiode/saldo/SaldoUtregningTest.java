@@ -1186,4 +1186,34 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(-10);
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
     }
+
+    @Test
+    void samtidig_uttak_som_overlapper_delvis_med_oppholdsperioder_skal_trekke_dager_for_resten_av_oppholdet() {
+        var samtidigUttak = new FastsattUttakPeriode.Builder()
+                .samtidigUttak(true)
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(LocalDate.of(2021, 8, 2), LocalDate.of(2021, 8, 6))
+                .build();
+        var oppholdAnnenpart = new FastsattUttakPeriode.Builder()
+                .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(LocalDate.of(2021, 8, 2), LocalDate.of(2021, 8, 13))
+                .build();
+        var søkersPeriode2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4), FELLESPERIODE, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(LocalDate.of(2021, 8, 10), LocalDate.of(2021, 8, 13))
+                .build();
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(LocalDate.of(2021, 8, 15), LocalDate.of(2021, 8, 15))
+                .build();
+        var søkersPerioder = List.of(samtidigUttak, søkersPeriode2);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 10)), søkersPerioder,
+                List.of(oppholdAnnenpart, periodeAnnenpart), false, Set.of(AKTIVITET1_SØKER), null, null);
+
+        assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
+    }
 }

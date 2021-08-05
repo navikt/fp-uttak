@@ -244,7 +244,7 @@ public class SaldoUtregning {
     private int frigitteDagerVanligeStønadskontoer(Stønadskontotype stønadskonto,
                                                    FastsattUttakPeriode periode,
                                                    FastsattUttakPeriode overlappende) {
-        if (periode.isSamtidigUttak() || overlappende.isSamtidigUttak()) {
+        if (overlappende.isSamtidigUttak()) {
             return 0;
         }
         var frigitte = 0;
@@ -253,7 +253,7 @@ public class SaldoUtregning {
         if (erOpphold(overlappende)) {
             frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
                     trekkdagerForOppholdsperiode(stønadskonto, overlappende));
-        } else {
+        } else if (!periode.isSamtidigUttak()) {
             var annenPartAktivitetMedKonto = aktivitetMedStønadskonto(stønadskonto, overlappende);
             if (annenPartAktivitetMedKonto.isPresent()) {
                 frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
@@ -536,7 +536,7 @@ public class SaldoUtregning {
     private Optional<LocalDate> sisteUttaksdato(List<FastsattUttakPeriode> perioder) {
         return perioder.stream()
                 .filter(periode -> !erOpphold(periode))
-                .min(Comparator.comparing(FastsattUttakPeriode::getTom))
+                .max(Comparator.comparing(FastsattUttakPeriode::getTom))
                 .map(FastsattUttakPeriode::getTom);
     }
 }
