@@ -33,7 +33,7 @@ public class FastsattUttakPeriode {
     }
 
     public List<FastsattUttakPeriodeAktivitet> getAktiviteter() {
-        return aktiviteter;
+        return aktiviteter == null ? List.of() : aktiviteter;
     }
 
     public boolean isFlerbarnsdager() {
