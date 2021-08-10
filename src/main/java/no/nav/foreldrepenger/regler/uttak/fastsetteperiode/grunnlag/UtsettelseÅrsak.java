@@ -7,5 +7,6 @@ public enum UtsettelseÅrsak {
     INNLAGT_SØKER,
     INNLAGT_BARN,
     NAV_TILTAK,
-    HV_OVELSE
+    HV_OVELSE,
+    FRI
 }
