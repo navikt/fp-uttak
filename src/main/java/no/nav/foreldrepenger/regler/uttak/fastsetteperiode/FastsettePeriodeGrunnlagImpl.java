@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -84,7 +85,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<PeriodeMedBarnInnlagt> getPerioderMedBarnInnlagt() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedBarnInnlagt();
+        var fraDok = regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedBarnInnlagt();
+        var fraYtelser = regelGrunnlag.getYtelser().pleiepenger()
+                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.perioder())
+                .orElse(List.of());
+        var felles = new ArrayList<>(fraDok);
+        felles.addAll(fraYtelser);
+        return felles;
     }
 
     @Override
