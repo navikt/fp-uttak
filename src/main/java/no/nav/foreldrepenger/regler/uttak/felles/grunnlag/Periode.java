@@ -52,7 +52,7 @@ public class Periode {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Periode periode = (Periode) o;
+        var periode = (Periode) o;
         return Objects.equals(fom, periode.fom) && Objects.equals(tom, periode.tom);
     }
 

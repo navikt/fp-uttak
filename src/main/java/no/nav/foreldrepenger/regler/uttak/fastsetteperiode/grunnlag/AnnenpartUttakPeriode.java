@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -77,6 +78,26 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
     public Optional<LocalDate> getSenestMottattDato() {
         return Optional.ofNullable(senestMottattDato);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        var that = (AnnenpartUttakPeriode) o;
+        return samtidigUttak == that.samtidigUttak && flerbarnsdager == that.flerbarnsdager && utsettelse == that.utsettelse
+                && oppholdsperiode == that.oppholdsperiode && innvilget == that.innvilget && Objects.equals(aktiviteter,
+                that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(senestMottattDato, that.senestMottattDato);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdsperiode, oppholdÅrsak,
+                innvilget, senestMottattDato);
     }
 
     public static class Builder {
