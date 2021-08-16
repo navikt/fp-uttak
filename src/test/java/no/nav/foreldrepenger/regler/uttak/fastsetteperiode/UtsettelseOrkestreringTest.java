@@ -16,6 +16,7 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerMedInnleggelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
@@ -436,6 +439,34 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder).hasSize(1);
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
+    }
+
+    @Test
+    void innvilge_eller_manuell_behandling_basert_på_pleiepenger_med_innleggelse() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+                .søknad(fødselSøknad()
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
+                        .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN)))
+                .ytelser(new Ytelser(new PleiepengerMedInnleggelse(Set.of(new PeriodeMedBarnInnlagt(fødselsdato.plusWeeks(3),
+                        fødselsdato.plusWeeks(5).minusDays(1))))));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(4);
+
+        var innvilgetPeriode = resultat.get(2).getUttakPeriode();
+        assertThat(innvilgetPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(innvilgetPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
+        assertThat(innvilgetPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(5).minusDays(1));
+        assertThat(innvilgetPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(innvilgetPeriode.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        var manuellPeriode = resultat.get(3).getUttakPeriode();
+        assertThat(manuellPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(manuellPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(5));
+        assertThat(manuellPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(manuellPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
     }
 
     @Disabled("TODO fritt uttak. Hvilke caser kan må gå tom for dager ved avslag utsettelse? Kanskje bare far har rett og utsettelse uten årsak")

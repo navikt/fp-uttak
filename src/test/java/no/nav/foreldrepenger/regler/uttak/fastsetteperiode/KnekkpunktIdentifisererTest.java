@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -29,6 +30,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerMedInnleggelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
@@ -470,6 +473,22 @@ class KnekkpunktIdentifisererTest {
         assertThat(knekkpunkter).contains(LocalDate.of(2020, 8, 1));
         //Første lovlige dato for andre periode ligger før start på perioden
         assertThat(knekkpunkter).doesNotContain(LocalDate.of(2020, 11, 1));
+    }
+
+    @Test
+    void skal_knekke_på_perioder_med_pleiepenger() {
+        var innleggelseFom = LocalDate.of(2020, 10, 10);
+        var innleggelseTom = LocalDate.of(2020, 10, 15);
+        var pleiepenger = new PleiepengerMedInnleggelse(Set.of(new PeriodeMedBarnInnlagt(innleggelseFom, innleggelseTom)));
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .datoer(new Datoer.Builder().fødsel(innleggelseFom))
+                .ytelser(new Ytelser(pleiepenger))
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).contains(innleggelseFom, innleggelseTom.plusDays(1));
     }
 
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {

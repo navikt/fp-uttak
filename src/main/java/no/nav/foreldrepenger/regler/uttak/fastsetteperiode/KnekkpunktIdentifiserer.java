@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
@@ -66,6 +67,7 @@ class KnekkpunktIdentifiserer {
             leggTilKnekkpunkterForTerminFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
+        knekkpunkter.addAll(knekkBasertPåYtelser(grunnlag));
 
         if (grunnlag.getAnnenPart() != null) {
             knekkBasertPåAnnenPart(grunnlag, knekkpunkter);
@@ -77,6 +79,15 @@ class KnekkpunktIdentifiserer {
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
                 .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
                 .collect(Collectors.toSet());
+    }
+
+    private static Set<LocalDate> knekkBasertPåYtelser(RegelGrunnlag grunnlag) {
+        var ytelser = grunnlag.getYtelser();
+        var pleiepenger = ytelser.pleiepenger();
+        return pleiepenger.map(p -> p.perioder().stream()
+                .flatMap(per -> Stream.of(per.getFom(), per.getTom().plusDays(1)))
+                .collect(Collectors.toSet()))
+                .orElseGet(Set::of);
     }
 
     private static Set<LocalDate> knekkPunkterBaserPåFørsteLovligeUttaksdag(RegelGrunnlag grunnlag) {

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class RegelGrunnlag {
@@ -19,6 +20,7 @@ public class RegelGrunnlag {
     private Opptjening opptjening;
     private Adopsjon adopsjon;
     private Kontoer kontoer;
+    private Ytelser ytelser;
 
     private RegelGrunnlag() {
 
@@ -78,6 +80,10 @@ public class RegelGrunnlag {
 
     public Kontoer getKontoer() {
         return kontoer;
+    }
+
+    public Ytelser getYtelser() {
+        return ytelser;
     }
 
     public static class Builder {
@@ -144,9 +150,17 @@ public class RegelGrunnlag {
             return this;
         }
 
+        public Builder ytelser(Ytelser ytelser) {
+            kladd.ytelser = ytelser;
+            return this;
+        }
+
         public RegelGrunnlag build() {
             if (kladd.getDatoer() != null) {
                 validerDatoerOppMotSøknad();
+            }
+            if (kladd.ytelser == null) {
+                kladd.ytelser = new Ytelser(null);
             }
             //Hindre gjenbruk
             var regelGrunnlag = this.kladd;

@@ -45,4 +45,19 @@ public class Periode {
     public String toString() {
         return "Periode{" + "fom=" + fom + ", tom=" + tom + '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Periode periode = (Periode) o;
+        return Objects.equals(fom, periode.fom) && Objects.equals(tom, periode.tom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fom, tom);
+    }
 }
