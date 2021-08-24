@@ -14,7 +14,9 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     OPPHOLD_IKKE_SAMTIDIG_UTTAK(4084, "Opphold på grunn av den andre forelderens vedtak"),
     IKKE_SAMTYKKE(4085, "Ikke samtykke mellom foreldrene"),
     OPPHOLD_UTSETTELSE(4086, "Opphold på grunn av den andre forelderens vedtak"),
-    MOR_TAR_IKKE_ALLE_UKENE(4095, "Mor tar ikke alle ukene"),
+    MOR_TAR_IKKE_UKENE_FØR_FØDSEL(4095, "Mor tar ikke alle ukene før fødsel"),
+    MOR_TAR_IKKE_UKENE_ETTER_FØDSEL(4103, "Mor tar ikke alle ukene etter fødsel"),
+    BARE_FAR_RETT_IKKE_SØKT(4102, "Bare far rett ikke-søkt periode"),
     SØKER_DØD(4071, "Søker er død"),
     BARN_DØD(4072, "Barnet er dødt"),
     MOR_IKKE_RETT_FK(4073, "Ikke rett til kvote fordi mor ikke har rett til foreldrepenger"),
@@ -43,6 +45,10 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     SØKT_GRADERING_ETTER_PERIODEN_HAR_BEGYNT(4080, "Søker har søkt om gradert uttak etter at perioden med delvis arbeid er påbegynt"),
     SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT(4081, "Søker har søkt om utsettelse pga ferie etter ferien er begynt"),
     SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT(4082, "Søker har søkt om utsettelse pga arbeid etter arbeid er begynt"),
+
+    SØKERS_SYKDOM_SKADE_SEKS_UKER_IKKE_OPPFYLT(4110, "Søkers sykdom/skade første 6 uker ikke oppfylt"),
+    SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT(4111, "Søkers innleggelse første 6 uker ikke oppfylt"),
+    BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT(4112, "Barnets innleggelse første 6 uker ikke oppfylt"),
 
     //Medlem
     SØKER_IKKE_MEDLEM(4087, "Søker ikke medlem"),

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
@@ -46,13 +47,13 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         //TODO fritt uttak: Manuell behandling for alle manglende søkt
         assertThat(perioder).hasSize(3);
         assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+                IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
         assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
         assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
@@ -102,7 +103,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         //UT1291
         assertThat(perioder.get(1).isManuellBehandling()).isTrue();
     }
@@ -134,7 +135,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder).hasSize(3);
 
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
         assertThat(perioder.get(0).getUttakPeriode().getAktiviteter()).hasSize(1);
         assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD))
@@ -143,7 +144,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(startdatoNyttArbeidsforhold.minusDays(1));
 
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
         assertThat(perioder.get(1).getUttakPeriode().getAktiviteter()).hasSize(2);
         assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));

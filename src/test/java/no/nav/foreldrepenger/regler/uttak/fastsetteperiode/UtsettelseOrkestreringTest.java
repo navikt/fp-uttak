@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Annen
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.ARBEID;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.FERIE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.FRI;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_BARN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_SØKER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.SYKDOM_SKADE;
@@ -41,6 +42,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
 class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -505,6 +507,36 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(tom);
         assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    void utsettelse_akt_krav_bare_far_rett_innvilget_uten_trekk() {
+        var fødselsdato = LocalDate.of(2021, 1, 20);
+        //Skal få avslag pga mor ikke er i aktivitet
+        var fom = fødselsdato.plusWeeks(6);
+        var tom = fødselsdato.plusWeeks(9);
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
+                new PeriodeMedAvklartMorsAktivitet(fom, tom, PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
+        //Skal gå tom for dager
+        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
+                FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+        basicGrunnlagFar(fødselsdato)
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
+                .søknad(new Søknad.Builder().type(FØDSEL)
+                        .oppgittPeriode(utsettelse)
+                        .dokumentasjon(dokumentasjon));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(1);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
+        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fom);
+        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(tom);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
     }
 
     //TODO fritt uttak. Lage tester på bare far har rett. Avhenger av om det løses med utsettelse uten årsak eller ikke

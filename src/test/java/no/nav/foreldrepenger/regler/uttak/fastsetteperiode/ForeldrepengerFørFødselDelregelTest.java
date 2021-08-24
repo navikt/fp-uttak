@@ -83,7 +83,7 @@ class ForeldrepengerFørFødselDelregelTest {
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
-        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_ALLE_UKENE);
+        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_FØR_FØDSEL);
     }
 
     @Test
