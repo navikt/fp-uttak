@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
@@ -43,8 +42,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                 .rettOgOmsorg(bareFarRett())
                 .build();
         var perioder = fastsettPerioder(grunnlag);
-
-        //TODO fritt uttak: Manuell behandling for alle manglende søkt
+        
         assertThat(perioder).hasSize(3);
         assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);

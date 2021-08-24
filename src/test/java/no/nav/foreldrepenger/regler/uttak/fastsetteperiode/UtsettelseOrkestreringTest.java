@@ -471,7 +471,9 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(manuellPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
     }
 
-    @Disabled("TODO fritt uttak. Hvilke caser kan må gå tom for dager ved avslag utsettelse? Kanskje bare far har rett og utsettelse uten årsak")
+    // TODO fritt uttak. Hvilke caser kan må gå tom for dager ved avslag utsettelse?
+    //  Kanskje bare far har rett og utsettelse uten årsak
+    // Vurder saldosjekk i aktivitetskravflyt så man får tom på konto
     @Test
     void avslag_utsettelse_med_trekkdager_skal_knekkes_når_saldo_går_tom() {
         var fødselsdato = LocalDate.of(2021, 1, 20);
@@ -482,7 +484,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 new PeriodeMedAvklartMorsAktivitet(fom, tom, PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_DOKUMENTERT));
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
-                ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+                FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         basicGrunnlagFar(fødselsdato)
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(bareFarRett())
@@ -502,7 +504,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak())
-                .isEqualTo(IkkeOppfyltÅrsak.INGEN_STØNADSDAGER_IGJEN_FOR_AVSLÅTT_UTSETTELSE);
+                .isEqualTo(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fom.plusWeeks(2));
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(tom);
         assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
@@ -538,8 +540,6 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
     }
-
-    //TODO fritt uttak. Lage tester på bare far har rett. Avhenger av om det løses med utsettelse uten årsak eller ikke
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {
         return new Datoer.Builder().fødsel(fødselsdato);

@@ -17,17 +17,8 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
- * Delregel innenfor regeltjenesten FastsettePeriodeRegel som fastsetter uttak av foreldrepenger før fødsel.
- * <p>
- * Utfall definisjoner:<br>
- * <p>
- * Utfall AVSLÅTT:<br>
- * - Far søker om perioden
- * - Perioden starter før perioden forbeholdt mor før fødsel.<br>
- * - Perioden starter etter termin/fødsel.<br>
- * <p>
- * Utfall INNVILGET:<br>
- * - Perioden dekker perioden forbeholdt mor før fødsel og det er mor som søker.
+ * Delregel innenfor regeltjenesten FastsettePeriodeRegel som fastsetter perioder som ikke er søkt om.
+ * Disse er i hovedsak innenfor perioder som er reservert mor (14-9 sjette ledd) og tekniske trekkperioder for far (14-14 første ledd)
  */
 
 @RuleDocumentation(value = ManglendeSøktPeriodeDelregel.ID, specificationReference = "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
