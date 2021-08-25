@@ -63,13 +63,6 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
         return rs.hvisRegel(SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent.ID, "Starter perioden for tidlig?")
                 .hvis(new SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent(konfigurasjon),
                         Manuellbehandling.opprett("UT1070", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false))
-                .ellers(sjekkOmManglendeSøktPeriodeNode(rs));
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriodeNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
-        return rs.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det manglende søkt periode?")
-                .hvis(new SjekkOmManglendeSøktPeriode(),
-                        IkkeOppfylt.opprett("UT1073", IkkeOppfyltÅrsak.MOR_TAR_IKKE_ALLE_UKENE, true, false))
                 .ellers(sjekkOmGradering(rs));
     }
 

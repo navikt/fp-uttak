@@ -142,7 +142,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         assertThat(resultater).hasSize(3);
         verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(3).minusDays(3), MØDREKVOTE,
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+                IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
         verifiserManuellBehandlingPeriode(resultater.get(1).getUttakPeriode(), fødselsdato.plusWeeks(3),
                 fødselsdato.plusWeeks(6).minusDays(1), FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
@@ -169,7 +169,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         verifiserManuellBehandlingPeriode(resultater.get(3).getUttakPeriode(), fødselsdato, fødselsdato, FELLESPERIODE, null,
                 Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         verifiserAvslåttPeriode(resultater.get(4).getUttakPeriode(), fødselsdato.plusDays(1), fødselsdato.plusWeeks(6).minusDays(3),
-                MØDREKVOTE, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+                MØDREKVOTE, IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
     }
 
     @Test
