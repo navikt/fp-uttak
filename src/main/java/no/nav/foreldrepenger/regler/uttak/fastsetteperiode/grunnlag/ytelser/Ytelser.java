@@ -4,13 +4,13 @@ import java.util.Optional;
 
 public class Ytelser {
 
-    private final PleiepengerMedInnleggelse pleiepengerMedInnleggelse;
+    private final Pleiepenger pleiepenger;
 
-    public Ytelser(PleiepengerMedInnleggelse pleiepengerMedInnleggelse) {
-        this.pleiepengerMedInnleggelse = pleiepengerMedInnleggelse;
+    public Ytelser(Pleiepenger pleiepenger) {
+        this.pleiepenger = pleiepenger;
     }
 
-    public Optional<PleiepengerMedInnleggelse> pleiepenger() {
-        return Optional.ofNullable(pleiepengerMedInnleggelse);
+    public Optional<Pleiepenger> pleiepenger() {
+        return Optional.ofNullable(pleiepenger);
     }
 }

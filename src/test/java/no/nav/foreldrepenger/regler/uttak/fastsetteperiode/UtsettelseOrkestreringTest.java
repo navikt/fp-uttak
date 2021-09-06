@@ -39,7 +39,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerMedInnleggelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -451,8 +452,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
                         .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN)))
-                .ytelser(new Ytelser(new PleiepengerMedInnleggelse(Set.of(new PeriodeMedBarnInnlagt(fødselsdato.plusWeeks(3),
-                        fødselsdato.plusWeeks(5).minusDays(1))))));
+                .ytelser(new Ytelser(new Pleiepenger(Set.of(new PleiepengerPeriode(fødselsdato.plusWeeks(3),
+                        fødselsdato.plusWeeks(5).minusDays(1), true)))));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);

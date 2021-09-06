@@ -86,10 +86,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public List<PeriodeMedBarnInnlagt> getPerioderMedBarnInnlagt() {
         var fraDok = regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedBarnInnlagt();
-        var fraYtelser = regelGrunnlag.getYtelser().pleiepenger()
-                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.perioder())
-                .orElse(List.of());
         var felles = new ArrayList<>(fraDok);
+        var fraYtelser = regelGrunnlag.getYtelser().pleiepenger()
+                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.medInnleggelse())
+                .orElse(List.of())
+                .stream()
+                .map(p -> new PeriodeMedBarnInnlagt(p.getFom(), p.getTom()))
+                .toList();
         felles.addAll(fraYtelser);
         return felles;
     }
