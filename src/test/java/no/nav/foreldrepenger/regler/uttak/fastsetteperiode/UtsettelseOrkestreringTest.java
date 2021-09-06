@@ -17,6 +17,7 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Disabled;
@@ -368,6 +369,27 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(resultat.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    void pleiepenger_med_overlappende_uttaksperiode_skal_gå_til_manuell() {
+        var fødselsdato = LocalDate.of(2019, 7, 1);
+        var innleggelse = new PleiepengerPeriode(fødselsdato, fødselsdato.plusWeeks(3), true);
+        var utenInnleggelse = new PleiepengerPeriode(fødselsdato.plusWeeks(3).plusDays(1), fødselsdato.plusWeeks(6).minusDays(1), false);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+                .søknad(fødselSøknad()
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))))
+                .ytelser(new Ytelser(new Pleiepenger(List.of(innleggelse, utenInnleggelse))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getUttakPeriode().getFom()).isEqualTo(innleggelse.getFom());
+        assertThat(resultat.get(0).getUttakPeriode().getManuellbehandlingårsak())
+                .isEqualTo(Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE);
+        assertThat(resultat.get(1).getUttakPeriode().getFom()).isEqualTo(utenInnleggelse.getFom());
+        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak())
+                .isEqualTo(Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE);
     }
 
     @Test

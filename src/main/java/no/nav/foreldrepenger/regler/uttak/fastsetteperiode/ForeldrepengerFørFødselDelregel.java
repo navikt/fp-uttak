@@ -37,7 +37,7 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
     private Konfigurasjon konfigurasjon;
 
     public ForeldrepengerFørFødselDelregel() {
-        // For dokumentasjonsgenerering6
+        // For dokumentasjonsgenerering
     }
 
 
