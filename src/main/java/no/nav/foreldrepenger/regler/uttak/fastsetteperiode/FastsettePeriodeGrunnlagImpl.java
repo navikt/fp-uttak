@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +28,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenO
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
@@ -86,10 +88,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public List<PeriodeMedBarnInnlagt> getPerioderMedBarnInnlagt() {
         var fraDok = regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedBarnInnlagt();
-        var fraYtelser = regelGrunnlag.getYtelser().pleiepenger()
-                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.perioder())
-                .orElse(List.of());
         var felles = new ArrayList<>(fraDok);
+        var fraYtelser = regelGrunnlag.getYtelser().pleiepenger()
+                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
+                .orElse(List.of())
+                .stream()
+                .map(p -> new PeriodeMedBarnInnlagt(p.getFom(), p.getTom()))
+                .toList();
         felles.addAll(fraYtelser);
         return felles;
     }
@@ -257,5 +262,10 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean kreverBehandlingSammenhengendeUttak() {
         return regelGrunnlag.getBehandling().isKreverSammenhengendeUttak();
+    }
+
+    @Override
+    public Collection<PleiepengerPeriode> perioderMedPleiepenger() {
+        return regelGrunnlag.getYtelser().pleiepenger().map(p -> p.perioder()).orElse(List.of());
     }
 }

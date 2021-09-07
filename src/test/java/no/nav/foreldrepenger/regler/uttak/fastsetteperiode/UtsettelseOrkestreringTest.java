@@ -17,6 +17,7 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Disabled;
@@ -39,7 +40,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerMedInnleggelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -370,6 +372,27 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
+    void pleiepenger_med_overlappende_uttaksperiode_skal_gå_til_manuell() {
+        var fødselsdato = LocalDate.of(2019, 7, 1);
+        var innleggelse = new PleiepengerPeriode(fødselsdato, fødselsdato.plusWeeks(3), true);
+        var utenInnleggelse = new PleiepengerPeriode(fødselsdato.plusWeeks(3).plusDays(1), fødselsdato.plusWeeks(6).minusDays(1), false);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+                .søknad(fødselSøknad()
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))))
+                .ytelser(new Ytelser(new Pleiepenger(List.of(innleggelse, utenInnleggelse))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getUttakPeriode().getFom()).isEqualTo(innleggelse.getFom());
+        assertThat(resultat.get(0).getUttakPeriode().getManuellbehandlingårsak())
+                .isEqualTo(Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE);
+        assertThat(resultat.get(1).getUttakPeriode().getFom()).isEqualTo(utenInnleggelse.getFom());
+        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak())
+                .isEqualTo(Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE);
+    }
+
+    @Test
     void utsettelse_pga_sykdom_før_søknad_mottatt_dato_skal_innvilges() {
         //Mottatt dato skal ikke være relevant for utsettelse første 6 ukene hvis det er dokumentert
         var fødselsdato = LocalDate.of(2019, 7, 1);
@@ -451,8 +474,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
                         .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN)))
-                .ytelser(new Ytelser(new PleiepengerMedInnleggelse(Set.of(new PeriodeMedBarnInnlagt(fødselsdato.plusWeeks(3),
-                        fødselsdato.plusWeeks(5).minusDays(1))))));
+                .ytelser(new Ytelser(new Pleiepenger(Set.of(new PleiepengerPeriode(fødselsdato.plusWeeks(3),
+                        fødselsdato.plusWeeks(5).minusDays(1), true)))));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
