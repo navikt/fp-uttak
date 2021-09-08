@@ -19,6 +19,11 @@ public class PleiepengerPeriode extends LukketPeriode {
     }
 
     @Override
+    public String toString() {
+        return "PleiepengerPeriode{" + "periode=" + super.toString() + ", barnInnlagt=" + barnInnlagt + '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
