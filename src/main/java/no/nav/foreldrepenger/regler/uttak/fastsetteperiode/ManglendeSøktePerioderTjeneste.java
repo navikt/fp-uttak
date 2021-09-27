@@ -62,6 +62,10 @@ final class ManglendeSøktePerioderTjeneste {
      */
     private static List<OppgittPeriode> finnManglendeSøktePerioderITidsprommetForbeholdtMor(RegelGrunnlag grunnlag,
                                                                                             Konfigurasjon konfigurasjon) {
+        // Må sjekke om annenpart. Gjelder der far først har søkt om aleneomsorg.
+        if (grunnlag.getBehandling().isSøkerFarMedMor() && grunnlag.getAnnenPart() == null) {
+            return List.of();
+        }
         var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
 
         var fellesUttakBeggeParter = slåSammenUttakForBeggeParter(grunnlag)
