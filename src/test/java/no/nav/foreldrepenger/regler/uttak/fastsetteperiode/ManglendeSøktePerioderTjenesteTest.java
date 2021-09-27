@@ -13,10 +13,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
@@ -31,7 +29,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -144,35 +141,23 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    void finnerHullMellomParteneITidsrommetForbeholdtMorHvisAnnenpartHarAvslåttPeriodeUtenTrekkdagerOgUtbetaling() {
-        var familiehendelse = LocalDate.of(2018, 12, 4);
-
-        var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse,
-                familiehendelse.plusWeeks(3).minusDays(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(),
-                        MØDREKVOTE, new Trekkdager(10), Utbetalingsgrad.TEN))
-                .build();
-        var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(3),
-                familiehendelse.plusWeeks(7))
-                .innvilget(false)
-                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE,
-                        Trekkdager.ZERO, Utbetalingsgrad.ZERO))
-                .build();
+    void skal_ikke_opprette_msp_hvis_mor_ikke_søkt() {
+        var fødselsdato = LocalDate.of(2021, 9, 27);
         var grunnlag = grunnlagMedKontoer()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(8), familiehendelse.plusWeeks(15))))
                 .behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(familiehendelse))
-                .annenPart(new AnnenPart.Builder()
-                        .uttaksperiode(annenpartInnvilgetMødrekvote)
-                        .uttaksperiode(annenpartAvslåttMødrekvote))
+                .rettOgOmsorg(beggeRett())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .søknad(new Søknad.Builder()
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(4)))
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20))))
                 .build();
 
         var msp = finnManglendeSøktePerioder(grunnlag);
-        assertThat(msp).hasSize(1);
-        assertThat(msp.get(0).getFom()).isEqualTo(annenpartAvslåttMødrekvote.getFom());
-        assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(6).minusDays(1));
+        assertThat(msp).isEmpty();
+    }
+
+    private RettOgOmsorg.Builder beggeRett() {
+        return new RettOgOmsorg.Builder().aleneomsorg(false).morHarRett(true).farHarRett(true).samtykke(true);
     }
 
     @Test
