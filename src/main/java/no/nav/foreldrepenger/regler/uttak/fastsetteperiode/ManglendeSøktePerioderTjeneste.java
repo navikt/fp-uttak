@@ -137,7 +137,7 @@ final class ManglendeSøktePerioderTjeneste {
         return Stream.of(periode);
     }
 
-    private static Optional<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRett(RegelGrunnlag grunnlag,
+    private static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRett(RegelGrunnlag grunnlag,
                                                                                    Konfigurasjon konfigurasjon) {
         //Kommer sortert
         var søktFom = grunnlag.getSøknad().getOppgittePerioder().get(0).getFom();
@@ -147,26 +147,37 @@ final class ManglendeSøktePerioderTjeneste {
         return finnManglendeSøktPeriodeBareFarHarRettFødselTermin(grunnlag, konfigurasjon, søktFom);
     }
 
-    private static Optional<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettAdopsjon(RegelGrunnlag grunnlag, LocalDate søktFom) {
+    private static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettAdopsjon(RegelGrunnlag grunnlag, LocalDate søktFom) {
         var senesteLovligeStartdatoVedAdopsjon = utledSenesteLovligeStartdatoVedAdopsjon(grunnlag);
-        if (søktFom.isAfter(senesteLovligeStartdatoVedAdopsjon)) {
-            return Optional.of(lagManglendeSøktPeriode(senesteLovligeStartdatoVedAdopsjon, søktFom.minusDays(1),
-                    Stønadskontotype.FORELDREPENGER));
-        }
-        return Optional.empty();
+        return finnManglendeSøktPeriodeBareFarHarRettFraDato(grunnlag, søktFom, senesteLovligeStartdatoVedAdopsjon);
     }
 
-    private static Optional<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettFødselTermin(RegelGrunnlag grunnlag,
-                                                                                               Konfigurasjon konfigurasjon,
-                                                                                               LocalDate søktFom) {
+    private static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettFødselTermin(RegelGrunnlag grunnlag,
+                                                                                           Konfigurasjon konfigurasjon,
+                                                                                           LocalDate søktFom) {
         var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
         var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
         var bareFarSomHarRettMåHaStartdato = Virkedager.plusVirkedager(tomTidsperiodeForbeholdtMor, 1);
-        if (grunnlag.getSøknad().gjelderTerminFødsel() && søktFom.isAfter(bareFarSomHarRettMåHaStartdato)) {
-            return Optional.of(lagManglendeSøktPeriode(bareFarSomHarRettMåHaStartdato, søktFom.minusDays(1),
-                    Stønadskontotype.FORELDREPENGER));
+        return finnManglendeSøktPeriodeBareFarHarRettFraDato(grunnlag, søktFom, bareFarSomHarRettMåHaStartdato);
+    }
+
+    private static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRettFraDato(RegelGrunnlag grunnlag,
+                                                                                      LocalDate søktFom,
+                                                                                      LocalDate påkrevdOppstartsdato) {
+        List<OppgittPeriode> msp = new ArrayList<>();
+        if (søktFom.isAfter(påkrevdOppstartsdato)) {
+            var mspFraPåkrevdOppstart = lagManglendeSøktPeriode(påkrevdOppstartsdato, søktFom.minusDays(1),
+                    Stønadskontotype.FORELDREPENGER);
+            msp.add(mspFraPåkrevdOppstart);
         }
-        return Optional.empty();
+        var søktePerioder = grunnlag.getSøknad()
+                .getOppgittePerioder()
+                .stream()
+                .map(p -> new LukketPeriode(p.getFom(), p.getTom()))
+                .toList();
+        var manglendeMellomliggendePerioder = finnManglendeMellomliggendePerioder(søktePerioder, påkrevdOppstartsdato);
+        msp.addAll(manglendeMellomliggendePerioder);
+        return msp;
     }
 
     private static List<LukketPeriode> splitPåTidsperiodeForbeholdtMor(LocalDate familiehendelse,
