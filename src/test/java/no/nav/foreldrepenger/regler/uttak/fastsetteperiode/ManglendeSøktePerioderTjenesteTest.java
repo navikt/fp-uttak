@@ -216,6 +216,64 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
+    void skalLageManglendeSøktIMellomliggendePerioderNårBareFarHarRett_fødsel() {
+        var familiehendelse = LocalDate.of(2021, 9, 28);
+
+        var grunnlag = grunnlagMedKontoer()
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.minusWeeks(3), familiehendelse.plusWeeks(2)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(4), familiehendelse.plusWeeks(5)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(12), familiehendelse.plusWeeks(15)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(16), familiehendelse.plusWeeks(18)))
+                )
+                .behandling(farBehandling())
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .datoer(new Datoer.Builder().fødsel(familiehendelse))
+                .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).hasSize(2);
+        assertThat(msp.get(0).getFom()).isEqualTo(familiehendelse.plusWeeks(6));
+        assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(12).minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(msp.get(1).getFom()).isEqualTo(familiehendelse.plusWeeks(15).plusDays(1));
+        assertThat(msp.get(1).getTom()).isEqualTo(familiehendelse.plusWeeks(16).minusDays(1));
+        assertThat(msp.get(1).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    void skalLageManglendeSøktIMellomliggendePerioderNårBareFarHarRett_adopsjon() {
+        var familiehendelse = LocalDate.of(2021, 9, 28);
+
+        var grunnlag = grunnlagMedKontoer()
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.minusWeeks(3), familiehendelse.plusWeeks(2)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(4), familiehendelse.plusWeeks(5)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(12), familiehendelse.plusWeeks(15)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(16), familiehendelse.plusWeeks(18)))
+                )
+                .behandling(farBehandling())
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .datoer(new Datoer.Builder().omsorgsovertakelse(familiehendelse))
+                .adopsjon(new Adopsjon.Builder().ankomstNorge(familiehendelse))
+                .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).hasSize(3);
+        assertThat(msp.get(0).getFom()).isEqualTo(familiehendelse.plusWeeks(2).plusDays(1));
+        assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(4).minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(msp.get(1).getFom()).isEqualTo(familiehendelse.plusWeeks(5).plusDays(1));
+        assertThat(msp.get(1).getTom()).isEqualTo(familiehendelse.plusWeeks(12).minusDays(1));
+        assertThat(msp.get(1).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(msp.get(2).getFom()).isEqualTo(familiehendelse.plusWeeks(15).plusDays(1));
+        assertThat(msp.get(2).getTom()).isEqualTo(familiehendelse.plusWeeks(16).minusDays(1));
+        assertThat(msp.get(2).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
     void skalIkkeLageManglendeSøktSomGårOver6UkerEtterFødsel() {
         var familiehendelse = LocalDate.of(2018, 12, 27);
 
