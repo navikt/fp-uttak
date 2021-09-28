@@ -101,7 +101,7 @@ class ForeldrepengerFørFødselDelregelTest {
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
-        assertManuell(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO,
+        assertManuell(regelresultat, IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL, Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL,
                 false, false);
     }
 
