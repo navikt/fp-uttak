@@ -342,8 +342,8 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertManuellBehandling(regelresultat, IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER,
-                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
+        assertManuellBehandling(regelresultat, IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
+                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL);
     }
 
     @Test

@@ -182,8 +182,8 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> uttakFørTerminFødsel() {
         return rs.hvisRegel(SjekkOmPeriodenSlutterFørFamiliehendelse.ID, "Skal uttaksperioden være før termin/fødsel?")
                 .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(),
-                        Manuellbehandling.opprett("UT1020", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG,
-                                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG, false, false))
+                        Manuellbehandling.opprett("UT1020", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
+                                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false))
                 .ellers(sjekkOmPeriodenGjelderFlerbarnsdager());
     }
 

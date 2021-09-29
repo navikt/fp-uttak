@@ -94,10 +94,10 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         assertThat(resultater).hasSize(3);
         verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(5),
-                fødselsdato.minusWeeks(3).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG,
-                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
+                fødselsdato.minusWeeks(3).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
+                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL);
         verifiserManuellBehandlingPeriode(resultater.get(1).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                FELLESPERIODE, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG);
+                FELLESPERIODE, IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL, Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL);
         verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(1), Perioderesultattype.INNVILGET,
                 FELLESPERIODE);
     }

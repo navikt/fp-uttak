@@ -54,7 +54,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
         assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(
-                Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
+                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL);
         assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
         assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(3));
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));

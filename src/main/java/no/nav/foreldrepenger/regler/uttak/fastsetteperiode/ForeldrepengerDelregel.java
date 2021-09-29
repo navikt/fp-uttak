@@ -184,8 +184,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkalVæreFørFamileHendelse() {
         return rs.hvisRegel(SjekkOmPeriodenSlutterFørFamiliehendelse.ID, "Skal uttak være før termin/fødsel?")
                 .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(),
-                        Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER,
-                                Manuellbehandlingårsak.SØKER_HAR_IKKE_OMSORG, false, false))
+                        Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
+                                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false))
                 .ellers(sjekkErDetAleneomsorgFar());
     }
 
