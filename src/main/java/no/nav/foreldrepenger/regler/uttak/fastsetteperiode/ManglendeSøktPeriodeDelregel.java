@@ -5,6 +5,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -65,9 +66,16 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBrukSammenhengendeUttakÅrsaker(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
-                .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(),
-                        IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false))
+                .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), sjekkOmSøkerErMor(rs))
                 .ellers(sjekkOmSakGjelderBareFarRett(rs));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor(Ruleset<FastsettePeriodeGrunnlag> rs) {
+        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
+                .hvis(new SjekkOmSøkerErMor(),
+                        Manuellbehandling.opprett("UT1096", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.VURDER_OM_UTSETTELSE,
+                                true, false))
+                .ellers(IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSakGjelderBareFarRett(Ruleset<FastsettePeriodeGrunnlag> rs) {

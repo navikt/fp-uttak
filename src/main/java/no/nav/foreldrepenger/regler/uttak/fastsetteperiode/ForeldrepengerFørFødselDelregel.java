@@ -51,7 +51,7 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMorNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
-        return rs.hvisRegel(SjekkOmSøkerErMor.ID, "Er søker mor?")
+        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmPeriodenStarterForTidligNode(rs))
                 .ellers(Manuellbehandling.opprett("UT1076", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
                         Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false));

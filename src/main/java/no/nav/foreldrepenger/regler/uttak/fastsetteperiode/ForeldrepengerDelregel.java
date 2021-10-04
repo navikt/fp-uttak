@@ -52,7 +52,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
-        return rs.hvisRegel(SjekkOmSøkerErMor.ID, "Er søker mor?")
+        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmDetErFødselMor())
                 .ellers(sjekkOmDetErFødselFar());
     }
