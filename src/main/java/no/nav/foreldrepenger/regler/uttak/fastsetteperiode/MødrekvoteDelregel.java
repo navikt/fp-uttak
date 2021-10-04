@@ -53,7 +53,6 @@ import no.nav.fpsak.nare.specification.Specification;
 public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10";
-    private static final String ER_SØKER_MOR = "Er søker mor?";
     private static final String RESERVERT_MØDREKVOTE = "Er perioden innenfor dager reservert for mødrekvote etter fødsel?";
 
     private Konfigurasjon konfigurasjon;
@@ -84,7 +83,7 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMor() {
-        return rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_MOR)
+        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmFødsel())
                 .ellers(sjekkOmFarSøktOmOverføringAvMødrekvote());
     }
@@ -174,7 +173,7 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor() {
-        return rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_MOR)
+        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmGraderingIPerioden())
                 .ellers(sjekkOmSøkerHarOmsorgForBarnet());
     }
@@ -194,7 +193,7 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDisponibleDager() {
-        var sjekkOmSøkerErMor = rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_MOR)
+        var sjekkOmSøkerErMor = rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(), erDetGraderingIPeriode2())
                 .ellers(new OverføringDelregel().getSpecification());
 
