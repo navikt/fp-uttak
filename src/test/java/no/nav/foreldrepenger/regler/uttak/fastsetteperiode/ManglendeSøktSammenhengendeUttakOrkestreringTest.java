@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
@@ -127,67 +126,32 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
     }
 
     @Test
-    @Disabled("TODO palfi")
     void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
-        var grunnlag = basicGrunnlagMorSammenhengendeUttak(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
-                oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
-                //manglende søkt i mellom
-                oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12))))
-                .kontoer(kontoer(konto(Stønadskontotype.MØDREKVOTE, 32), konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15)))
+        var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(30).type(FORELDREPENGER)))
+                .søknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10)),
+                        //Bare far har rett, msp i mellom
+                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20))
+                ))
                 .build();
         var perioder = fastsettPerioder(grunnlag);
 
-        assertThat(perioder).hasSize(5);
+        assertThat(perioder).hasSize(4);
+        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isNull();
-        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isZero();
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-    }
-
-    @Test
-    @Disabled("TODO palfi")
-    void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode_flere_knekk() {
-        var fødselsdato = LocalDate.of(2019, 9, 3);
-        var grunnlag = basicGrunnlagMorSammenhengendeUttak(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
-                oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
-                //manglende søkt i mellom
-                oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12))))
-                .kontoer(kontoer(konto(Stønadskontotype.MØDREKVOTE, 32), konto(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, 15),
-                        konto(Stønadskontotype.FELLESPERIODE, 5)))
-                .build();
-        var perioder = fastsettPerioder(grunnlag);
-
-        //Går tom for mødrekvote først, deretter fellesperiode
-        assertThat(perioder).hasSize(6);
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
         assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isNull();
+        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isZero();
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
-        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FELLESPERIODE);
-        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(4).getUttakPeriode().getStønadskontotype()).isNull();
-        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isZero();
-        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     @Test
