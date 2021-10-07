@@ -196,21 +196,12 @@ public class FastsettePerioderRegelOrkestrering {
 
         var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, saldoUtregning, regelresultat);
 
-        switch (utfallType) {
-            case AVSLÅTT -> {
-                var annenPartUttaksperioder = annenpartUttaksperioder(regelGrunnlag);
-                return behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
-                        overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenPartUttaksperioder));
-            }
-            case INNVILGET -> {
-                return behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt,
-                        regelresultat);
-            }
-            case MANUELL_BEHANDLING -> {
-                return behandler.manuellBehandling(aktuellPeriode, regelresultat);
-            }
-            default -> throw new UnsupportedOperationException(String.format("Ukjent utfalltype: %s", utfallType.name()));
-        }
+        return switch (utfallType) {
+            case AVSLÅTT -> behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
+                    overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenpartUttaksperioder(regelGrunnlag)));
+            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat);
+            case MANUELL_BEHANDLING -> behandler.manuellBehandling(aktuellPeriode, regelresultat);
+        };
     }
 
     private List<AnnenpartUttakPeriode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {

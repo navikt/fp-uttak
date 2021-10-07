@@ -50,7 +50,6 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         return switch (utfallType) {
             case INNVILGET -> ja();
             case AVSLÅTT, MANUELL_BEHANDLING -> nei(ruleReasonRef);
-            default -> throw new IllegalStateException("Ugyldig UtfallType: " + utfallType);
         };
     }
 
