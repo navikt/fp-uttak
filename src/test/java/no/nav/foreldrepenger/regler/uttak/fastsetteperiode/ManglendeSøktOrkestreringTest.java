@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
@@ -255,4 +256,22 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
         assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
+
+    @Test
+    void bfhr_eneste_periode_er_første_6_ukene_skal_gå_til_manuell() {
+        var fødselsdato = LocalDate.of(2021, 10, 11);
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL,
+                        oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
+                        .dokumentasjon(new Dokumentasjon.Builder()
+                                .gyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(4))))
+                )
+                .kontoer(kontoer(konto(FORELDREPENGER, 100)))
+                .rettOgOmsorg(bareFarRett())
+                .build();
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(1);
+        assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isNotNull();
+    }
+
 }

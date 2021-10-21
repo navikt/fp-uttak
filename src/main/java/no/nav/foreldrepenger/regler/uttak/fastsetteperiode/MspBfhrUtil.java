@@ -51,6 +51,9 @@ final class MspBfhrUtil {
                 .filter(p -> p.getTom().isAfter(ikkeLagHullFørDato))
                 .map(p -> new LukketPeriode(p.getFom(), p.getTom()))
                 .toList();
+        if (søktePerioderSomSkalLageHull.isEmpty()) {
+            return List.of();
+        }
         var førstePeriodeFom = søktePerioderSomSkalLageHull.get(0).getFom();
         if (førstePeriodeFom.isAfter(påkrevdOppstartsdato)) {
             var mspFraPåkrevdOppstart = lagManglendeSøktPeriode(påkrevdOppstartsdato, førstePeriodeFom.minusDays(1),
