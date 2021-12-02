@@ -1,33 +1,37 @@
 name: Bygg pull request
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - 'LICENCE'
+      - 'CODEOWNERS'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/release.yml'
+      - '.github/release-drafter.yml'
+      - '.github/dependabot.yml'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Sjekk ut kode
         uses: actions/checkout@v2
-
-      - name: Cache maven repository
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-
       - name: Set up JDK 16
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '16'
-
+          cache: 'maven'
       - name: Build
         shell: bash
         run: |
           echo "Building $(echo $GITHUB_SHA | cut -c1-7)"
-          mvn package -e --batch-mode --settings ./.github/.m2/settings.xml --file pom.xml -Dchangelist= -Dsha1=-$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)
+          mvn jacoco:prepare-agent package jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dchangelist= -Dsha1=-$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7) -Dsonar.login=${SONAR_TOKEN}
         env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
