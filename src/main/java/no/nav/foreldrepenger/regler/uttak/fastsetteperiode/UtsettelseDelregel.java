@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSøkerInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -44,7 +43,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
         return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
-                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmTidsperiodeForbeholdtMor())
+                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmUtsettelsePgaBarnInnlagtPrematur())
                 .ellers(sjekkOmPeriodeErFørFamiliehendelseVedAdopsjon());
     }
 
@@ -90,38 +89,42 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
         return rs.hvisRegel(SjekkOmUtsettelsePgaSøkerInnleggelse.ID, SjekkOmUtsettelsePgaSøkerInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSøkerInnleggelse(), erSøkerInnlagtErDokumentert)
-                .ellers(sjekkOmBarnetsInnleggelse());
+                .ellers(sjekkOmUtsettelsePgaBarnInnlagt());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetsInnleggelse() {
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaBarnInnlagt() {
+        var varBarnetInnlagtSjekk = rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
+                .hvis(new SjekkOmBarnInnlagt(), Oppfylt.opprett("UT1359", InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT, false, false))
+                .ellers(Manuellbehandling.opprett("UT1358", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT,
+                        Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
-                .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), sjekkOmBarnetVarInnlagt())
+                .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), varBarnetInnlagtSjekk)
                 .ellers(Manuellbehandling.opprett("UT1357", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetVarInnlagt() {
-        return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
-                .hvis(new SjekkOmBarnInnlagt(), sjekkOmFødselFørUke33())
-                .ellers(Manuellbehandling.opprett("UT1358", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaBarnInnlagtPrematur() {
+        return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
+                .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), sjekkOmFødselFørUke33())
+                .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselFørUke33() {
         return rs.hvisRegel(SjekkOmFødselErFørUke33.ID, SjekkOmFødselErFørUke33.BESKRIVELSE)
                 .hvis(new SjekkOmFødselErFørUke33(konfigurasjon), sjekkOmPeriodenErFørTermin())
-                .ellers(innvilgUT1359());
+                .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenErFørTermin() {
         return rs.hvisRegel(SjekkOmPeriodeErFørTermin.ID, SjekkOmPeriodeErFørTermin.BESKRIVELSE)
-                //prematuruker
-                .hvis(new SjekkOmPeriodeErFørTermin(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER,
-                        true, false))
-                .ellers(innvilgUT1359());
+                .hvis(new SjekkOmPeriodeErFørTermin(), sjekkOmBarnetVarInnlagtPrematur())
+                .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 
-    private FastsettePeriodeUtfall innvilgUT1359() {
-        return Oppfylt.opprett("UT1359", InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT, false, false);
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetVarInnlagtPrematur() {
+        return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
+                .hvis(new SjekkOmBarnInnlagt(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false))
+                .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 }
