@@ -9,6 +9,9 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utset
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_BARN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_SØKER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.SYKDOM_SKADE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
@@ -43,7 +46,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
@@ -427,7 +429,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var uttakPeriode = resultat.get(0).getUttakPeriode();
         assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(uttakPeriode.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE);
+        assertThat(uttakPeriode.getPeriodeResultatÅrsak()).isEqualTo(OPPHOLD_UTSETTELSE);
     }
 
     @Test
@@ -527,7 +529,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak())
-                .isEqualTo(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
+                .isEqualTo(AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fom.plusWeeks(2));
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(tom);
         assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
@@ -562,6 +564,41 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(tom);
         assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
+    }
+
+    @Test
+    void prematur_fødsel_pleiepenger_skal_gi_utsettelse_med_trekkdager_fram_til_termindato() {
+        var fødselsdato = LocalDate.of(2021, 11, 22);
+        var termindato = fødselsdato.plusWeeks(8);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+                .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
+                .søknad(fødselSøknad()
+                .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN))
+                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, termindato, termindato.plusWeeks(6)))
+                .dokumentasjon(new Dokumentasjon.Builder()
+                        .periodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fødselsdato, termindato.minusDays(1)))));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+
+        var p1 = resultat.get(0).getUttakPeriode();
+        var p2 = resultat.get(1).getUttakPeriode();
+        var p3 = resultat.get(2).getUttakPeriode();
+        assertThat(p1.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(p1.getFom()).isEqualTo(fødselsdato);
+        assertThat(p1.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(p1.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(p1.getPeriodeResultatÅrsak()).isEqualTo(FRATREKK_PLEIEPENGER);
+        assertThat(p1.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
+
+        assertThat(p2.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(p2.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
+        assertThat(p2.getTom()).isEqualTo(termindato.minusDays(1));
+        assertThat(p2.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(p2.getPeriodeResultatÅrsak()).isEqualTo(FRATREKK_PLEIEPENGER);
+        assertThat(p2.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(10));
+
+        assertThat(p3.getStønadskontotype()).isEqualTo(MØDREKVOTE);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {
