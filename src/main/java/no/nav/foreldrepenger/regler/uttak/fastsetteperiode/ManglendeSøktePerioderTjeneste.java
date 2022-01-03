@@ -93,7 +93,7 @@ final class ManglendeSøktePerioderTjeneste {
         var stønadskontotype = harForeldrepengerKonto ? Stønadskontotype.FORELDREPENGER : Stønadskontotype.MØDREKVOTE;
         return finnManglendeMellomliggendePerioder(fellesUttakBeggeParter, familiehendelse, stønadskontotype)
                 .stream()
-                .flatMap(p -> split(tomTidsperiodeForbeholdtMor, p))
+                .flatMap(p -> split(tomTidsperiodeForbeholdtMor.plusDays(1), p))
                 .filter(p -> periodeLiggerITidsrommetForbeholdtMor(grunnlag, konfigurasjon, p))
                 .sorted(Comparator.comparing(OppgittPeriode::getFom))
                 .collect(Collectors.toList());
@@ -141,14 +141,16 @@ final class ManglendeSøktePerioderTjeneste {
     }
 
     private static Stream<OppgittPeriode> split(LocalDate dato, OppgittPeriode periode) {
-        if (periode.overlapper(dato) && !periode.getFom().isEqual(dato) && !periode.getTom().isEqual(dato)) {
-            return Stream.of(periode.kopiMedNyPeriode(periode.getFom(), dato),
-                    periode.kopiMedNyPeriode(dato.plusDays(1), periode.getTom()));
+        if (periode.getFom().isEqual(dato)) {
+            return Stream.of(periode);
+        }
+
+        if (periode.overlapper(dato)) {
+            return Stream.of(periode.kopiMedNyPeriode(periode.getFom(), dato.minusDays(1)),
+                    periode.kopiMedNyPeriode(dato, periode.getTom()));
         }
         return Stream.of(periode);
     }
-
-
 
     private static List<LukketPeriode> splitPåTidsperiodeForbeholdtMor(LocalDate familiehendelse,
                                                                        LukketPeriode periode,

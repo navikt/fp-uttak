@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
@@ -356,6 +357,31 @@ class ManglendeSøktePerioderTjenesteTest {
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(LocalDate.of(2021, 6, 21));
         assertThat(msp.get(0).getTom()).isEqualTo(LocalDate.of(2021, 6, 25));
+    }
+
+    @Test
+    @DisplayName("Skal lage manglende søkt periode for den ene dagen som ligger innen første 6 ukene.")
+    void ikke_msp_hvis_fødsel_etter_termin_med_påfølgende_fritt_uttak() {
+        //Fra prod saksnummer 152085835
+        var termin = LocalDate.of(2021, 12, 15);
+        var fødselsdato = LocalDate.of(2021, 12, 16);
+
+        var grunnlag = grunnlagMedKontoer()
+                .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termin))
+                .søknad(new Søknad.Builder()
+                        .oppgittPeriode(oppgittPeriode(FELLESPERIODE, LocalDate.of(2021, 11, 24), LocalDate.of(2021, 11, 24)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2021, 11, 25), LocalDate.of(2021, 12, 15)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, LocalDate.of(2021, 12, 16), LocalDate.of(2022, 1, 25)))
+                        //Opprinnelig søkt fritt uttak etter uke 6
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, LocalDate.of(2022, 2, 16), LocalDate.of(2022, 2, 16)))
+                )
+                .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(LocalDate.of(2022, 1, 26));
+        assertThat(msp.get(0).getTom()).isEqualTo(LocalDate.of(2022, 1, 26));
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
