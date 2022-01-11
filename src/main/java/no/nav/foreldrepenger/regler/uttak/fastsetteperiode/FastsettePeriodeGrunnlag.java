@@ -167,6 +167,13 @@ public interface FastsettePeriodeGrunnlag {
 
     boolean isMorRett();
 
+    /**
+     * Tilfelle av BareFarRett og MorMottarUføretrygd, 14-14 tredje ledd
+     *
+     * @return true dersom rett.
+     */
+    boolean isBareFarHarRettMorUføretrygd();
+
     SaldoUtregning getSaldoUtregning();
 
     /**

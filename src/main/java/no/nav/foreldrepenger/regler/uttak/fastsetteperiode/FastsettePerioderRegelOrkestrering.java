@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
@@ -286,10 +287,17 @@ public class FastsettePerioderRegelOrkestrering {
                 .tidsperiode(periode.getFom(), periode.getTom())
                 .aktiviteter(mapAktiviteter(periode))
                 .flerbarnsdager(periode.isFlerbarnsdager())
+                .forbrukerMinsterett(brukerAvMinsterett(periode))
                 .oppholdÅrsak(periode.getOppholdÅrsak())
                 .samtidigUttak(periode.erSamtidigUttak())
                 .periodeResultatType(periode.getPerioderesultattype())
                 .build();
+    }
+
+    private boolean brukerAvMinsterett(UttakPeriode periode) {
+        // TODO hva med overføringsperioder - antar forbruk dersom overføring innvilget
+        return !periode.isManglendeSøktPeriode() && periode.getUtsettelseÅrsak() == null && periode.getOppholdÅrsak() == null
+                && (periode.getOverføringÅrsak() == null || periode.getPerioderesultattype().equals(Perioderesultattype.INNVILGET));
     }
 
     private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder,

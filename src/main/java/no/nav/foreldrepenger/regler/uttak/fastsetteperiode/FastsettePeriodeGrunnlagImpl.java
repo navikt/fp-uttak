@@ -169,6 +169,12 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
+    public boolean isBareFarHarRettMorUføretrygd() {
+        return regelGrunnlag.getRettOgOmsorg().getFarHarRett() && !regelGrunnlag.getRettOgOmsorg().getMorHarRett() &&
+                regelGrunnlag.getRettOgOmsorg().getMorUføretrygd();
+    }
+
+    @Override
     public List<GyldigGrunnPeriode> getGyldigGrunnPerioder() {
         return regelGrunnlag.getSøknad().getDokumentasjon().getGyldigGrunnPerioder();
     }

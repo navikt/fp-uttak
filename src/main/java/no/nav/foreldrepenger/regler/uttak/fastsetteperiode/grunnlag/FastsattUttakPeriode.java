@@ -13,6 +13,7 @@ public class FastsattUttakPeriode {
     private LocalDate tom;
     private boolean samtidigUttak;
     private LocalDate mottattDato;
+    private boolean forbrukMinsterett;
 
     private FastsattUttakPeriode() {
     }
@@ -26,6 +27,7 @@ public class FastsattUttakPeriode {
         this.tom = periode.tom;
         this.samtidigUttak = periode.samtidigUttak;
         this.mottattDato = periode.mottattDato;
+        this.forbrukMinsterett = periode.forbrukMinsterett;
     }
 
     public Perioderesultattype getPerioderesultattype() {
@@ -56,6 +58,10 @@ public class FastsattUttakPeriode {
         return samtidigUttak;
     }
 
+    public boolean isForbrukMinsterett() {
+        return forbrukMinsterett;
+    }
+
     public Optional<LocalDate> getMottattDato() {
         return Optional.ofNullable(mottattDato);
     }
@@ -84,6 +90,11 @@ public class FastsattUttakPeriode {
 
         public Builder flerbarnsdager(boolean flerbarnsdager) {
             kladd.flerbarnsdager = flerbarnsdager;
+            return this;
+        }
+
+        public Builder forbrukerMinsterett(boolean forbrukMinsterett) {
+            kladd.forbrukMinsterett = forbrukMinsterett;
             return this;
         }
 

@@ -4,6 +4,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -21,6 +22,9 @@ public class SjekkOmMorErIAktivitet extends LeafSpecification<FastsettePeriodeGr
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
+        if (MorsAktivitet.UFØRE.equals(grunnlag.getAktuellPeriode().getMorsAktivitet()) && grunnlag.isBareFarHarRettMorUføretrygd()) {
+            return ja();
+        }
         var periodeMedAvklartMorsAktivitet = periodeMedAktivitet(grunnlag);
         if (periodeMedAvklartMorsAktivitet.isEmpty()) {
             return nei();

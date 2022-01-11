@@ -26,6 +26,7 @@ public final class UttakPeriode extends LukketPeriode {
     private final BigDecimal arbeidsprosent;
     private final UtsettelseÅrsak utsettelseÅrsak;
     private final OverføringÅrsak overføringÅrsak;
+    private final boolean manglendeSøktPeriode;
 
     public UttakPeriode(LocalDate fom,
                         LocalDate tom,
@@ -40,7 +41,8 @@ public final class UttakPeriode extends LukketPeriode {
                         Stønadskontotype stønadskontotype,
                         BigDecimal arbeidsprosent,
                         UtsettelseÅrsak utsettelseÅrsak,
-                        OverføringÅrsak overføringÅrsak) {
+                        OverføringÅrsak overføringÅrsak,
+                        boolean erManglendeSøktPeriode) {
         super(fom, tom);
         this.perioderesultattype = perioderesultattype;
         this.manuellbehandlingårsak = manuellbehandlingårsak;
@@ -54,6 +56,7 @@ public final class UttakPeriode extends LukketPeriode {
         this.arbeidsprosent = arbeidsprosent;
         this.utsettelseÅrsak = utsettelseÅrsak;
         this.overføringÅrsak = overføringÅrsak;
+        this.manglendeSøktPeriode = erManglendeSøktPeriode;
         validerKontoVedTrekkdager();
     }
 
@@ -108,6 +111,10 @@ public final class UttakPeriode extends LukketPeriode {
 
     public boolean isFlerbarnsdager() {
         return flerbarnsdager;
+    }
+
+    public boolean isManglendeSøktPeriode() {
+        return manglendeSøktPeriode;
     }
 
     public SamtidigUttaksprosent getSamtidigUttaksprosent() {

@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
@@ -32,6 +33,7 @@ public class SaldoUtregning {
     private final boolean berørtBehandling;
     private final LocalDateTime sisteSøknadMottattTidspunktSøker;
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
+    private final Trekkdager minsterettDager;
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer,
                    List<FastsattUttakPeriode> søkersPerioder,
@@ -40,6 +42,18 @@ public class SaldoUtregning {
                    Set<AktivitetIdentifikator> søkersAktiviteter,
                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
+        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
+                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO);
+    }
+
+    SaldoUtregning(Set<Stønadskonto> stønadskontoer,
+                   List<FastsattUttakPeriode> søkersPerioder,
+                   List<FastsattUttakPeriode> annenpartsPerioder,
+                   boolean berørtBehandling,
+                   Set<AktivitetIdentifikator> søkersAktiviteter,
+                   LocalDateTime sisteSøknadMottattTidspunktSøker,
+                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
+                   Trekkdager minsterettDager) {
         this.stønadskontoer = stønadskontoer;
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
@@ -47,6 +61,7 @@ public class SaldoUtregning {
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.berørtBehandling = berørtBehandling;
+        this.minsterettDager = minsterettDager;
     }
 
     /**
@@ -79,6 +94,31 @@ public class SaldoUtregning {
         return getMaxDagerITrekkdager(stønadskonto).subtract(new Trekkdager(forbruktSøker))
                 .subtract(new Trekkdager(forbruktAnnenpart))
                 .add(new Trekkdager(frigitteDager));
+    }
+
+    public Trekkdager saldoITrekkdager(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, OppgittPeriode aktuellPeriode) {
+        var forbruktSøker = forbruktSøker(stønadskonto, aktivitet, søkersPerioder);
+        var forbruktAnnenpart = minForbruktAnnenpart(stønadskonto);
+        //frigitte dager er dager fra annenpart som blir ledig når søker tar uttak i samme periode
+        var frigitteDager = frigitteDager(stønadskonto);
+        var gulv = Stønadskontotype.FLERBARNSDAGER.equals(stønadskonto) ? Trekkdager.ZERO : beregnRestMinstestønad(aktivitet, aktuellPeriode);
+        return getMaxDagerITrekkdager(stønadskonto).subtract(new Trekkdager(forbruktSøker))
+                .subtract(new Trekkdager(forbruktAnnenpart))
+                .add(new Trekkdager(frigitteDager))
+                .subtract(gulv);
+    }
+
+    private Trekkdager beregnRestMinstestønad(AktivitetIdentifikator aktivitet, OppgittPeriode aktuellPeriode) {
+        if (Trekkdager.ZERO.equals(minsterettDager) || aktuellPeriode.relevantForMinsterett()) {
+            return Trekkdager.ZERO;
+        }
+        var forbruk = stønadskontoer().stream()
+                .filter(k -> !Stønadskontotype.FLERBARNSDAGER.equals(k))
+                .map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder))
+                .map(Trekkdager::new)
+                .reduce(Trekkdager.ZERO, Trekkdager::add);
+        var restsaldo = minsterettDager.subtract(forbruk);
+        return restsaldo.compareTo(Trekkdager.ZERO) > 0 ? restsaldo : Trekkdager.ZERO;
     }
 
     /**
@@ -165,14 +205,6 @@ public class SaldoUtregning {
         return søkersPerioder.stream()
                 .filter(p -> søktSamtidigUttak(stønadskontoType, p))
                 .anyMatch(FastsattUttakPeriode::isSamtidigUttak);
-    }
-
-    public boolean negativSaldoPåNoenKonto() {
-        return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldo(stønadskonto.getStønadskontotype()));
-    }
-
-    public int getMaxDager(Stønadskontotype stønadskontotype) {
-        return getMaxDagerITrekkdager(stønadskontotype).decimalValue().intValue();
     }
 
     private Trekkdager getMaxDagerITrekkdager(Stønadskontotype stønadskontotype) {
@@ -357,6 +389,39 @@ public class SaldoUtregning {
         return sum;
     }
 
+    private BigDecimal forbruktSøkersMinsterett(Stønadskontotype stønadskonto,
+                                                AktivitetIdentifikator aktivitet,
+                                                List<FastsattUttakPeriode> søkersPerioder) {
+        var sum = BigDecimal.ZERO;
+
+        for (var i = 0; i < søkersPerioder.size(); i++) {
+            var periodeSøker = søkersPerioder.get(i);
+            if (!forbrukerMinsterett(periodeSøker)) {
+                continue;
+            }
+            if (erOpphold(periodeSøker)) {
+                sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periodeSøker));
+            } else {
+                var nestePeriodeSomIkkeErOpphold = nestePeriodeSomIkkeErOpphold(søkersPerioder, i);
+                if (!aktivitetIPeriode(periodeSøker, aktivitet) && (nestePeriodeSomIkkeErOpphold.isEmpty() || aktivitetIPeriode(
+                        nestePeriodeSomIkkeErOpphold.get(), aktivitet))) {
+                    var perioderTomPeriode = søkersPerioder.subList(0, i + 1);
+                    var ekisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
+                    ekisterendeAktiviteter.remove(aktivitet);
+                    var minForbrukteDagerEksisterendeAktiviteter = ekisterendeAktiviteter.stream()
+                            .map(a -> forbruktSøkersMinsterett(stønadskonto, a, perioderTomPeriode))
+                            .min(BigDecimal::compareTo)
+                            .orElseThrow();
+                    sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
+                } else {
+                    sum = sum.add(trekkdagerForUttaksperiode(stønadskonto, aktivitet, periodeSøker));
+                }
+            }
+        }
+
+        return sum;
+    }
+
     private Optional<FastsattUttakPeriode> nestePeriodeSomIkkeErOpphold(List<FastsattUttakPeriode> perioder, int index) {
         for (var i = index + 1; i < perioder.size(); i++) {
             var periode = perioder.get(i);
@@ -382,6 +447,10 @@ public class SaldoUtregning {
 
     private boolean erOpphold(FastsattUttakPeriode periodeSøker) {
         return periodeSøker.getOppholdÅrsak() != null;
+    }
+
+    private boolean forbrukerMinsterett(FastsattUttakPeriode periodeSøker) {
+        return periodeSøker.isForbrukMinsterett();
     }
 
     private BigDecimal trekkdagerForOppholdsperiode(Stønadskontotype stønadskonto,

@@ -166,6 +166,10 @@ public final class OppgittPeriode extends LukketPeriode {
         return morsAktivitet;
     }
 
+    public boolean relevantForMinsterett() {
+        return !manglendeSøktPeriode && oppholdÅrsak == null && utsettelseÅrsak == null;
+    }
+
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
         return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, PeriodeVurderingType.IKKE_VURDERT, null, false, null,
                 null, null, null, null);

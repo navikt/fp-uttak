@@ -25,7 +25,7 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
         var tomForAlleSineKontoer = true;
         for (var stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
+                var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet, grunnlag.getAktuellPeriode());
                 if (saldo.merEnn0()) {
                     tomForAlleSineKontoer = false;
                 }

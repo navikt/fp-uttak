@@ -59,7 +59,7 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        var saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
+        var saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet, oppgittPeriode);
         var saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
 
         var trekkdagerIPeriodeFom = justerHelgTilMandag(oppgittPeriode.getFom());
