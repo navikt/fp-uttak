@@ -166,7 +166,7 @@ public final class OppgittPeriode extends LukketPeriode {
         return morsAktivitet;
     }
 
-    public boolean relevantForMinsterett() {
+    public boolean kanTrekkeAvMinsterett() {
         return !manglendeSøktPeriode && oppholdÅrsak == null && utsettelseÅrsak == null;
     }
 

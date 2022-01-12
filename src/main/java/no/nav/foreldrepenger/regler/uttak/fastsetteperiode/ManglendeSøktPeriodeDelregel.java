@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmKunMinsterettAlleKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
@@ -73,16 +74,28 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(),
-                        Manuellbehandling.opprett("UT1096", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.VURDER_OM_UTSETTELSE,
-                                true, false))
+                        Manuellbehandling.opprett("UT1096", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.VURDER_OM_UTSETTELSE, true, false))
+                .ellers(sjekkMinstedagerFar(rs));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkMinstedagerFar(Ruleset<FastsettePeriodeGrunnlag> rs) {
+        return rs.hvisRegel(SjekkOmKunMinsterettAlleKontoer.ID, SjekkOmKunMinsterettAlleKontoer.BESKRIVELSE)
+                .hvis(new SjekkOmKunMinsterettAlleKontoer(),
+                        IkkeOppfylt.opprett("UT1088", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
                 .ellers(IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSakGjelderBareFarRett(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(),
-                        IkkeOppfylt.opprett("UT1093", IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT, true, false))
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmBareFarRettMinstedager(rs))
                 .ellers(sjekkOmPeriodeGjelderMorsReserverteUker(rs));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarRettMinstedager(Ruleset<FastsettePeriodeGrunnlag> rs) {
+        return rs.hvisRegel(SjekkOmKunMinsterettAlleKontoer.ID, SjekkOmKunMinsterettAlleKontoer.BESKRIVELSE)
+                .hvis(new SjekkOmKunMinsterettAlleKontoer(),
+                        IkkeOppfylt.opprett("UT1088", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .ellers(IkkeOppfylt.opprett("UT1093", IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeGjelderMorsReserverteUker(Ruleset<FastsettePeriodeGrunnlag> rs) {

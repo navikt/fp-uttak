@@ -5,18 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkOmTomForAlleSineKontoer.ID)
-public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmKunMinsterettAlleKontoer.ID)
+public class SjekkOmKunMinsterettAlleKontoer extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
-    public static final String ID = "FP_VK 10.5.1";
-    public static final String BESKRIVELSE = "Er søker tom for alle sine kontoer?";
+    public static final String ID = "FP_VK 10.5.4";
+    public static final String BESKRIVELSE = "Har søker kun minsterett for alle konti?";
 
-    public SjekkOmTomForAlleSineKontoer() {
+    public SjekkOmKunMinsterettAlleKontoer() {
         super(ID);
     }
 
@@ -26,7 +27,9 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
         for (var stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
-                if (saldo.merEnn0()) {
+                var minsterett = grunnlag.getAktuellPeriode().kanTrekkeAvMinsterett() ? Trekkdager.ZERO :
+                        grunnlag.getSaldoUtregning().restSaldoMinsterett(stønadskontotype, aktivitet);
+                if (saldo.subtract(minsterett).merEnn0()) {
                     tomForAlleSineKontoer = false;
                 }
             }

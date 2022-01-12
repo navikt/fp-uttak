@@ -41,7 +41,7 @@ class RegelResultatBehandler {
                     lagAktiviteter(oppgittPeriode, regelresultat, false), oppgittPeriode.isFlerbarnsdager(),
                     regnSamtidigUttaksprosentMotGradering(oppgittPeriode), oppgittPeriode.getOppholdÅrsak(),
                     oppgittPeriode.getStønadskontotype(), oppgittPeriode.getArbeidsprosent(), oppgittPeriode.getUtsettelseÅrsak(),
-                    oppgittPeriode.getOverføringÅrsak(), oppgittPeriode.isManglendeSøktPeriode());
+                    oppgittPeriode.getOverføringÅrsak());
 
             return RegelResultatBehandlerResultat.utenKnekk(resultat);
         }
@@ -53,7 +53,7 @@ class RegelResultatBehandler {
                 lagAktiviteter(oppgittPeriodeFørKnekk, regelresultat, false), oppgittPeriodeFørKnekk.isFlerbarnsdager(),
                 regnSamtidigUttaksprosentMotGradering(oppgittPeriodeFørKnekk), oppgittPeriodeFørKnekk.getOppholdÅrsak(),
                 oppgittPeriodeFørKnekk.getStønadskontotype(), oppgittPeriodeFørKnekk.getArbeidsprosent(),
-                oppgittPeriodeFørKnekk.getUtsettelseÅrsak(), oppgittPeriodeFørKnekk.getOverføringÅrsak(), oppgittPeriode.isManglendeSøktPeriode());
+                oppgittPeriodeFørKnekk.getUtsettelseÅrsak(), oppgittPeriodeFørKnekk.getOverføringÅrsak());
         var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().getDato(), oppgittPeriode.getTom());
         return RegelResultatBehandlerResultat.medKnekk(førKnekk, etterKnekk);
     }
@@ -73,7 +73,7 @@ class RegelResultatBehandler {
                     oppgittPeriodeFørKnekk.isFlerbarnsdager(), regnSamtidigUttaksprosentMotGradering(oppgittPeriodeFørKnekk),
                     oppgittPeriodeFørKnekk.getOppholdÅrsak(), konto(oppgittPeriodeFørKnekk).orElse(null),
                     oppgittPeriodeFørKnekk.getArbeidsprosent(), oppgittPeriodeFørKnekk.getUtsettelseÅrsak(),
-                    oppgittPeriodeFørKnekk.getOverføringÅrsak(), oppgittPeriode.isManglendeSøktPeriode());
+                    oppgittPeriodeFørKnekk.getOverføringÅrsak());
             var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().getDato(), oppgittPeriode.getTom());
             return RegelResultatBehandlerResultat.medKnekk(resultat, etterKnekk);
         }
@@ -82,7 +82,7 @@ class RegelResultatBehandler {
                 lagAktiviteter(oppgittPeriode, regelresultat, overlapperInnvilgetAnnenpartsPeriode), oppgittPeriode.isFlerbarnsdager(),
                 regnSamtidigUttaksprosentMotGradering(oppgittPeriode), oppgittPeriode.getOppholdÅrsak(),
                 konto(oppgittPeriode).orElse(null), oppgittPeriode.getArbeidsprosent(), oppgittPeriode.getUtsettelseÅrsak(),
-                oppgittPeriode.getOverføringÅrsak(), oppgittPeriode.isManglendeSøktPeriode());
+                oppgittPeriode.getOverføringÅrsak());
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
 
@@ -106,7 +106,7 @@ class RegelResultatBehandler {
                 regelresultat.getGraderingIkkeInnvilgetÅrsak(), lagAktiviteter(oppgittPeriode, regelresultat, false),
                 oppgittPeriode.isFlerbarnsdager(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode),
                 oppgittPeriode.getOppholdÅrsak(), stønadskontotype.orElse(null), oppgittPeriode.getArbeidsprosent(),
-                oppgittPeriode.getUtsettelseÅrsak(), oppgittPeriode.getOverføringÅrsak(), oppgittPeriode.isManglendeSøktPeriode());
+                oppgittPeriode.getUtsettelseÅrsak(), oppgittPeriode.getOverføringÅrsak());
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
 
@@ -141,7 +141,11 @@ class RegelResultatBehandler {
         //Må sjekke saldo her, ved flere arbeidsforhold kan det reglene ha gått til sluttpunkt som trekkes dager selv om ett av arbeidsforholdene er tom
         //På arbeidsforholdet som er tom på konto skal det settes 0 trekkdager
         var stønadskonto = konto(oppgittPeriode);
-        var harIgjenTrekkdager = saldoUtregning.saldoITrekkdager(stønadskonto.orElse(null), identifikator, oppgittPeriode).merEnn0();
+        var bruttosaldo = saldoUtregning.saldoITrekkdager(stønadskonto.orElse(null), identifikator);
+        var minsterett = oppgittPeriode.kanTrekkeAvMinsterett() ? Trekkdager.ZERO :
+                saldoUtregning.restSaldoMinsterett(stønadskonto.orElse(null), identifikator);
+        var harIgjenTrekkdager = bruttosaldo.subtract(minsterett).merEnn0();
+
         var manuellBehandling = manuellBehandling(regelresultat);
         if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling && !harIgjenTrekkdager)) {
             return new PeriodeAktivitetResultat(Utbetalingsgrad.ZERO, Trekkdager.ZERO);

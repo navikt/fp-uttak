@@ -22,7 +22,7 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto e
         var stønadskontotype = aktuellPeriode.getStønadskontotype();
 
         for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-            var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet, grunnlag.getAktuellPeriode());
+            var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (saldo.merEnn0()) {
                 if (aktuellPeriode.isFlerbarnsdager()) {
                     var saldoFlerbarnsdager = grunnlag.getSaldoUtregning()

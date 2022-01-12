@@ -30,7 +30,7 @@ public class SjekkOmDagerIgjenPåAlleAktiviteter extends LeafSpecification<Fasts
 
     private boolean dagerIgjenPåKonto(FastsettePeriodeGrunnlag grunnlag, Stønadskontotype stønadskontotype) {
         for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-            var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet, grunnlag.getAktuellPeriode());
+            var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (!saldo.merEnn0()) {
                 return false;
             }

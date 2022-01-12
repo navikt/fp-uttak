@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -295,9 +296,7 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private boolean brukerAvMinsterett(UttakPeriode periode) {
-        // TODO hva med overføringsperioder - antar forbruk dersom overføring innvilget
-        return !periode.isManglendeSøktPeriode() && periode.getUtsettelseÅrsak() == null && periode.getOppholdÅrsak() == null
-                && (periode.getOverføringÅrsak() == null || periode.getPerioderesultattype().equals(Perioderesultattype.INNVILGET));
+        return Perioderesultattype.INNVILGET.equals(periode.getPerioderesultattype()) || IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periode.getPeriodeResultatÅrsak());
     }
 
     private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder,
