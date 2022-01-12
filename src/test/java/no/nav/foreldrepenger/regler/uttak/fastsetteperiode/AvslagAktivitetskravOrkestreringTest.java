@@ -2,17 +2,11 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_IKKE_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -33,15 +27,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 
 class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -70,57 +60,6 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
-    }
-
-    @Test
-    void bfhr_mor_med_bekreftet_uføretrygd_skal_godkjennes() {
-        var fødselsdato = LocalDate.of(2022, 1, 1);
-        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
-        var oppgittPeriodeU1 =  foreldrepengerUtsettelse(fødselsdato.plusMonths(6), fødselsdato.plusMonths(7).minusDays(1), MorsAktivitet.UFØRE);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriodeU1, oppgittPeriode2));
-
-        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true).morUføretrygd(true))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
-        var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 40))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT, 0))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, -1))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
-    }
-
-    @Test
-    void bfhr_mor_med_bekreftet_uføretrygd_flerbarn_skal_godkjennes() {
-        var fødselsdato = LocalDate.of(2022, 1, 1);
-        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285), konto(FLERBARNSDAGER, 85))).minsterettDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
-
-        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true).morUføretrygd(true))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
-        var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 40))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, -1))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
-    }
-
-    private boolean harPeriode(UttakPeriode p, Perioderesultattype prt, PeriodeResultatÅrsak prå, int dager) {
-        return p.getPerioderesultattype().equals(prt) && p.getPeriodeResultatÅrsak().equals(prå) && (dager == -1 ||
-                p.getAktiviteter().stream().map(UttakPeriodeAktivitet::getTrekkdager).mapToInt(Trekkdager::rundOpp).sum() == dager);
     }
 
     @Test
@@ -235,16 +174,6 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null,
                 false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, utdanning);
     }
-
-    private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet utdanning) {
-        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null,
-                false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, utdanning);
-    }
-
-    private OppgittPeriode foreldrepengerUtsettelse(LocalDate fom, LocalDate tom, MorsAktivitet utdanning) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FRI, fom, fom, utdanning);
-    }
-
 
     private static Stream<Arguments> dokumentasjonOgAvslagKombinasjoner() {
         return Stream.of(Arguments.of(MorsAktivitet.ARBEID, IKKE_I_AKTIVITET_DOKUMENTERT,

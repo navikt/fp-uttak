@@ -174,6 +174,13 @@ public interface FastsettePeriodeGrunnlag {
      */
     boolean isBareFarHarRettMorUføretrygd();
 
+    /**
+     * Har saken en minsterett for uttak
+     *
+     * @return true dersom saken tilsier en minsterett for uttak.
+     */
+    boolean isSakMedMinsterett();
+
     SaldoUtregning getSaldoUtregning();
 
     /**

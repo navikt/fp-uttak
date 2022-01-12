@@ -175,6 +175,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
+    public boolean isSakMedMinsterett() {
+        return regelGrunnlag.getKontoer().getMinsterettDager() > 0;
+    }
+
+    @Override
     public List<GyldigGrunnPeriode> getGyldigGrunnPerioder() {
         return regelGrunnlag.getSøknad().getDokumentasjon().getGyldigGrunnPerioder();
     }

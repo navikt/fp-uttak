@@ -296,7 +296,9 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private boolean brukerAvMinsterett(UttakPeriode periode) {
-        return Perioderesultattype.INNVILGET.equals(periode.getPerioderesultattype()) || IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periode.getPeriodeResultatÅrsak());
+        return Perioderesultattype.INNVILGET.equals(periode.getPerioderesultattype())
+                || (Perioderesultattype.AVSLÅTT.equals(periode.getPerioderesultattype()) && IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periode.getPeriodeResultatÅrsak()))
+                || (Perioderesultattype.MANUELL_BEHANDLING.equals(periode.getPerioderesultattype()) && periode.getUtsettelseÅrsak() == null);
     }
 
     private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder,

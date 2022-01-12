@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMorBekreftetUfør;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
@@ -258,8 +259,21 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigGrunnForTidligOppstart() {
         return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID,
                 "Foreligger et gyldig grunn for hele perioden for tidlig oppstart?")
-                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkOmAktivitetskravErOppfylt())
+                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkOmUførePeriodeErBekreftet())
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUførePeriodeErBekreftet() {
+        return rs.hvisRegel(SjekkOmMorBekreftetUfør.ID, SjekkOmMorBekreftetUfør.BESKRIVELSE)
+                .hvis(new SjekkOmMorBekreftetUfør(), sjekkGraderingVedKunFarMedmorRettMorUfør())
+                .ellers(sjekkOmAktivitetskravErOppfylt());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkGraderingVedKunFarMedmorRettMorUfør() {
+        return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
+                .hvis(new SjekkOmGradertPeriode(),
+                        Oppfylt.opprett("UT1318", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true))
+                .ellers(Oppfylt.opprett("UT1317", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, true));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAktivitetskravErOppfylt() {
@@ -278,7 +292,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkFarUtenAleneomsorgHarDisponibleDager() {
         return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
                 SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmAktivitetskravErOppfylt())
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmUførePeriodeErBekreftet())
                 .ellers(Manuellbehandling.opprett("UT1203", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 }
