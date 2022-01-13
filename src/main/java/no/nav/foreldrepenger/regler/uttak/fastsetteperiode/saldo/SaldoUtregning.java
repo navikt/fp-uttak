@@ -45,7 +45,7 @@ public class SaldoUtregning {
                 sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO);
     }
 
-    SaldoUtregning(Set<Stønadskonto> stønadskontoer,
+    SaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                    List<FastsattUttakPeriode> søkersPerioder,
                    List<FastsattUttakPeriode> annenpartsPerioder,
                    boolean berørtBehandling,
