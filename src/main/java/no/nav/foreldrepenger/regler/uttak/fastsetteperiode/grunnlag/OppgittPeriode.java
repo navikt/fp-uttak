@@ -172,7 +172,7 @@ public final class OppgittPeriode extends LukketPeriode {
 
     public boolean gjelderPeriodeMinsterett() {
         // Tilpasses mekanismene som brukes for å søke med bakgrunn i minsterett ulike scenarier
-        return kanTrekkeAvMinsterett() && MorsAktivitet.UFØRE.equals(morsAktivitet);
+        return kanTrekkeAvMinsterett() && (MorsAktivitet.UFØRE.equals(morsAktivitet) || morsAktivitet == null);
     }
 
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {

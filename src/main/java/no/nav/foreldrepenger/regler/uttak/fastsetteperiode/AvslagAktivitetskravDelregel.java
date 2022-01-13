@@ -15,6 +15,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOpp
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmAktivitetErDokumentert;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorArbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorInnlagt;
@@ -45,6 +46,12 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
         return rs.hvisRegel(SjekkOmMorsAktivitetErKjent.ID, SjekkOmMorsAktivitetErKjent.BESKRIVELSE)
                 //Går til manuell for at saksbehandler skal velge riktig hjemmel
+                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1319", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .ellers(sjekkOmKjentAktivitet());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmKjentAktivitet() {
+        return rs.hvisRegel(SjekkOmMorSyk.ID, SjekkOmMorSyk.BESKRIVELSE)
                 .hvis(new SjekkOmMorsAktivitetErKjent(), sjekkOmMorArbeid())
                 .ellers(Manuellbehandling.opprett("UT1315", null,
                         Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
