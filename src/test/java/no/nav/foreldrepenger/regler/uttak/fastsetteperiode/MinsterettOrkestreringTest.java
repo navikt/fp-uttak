@@ -36,7 +36,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
     @Test
     void bfhr_mor_med_bekreftet_uføretrygd_skal_godkjennes() {
-        var fødselsdato = LocalDate.of(2022, 1, 1);
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(75);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
         var utsettelseFra = Virkedager.justerHelgTilMandag(fødselsdato.plusMonths(6));
@@ -55,7 +55,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harManuellPeriode(p.getUttakPeriode(), Manuellbehandlingårsak.MOR_UFØR, 20))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, -1))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
     }
 
@@ -77,8 +77,28 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, -1))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
+    }
+
+    @Test
+    void bfhr_mor_med_bekreftet_uføretrygd_overskrider_minsterett() {
+        var fødselsdato = LocalDate.of(2022, 1, 1);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(75);
+        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(23).minusDays(1), MorsAktivitet.UFØRE);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode));
+
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true).morUføretrygd(true))
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 75))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harManuellPeriode(p.getUttakPeriode(), Manuellbehandlingårsak.MOR_UFØR, 5))).isTrue();
     }
 
     private boolean harPeriode(UttakPeriode p, Perioderesultattype prt, PeriodeResultatÅrsak prå, int dager) {
@@ -94,6 +114,11 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet utdanning) {
         return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null,
                 false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, utdanning);
+    }
+
+    private OppgittPeriode foreldrepenger(LocalDate fom, LocalDate tom, MorsAktivitet utdanning) {
+        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fom, tom, null,
+                false, PeriodeVurderingType.IKKE_VURDERT, fom.minusWeeks(3), fom.minusWeeks(3), utdanning);
     }
 
     private OppgittPeriode foreldrepengerUtsettelse(LocalDate fom, LocalDate tom, MorsAktivitet utdanning) {
