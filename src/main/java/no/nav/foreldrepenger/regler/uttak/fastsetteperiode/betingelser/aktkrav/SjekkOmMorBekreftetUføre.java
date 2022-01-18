@@ -17,7 +17,6 @@ public class SjekkOmMorBekreftetUføre extends LeafSpecification<FastsettePeriod
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        var bfhrmu = fastsettePeriodeGrunnlag.isBareFarHarRettMorUføretrygd();
         return fastsettePeriodeGrunnlag.isBareFarHarRettMorUføretrygd() ? ja() : nei();
     }
 }
