@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMi
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorOppgittUføre;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -263,6 +264,12 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmOppgittMorUfør() {
+        return rs.hvisRegel(SjekkOmMorOppgittUføre.ID, SjekkOmMorOppgittUføre.BESKRIVELSE)
+                .hvis(new SjekkOmMorOppgittUføre(), sjekkOmGjelderMinsterett())
+                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
+    }
+
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGjelderMinsterett() {
         return rs.hvisRegel(SjekkOmMinsterettMedDisponibleDager.ID, SjekkOmMinsterettMedDisponibleDager.BESKRIVELSE)
                 .hvis(new SjekkOmMinsterettMedDisponibleDager(), sjekkGraderingVedKunFarMedmorRettMinsterett())
@@ -279,7 +286,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAktivitetskravErOppfylt() {
         return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
                 .hvis(new SjekkOmMorErIAktivitet(), sjekkGraderingVedKunFarMedmorRett())
-                .ellers(sjekkOmGjelderMinsterett());
+                .ellers(sjekkOmOppgittMorUfør());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkGraderingVedKunFarMedmorRett() {

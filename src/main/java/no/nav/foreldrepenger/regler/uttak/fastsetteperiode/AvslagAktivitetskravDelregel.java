@@ -14,14 +14,17 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOpp
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmAktivitetErDokumentert;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorArbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorBekreftetUføre;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorIntroduksjonsprogram;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorKombinasjonArbeidUtdanning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorKvalifiseringsprogram;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorOppgittUføre;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorSyk;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorUtdanning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorsAktivitetErKjent;
@@ -44,21 +47,21 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
-        return rs.hvisRegel(SjekkOmMorsAktivitetErKjent.ID, SjekkOmMorsAktivitetErKjent.BESKRIVELSE)
+        return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
                 //Går til manuell for at saksbehandler skal velge riktig hjemmel
                 .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1319", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
                 .ellers(sjekkOmKjentAktivitet());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmKjentAktivitet() {
-        return rs.hvisRegel(SjekkOmMorSyk.ID, SjekkOmMorSyk.BESKRIVELSE)
+        return rs.hvisRegel(SjekkOmMorsAktivitetErKjent.ID, SjekkOmMorsAktivitetErKjent.BESKRIVELSE)
                 .hvis(new SjekkOmMorsAktivitetErKjent(), sjekkOmMorArbeid())
                 .ellers(Manuellbehandling.opprett("UT1315", null,
                         Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorArbeid() {
-        return rs.hvisRegel(SjekkOmMorSyk.ID, SjekkOmMorSyk.BESKRIVELSE)
+        return rs.hvisRegel(SjekkOmMorArbeid.ID, SjekkOmMorArbeid.BESKRIVELSE)
                 .hvis(new SjekkOmMorArbeid(), morArbeid())
                 .ellers(sjekkOmMorSyk());
     }
@@ -96,7 +99,19 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorKombinasjonArbeidUtdanning() {
         return rs.hvisRegel(SjekkOmMorKombinasjonArbeidUtdanning.ID, SjekkOmMorKombinasjonArbeidUtdanning.BESKRIVELSE)
                 .hvis(new SjekkOmMorKombinasjonArbeidUtdanning(), morKombinasjonArbeidUtdanning())
+                .ellers(sjekkOmMorOppgittUføretrygd());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorOppgittUføretrygd() {
+        return rs.hvisRegel(SjekkOmMorOppgittUføre.ID, SjekkOmMorOppgittUføre.BESKRIVELSE)
+                .hvis(new SjekkOmMorOppgittUføre(), sjekkOmMorBekreftetUføretrygd())
                 .ellers(Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorBekreftetUføretrygd() {
+        return rs.hvisRegel(SjekkOmMorBekreftetUføre.ID, SjekkOmMorBekreftetUføre.BESKRIVELSE)
+                .hvis(new SjekkOmMorBekreftetUføre(), Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true))
+                .ellers(avslå("UT1322", FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morArbeid() {

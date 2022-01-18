@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -28,6 +30,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -296,9 +299,15 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private boolean brukerAvMinsterett(UttakPeriode periode) {
-        return Perioderesultattype.INNVILGET.equals(periode.getPerioderesultattype())
+        return (Perioderesultattype.INNVILGET.equals(periode.getPerioderesultattype()) && !erPeriodeMedGodkjentAktivitet(periode))
                 || (Perioderesultattype.AVSLÅTT.equals(periode.getPerioderesultattype()) && IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periode.getPeriodeResultatÅrsak()))
                 || (Perioderesultattype.MANUELL_BEHANDLING.equals(periode.getPerioderesultattype()) && periode.getUtsettelseÅrsak() == null);
+    }
+
+    private boolean erPeriodeMedGodkjentAktivitet(UttakPeriode periode) {
+        // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
+        return periode.isFlerbarnsdager() || InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periode.getPeriodeResultatÅrsak()) ||
+                (periode.getMorsAktivitet() != null && !Objects.equals(periode.getMorsAktivitet(), MorsAktivitet.UFØRE)); // Graderingstilfelle
     }
 
     private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder,

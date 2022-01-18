@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,34 +25,30 @@ public final class UttakPeriode extends LukketPeriode {
     private final BigDecimal arbeidsprosent;
     private final UtsettelseÅrsak utsettelseÅrsak;
     private final OverføringÅrsak overføringÅrsak;
+    private final MorsAktivitet morsAktivitet;
 
-    public UttakPeriode(LocalDate fom,
-                        LocalDate tom,
+    public UttakPeriode(OppgittPeriode oppgittPeriode, // NOSONAR
                         Perioderesultattype perioderesultattype,
                         Manuellbehandlingårsak manuellbehandlingårsak,
                         PeriodeResultatÅrsak periodeResultatÅrsak,
                         GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak,
                         Set<UttakPeriodeAktivitet> aktiviteter,
-                        boolean flerbarnsdager,
                         SamtidigUttaksprosent samtidigUttaksprosent,
-                        OppholdÅrsak oppholdÅrsak,
-                        Stønadskontotype stønadskontotype,
-                        BigDecimal arbeidsprosent,
-                        UtsettelseÅrsak utsettelseÅrsak,
-                        OverføringÅrsak overføringÅrsak) {
-        super(fom, tom);
+                        Stønadskontotype stønadskontotype) {
+        super(oppgittPeriode.getFom(), oppgittPeriode.getTom());
         this.perioderesultattype = perioderesultattype;
         this.manuellbehandlingårsak = manuellbehandlingårsak;
         this.periodeResultatÅrsak = periodeResultatÅrsak;
         this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
         this.aktiviteter = aktiviteter;
-        this.flerbarnsdager = flerbarnsdager;
+        this.flerbarnsdager = oppgittPeriode.isFlerbarnsdager();
         this.samtidigUttaksprosent = samtidigUttaksprosent;
-        this.oppholdÅrsak = oppholdÅrsak;
+        this.oppholdÅrsak = oppgittPeriode.getOppholdÅrsak();
         this.stønadskontotype = stønadskontotype;
-        this.arbeidsprosent = arbeidsprosent;
-        this.utsettelseÅrsak = utsettelseÅrsak;
-        this.overføringÅrsak = overføringÅrsak;
+        this.arbeidsprosent = oppgittPeriode.getArbeidsprosent();
+        this.utsettelseÅrsak = oppgittPeriode.getUtsettelseÅrsak();
+        this.overføringÅrsak = oppgittPeriode.getOverføringÅrsak();
+        this.morsAktivitet = oppgittPeriode.getMorsAktivitet();
         validerKontoVedTrekkdager();
     }
 
@@ -138,6 +133,10 @@ public final class UttakPeriode extends LukketPeriode {
         return overføringÅrsak;
     }
 
+    public MorsAktivitet getMorsAktivitet() {
+        return morsAktivitet;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -152,13 +151,13 @@ public final class UttakPeriode extends LukketPeriode {
                 that.periodeResultatÅrsak) && graderingIkkeInnvilgetÅrsak == that.graderingIkkeInnvilgetÅrsak && Objects.equals(
                 aktiviteter, that.aktiviteter) && Objects.equals(samtidigUttaksprosent, that.samtidigUttaksprosent)
                 && oppholdÅrsak == that.oppholdÅrsak && stønadskontotype == that.stønadskontotype && Objects.equals(arbeidsprosent,
-                that.arbeidsprosent);
+                that.arbeidsprosent) && Objects.equals(morsAktivitet, that.morsAktivitet);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(perioderesultattype, manuellbehandlingårsak, periodeResultatÅrsak, graderingIkkeInnvilgetÅrsak,
-                aktiviteter, flerbarnsdager, samtidigUttaksprosent, oppholdÅrsak, stønadskontotype, arbeidsprosent);
+                aktiviteter, flerbarnsdager, samtidigUttaksprosent, oppholdÅrsak, stønadskontotype, arbeidsprosent, morsAktivitet);
     }
 
     @Override
