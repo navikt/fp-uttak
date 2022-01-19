@@ -773,11 +773,17 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
     @Test
     void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_manuell() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
+        var dok = new Dokumentasjon.Builder()
+                .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
+                        PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
+        var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
+                PeriodeVurderingType.PERIODE_OK, ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100),
+                MorsAktivitet.UTDANNING);
         var grunnlag = basicGrunnlagFar(fødselsdato)
+                .behandling(farBehandling())
+                .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
                 .rettOgOmsorg(bareFarRett())
-                .søknad(søknad(FØDSEL, OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8),
-                        PeriodeVurderingType.IKKE_VURDERT, ARBEID, fødselsdato.plusWeeks(80), fødselsdato.plusWeeks(80),
-                        MorsAktivitet.UTDANNING)));
+                .søknad(søknad(FØDSEL, utsettelse).dokumentasjon(dok));
 
         var perioder = fastsettPerioder(grunnlag);
 
