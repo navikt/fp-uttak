@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
@@ -451,21 +450,26 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     //FAGSYSTEM-151437
-    @Disabled("TODO fritt uttak")
     @Test
-    void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_manuell() {
+    void utsettelse_innvilges_tilbake_i_tid_for_bare_far_har_rett_hvis_mor_er_i_aktivitet() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
+        var dok = new Dokumentasjon.Builder()
+                .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
+                        PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
+        var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
+                PeriodeVurderingType.PERIODE_OK, ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100),
+                MorsAktivitet.UTDANNING);
         var grunnlag = basicGrunnlagFar(fødselsdato)
+                .behandling(farBehandling())
+                .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
                 .rettOgOmsorg(bareFarRett())
-                .søknad(søknad(FØDSEL, OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8),
-                        PeriodeVurderingType.IKKE_VURDERT, ARBEID, fødselsdato.plusWeeks(80), fødselsdato.plusWeeks(80),
-                        MorsAktivitet.UTDANNING)));
+                .søknad(søknad(FØDSEL, utsettelse).dokumentasjon(dok));
 
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
     }
 
     @Test
