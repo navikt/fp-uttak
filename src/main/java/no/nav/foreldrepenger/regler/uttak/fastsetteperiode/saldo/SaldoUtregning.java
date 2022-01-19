@@ -34,17 +34,6 @@ public class SaldoUtregning {
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final Trekkdager minsterettDager;
 
-    SaldoUtregning(Set<Stønadskonto> stønadskontoer,
-                   List<FastsattUttakPeriode> søkersPerioder,
-                   List<FastsattUttakPeriode> annenpartsPerioder,
-                   boolean berørtBehandling,
-                   Set<AktivitetIdentifikator> søkersAktiviteter,
-                   LocalDateTime sisteSøknadMottattTidspunktSøker,
-                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
-        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
-                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO);
-    }
-
     SaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                    List<FastsattUttakPeriode> søkersPerioder,
                    List<FastsattUttakPeriode> annenpartsPerioder,
@@ -61,6 +50,17 @@ public class SaldoUtregning {
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.berørtBehandling = berørtBehandling;
         this.minsterettDager = minsterettDager;
+    }
+
+    SaldoUtregning(Set<Stønadskonto> stønadskontoer,
+                   List<FastsattUttakPeriode> søkersPerioder,
+                   List<FastsattUttakPeriode> annenpartsPerioder,
+                   boolean berørtBehandling,
+                   Set<AktivitetIdentifikator> søkersAktiviteter,
+                   LocalDateTime sisteSøknadMottattTidspunktSøker,
+                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
+        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
+                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO);
     }
 
     /**
@@ -93,6 +93,13 @@ public class SaldoUtregning {
         return getMaxDagerITrekkdager(stønadskonto).subtract(new Trekkdager(forbruktSøker))
                 .subtract(new Trekkdager(forbruktAnnenpart))
                 .add(new Trekkdager(frigitteDager));
+    }
+
+    public Trekkdager nettoSaldoJustertForMinsterett(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, boolean kanTrekkeAvMinsterett) {
+        var brutto = saldoITrekkdager(stønadskonto, aktivitet);
+        var reduksjon = kanTrekkeAvMinsterett ? Trekkdager.ZERO : restSaldoMinsterett(stønadskonto, aktivitet);
+        return brutto.subtract(reduksjon);
+
     }
 
     public Trekkdager restSaldoMinsterett(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
@@ -192,6 +199,14 @@ public class SaldoUtregning {
         return søkersPerioder.stream()
                 .filter(p -> søktSamtidigUttak(stønadskontoType, p))
                 .anyMatch(FastsattUttakPeriode::isSamtidigUttak);
+    }
+
+    public boolean negativSaldoPåNoenKonto() {
+        return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldo(stønadskonto.getStønadskontotype()));
+    }
+
+    public int getMaxDager(Stønadskontotype stønadskontotype) {
+        return getMaxDagerITrekkdager(stønadskontotype).decimalValue().intValue();
     }
 
     private Trekkdager getMaxDagerITrekkdager(Stønadskontotype stønadskontotype) {
@@ -399,9 +414,9 @@ public class SaldoUtregning {
             if (erOpphold(periodeSøker)) {
                 sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periodeSøker));
             } else {
-                var nestePeriodeSomIkkeErOpphold = nestePeriodeSomForbrukerDager(søkersPerioder, i);
+                var nestePeriodeSomForbrukerDager = nestePeriodeSomForbrukerDager(søkersPerioder, i);
                 if (!aktivitetIPeriode(periodeSøker, aktivitet) &&
-                        (nestePeriodeSomIkkeErOpphold.isEmpty() || aktivitetIPeriode(nestePeriodeSomIkkeErOpphold.get(), aktivitet))) {
+                        (nestePeriodeSomForbrukerDager.isEmpty() || aktivitetIPeriode(nestePeriodeSomForbrukerDager.get(), aktivitet))) {
                     var perioderTomPeriode = søkersPerioder.subList(0, i + 1);
                     var ekisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
                     ekisterendeAktiviteter.remove(aktivitet);

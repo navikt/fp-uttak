@@ -18,6 +18,7 @@ public class SjekkOmMinsterettMedDisponibleDager extends LeafSpecification<Fasts
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
+        // TODO WLB - tilpass når flere tilfelle kan passere denne sjekken. Nå er den konservativ
         if (grunnlag.isSakMedMinsterett() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldo = grunnlag.getSaldoUtregning().restSaldoMinsterett(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet);

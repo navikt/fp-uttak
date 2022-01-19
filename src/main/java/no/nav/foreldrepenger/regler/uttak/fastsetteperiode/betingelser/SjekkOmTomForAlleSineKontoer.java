@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -23,14 +22,13 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        var ikkeMinsterett = !grunnlag.isSakMedMinsterett();
+        var sakMedMinsterett = grunnlag.isSakMedMinsterett();
         var tomForAlleSineKontoer = true;
         for (var stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
-                var gulv = ikkeMinsterett || grunnlag.getAktuellPeriode().kanTrekkeAvMinsterett() ? Trekkdager.ZERO :
-                        grunnlag.getSaldoUtregning().restSaldoMinsterett(stønadskontotype, aktivitet);
-                if (saldo.subtract(gulv).merEnn0()) {
+                var nettosaldo = grunnlag.getSaldoUtregning().nettoSaldoJustertForMinsterett(stønadskontotype, aktivitet,
+                        !sakMedMinsterett || grunnlag.getAktuellPeriode().kanTrekkeAvMinsterett());
+                if (nettosaldo.merEnn0()) {
                     tomForAlleSineKontoer = false;
                 }
             }

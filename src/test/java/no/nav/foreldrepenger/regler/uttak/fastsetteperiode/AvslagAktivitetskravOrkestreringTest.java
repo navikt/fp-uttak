@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
@@ -56,7 +55,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true).morUføretrygd(true))
+                .rettOgOmsorg(bareFarRett().morUføretrygd(true))
                 .søknad(søknad)
                 .inngangsvilkår(oppfyltAlleVilkår())
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -75,7 +74,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true).morUføretrygd(false))
+                .rettOgOmsorg(bareFarRett().morUføretrygd(false))
                 .søknad(søknad)
                 .inngangsvilkår(oppfyltAlleVilkår())
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -93,7 +92,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).morUføretrygd(false))
+                .rettOgOmsorg(beggeRett().morUføretrygd(false))
                 .søknad(søknad)
                 .inngangsvilkår(oppfyltAlleVilkår())
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))

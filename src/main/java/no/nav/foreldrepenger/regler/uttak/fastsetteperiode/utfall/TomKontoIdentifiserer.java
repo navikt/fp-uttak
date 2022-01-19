@@ -60,29 +60,8 @@ public class TomKontoIdentifiserer {
         if (!skalTrekkeDager) {
             return Optional.empty();
         }
-
-        var bruttosaldo = saldoUtregning.saldoITrekkdager(stønadskontotype, aktivitet);
-        var minsterett = oppgittPeriode.kanTrekkeAvMinsterett() ? Trekkdager.ZERO :
-                saldoUtregning.restSaldoMinsterett(stønadskontotype, aktivitet);
-        var saldo = bruttosaldo.subtract(minsterett);
-        var saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
-
-        var trekkdagerIPeriodeFom = justerHelgTilMandag(oppgittPeriode.getFom());
-        var datoKontoGårTom = Virkedager.plusVirkedager(trekkdagerIPeriodeFom, saldoTilVirkedager);
-        if (datoKontoGårTom.isAfter(trekkdagerIPeriodeFom) && !datoKontoGårTom.isAfter(oppgittPeriode.getTom())) {
-            return Optional.of(datoKontoGårTom);
-        }
-
-        if (oppgittPeriode.gjelderPeriodeMinsterett()) {
-            var saldoMinsterett = saldoUtregning.restSaldoMinsterett(stønadskontotype, aktivitet);
-            var virkedagerMinsterett = saldoTilVirkedager(oppgittPeriode, aktivitet, saldoMinsterett);
-            var datoMinsterettGårTom = Virkedager.plusVirkedager(trekkdagerIPeriodeFom, virkedagerMinsterett);
-            if (datoMinsterettGårTom.isAfter(trekkdagerIPeriodeFom) && !datoMinsterettGårTom.isAfter(oppgittPeriode.getTom())) {
-                return Optional.of(datoMinsterettGårTom);
-            }
-        }
-
-        return Optional.empty();
+        var saldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskontotype, aktivitet, oppgittPeriode.kanTrekkeAvMinsterett());
+        return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldo);
     }
 
     private static Optional<LocalDate> finnDatoMinsterettOppbrukt(OppgittPeriode oppgittPeriode,
@@ -94,13 +73,20 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        var trekkdagerIPeriodeFom = justerHelgTilMandag(oppgittPeriode.getFom());
         var saldoMinsterett = saldoUtregning.restSaldoMinsterett(stønadskontotype, aktivitet);
-        var virkedagerMinsterett = saldoTilVirkedager(oppgittPeriode, aktivitet, saldoMinsterett);
-        var datoMinsterettGårTom = Virkedager.plusVirkedager(trekkdagerIPeriodeFom, virkedagerMinsterett);
-        if (datoMinsterettGårTom.isAfter(trekkdagerIPeriodeFom) && !datoMinsterettGårTom.isAfter(oppgittPeriode.getTom())) {
-            return Optional.of(datoMinsterettGårTom);
+        return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
+    }
+
+    private static Optional<LocalDate> datoHvisSaldoOppbruktIPeriode(OppgittPeriode oppgittPeriode,
+                                                                     AktivitetIdentifikator aktivitet,
+                                                                     Trekkdager saldo) {
+        var trekkdagerIPeriodeFom = justerHelgTilMandag(oppgittPeriode.getFom());
+        var saldoTilVirkedager = saldoTilVirkedager(oppgittPeriode, aktivitet, saldo);
+        var datoKontoGårTom = Virkedager.plusVirkedager(trekkdagerIPeriodeFom, saldoTilVirkedager);
+        if (datoKontoGårTom.isAfter(trekkdagerIPeriodeFom) && !datoKontoGårTom.isAfter(oppgittPeriode.getTom())) {
+            return Optional.of(datoKontoGårTom);
         }
+
         return Optional.empty();
     }
 

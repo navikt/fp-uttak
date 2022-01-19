@@ -134,10 +134,8 @@ class RegelResultatBehandler {
         //Må sjekke saldo her, ved flere arbeidsforhold kan det reglene ha gått til sluttpunkt som trekkes dager selv om ett av arbeidsforholdene er tom
         //På arbeidsforholdet som er tom på konto skal det settes 0 trekkdager
         var stønadskonto = konto(oppgittPeriode);
-        var bruttosaldo = saldoUtregning.saldoITrekkdager(stønadskonto.orElse(null), identifikator);
-        var minsterett = oppgittPeriode.kanTrekkeAvMinsterett() ? Trekkdager.ZERO :
-                saldoUtregning.restSaldoMinsterett(stønadskonto.orElse(null), identifikator);
-        var harIgjenTrekkdager = bruttosaldo.subtract(minsterett).merEnn0();
+        var nettosaldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskonto.orElse(null), identifikator, oppgittPeriode.kanTrekkeAvMinsterett());
+        var harIgjenTrekkdager = nettosaldo.merEnn0();
 
         var manuellBehandling = manuellBehandling(regelresultat);
         if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling && !harIgjenTrekkdager)) {

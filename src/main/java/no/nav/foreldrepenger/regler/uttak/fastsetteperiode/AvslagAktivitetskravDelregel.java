@@ -105,12 +105,12 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorOppgittUføretrygd() {
         return rs.hvisRegel(SjekkOmMorOppgittUføre.ID, SjekkOmMorOppgittUføre.BESKRIVELSE)
                 .hvis(new SjekkOmMorOppgittUføre(), sjekkOmMorBekreftetUføretrygd())
-                .ellers(Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true));
+                .ellers(utfall1314AvklarUføreSiutasjon());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorBekreftetUføretrygd() {
         return rs.hvisRegel(SjekkOmMorBekreftetUføre.ID, SjekkOmMorBekreftetUføre.BESKRIVELSE)
-                .hvis(new SjekkOmMorBekreftetUføre(), Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true))
+                .hvis(new SjekkOmMorBekreftetUføre(), utfall1314AvklarUføreSiutasjon())
                 .ellers(avslå("UT1322", FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR));
     }
 
@@ -161,5 +161,9 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
 
     private FastsettePeriodeUtfall avslå(String sluttpunktId, IkkeOppfyltÅrsak årsak) {
         return IkkeOppfylt.opprett(sluttpunktId, årsak, true, false);
+    }
+
+    private FastsettePeriodeUtfall utfall1314AvklarUføreSiutasjon() {
+        return Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true);
     }
 }
