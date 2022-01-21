@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -119,6 +120,47 @@ class SaldoUtregningTest {
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(MØDREKVOTE)).isEqualTo(10 - 15);
+    }
+
+    @Test
+    void for_stort_trekk_som_ikke_bruker_minsterett_gir_riktig_saldo_minsterett() {
+        // assert/netto: kanTrekkeAvMinsterett = false for MSP, Uttak, Opphold
+        // Forbrukeravminsterett = innvilget utenom aktivitetskrav, avslag/søknadsfrist, eller manuellbehandling
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(enTirsdag, enTirsdag)
+                .forbrukerMinsterett(false)
+                .build();
+        var perioderSøker = List.of(fastsattUttakPeriode);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
+                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5));
+        // Skal beholde dager pga minsterett 5 derfor 5-15
+        assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
+        assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
+        assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
+        assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
+    }
+
+    @Test
+    void for_stort_trekk_som_bruker_minsterett_gir_riktig_saldo_minsterett() {
+        // assert/netto: kanTrekkeAvMinsterett = false for MSP, Uttak, Opphold
+        // Forbrukeravminsterett = innvilget utenom aktivitetskrav, avslag/søknadsfrist, eller manuellbehandling
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(enTirsdag, enTirsdag)
+                .forbrukerMinsterett(true)
+                .build();
+        var perioderSøker = List.of(fastsattUttakPeriode);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
+                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5));
+        // Skal forbruke minsterett
+        assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
+        assertThat(saldoUtregning.restSaldoMinsterett(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
+        assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
+        assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
     }
 
     @Test

@@ -100,7 +100,7 @@ final class ValgAvStønadskontoTjeneste {
     private static boolean erTomForKonto(OppgittPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
         var tomForKonto = true;
         for (var arbeidsforhold : periode.getAktiviteter()) {
-            var saldo = saldoUtregning.saldoITrekkdager(stønadskontotype, arbeidsforhold);
+            var saldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskontotype, arbeidsforhold, periode.kanTrekkeAvMinsterett());
             if (saldo.merEnn0()) {
                 tomForKonto = false;
             } else {

@@ -22,28 +22,27 @@ public class SjekkOmTomForAlleSineKontoer extends LeafSpecification<FastsettePer
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
+        var sakMedMinsterett = grunnlag.isSakMedMinsterett();
         var tomForAlleSineKontoer = true;
         for (var stønadskontotype : hentSøkerSineKontoer(grunnlag)) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
-                if (saldo.merEnn0()) {
+                var nettosaldo = grunnlag.getSaldoUtregning().nettoSaldoJustertForMinsterett(stønadskontotype, aktivitet,
+                        !sakMedMinsterett || grunnlag.getAktuellPeriode().kanTrekkeAvMinsterett());
+                if (nettosaldo.merEnn0()) {
                     tomForAlleSineKontoer = false;
                 }
             }
         }
         return tomForAlleSineKontoer ? ja() : nei();
-
     }
 
     static List<Stønadskontotype> hentSøkerSineKontoer(FastsettePeriodeGrunnlag grunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         if (!søkerOgAnnenForelderSineKontoer(grunnlag).contains(Stønadskontotype.FORELDREPENGER)) {
             if (grunnlag.isSøkerMor()) {
-                søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE,
-                        Stønadskontotype.FORELDREPENGER); // 1 og 5
+                søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER); // 1 og 5
             } else {
-                søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE,
-                        Stønadskontotype.FORELDREPENGER); // 3 og 7
+                søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER); // 3 og 7
             }
         } else { // en har rett
             søkerSineKonto = List.of(Stønadskontotype.FORELDREPENGER); // 2 4 6 og 8

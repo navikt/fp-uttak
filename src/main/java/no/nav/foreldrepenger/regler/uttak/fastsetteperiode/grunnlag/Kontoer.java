@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public final class Kontoer {
 
     private List<Konto> kontoList = new ArrayList<>();
+    private int minsterettDager = 0;
 
     private Kontoer() {
 
@@ -15,6 +16,10 @@ public final class Kontoer {
 
     public List<Konto> getKontoList() {
         return kontoList;
+    }
+
+    public int getMinsterettDager() {
+        return minsterettDager;
     }
 
     public static class Builder {
@@ -28,6 +33,11 @@ public final class Kontoer {
 
         public Builder kontoList(List<Konto.Builder> kontoList) {
             kladd.kontoList = kontoList.stream().map(Konto.Builder::build).collect(Collectors.toList());
+            return this;
+        }
+
+        public Builder minsterettDager(int minsterettDager) {
+            kladd.minsterettDager = minsterettDager;
             return this;
         }
 

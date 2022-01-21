@@ -14,9 +14,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettMedDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorOppgittUføre;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -262,10 +264,29 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmOppgittMorUfør() {
+        return rs.hvisRegel(SjekkOmMorOppgittUføre.ID, SjekkOmMorOppgittUføre.BESKRIVELSE)
+                .hvis(new SjekkOmMorOppgittUføre(), sjekkOmGjelderMinsterett())
+                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGjelderMinsterett() {
+        return rs.hvisRegel(SjekkOmMinsterettMedDisponibleDager.ID, SjekkOmMinsterettMedDisponibleDager.BESKRIVELSE)
+                .hvis(new SjekkOmMinsterettMedDisponibleDager(), sjekkGraderingVedKunFarMedmorRettMinsterett())
+                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkGraderingVedKunFarMedmorRettMinsterett() {
+        return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
+                .hvis(new SjekkOmGradertPeriode(),
+                        Oppfylt.opprett("UT1318", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true))
+                .ellers(Oppfylt.opprett("UT1317", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, true));
+    }
+
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAktivitetskravErOppfylt() {
         return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
                 .hvis(new SjekkOmMorErIAktivitet(), sjekkGraderingVedKunFarMedmorRett())
-                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
+                .ellers(sjekkOmOppgittMorUfør());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkGraderingVedKunFarMedmorRett() {

@@ -166,6 +166,15 @@ public final class OppgittPeriode extends LukketPeriode {
         return morsAktivitet;
     }
 
+    public boolean kanTrekkeAvMinsterett() {
+        return !manglendeSøktPeriode && oppholdÅrsak == null && utsettelseÅrsak == null;
+    }
+
+    public boolean gjelderPeriodeMinsterett() {
+        // TODO WLB - Tilpasse til mekanismene som brukes for å søke med bakgrunn i minsterett ulike scenarier. Denne er konservativ nå.
+        return kanTrekkeAvMinsterett() && (MorsAktivitet.UFØRE.equals(morsAktivitet) || morsAktivitet == null);
+    }
+
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
         return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, PeriodeVurderingType.IKKE_VURDERT, null, false, null,
                 null, null, null, null);

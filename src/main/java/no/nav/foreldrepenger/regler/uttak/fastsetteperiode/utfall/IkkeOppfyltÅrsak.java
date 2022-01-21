@@ -83,8 +83,10 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT(4088,"Aktivitetskravet introduksjonsprogrammet ikke dokumentert"),
 
     AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT(4056,"Aktivitetskravet kvalifiseringsprogrammet ikke oppfylt"),
-    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT(4089,"Aktivitetskravet kvalifiseringsprogrammet ikke dokumentert");
+    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT(4089,"Aktivitetskravet kvalifiseringsprogrammet ikke dokumentert"),
 
+
+    FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR(4057, "Foreldrepenger, kun far har rett mor er ikke ufør");
 
     private final int id;
     private final String beskrivelse;
