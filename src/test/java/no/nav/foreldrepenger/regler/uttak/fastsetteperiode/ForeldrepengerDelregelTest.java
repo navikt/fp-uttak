@@ -690,7 +690,45 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, "UT1318");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1318");
+    }
+
+    @Test
+    void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_morUføretrygdet_ikkeFrittUttak() {
+        var familiehendelseDato = LocalDate.now().minusMonths(2);
+        var fom = familiehendelseDato.plusWeeks(8);
+        var tom = familiehendelseDato.plusWeeks(10);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false,
+                PeriodeVurderingType.IKKE_VURDERT, familiehendelseDato, familiehendelseDato, MorsAktivitet.UFØRE);
+        var kontoer = foreldrepengerKonto(40).utenAktivitetskravDager(10);
+        var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .kontoer(kontoer)
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).morUføretrygd(true))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1317");
+    }
+
+    @Test
+    void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett_morUføretrygdetGradert_ikkeFrittUttak() {
+        var familiehendelseDato = LocalDate.now().minusMonths(2);
+        var fom = familiehendelseDato.plusWeeks(8);
+        var tom = familiehendelseDato.plusWeeks(10);
+        var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN, SamtidigUttaksprosent.ZERO, false,
+                Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, familiehendelseDato, familiehendelseDato, MorsAktivitet.UFØRE);
+        var kontoer = foreldrepengerKonto(40).utenAktivitetskravDager(10);
+        var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .kontoer(kontoer)
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).morUføretrygd(true))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1318");
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

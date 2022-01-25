@@ -180,6 +180,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
+    public boolean isSakMedDagerUtenAktivitetskrav() {
+        return regelGrunnlag.getKontoer().getUtenAktivitetskravDager() > 0;
+    }
+
+    @Override
     public List<GyldigGrunnPeriode> getGyldigGrunnPerioder() {
         return regelGrunnlag.getSøknad().getDokumentasjon().getGyldigGrunnPerioder();
     }
