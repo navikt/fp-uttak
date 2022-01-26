@@ -172,7 +172,8 @@ public final class OppgittPeriode extends LukketPeriode {
 
     public boolean gjelderPeriodeMinsterett() {
         // TODO WLB - Tilpasse til mekanismene som brukes for å søke med bakgrunn i minsterett ulike scenarier. Denne er konservativ nå.
-        return kanTrekkeAvMinsterett() && (MorsAktivitet.UFØRE.equals(morsAktivitet) || morsAktivitet == null);
+        // TODO TFP-4842 si at perioder der mors aktivitet = null
+        return kanTrekkeAvMinsterett() && MorsAktivitet.UFØRE.equals(morsAktivitet);
     }
 
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {

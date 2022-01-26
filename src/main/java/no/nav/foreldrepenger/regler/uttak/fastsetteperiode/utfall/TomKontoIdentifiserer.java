@@ -43,6 +43,8 @@ public class TomKontoIdentifiserer {
             }
             finnDatoMinsterettOppbrukt(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
+            finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager)
+                    .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
         }
         if (knekkpunkter.isEmpty()) {
             return Optional.empty();
@@ -74,6 +76,19 @@ public class TomKontoIdentifiserer {
         }
 
         var saldoMinsterett = saldoUtregning.restSaldoMinsterett(stønadskontotype, aktivitet);
+        return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
+    }
+
+    private static Optional<LocalDate> finnDatoDagerUtenAktivitetskravOppbrukt(OppgittPeriode oppgittPeriode,
+                                                                               AktivitetIdentifikator aktivitet,
+                                                                               SaldoUtregning saldoUtregning,
+                                                                               Stønadskontotype stønadskontotype,
+                                                                               boolean skalTrekkeDager) {
+        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager || Stønadskontotype.FLERBARNSDAGER.equals(stønadskontotype) ) {
+            return Optional.empty();
+        }
+
+        var saldoMinsterett = saldoUtregning.restSaldoDagerUtenAktivitetskrav(stønadskontotype, aktivitet);
         return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
     }
 

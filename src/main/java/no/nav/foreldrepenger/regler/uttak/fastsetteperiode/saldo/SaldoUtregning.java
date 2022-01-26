@@ -33,6 +33,7 @@ public class SaldoUtregning {
     private final LocalDateTime sisteSøknadMottattTidspunktSøker;
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final Trekkdager minsterettDager;
+    private final Trekkdager utenAktivitetskravDager;
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                    List<FastsattUttakPeriode> søkersPerioder,
@@ -41,7 +42,8 @@ public class SaldoUtregning {
                    Set<AktivitetIdentifikator> søkersAktiviteter,
                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                   Trekkdager minsterettDager) {
+                   Trekkdager minsterettDager,
+                   Trekkdager utenAktivitetskravDager) {
         this.stønadskontoer = stønadskontoer;
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
@@ -50,6 +52,7 @@ public class SaldoUtregning {
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.berørtBehandling = berørtBehandling;
         this.minsterettDager = minsterettDager;
+        this.utenAktivitetskravDager = utenAktivitetskravDager;
     }
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer,
@@ -60,7 +63,7 @@ public class SaldoUtregning {
                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
         this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
-                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO);
+                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO, Trekkdager.ZERO);
     }
 
     /**
@@ -112,6 +115,19 @@ public class SaldoUtregning {
                 .map(Trekkdager::new)
                 .reduce(Trekkdager.ZERO, Trekkdager::add);
         var restsaldo = minsterettDager.subtract(forbruk);
+        return restsaldo.compareTo(Trekkdager.ZERO) > 0 ? restsaldo : Trekkdager.ZERO;
+    }
+
+    public Trekkdager restSaldoDagerUtenAktivitetskrav(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
+        if (Stønadskontotype.FLERBARNSDAGER.equals(stønadskonto) || Trekkdager.ZERO.equals(utenAktivitetskravDager)) {
+            return Trekkdager.ZERO;
+        }
+        var forbruk = stønadskontoer().stream()
+                .filter(k -> !Stønadskontotype.FLERBARNSDAGER.equals(k))
+                .map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder))
+                .map(Trekkdager::new)
+                .reduce(Trekkdager.ZERO, Trekkdager::add);
+        var restsaldo = utenAktivitetskravDager.subtract(forbruk);
         return restsaldo.compareTo(Trekkdager.ZERO) > 0 ? restsaldo : Trekkdager.ZERO;
     }
 

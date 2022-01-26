@@ -9,7 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmMorBekreftetUføre extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "AVSLAG_AKT_11";
-    public static final String BESKRIVELSE = "Har søker oppgitt at mor mottar uføretrygd ?";
+    public static final String BESKRIVELSE = "Er det bekreftet at mor mottar uføretrygd ?";
 
     public SjekkOmMorBekreftetUføre() {
         super(ID);

@@ -175,7 +175,16 @@ public interface FastsettePeriodeGrunnlag {
     boolean isBareFarHarRettMorUføretrygd();
 
     /**
-     * Har saken en minsterett for uttak
+     * Har saken perioder uten aktivitetskrav iht 14-14 tredje ledd
+     * Slike saker skal ikke ha minsterett.
+     *
+     * @return true dersom saken tilsier dager uten aktivitetskrav.
+     */
+    boolean isSakMedDagerUtenAktivitetskrav();
+
+    /**
+     * Har saken en minsterett for uttak.
+     * Slike saker skal ikke ha dager uten aktivitetskrav.
      *
      * @return true dersom saken tilsier en minsterett for uttak.
      */

@@ -9,6 +9,7 @@ public final class Kontoer {
 
     private List<Konto> kontoList = new ArrayList<>();
     private int minsterettDager = 0;
+    private int utenAktivitetskravDager = 0;
 
     private Kontoer() {
 
@@ -20,6 +21,10 @@ public final class Kontoer {
 
     public int getMinsterettDager() {
         return minsterettDager;
+    }
+
+    public int getUtenAktivitetskravDager() {
+        return utenAktivitetskravDager;
     }
 
     public static class Builder {
@@ -41,7 +46,15 @@ public final class Kontoer {
             return this;
         }
 
+        public Builder utenAktivitetskravDager(int utenAktivitetskravDager) {
+            kladd.utenAktivitetskravDager = utenAktivitetskravDager;
+            return this;
+        }
+
         public Kontoer build() {
+            if (kladd.minsterettDager > 0 && kladd.utenAktivitetskravDager > 0) {
+                throw new IllegalArgumentException("Utviklerfeil: Sak med både minsterett og dager uten aktivitetskrav");
+            }
             return kladd;
         }
     }

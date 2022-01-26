@@ -30,7 +30,8 @@ public final class SaldoUtregningTjeneste {
         var stønadskontoer = lagStønadskontoer(grunnlag);
         return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(),
                 grunnlag.getAktiviteter(), grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null),
-                grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null), new Trekkdager(grunnlag.getKontoer().getMinsterettDager()));
+                grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
+                new Trekkdager(grunnlag.getKontoer().getMinsterettDager()), new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager()));
     }
 
     private static List<FastsattUttakPeriode> finnRelevanteAnnenpartsPerioder(boolean isBerørtBehandling,
