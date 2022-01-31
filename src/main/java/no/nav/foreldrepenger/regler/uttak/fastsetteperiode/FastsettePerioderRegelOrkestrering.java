@@ -304,7 +304,8 @@ public class FastsettePerioderRegelOrkestrering {
 
     private boolean erPeriodeMedGodkjentAktivitet(UttakPeriode periode) {
         // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
-        return periode.isFlerbarnsdager() || InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periode.getPeriodeResultatÅrsak()) ||
+        // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
+        return InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periode.getPeriodeResultatÅrsak()) ||
                 InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periode.getPeriodeResultatÅrsak());
     }
 
