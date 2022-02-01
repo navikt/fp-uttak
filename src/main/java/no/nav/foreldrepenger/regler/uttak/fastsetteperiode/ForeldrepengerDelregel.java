@@ -264,12 +264,6 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmOppgittMorUfør() {
-        return rs.hvisRegel(SjekkOmMorOppgittUføre.ID, SjekkOmMorOppgittUføre.BESKRIVELSE)
-                .hvis(new SjekkOmMorOppgittUføre(), sjekkOmGjelderMinsterett())
-                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
-    }
-
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGjelderMinsterett() {
         return rs.hvisRegel(SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager.ID, SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager.BESKRIVELSE)
                 .hvis(new SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager(), sjekkGraderingVedKunFarMedmorRettMinsterett())
@@ -286,7 +280,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAktivitetskravErOppfylt() {
         return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
                 .hvis(new SjekkOmMorErIAktivitet(), sjekkGraderingVedKunFarMedmorRett())
-                .ellers(sjekkOmOppgittMorUfør());
+                .ellers(sjekkOmGjelderMinsterett());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkGraderingVedKunFarMedmorRett() {
