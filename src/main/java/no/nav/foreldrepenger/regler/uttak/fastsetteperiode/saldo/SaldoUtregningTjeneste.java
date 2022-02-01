@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,12 +27,45 @@ public final class SaldoUtregningTjeneste {
     public static SaldoUtregning lagUtregning(SaldoUtregningGrunnlag grunnlag) {
         var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isBerørtBehandling(), grunnlag.getUtregningsdato(),
                 grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
-        var søkersFastsattePerioder = grunnlag.getSøkersFastsattePerioder();
+
+        var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder());
         var stønadskontoer = lagStønadskontoer(grunnlag);
         return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(),
                 grunnlag.getAktiviteter(), grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null),
                 grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
-                new Trekkdager(grunnlag.getKontoer().getMinsterettDager()), new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager()));
+                new Trekkdager(grunnlag.getKontoer().getMinsterettDager()),
+                new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager()));
+    }
+
+    private static List<FastsattUttakPeriode> knekkSøkersOppholdsperioder(List<FastsattUttakPeriode> annenpartsPerioder,
+                                                                          List<FastsattUttakPeriode> søkersFastsattePerioder1) {
+        var knekkpunkter = annenpartsPerioder.stream().flatMap(ap -> Stream.of(ap.getFom().minusDays(1), ap.getTom())).toList();
+        return søkersFastsattePerioder1.stream().flatMap(p -> {
+            if (p.isOpphold()) {
+                return knekkOpphold(p, knekkpunkter).stream();
+            }
+            return Stream.of(p);
+        }).toList();
+    }
+
+    private static List<FastsattUttakPeriode> knekkOpphold(FastsattUttakPeriode opphold, List<LocalDate> knekkpunkter) {
+
+        var etterKnekk = new ArrayList<FastsattUttakPeriode>();
+        var sortedKnekk = knekkpunkter.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        var etterKnekkOpphold = opphold;
+        for (var knekk : sortedKnekk) {
+            var tidsperiode = new LukketPeriode(etterKnekkOpphold.getFom(), etterKnekkOpphold.getTom());
+            if (tidsperiode.overlapper(knekk) && !etterKnekkOpphold.getTom().isEqual(knekk)) {
+                var førKnekkOpphold = new FastsattUttakPeriode.Builder(etterKnekkOpphold).tidsperiode(etterKnekkOpphold.getFom(),
+                        knekk).build();
+                etterKnekkOpphold = new FastsattUttakPeriode.Builder(etterKnekkOpphold).tidsperiode(knekk.plusDays(1),
+                        etterKnekkOpphold.getTom()).build();
+                etterKnekk.add(førKnekkOpphold);
+            }
+        }
+        etterKnekk.add(etterKnekkOpphold);
+        return etterKnekk;
+
     }
 
     private static List<FastsattUttakPeriode> finnRelevanteAnnenpartsPerioder(boolean isBerørtBehandling,
@@ -89,8 +123,7 @@ public final class SaldoUtregningTjeneste {
     }
 
     private static FastsattUttakPeriode map(AnnenpartUttakPeriode annenpartsPeriode) {
-        return new FastsattUttakPeriode.Builder()
-                .periodeResultatType(map(annenpartsPeriode.isInnvilget()))
+        return new FastsattUttakPeriode.Builder().periodeResultatType(map(annenpartsPeriode.isInnvilget()))
                 .samtidigUttak(annenpartsPeriode.isSamtidigUttak())
                 .flerbarnsdager(annenpartsPeriode.isFlerbarnsdager())
                 .oppholdÅrsak(annenpartsPeriode.getOppholdÅrsak())
