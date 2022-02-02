@@ -238,7 +238,7 @@ public class SaldoUtregning {
         for (var periode : søkersPerioder) {
             var overlappendePerioder = overlappendeAnnenpartPeriode(periode);
             for (var overlappendePeriode : overlappendePerioder) {
-                if (erOpphold(periode) && innvilgetMedTrekkdager(overlappendePeriode)) {
+                if (periode.isOpphold() && innvilgetMedTrekkdager(overlappendePeriode)) {
                     sum += trekkdagerForOppholdsperiode(stønadskonto, periode).intValue();
                 } else if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)) {
                     if (Objects.equals(stønadskonto, Stønadskontotype.FLERBARNSDAGER)) {
@@ -246,7 +246,7 @@ public class SaldoUtregning {
                     } else {
                         sum += frigitteDagerVanligeStønadskontoer(stønadskonto, periode, overlappendePeriode);
                     }
-                } else if (tapendePeriode(periode, overlappendePeriode) && erOpphold(overlappendePeriode)) {
+                } else if (tapendePeriode(periode, overlappendePeriode) && overlappendePeriode.isOpphold()) {
                     var delFom = overlappendePeriode.getFom()
                             .isBefore(periode.getFom()) ? periode.getFom() : overlappendePeriode.getFom();
                     var delTom = overlappendePeriode.getTom()
@@ -300,7 +300,7 @@ public class SaldoUtregning {
         var frigitte = 0;
         var delFom = periode.getFom().isBefore(overlappende.getFom()) ? overlappende.getFom() : periode.getFom();
         var delTom = periode.getTom().isBefore(overlappende.getTom()) ? periode.getTom() : overlappende.getTom();
-        if (erOpphold(overlappende)) {
+        if (overlappende.isOpphold()) {
             frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
                     trekkdagerForOppholdsperiode(stønadskonto, overlappende));
         } else if (!periode.isSamtidigUttak()) {
@@ -351,7 +351,7 @@ public class SaldoUtregning {
         for (var periode : annenpartsPerioder) {
             for (var annenpartAktivitet : aktiviteterForAnnenpart()) {
                 final BigDecimal trekkdager;
-                if (erOpphold(periode)) {
+                if (periode.isOpphold()) {
                     trekkdager = trekkdagerForOppholdsperiode(stønadskonto, periode);
                 } else {
                     if (!aktivitetIPeriode(periode, annenpartAktivitet)) {
@@ -384,7 +384,7 @@ public class SaldoUtregning {
 
         for (var i = 0; i < søkersPerioder.size(); i++) {
             var periodeSøker = søkersPerioder.get(i);
-            if (erOpphold(periodeSøker)) {
+            if (periodeSøker.isOpphold()) {
                 sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periodeSøker));
             } else {
                 var nestePeriodeSomIkkeErOpphold = nestePeriodeSomIkkeErOpphold(søkersPerioder, i);
@@ -410,7 +410,7 @@ public class SaldoUtregning {
     private Optional<FastsattUttakPeriode> nestePeriodeSomIkkeErOpphold(List<FastsattUttakPeriode> perioder, int index) {
         for (var i = index + 1; i < perioder.size(); i++) {
             var periode = perioder.get(i);
-            if (!erOpphold(periode)) {
+            if (!periode.isOpphold()) {
                 return Optional.of(periode);
             }
         }
@@ -427,7 +427,7 @@ public class SaldoUtregning {
             if (!periodeSøker.isForbrukMinsterett()) {
                 continue;
             }
-            if (erOpphold(periodeSøker)) {
+            if (periodeSøker.isOpphold()) {
                 sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periodeSøker));
             } else {
                 var nestePeriodeSomForbrukerDager = nestePeriodeSomForbrukerDager(søkersPerioder, i);
@@ -471,10 +471,6 @@ public class SaldoUtregning {
             }
         }
         return BigDecimal.ZERO;
-    }
-
-    private boolean erOpphold(FastsattUttakPeriode periodeSøker) {
-        return periodeSøker.getOppholdÅrsak() != null;
     }
 
     private BigDecimal trekkdagerForOppholdsperiode(Stønadskontotype stønadskonto,
@@ -546,7 +542,7 @@ public class SaldoUtregning {
     }
 
     private Trekkdager minForbrukteDager(FastsattUttakPeriode periode, Stønadskontotype stønadskontoType) {
-        if (erOpphold(periode)) {
+        if (periode.isOpphold()) {
             return new Trekkdager(trekkdagerForOppholdsperiode(stønadskontoType, periode));
         }
         Trekkdager minForbrukt = null;
@@ -608,7 +604,7 @@ public class SaldoUtregning {
 
         var resultat = new ArrayList<FastsattUttakPeriode>();
         for (var periode : perioderAnnenpart) {
-            if (erOpphold(periode)) {
+            if (periode.isOpphold()) {
                 if (!periode.getFom().isAfter(sisteUttaksdatoFelles)) {
                     var nyFom = periode.getFom();
                     //Hvis oppholdsperioder delvis overlapper med annenpart skal deler av oppholdet brukes
@@ -628,7 +624,7 @@ public class SaldoUtregning {
 
     private Optional<LocalDate> sisteUttaksdato(List<FastsattUttakPeriode> perioder) {
         return perioder.stream()
-                .filter(periode -> !erOpphold(periode))
+                .filter(periode -> !periode.isOpphold())
                 .max(Comparator.comparing(FastsattUttakPeriode::getTom))
                 .map(FastsattUttakPeriode::getTom);
     }

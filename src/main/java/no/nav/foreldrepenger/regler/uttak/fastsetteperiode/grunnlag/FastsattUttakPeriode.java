@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class FastsattUttakPeriode {
+
     private Perioderesultattype perioderesultattype;
     private List<FastsattUttakPeriodeAktivitet> aktiviteter;
     private boolean flerbarnsdager;
@@ -66,6 +67,15 @@ public class FastsattUttakPeriode {
         return Optional.ofNullable(mottattDato);
     }
 
+    public boolean isOpphold() {
+        return getOppholdÅrsak() != null;
+    }
+
+    @Override
+    public String toString() {
+        return "FastsattUttakPeriode{" + "fom=" + fom + ", tom=" + tom + '}';
+    }
+
     public static class Builder {
 
         private final FastsattUttakPeriode kladd;
@@ -104,6 +114,9 @@ public class FastsattUttakPeriode {
         }
 
         public Builder tidsperiode(LocalDate fom, LocalDate tom) {
+            if (tom.isBefore(fom)) {
+                throw new IllegalArgumentException("Tom(" + tom + ") kan ikke ligge før fom(" + fom + ")");
+            }
             kladd.fom = fom;
             kladd.tom = tom;
             return this;
