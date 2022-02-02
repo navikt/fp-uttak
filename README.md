@@ -17,9 +17,9 @@ Inneholder tre tjenester for foreldrepenger:
 
 # Komme i gang
 
-Bygges med maven, java 16 
+Bygges med maven, java 17
 
 ## For NAV-ansatte
 
 Interne henvendelser kan sendes via Slack i kanalen #teamforeldrepenger
-https://confluence.adeo.no/display/TVF/1.+Samleside+for+oppdaterte+regelflyter
+https://confluence.adeo.no/display/TVF/7.2+Vurdere+uttak
