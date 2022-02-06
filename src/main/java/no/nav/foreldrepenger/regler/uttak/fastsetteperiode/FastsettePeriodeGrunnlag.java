@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
@@ -222,6 +223,11 @@ public interface FastsettePeriodeGrunnlag {
      * Om alle barn er døde eller ikke
      */
     boolean erAlleBarnDøde();
+
+    /**
+     * Om det finnes en dødsdato for barn
+     */
+    Optional<LocalDate> getStartNyStønadsperiode();
 
     /**
      * Inngangsvilkår

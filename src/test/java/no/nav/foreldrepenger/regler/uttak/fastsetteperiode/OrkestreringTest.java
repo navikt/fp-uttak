@@ -57,6 +57,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
@@ -972,4 +973,58 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
         assertThat(resultat.stream()).allMatch(p -> p.getUttakPeriode().getPerioderesultattype().equals(Perioderesultattype.INNVILGET));
     }
+
+    @Test
+    public void skal_delvis_innvilge_med_periode_før_etter_start_ny_stønadsperiode() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
+        var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        grunnlag.datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+            .rettOgOmsorg(beggeRett())
+            .behandling(farBehandling())
+            .søknad(søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(FEDREKVOTE, nesteStønadsperiode.minusWeeks(5), nesteStønadsperiode.plusWeeks(5).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).map(UttakPeriode::getPerioderesultattype).filter(INNVILGET::equals).count()).isEqualTo(1);
+        var avslått = resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).filter(up -> AVSLÅTT.equals(up.getPerioderesultattype())).findFirst().orElseThrow();
+        assertThat(avslått.getFom()).isEqualTo(nesteStønadsperiode);
+        assertThat(avslått.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
+    }
+
+    @Test
+    public void skal_innvilge_med_periode_før_start_ny_stønadsperiode() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
+        var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        grunnlag.datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+            .rettOgOmsorg(beggeRett())
+            .behandling(farBehandling())
+            .kontoer(defaultKontoer())
+            .søknad(søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(FEDREKVOTE, nesteStønadsperiode.minusWeeks(18), nesteStønadsperiode.minusWeeks(8).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
+    public void skal_avslå_med_periode_etter_start_ny_stønadsperiode() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
+        var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        grunnlag.datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+            .rettOgOmsorg(beggeRett())
+            .behandling(farBehandling())
+            .søknad(søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(FEDREKVOTE, nesteStønadsperiode.plusWeeks(1), nesteStønadsperiode.plusWeeks(11).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultat.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
+    }
+
 }

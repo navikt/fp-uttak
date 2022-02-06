@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeUavklartUtenomNoenTyper;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterNyStønadsperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
@@ -44,8 +45,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
@@ -205,7 +206,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
                 "Er hele perioden innenfor maksimalgrense for foreldrepenger?")
                 .hvis(new SjekkOmPeriodenErEtterMaksgrenseForUttak(konfigurasjon),
                         IkkeOppfylt.opprett("UT1085", IkkeOppfyltÅrsak.UTTAK_ETTER_3_ÅRSGRENSE, false, false))
-                .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());
+                .ellers(sjekkOmPeriodeEtterNyStønadsperiode());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNyStønadsperiode() {
+        return rs.hvisRegel(SjekkOmPeriodenErEtterNyStønadsperiode.ID, "Er uttaksperioden etter start av ny stønadsperiode?")
+            .hvis(new SjekkOmPeriodenErEtterNyStønadsperiode(),
+                IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false))
+            .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselsvilkåretErOppfylt() {
