@@ -21,7 +21,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
         var fpff = oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3),
                 fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -44,7 +44,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
     @Test
     void foreldrepengerFørFødsel_far_søker_fpff() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        basicGrunnlagFar(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1))));
 
         var perioder = fastsettPerioder(grunnlag);
@@ -63,7 +63,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
     @Test
     void foreldrepengerFørFødsel_for_lang_fpff_periode_før_fødsel() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(4), fødselsdato.minusDays(1))));
 
         var perioder = fastsettPerioder(grunnlag);
@@ -104,7 +104,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
                 fødselsdato.plusWeeks(2).minusDays(1));
         var mødrekvote = oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(2),
                 fødselsdato.plusWeeks(6).minusDays(1));
-        basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -139,7 +139,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
     @Test
     void foreldrepengerFørFødsel_for_kort_fpff_periode_slutter_for_tidlig() {
         var fødselsdato = LocalDate.of(2018, 3, 1);
-        basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3).minusDays(1),
                         fødselsdato.minusWeeks(2))));
 
@@ -185,7 +185,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
     @Test
     void foreldrepengerFørFødsel_for_kort_fpff_starter_for_sent() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1))));
         var perioder = fastsettPerioder(grunnlag);
 

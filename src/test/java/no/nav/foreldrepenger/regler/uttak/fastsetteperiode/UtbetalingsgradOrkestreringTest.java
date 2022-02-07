@@ -35,7 +35,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(20).minusDays(1));
-        basicGrunnlag(fødselsdato).søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -69,14 +69,16 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
                 UtsettelseÅrsak.FERIE);
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12),
                 fødselsdato.plusWeeks(14).minusDays(1));
-        basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().oppgittPeriode(fpff)
+
+        //Krever sammenhengende pga søkt om ferie som innvilges, dette er gamle regler
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .behandling(morBehandling().kreverSammenhengendeUttak(true))
+                .søknad(new Søknad.Builder().oppgittPeriode(fpff)
                 .oppgittPeriode(mødrekvote)
                 .oppgittPeriode(utsettelseFellesperiode)
                 .oppgittPeriode(fellesperiode)
                 .type(Søknadstype.FØDSEL));
 
-        //Krever sammenhengende pga søkt om ferie som innvilges, dette er gamle regler
-        var grunnlag = this.grunnlag.behandling(morBehandling().kreverSammenhengendeUttak(true));
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(5);
@@ -108,6 +110,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
     void gradering_gir_redusert_utbetalingsgrad() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktiviteter = Set.of(ARBEIDSFORHOLD_1);
+        var grunnlag = basicGrunnlag();
         leggPåKvoter(grunnlag);
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
@@ -142,6 +145,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
     void gradering_gir_redusert_utbetalingsgrad_avrunding() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktivititeter = Set.of(ARBEIDSFORHOLD_1, ARBEIDSFORHOLD_2);
+        var grunnlag = basicGrunnlag();
         leggPåKvoter(grunnlag);
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));

@@ -400,8 +400,8 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
     @Test
     void foreldrepengerFørFødsel_for_kort_fpff_starter_for_sent() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        basicGrunnlagMorSammenhengendeUttak(fødselsdato).søknad(søknad(Søknadstype.FØDSEL,
-                oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1))));
+        var grunnlag = basicGrunnlagMorSammenhengendeUttak(fødselsdato).søknad(
+                søknad(FØDSEL, oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(1), fødselsdato.minusDays(1))));
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);

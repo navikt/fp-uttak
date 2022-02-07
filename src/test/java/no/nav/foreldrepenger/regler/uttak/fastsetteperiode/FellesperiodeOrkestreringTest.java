@@ -40,7 +40,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(1000))
                 .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(1000))
                 .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(4 * 5));
-        basicGrunnlagMor().søknad(søknad(Søknadstype.FØDSEL,
+        var grunnlag = basicGrunnlagMor().søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1))))
@@ -88,7 +88,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     void for_tidlig_fellesperiode_far_blir_knekt_og_må_behandles_manuelt() {
         var periode = oppgittPeriode(FELLESPERIODE, fødselsdato.minusWeeks(5), fødselsdato.plusWeeks(1), false, null,
                 PeriodeVurderingType.PERIODE_OK);
-        basicGrunnlagFar().søknad(søknad(Søknadstype.FØDSEL, periode));
+        var grunnlag = basicGrunnlagFar().søknad(søknad(Søknadstype.FØDSEL, periode));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -153,7 +153,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     void fellesperiode_mor_uttak_starter_før_12_uker_blir_avslått_med_knekk_ved_12_uker_før_fødsel() {
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(1000))
                 .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(13 * 5));
-        basicGrunnlagMor()
+        var grunnlag = basicGrunnlagMor()
                 .søknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FELLESPERIODE, fødselsdato.minusWeeks(13), fødselsdato)))
                 .kontoer(kontoer);
 
@@ -213,14 +213,10 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor() {
-        return basicGrunnlag().behandling(morBehandling());
+        return basicGrunnlag(fødselsdato).behandling(morBehandling());
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar() {
-        return basicGrunnlag().behandling(farBehandling());
-    }
-
-    private RegelGrunnlag.Builder basicGrunnlag() {
-        return grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
+        return basicGrunnlag(fødselsdato).behandling(farBehandling());
     }
 }

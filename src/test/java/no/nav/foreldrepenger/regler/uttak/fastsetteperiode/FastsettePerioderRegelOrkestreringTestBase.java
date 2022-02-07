@@ -41,20 +41,6 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
 
     private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
-    protected RegelGrunnlag.Builder grunnlag = RegelGrunnlagTestBuilder.create()
-            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-            .behandling(morBehandling())
-            .kontoer(defaultKontoer())
-            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-            .inngangsvilkår(oppfyltAlleVilkår());
-
-    Kontoer.Builder defaultKontoer() {
-        return new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
-                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
-    }
-
     protected final RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .behandling(morBehandling())
@@ -88,6 +74,22 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
         assertThat(periode.getPeriodeResultatÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
     }
 
+
+    RegelGrunnlag.Builder basicGrunnlag() {
+        return RegelGrunnlagTestBuilder.create()
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .behandling(morBehandling())
+                .kontoer(defaultKontoer())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .inngangsvilkår(oppfyltAlleVilkår());
+    }
+
+    Kontoer.Builder defaultKontoer() {
+        return new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
+                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
+    }
 
     void verifiserManuellBehandlingPeriode(UttakPeriode periode,
                                            LocalDate forventetFom,
@@ -163,7 +165,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
-        return grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
+        return basicGrunnlag().datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
     }
 
     Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {

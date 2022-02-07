@@ -38,7 +38,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
                 .arbeidsforhold(new Arbeidsforhold(arbeidsforhold3, omsorgsovertakelse.plusWeeks(8)))
                 .arbeidsforhold(new Arbeidsforhold(arbeidsforhold4, omsorgsovertakelse.plusWeeks(35)));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, omsorgsovertakelse, omsorgsovertakelse.plusWeeks(40));
-        grunnlag.arbeid(arbeid)
+        var grunnlag = basicGrunnlag()
+                .arbeid(arbeid)
                 .søknad(søknad(Søknadstype.ADOPSJON, mødrekvote))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(omsorgsovertakelse))
                 .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelse));
@@ -67,7 +68,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var gradertMødrekvote = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
         var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11).minusDays(1));
-        grunnlag.arbeid(arbeid)
+        var grunnlag = basicGrunnlag()
+                .arbeid(arbeid)
                 .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote, mødrekvote2))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
@@ -95,7 +97,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1));
         var gradertMødrekvote = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(12).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold1));
-        grunnlag.arbeid(arbeid)
+        var grunnlag = basicGrunnlag()
+                .arbeid(arbeid)
                 .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote1, gradertMødrekvote))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
@@ -137,7 +140,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var gradertMødrekvote2 = gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1),
                 BigDecimal.valueOf(50), Set.of(arbeidsforhold2));
         var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
-        grunnlag.arbeid(arbeid)
+        var grunnlag = basicGrunnlag()
+                .arbeid(arbeid)
                 .søknad(søknad(Søknadstype.FØDSEL, mødrekvote1, gradertMødrekvote1, gradertMødrekvote2, mødrekvote2))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
@@ -156,7 +160,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold, fødselsdato.plusWeeks(4)));
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
-        grunnlag.arbeid(arbeid)
+        var grunnlag = basicGrunnlag()
+                .arbeid(arbeid)
                 .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato));
 
@@ -180,7 +185,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(utsettelseArbeid.getFom(), fpPeriode.getTom(), I_AKTIVITET));
         var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode).dokumentasjon(dokumentasjon);
-        grunnlag.arbeid(arbeid)
+        var grunnlag = basicGrunnlag()
+                .arbeid(arbeid)
                 .søknad(søknad)
                 .rettOgOmsorg(bareFarRett())
                 .behandling(farBehandling())

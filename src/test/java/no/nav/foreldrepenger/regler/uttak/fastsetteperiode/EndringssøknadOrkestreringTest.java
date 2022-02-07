@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -38,8 +37,8 @@ class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var revurdering = new Revurdering.Builder().endringsdato(endringsdato).gjeldendeVedtak(vedtak);
         var søknadOm10UkerMødrekvote = søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, endringsdato, endringsdato.plusWeeks(10).minusDays(1)));
-        grunnlag.revurdering(revurdering)
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .revurdering(revurdering)
                 .kontoer(
                         new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(75)))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitet)))
@@ -68,8 +67,8 @@ class EndringssøknadOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var revurdering = new Revurdering.Builder().endringsdato(fødselsdato.plusWeeks(6)).gjeldendeVedtak(vedtak);
         var søknadOm12UkerMødrekvote = søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(18).minusDays(1)));
-        grunnlag.revurdering(revurdering)
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .revurdering(revurdering)
                 .kontoer(
                         new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(75)))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitet1))

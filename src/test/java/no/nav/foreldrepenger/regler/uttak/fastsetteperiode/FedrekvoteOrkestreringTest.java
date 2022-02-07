@@ -33,9 +33,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_fra_første_dag_til_midten_av_perioden_blir_innvilget_med_knekkpunkt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(farBehandling())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL,
                         oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), PeriodeVurderingType.PERIODE_OK),
                         oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2), PeriodeVurderingType.UAVKLART_PERIODE)));
@@ -58,9 +56,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void skal_gi_ikke_innvilget_når_far_har_gyldig_grunn_til_tidlig_oppstart_men_ikke_omsorg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(100));
-        grunnlag.datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(farBehandling())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), PeriodeVurderingType.PERIODE_OK))
                         .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
@@ -84,9 +80,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void fedrekvote_fra_1_dag_før_6_uker_skal_behandles_manuelt() {
         var fødselsdato = LocalDate.of(2018, 1, 3);
 
-        var grunnlag = this.grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(farBehandling())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL,
                         oppgittPeriode(fødselsdato.plusWeeks(6).minusDays(1), fødselsdato.plusWeeks(10).minusDays(1),
                                 PeriodeVurderingType.UAVKLART_PERIODE)))
@@ -107,9 +101,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var periode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE);
-        grunnlag.datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(farBehandling())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL, periode));
 
         var resultater = fastsettPerioder(grunnlag);
@@ -125,9 +117,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void fedrekvote_bli_ikke_innvilget_når_søker_ikke_har_omsorg() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(100));
-        grunnlag.datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(farBehandling())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(6),
                                 fødselsdato.plusWeeks(10).minusDays(1)))
@@ -145,9 +135,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(morBehandling())
+        var grunnlag = basicGrunnlagMor(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3),
                                 fødselsdato.minusDays(1)))
@@ -195,9 +183,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(datoer(fødselsdato))
-                .behandling(morBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagMor(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL,
                         oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3),
                                 fødselsdato.minusDays(1)),
@@ -238,9 +224,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void overføring_av_fedrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(morBehandling())
+        var grunnlag = basicGrunnlagMor(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL,
                         oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3),
                                 fødselsdato.minusDays(1)),

@@ -185,7 +185,7 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void en_lang_manglende_søkt_før_første_uttaksperiode_skal_gå_til_manuell_når_alle_dager_brukes_opp() {
         var fødselsdato = LocalDate.of(2018, 2, 13);
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(200));
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
+        var grunnlag = basicGrunnlag(fødselsdato)
                 .behandling(farBehandling())
                 .rettOgOmsorg(bareFarRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)

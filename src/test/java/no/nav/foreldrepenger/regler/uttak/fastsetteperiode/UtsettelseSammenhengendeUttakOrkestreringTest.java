@@ -633,9 +633,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
     @Test
     void skal_knekke_riktig_på_helligdager_i_jula_ved_utsettelse_pga_ferie() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
                                 .innvilget(true)
@@ -667,9 +665,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var hvFom = fødselsdato.plusWeeks(6);
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
                                 .innvilget(true)
@@ -693,9 +689,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var hvFom = fødselsdato.plusWeeks(6);
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
                                 .innvilget(true)
@@ -720,9 +714,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var tiltakFom = fødselsdato.plusWeeks(6);
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
                                 .innvilget(true)
@@ -746,9 +738,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var tiltakFom = fødselsdato.plusWeeks(6);
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
                                 .innvilget(true)
@@ -803,8 +793,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
                 ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
-        basicGrunnlagFar(fødselsdato)
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
                 .søknad(new Søknad.Builder().type(FØDSEL)
@@ -859,11 +848,11 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
 
     private RegelGrunnlag.Builder aleneomsorgUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
-        return grunnlag.datoer(datoer(fødselsdato)).behandling(behandling).kontoer(kontoer).rettOgOmsorg(aleneomsorg());
+        return basicGrunnlag().datoer(datoer(fødselsdato)).behandling(behandling).kontoer(kontoer).rettOgOmsorg(aleneomsorg());
     }
 
     private RegelGrunnlag.Builder basicUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {
-        return grunnlag.datoer(datoer(fødselsdato)).behandling(behandling).rettOgOmsorg(beggeRett());
+        return basicGrunnlag().datoer(datoer(fødselsdato)).behandling(behandling).rettOgOmsorg(beggeRett());
     }
 
     private Søknad.Builder fødselSøknad() {

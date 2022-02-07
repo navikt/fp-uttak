@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 
@@ -22,8 +20,7 @@ class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
     @Test
     void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() throws JsonProcessingException {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(new Behandling.Builder().søkerErMor(true))
+        var grunnlag = basicGrunnlagMor(fødselsdato)
                 .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
                 .søknad(søknad(Søknadstype.FØDSEL,
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),

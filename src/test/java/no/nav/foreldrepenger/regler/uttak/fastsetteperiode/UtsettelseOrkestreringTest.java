@@ -511,8 +511,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
                 FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
-        basicGrunnlagFar(fødselsdato)
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
                 .søknad(new Søknad.Builder().type(FØDSEL)
@@ -626,7 +625,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     private RegelGrunnlag.Builder basicUtsettelseGrunnlag(LocalDate fødselsdato, Behandling.Builder behandling) {
-        return grunnlag.datoer(datoer(fødselsdato)).behandling(behandling).rettOgOmsorg(beggeRett());
+        return basicGrunnlag().datoer(datoer(fødselsdato)).behandling(behandling).rettOgOmsorg(beggeRett());
     }
 
     private Søknad.Builder fødselSøknad() {

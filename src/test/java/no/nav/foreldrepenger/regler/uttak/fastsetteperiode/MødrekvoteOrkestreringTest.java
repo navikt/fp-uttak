@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -25,9 +24,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     @Test
     void mødrekvoteperiode_før_familiehendelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(morBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlag(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3),
                                 fødselsdato.minusWeeks(1).minusDays(1)))
@@ -60,9 +57,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     @Test
     void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
@@ -100,8 +95,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     @Test
     void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
@@ -122,9 +116,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     @Test
     void overføring_av_mødrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.UAVKLART_PERIODE,
@@ -158,9 +150,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     @Test
     void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1), PeriodeVurderingType.PERIODE_OK,
