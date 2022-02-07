@@ -100,7 +100,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), varBarnetInnlagtSjekk)
-                .ellers(Manuellbehandling.opprett("UT1357", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
+                .ellers(Manuellbehandling.opprett("UT1357", null,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
     }
 
