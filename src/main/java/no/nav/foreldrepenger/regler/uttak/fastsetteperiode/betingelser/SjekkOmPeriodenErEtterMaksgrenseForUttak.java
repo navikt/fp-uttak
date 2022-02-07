@@ -14,6 +14,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmPeriodenErEtterMaksgrenseForUttak extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 15.6";
+    public static final String BESKRIVELSE = "Er hele perioden innenfor maksimalgrense for foreldrepenger?";
     private final Konfigurasjon konfigurasjon;
 
     public SjekkOmPeriodenErEtterMaksgrenseForUttak(Konfigurasjon konfigurasjon) {

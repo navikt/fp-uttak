@@ -225,7 +225,7 @@ public interface FastsettePeriodeGrunnlag {
     boolean erAlleBarnDøde();
 
     /**
-     * Om det finnes en dødsdato for barn
+     * Eventuell dato for start av ny stønadsperiode (nytt barn)
      */
     Optional<LocalDate> getStartNyStønadsperiode();
 

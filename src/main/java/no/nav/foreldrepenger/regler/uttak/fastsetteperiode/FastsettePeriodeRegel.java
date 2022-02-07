@@ -202,15 +202,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense() {
-        return rs.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID,
-                "Er hele perioden innenfor maksimalgrense for foreldrepenger?")
+        return rs.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID, SjekkOmPeriodenErEtterMaksgrenseForUttak.BESKRIVELSE)
                 .hvis(new SjekkOmPeriodenErEtterMaksgrenseForUttak(konfigurasjon),
                         IkkeOppfylt.opprett("UT1085", IkkeOppfyltÅrsak.UTTAK_ETTER_3_ÅRSGRENSE, false, false))
                 .ellers(sjekkOmPeriodeEtterNyStønadsperiode());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNyStønadsperiode() {
-        return rs.hvisRegel(SjekkOmPeriodenErEtterNyStønadsperiode.ID, "Er uttaksperioden etter start av ny stønadsperiode?")
+        return rs.hvisRegel(SjekkOmPeriodenErEtterNyStønadsperiode.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenErEtterNyStønadsperiode(),
                 IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false))
             .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());

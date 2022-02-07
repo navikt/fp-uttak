@@ -9,6 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmPeriodenErEtterNyStønadsperiode extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 15.7";
+    public static final String BESKRIVELSE = "Er uttaksperioden etter start av ny stønadsperiode??";
 
     public SjekkOmPeriodenErEtterNyStønadsperiode() {
         super(ID);
