@@ -978,7 +978,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     public void skal_delvis_innvilge_med_periode_før_etter_start_ny_stønadsperiode() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        grunnlag.datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+        var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
             .rettOgOmsorg(beggeRett())
             .behandling(farBehandling())
             .søknad(søknad(Søknadstype.FØDSEL,
@@ -997,7 +997,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     public void skal_innvilge_med_periode_før_start_ny_stønadsperiode() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        grunnlag.datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+        var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
             .rettOgOmsorg(beggeRett())
             .behandling(farBehandling())
             .kontoer(defaultKontoer())
@@ -1014,7 +1014,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     public void skal_avslå_med_periode_etter_start_ny_stønadsperiode() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        grunnlag.datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+        var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
             .rettOgOmsorg(beggeRett())
             .behandling(farBehandling())
             .søknad(søknad(Søknadstype.FØDSEL,
