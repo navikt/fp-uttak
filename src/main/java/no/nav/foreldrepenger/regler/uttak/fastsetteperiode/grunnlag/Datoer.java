@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public final class Datoer {
 
@@ -9,21 +10,16 @@ public final class Datoer {
     private LocalDate fødsel;
     private Dødsdatoer dødsdatoer;
     //Ikke sleng inn flere datoer her uten å prøve å plassere i andre mer passende klasser
+    private LocalDate startdatoNesteStønadsperiode;  // Solo-dato
 
     private Datoer() {
     }
 
     public LocalDate getFamiliehendelse() {
-        if (getOmsorgsovertakelse() != null) {
-            return getOmsorgsovertakelse();
-        }
-        if (getFødsel() != null) {
-            return getFødsel();
-        }
-        if (getTermin() != null) {
-            return getTermin();
-        }
-        throw new IllegalStateException("Ingen familiehendelse");
+        return Optional.ofNullable(omsorgsovertakelse)
+            .or(() -> Optional.ofNullable(fødsel))
+            .or(() -> Optional.ofNullable(termin))
+            .orElseThrow(() -> new IllegalStateException("Ingen familiehendelse"));
     }
 
     public LocalDate getTermin() {
@@ -42,6 +38,9 @@ public final class Datoer {
         return dødsdatoer;
     }
 
+    public Optional<LocalDate> getStartdatoNesteStønadsperiode() {
+        return Optional.ofNullable(startdatoNesteStønadsperiode);
+    }
 
     public static class Builder {
         private final Datoer kladd = new Datoer();
@@ -58,6 +57,11 @@ public final class Datoer {
 
         public Builder omsorgsovertakelse(LocalDate omsorgsovertakelse) {
             kladd.omsorgsovertakelse = omsorgsovertakelse;
+            return this;
+        }
+
+        public Builder startdatoNesteStønadsperiode(LocalDate startdatoNesteStønadsperiode) {
+            kladd.startdatoNesteStønadsperiode = startdatoNesteStønadsperiode;
             return this;
         }
 

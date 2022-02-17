@@ -21,6 +21,7 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     BARN_DØD(4072, "Barnet er dødt"),
     MOR_IKKE_RETT_FK(4073, "Ikke rett til kvote fordi mor ikke har rett til foreldrepenger"),
     MOR_IKKE_RETT_FP(4075, "Ikke rett til fellesperiode fordi mor ikke har rett til foreldrepenger"),
+    UTTAK_ETTER_NY_STØNADSPERIODE(4104, "Uttak etter start av ny stønadsperiode"),
     FAR_PERIODE_FØR_FØDSEL(4105, "Far/medmor søker uttak før fødsel/omsorg"),
 
     // Adopsjon
