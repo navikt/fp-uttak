@@ -48,7 +48,7 @@
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
         <sonar.organization>navit</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <fpsak.nare.version>2.2.0</fpsak.nare.version>
+        <fpsak.nare.version>2.2.2</fpsak.nare.version>
         <jupiter.version>5.8.2</jupiter.version>
         <assertj.version>3.22.0</assertj.version>
     </properties>
