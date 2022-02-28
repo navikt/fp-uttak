@@ -130,7 +130,7 @@ class SaldoUtregningTest {
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
-                .forbrukerMinsterett(false)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
@@ -152,7 +152,7 @@ class SaldoUtregningTest {
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
-                .forbrukerMinsterett(true)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
@@ -174,7 +174,7 @@ class SaldoUtregningTest {
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
-                .forbrukerMinsterett(false)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
@@ -196,7 +196,7 @@ class SaldoUtregningTest {
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER, AKTIVITET1_SØKER)))
                 .periodeResultatType(Perioderesultattype.INNVILGET)
                 .tidsperiode(enTirsdag, enTirsdag)
-                .forbrukerMinsterett(true)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,

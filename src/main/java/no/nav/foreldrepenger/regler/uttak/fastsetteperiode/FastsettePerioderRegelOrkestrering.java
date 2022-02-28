@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
@@ -289,24 +288,26 @@ public class FastsettePerioderRegelOrkestrering {
                 .tidsperiode(periode.getFom(), periode.getTom())
                 .aktiviteter(mapAktiviteter(periode))
                 .flerbarnsdager(periode.isFlerbarnsdager())
-                .forbrukerMinsterett(brukerAvMinsterett(periode))
+                .resultatÅrsak(mapTilÅrsak(periode))
+                .utsettelse(periode.getUtsettelseÅrsak() != null)
                 .oppholdÅrsak(periode.getOppholdÅrsak())
                 .samtidigUttak(periode.erSamtidigUttak())
                 .periodeResultatType(periode.getPerioderesultattype())
                 .build();
     }
 
-    private boolean brukerAvMinsterett(UttakPeriode periode) {
-        return (Perioderesultattype.INNVILGET.equals(periode.getPerioderesultattype()) && !erPeriodeMedGodkjentAktivitet(periode))
-                || (Perioderesultattype.AVSLÅTT.equals(periode.getPerioderesultattype()) && IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periode.getPeriodeResultatÅrsak()))
-                || (Perioderesultattype.MANUELL_BEHANDLING.equals(periode.getPerioderesultattype()) && periode.getUtsettelseÅrsak() == null);
-    }
-
-    private boolean erPeriodeMedGodkjentAktivitet(UttakPeriode periode) {
-        // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
-        // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
-        return InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periode.getPeriodeResultatÅrsak()) ||
-                InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periode.getPeriodeResultatÅrsak());
+    private FastsattUttakPeriode.ResultatÅrsak mapTilÅrsak(UttakPeriode periode) {
+        var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
+        if (InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periodeResultatÅrsak)) {
+            return FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT;
+        }
+        if (InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periodeResultatÅrsak)) {
+            return FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
+        }
+        if (IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periodeResultatÅrsak)) {
+            return FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
+        }
+        return FastsattUttakPeriode.ResultatÅrsak.ANNET;
     }
 
     private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder,
