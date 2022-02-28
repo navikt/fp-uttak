@@ -1,5 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +18,8 @@ public class FastsattUttakPeriode {
     private LocalDate tom;
     private boolean samtidigUttak;
     private LocalDate mottattDato;
-    private boolean forbrukMinsterett;
+    private FastsattUttakPeriode.ResultatÅrsak resultatÅrsak;
+    private boolean utsettelse;
 
     private FastsattUttakPeriode() {
     }
@@ -28,7 +33,8 @@ public class FastsattUttakPeriode {
         this.tom = periode.tom;
         this.samtidigUttak = periode.samtidigUttak;
         this.mottattDato = periode.mottattDato;
-        this.forbrukMinsterett = periode.forbrukMinsterett;
+        this.resultatÅrsak = periode.resultatÅrsak;
+        this.utsettelse = periode.utsettelse;
     }
 
     public Perioderesultattype getPerioderesultattype() {
@@ -60,7 +66,16 @@ public class FastsattUttakPeriode {
     }
 
     public boolean isForbrukMinsterett() {
-        return forbrukMinsterett;
+        return (Perioderesultattype.INNVILGET.equals(perioderesultattype) && !erPeriodeMedGodkjentAktivitet())
+                || (Perioderesultattype.AVSLÅTT.equals(perioderesultattype) && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak))
+                || (Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
+    }
+
+    private boolean erPeriodeMedGodkjentAktivitet() {
+        // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
+        // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
+        return INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak) ||
+                INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak);
     }
 
     public Optional<LocalDate> getMottattDato() {
@@ -74,6 +89,13 @@ public class FastsattUttakPeriode {
     @Override
     public String toString() {
         return "FastsattUttakPeriode{" + "fom=" + fom + ", tom=" + tom + '}';
+    }
+
+    public enum ResultatÅrsak {
+        IKKE_OPPFYLT_SØKNADSFRIST,
+        INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT,
+        INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT,
+        ANNET,
     }
 
     public static class Builder {
@@ -103,8 +125,13 @@ public class FastsattUttakPeriode {
             return this;
         }
 
-        public Builder forbrukerMinsterett(boolean forbrukMinsterett) {
-            kladd.forbrukMinsterett = forbrukMinsterett;
+        public Builder resultatÅrsak(ResultatÅrsak resultatÅrsak) {
+            kladd.resultatÅrsak = resultatÅrsak;
+            return this;
+        }
+
+        public Builder utsettelse(boolean utsettelse) {
+            kladd.utsettelse = utsettelse;
             return this;
         }
 
