@@ -139,7 +139,7 @@ class SaldoUtregningTest {
         var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(10), new Trekkdager(10));
-        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(2);
         assertThat(saldoUtregning.getMaxDagerUtenAktivitetskrav()).isEqualTo(new Trekkdager(10));
     }
@@ -160,8 +160,8 @@ class SaldoUtregningTest {
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
-        assertThat(saldoUtregning.restSaldoMinsterett(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
-        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.restSaldoMinsterett(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
     }
@@ -182,8 +182,9 @@ class SaldoUtregningTest {
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
-        assertThat(saldoUtregning.restSaldoMinsterett(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
-        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.restSaldoMinsterett(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-10));
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav()).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
     }
@@ -204,8 +205,8 @@ class SaldoUtregningTest {
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
-        assertThat(saldoUtregning.restSaldoMinsterett(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
-        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
+        assertThat(saldoUtregning.restSaldoMinsterett(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
     }
@@ -226,8 +227,8 @@ class SaldoUtregningTest {
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
-        assertThat(saldoUtregning.restSaldoMinsterett(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
-        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.restSaldoMinsterett(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-10));
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
     }

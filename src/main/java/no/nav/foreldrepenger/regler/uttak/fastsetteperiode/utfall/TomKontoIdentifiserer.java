@@ -75,7 +75,7 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        var saldoMinsterett = saldoUtregning.restSaldoMinsterett(stønadskontotype, aktivitet);
+        var saldoMinsterett = saldoUtregning.restSaldoMinsterett(aktivitet);
         return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
     }
 
@@ -88,7 +88,7 @@ public class TomKontoIdentifiserer {
             return Optional.empty();
         }
 
-        var saldoMinsterett = saldoUtregning.restSaldoDagerUtenAktivitetskrav(stønadskontotype, aktivitet);
+        var saldoMinsterett = saldoUtregning.restSaldoDagerUtenAktivitetskrav(aktivitet);
         return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
     }
 

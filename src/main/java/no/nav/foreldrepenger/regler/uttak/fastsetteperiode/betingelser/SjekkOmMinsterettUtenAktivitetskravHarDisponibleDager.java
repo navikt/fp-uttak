@@ -21,7 +21,7 @@ public class SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager extends LeafS
         // TODO TFP-4842 - tilpass når flere tilfelle kan passere denne sjekken. Nå er den konservativ
         if (grunnlag.isSakMedDagerUtenAktivitetskrav() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().restSaldoDagerUtenAktivitetskrav(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet);
+                var saldo = grunnlag.getSaldoUtregning().restSaldoDagerUtenAktivitetskrav(aktivitet);
                 if (saldo.merEnn0()) {
                     return ja();
                 }
@@ -30,7 +30,7 @@ public class SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager extends LeafS
         // TODO WLB - tilpass når flere tilfelle kan passere denne sjekken. Nå er den konservativ
         if (grunnlag.isSakMedMinsterett() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().restSaldoMinsterett(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet);
+                var saldo = grunnlag.getSaldoUtregning().restSaldoMinsterett(aktivitet);
                 if (saldo.merEnn0()) {
                     return ja();
                 }

@@ -100,35 +100,43 @@ public class SaldoUtregning {
 
     public Trekkdager nettoSaldoJustertForMinsterett(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, boolean kanTrekkeAvMinsterett) {
         var brutto = saldoITrekkdager(stønadskonto, aktivitet);
-        var reduksjon = kanTrekkeAvMinsterett ? Trekkdager.ZERO : restSaldoMinsterett(stønadskonto, aktivitet);
-        return brutto.subtract(reduksjon);
-
+        if (!kanTrekkeAvMinsterett) {
+            var restSaldoMinsterett = restSaldoMinsterett(aktivitet);
+            var reduksjon = restSaldoMinsterett.mindreEnn0() ? Trekkdager.ZERO : restSaldoMinsterett;
+            return brutto.subtract(reduksjon);
+        }
+        return brutto;
     }
 
-    public Trekkdager restSaldoMinsterett(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
-        if (Stønadskontotype.FLERBARNSDAGER.equals(stønadskonto) || Trekkdager.ZERO.equals(minsterettDager)) {
+    public Trekkdager restSaldoMinsterett(AktivitetIdentifikator aktivitet) {
+        if (Trekkdager.ZERO.equals(minsterettDager)) {
             return Trekkdager.ZERO;
         }
-        var forbruk = stønadskontoer().stream()
+        var forbruk = forbruktAvMinsterett(aktivitet);
+        return minsterettDager.subtract(forbruk);
+    }
+
+    public Trekkdager restSaldoDagerUtenAktivitetskrav() {
+        return aktiviteterForSøker().stream()
+                .map(a -> restSaldoDagerUtenAktivitetskrav(a))
+                .max((o1, o2) -> o1.compareTo(o2))
+                .orElse(Trekkdager.ZERO);
+    }
+
+    public Trekkdager restSaldoDagerUtenAktivitetskrav(AktivitetIdentifikator aktivitet) {
+        if (Trekkdager.ZERO.equals(utenAktivitetskravDager)) {
+            return Trekkdager.ZERO;
+        }
+        var forbruk = forbruktAvMinsterett(aktivitet);
+        return utenAktivitetskravDager.subtract(forbruk);
+    }
+
+    private Trekkdager forbruktAvMinsterett(AktivitetIdentifikator aktivitet) {
+        return stønadskontoer().stream()
                 .filter(k -> !Stønadskontotype.FLERBARNSDAGER.equals(k))
                 .map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder))
                 .map(Trekkdager::new)
                 .reduce(Trekkdager.ZERO, Trekkdager::add);
-        var restsaldo = minsterettDager.subtract(forbruk);
-        return restsaldo.compareTo(Trekkdager.ZERO) > 0 ? restsaldo : Trekkdager.ZERO;
-    }
-
-    public Trekkdager restSaldoDagerUtenAktivitetskrav(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
-        if (Stønadskontotype.FLERBARNSDAGER.equals(stønadskonto) || Trekkdager.ZERO.equals(utenAktivitetskravDager)) {
-            return Trekkdager.ZERO;
-        }
-        var forbruk = stønadskontoer().stream()
-                .filter(k -> !Stønadskontotype.FLERBARNSDAGER.equals(k))
-                .map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder))
-                .map(Trekkdager::new)
-                .reduce(Trekkdager.ZERO, Trekkdager::add);
-        var restsaldo = utenAktivitetskravDager.subtract(forbruk);
-        return restsaldo.compareTo(Trekkdager.ZERO) > 0 ? restsaldo : Trekkdager.ZERO;
     }
 
     /**
@@ -226,7 +234,7 @@ public class SaldoUtregning {
     }
 
     public Trekkdager getMaxDagerUtenAktivitetskrav() {
-        return utenAktivitetskravDager;
+        return utenAktivitetskravDager == null ? Trekkdager.ZERO : utenAktivitetskravDager;
     }
 
     private Trekkdager getMaxDagerITrekkdager(Stønadskontotype stønadskontotype) {
