@@ -123,6 +123,28 @@ class SaldoUtregningTest {
     }
 
     @Test
+    void returnerer_dagerUtenAktivitetskrav() {
+        var fastsattUttakPeriode1 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10), FORELDREPENGER, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(enTirsdag, enTirsdag)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
+                .build();
+        var fastsattUttakPeriode2 = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(3), FORELDREPENGER, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(enTirsdag.plusDays(1), enTirsdag.plusDays(1))
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
+                .build();
+        var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker, List.of(), false,
+                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(10), new Trekkdager(10));
+        assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
+        assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(2);
+        assertThat(saldoUtregning.getMaxDagerUtenAktivitetskrav()).isEqualTo(new Trekkdager(10));
+    }
+
+    @Test
     void for_stort_trekk_som_ikke_bruker_minsterett_gir_riktig_saldo_minsterett() {
         // assert/netto: kanTrekkeAvMinsterett = false for MSP, Uttak, Opphold
         // Forbrukeravminsterett = innvilget utenom aktivitetskrav, avslag/søknadsfrist, eller manuellbehandling

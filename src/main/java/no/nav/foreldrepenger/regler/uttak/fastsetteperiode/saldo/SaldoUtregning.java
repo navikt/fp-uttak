@@ -225,6 +225,10 @@ public class SaldoUtregning {
         return getMaxDagerITrekkdager(stønadskontotype).decimalValue().intValue();
     }
 
+    public Trekkdager getMaxDagerUtenAktivitetskrav() {
+        return utenAktivitetskravDager;
+    }
+
     private Trekkdager getMaxDagerITrekkdager(Stønadskontotype stønadskontotype) {
         return stønadskontoer.stream()
                 .filter(stønadskonto -> stønadskonto.getStønadskontotype().equals(stønadskontotype))
