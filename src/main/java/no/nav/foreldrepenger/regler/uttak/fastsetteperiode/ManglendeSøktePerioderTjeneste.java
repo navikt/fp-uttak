@@ -187,7 +187,7 @@ final class ManglendeSøktePerioderTjeneste {
     }
 
     private static LocalDate fomTidsperiodeForbeholdtMor(Konfigurasjon konfigurasjon, LocalDate familiehendelse) {
-        return familiehendelse.minusWeeks(
-                konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse));
+        return Virkedager.justerHelgTilMandag(familiehendelse.minusWeeks(
+                konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse)));
     }
 }

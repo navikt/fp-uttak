@@ -384,6 +384,32 @@ class ManglendeSøktePerioderTjenesteTest {
         assertThat(msp.get(0).getTom()).isEqualTo(LocalDate.of(2022, 1, 26));
     }
 
+    @Test
+    @DisplayName("FAGSYSTEM-214259 - Mor søker en dag fellesperiode lenge før fødsel. Termin på en lørdag. "
+            + "Skal ikke få opprettet msp før fpff perioden")
+    void skalIkkeLageManglendeSøktFørUke3FørFødsel() {
+        var termindato = LocalDate.of(2022, 4, 16);
+
+        var søknadsperiodeFom = LocalDate.of(2022, 1, 31);
+        var grunnlag = grunnlagMedKontoer()
+                .søknad(new Søknad.Builder().type(Søknadstype.TERMIN)
+                        //Søker en dag
+                        .oppgittPeriode(oppgittPeriode(FELLESPERIODE, søknadsperiodeFom, søknadsperiodeFom))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2022, 3, 28), LocalDate.of(2022, 4, 15)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, LocalDate.of(2022, 4, 18), LocalDate.of(2022, 7, 29)))
+                        .oppgittPeriode(oppgittPeriode(FELLESPERIODE, LocalDate.of(2022, 8, 1), LocalDate.of(2022, 11, 17)))
+                )
+                .behandling(morBehandling())
+                .rettOgOmsorg(beggeRett())
+                .opptjening(new Opptjening.Builder().skjæringstidspunkt(søknadsperiodeFom))
+                .datoer(new Datoer.Builder().termin(termindato))
+                .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).isEmpty();
+    }
+
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
         return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
     }
