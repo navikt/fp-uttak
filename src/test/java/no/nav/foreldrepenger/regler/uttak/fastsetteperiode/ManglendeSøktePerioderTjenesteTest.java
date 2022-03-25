@@ -385,7 +385,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    @DisplayName("FAGSYSTEM-214259 - Mor søker en dag fellesperiode lenge før fødsel. Termin på en lørdag. "
+    @DisplayName("FAGSYSTEM-214259 - Mor søker esdn dag fellesperiode lenge før fødsel. Termin på en lørdag. "
             + "Skal ikke få opprettet msp før fpff perioden")
     void skalIkkeLageManglendeSøktFørUke3FørFødsel() {
         var termindato = LocalDate.of(2022, 4, 16);
