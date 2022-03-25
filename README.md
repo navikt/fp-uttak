@@ -23,3 +23,4 @@ Bygges med maven, java 17
 
 Interne henvendelser kan sendes via Slack i kanalen #teamforeldrepenger
 https://confluence.adeo.no/display/TVF/7.2+Vurdere+uttak
+ 
