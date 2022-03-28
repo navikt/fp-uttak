@@ -26,4 +26,5 @@ class ArbeidsforholdTest {
         assertThat(arbeidsforhold.getStillingsprosent(LocalDate.of(2019, 12, 12))).isEqualTo(BigDecimal.valueOf(50));
         assertThat(arbeidsforhold.getStillingsprosent(LocalDate.of(2020, 2, 2))).isEqualTo(BigDecimal.valueOf(100));
     }
+    
 }
