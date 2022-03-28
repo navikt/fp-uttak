@@ -18,7 +18,7 @@ class ArbeidsforholdTest {
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.forFrilans());
 
         arbeidsforhold.leggTilEndringIStilling(new EndringAvStilling(LocalDate.of(2019, 1, 1), BigDecimal.valueOf(50)));
-        arbeidsforhold.leggTilEndringIStilling(new EndringAvStilling(LocalDate.of(2018, 1, 1), BigDecimal.ZERO));
+        arbeidsforhold.leggTilEndringIStilling(new EndringAvStilling(LocalDate.of(2020, 1, 1), BigDecimal.ZERO));
         arbeidsforhold.leggTilEndringIStilling(new EndringAvStilling(LocalDate.of(2020, 1, 1), BigDecimal.valueOf(100)));
 
         assertThat(arbeidsforhold.getStillingsprosent(LocalDate.of(2017, 1, 1))).isEqualTo(BigDecimal.valueOf(100));
