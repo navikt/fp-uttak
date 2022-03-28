@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perio
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +20,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUtt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
@@ -211,6 +214,35 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultatPeriode = resultat.get(0).getUttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
+    }
+
+    @Test
+    void skal_evaluere_normal_flyt_dersom_flerbarnsdager_far_har_søkt_etter_mor_berørt_behandling() {
+        //Søkt samme dag, men mor har søkt etter far
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1), MOR_ARBEIDSFORHOLD,
+                                true, fødselsdato.plusWeeks(10)))
+                        .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12), MOR_ARBEIDSFORHOLD, true,
+                                fødselsdato.plusWeeks(10)))
+                )
+                .behandling(farBehandling().berørtBehandling(true))
+                .rettOgOmsorg(beggeRett())
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(5*15))
+                        .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(5*16 + 5*17))
+                        .konto(new Konto.Builder().type(FLERBARNSDAGER).trekkdager(5*17)))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
+                                null, true, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
     static AnnenpartUttakPeriode annenpartsPeriode(Stønadskontotype stønadskontotype,
