@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterNyStønadsperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenGjelderFlerbarnsdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPleiepenger;
@@ -156,8 +157,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad() {
         return rs.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
                 "Sammenfaller uttaksperioden med en periode hos den andre parten som har utbetaling > 0?")
-                .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmSamtidigUttak())
-                .ellers(sjekkOmPeriodeErUtsettelse());
+                .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmFlerbarnsdager())
+                .ellers(sjekkOmGradertEtterSøknadMottattdato());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmFlerbarnsdager() {
+        return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
+                .hvis(new SjekkOmEnPartsPeriodeErFlerbarnsdager(), sjekkOmGradertEtterSøknadMottattdato())
+                .ellers(sjekkOmSamtidigUttak());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtidigUttak() {
