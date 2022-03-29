@@ -234,7 +234,11 @@ public class SaldoUtregning {
     }
 
     public Trekkdager getMaxDagerUtenAktivitetskrav() {
-        return utenAktivitetskravDager == null ? Trekkdager.ZERO : utenAktivitetskravDager;
+        return Optional.ofNullable(utenAktivitetskravDager).orElse(Trekkdager.ZERO);
+    }
+
+    public Trekkdager getMaxDagerMinsterett() {
+        return Optional.ofNullable(minsterettDager).orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager getMaxDagerITrekkdager(Stønadskontotype stønadskontotype) {

@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -164,6 +165,7 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
+        assertThat(saldoUtregning.getMaxDagerMinsterett()).isEqualTo(new Trekkdager(5));
     }
 
     @Test
@@ -187,6 +189,7 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav()).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
+        assertThat(saldoUtregning.getMaxDagerMinsterett()).isEqualTo(new Trekkdager(5));
     }
 
     @Test
@@ -209,6 +212,8 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
+        assertThat(saldoUtregning.getMaxDagerUtenAktivitetskrav()).isEqualTo(new Trekkdager(5));
+        assertThat(saldoUtregning.getMaxDagerMinsterett()).isEqualTo(Trekkdager.ZERO);
     }
 
     @Test
