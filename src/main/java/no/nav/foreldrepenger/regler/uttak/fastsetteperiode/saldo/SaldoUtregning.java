@@ -98,6 +98,9 @@ public class SaldoUtregning {
                 .add(new Trekkdager(frigitteDager));
     }
 
+    /*
+     * Skal sørge for at MSP + opphold/utsettelse ikke reduserer minsteretten
+     */
     public Trekkdager nettoSaldoJustertForMinsterett(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, boolean kanTrekkeAvMinsterett) {
         var brutto = saldoITrekkdager(stønadskonto, aktivitet);
         if (!kanTrekkeAvMinsterett) {
@@ -106,6 +109,13 @@ public class SaldoUtregning {
             return brutto.subtract(reduksjon);
         }
         return brutto;
+    }
+
+    public Trekkdager restSaldoMinsterett() {
+        return aktiviteterForSøker().stream()
+                .map(this::restSaldoMinsterett)
+                .max(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
     }
 
     public Trekkdager restSaldoMinsterett(AktivitetIdentifikator aktivitet) {
@@ -118,8 +128,8 @@ public class SaldoUtregning {
 
     public Trekkdager restSaldoDagerUtenAktivitetskrav() {
         return aktiviteterForSøker().stream()
-                .map(a -> restSaldoDagerUtenAktivitetskrav(a))
-                .max((o1, o2) -> o1.compareTo(o2))
+                .map(this::restSaldoDagerUtenAktivitetskrav)
+                .max(Trekkdager::compareTo)
                 .orElse(Trekkdager.ZERO);
     }
 

@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -162,6 +161,7 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.restSaldoMinsterett(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
+        assertThat(saldoUtregning.restSaldoMinsterett()).isEqualTo(new Trekkdager(5));
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
@@ -185,6 +185,7 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.restSaldoMinsterett(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-10));
+        assertThat(saldoUtregning.restSaldoMinsterett()).isEqualTo(new Trekkdager(-10));
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav()).isEqualTo(Trekkdager.ZERO);
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
