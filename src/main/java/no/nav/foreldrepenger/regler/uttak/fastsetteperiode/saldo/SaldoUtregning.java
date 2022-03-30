@@ -304,6 +304,7 @@ public class SaldoUtregning {
                 .anyMatch(aktivitet -> aktivitet.getTrekkdager().merEnn0());
     }
 
+    // TODO (jol) - fjerne denne? Slår bare til dersom begge tar ut Flerbarnsdager samtidig.
     private int frigitteDagerFlerbarnsdager(Stønadskontotype stønadskonto,
                                             FastsattUttakPeriode periode,
                                             FastsattUttakPeriode overlappende) {
@@ -329,7 +330,7 @@ public class SaldoUtregning {
         if (overlappende.isOpphold()) {
             frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
                     trekkdagerForOppholdsperiode(stønadskonto, overlappende));
-        } else if (!periode.isSamtidigUttak()) {
+        } else if (!periode.isSamtidigUttak() && !periode.isFlerbarnsdager() && !overlappende.isFlerbarnsdager()) {
             var annenPartAktivitetMedKonto = aktivitetMedStønadskonto(stønadskonto, overlappende);
             if (annenPartAktivitetMedKonto.isPresent()) {
                 frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),

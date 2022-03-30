@@ -105,6 +105,29 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
+    void bfhr_enkel_minsterett_vs_innvilget_med_mye_godkjent_aktivitet() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(40);
+        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(45).minusDays(1), MorsAktivitet.UTDANNING);
+        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(45), fødselsdato.plusWeeks(47).minusDays(1), null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
+
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+                .søknad(søknad.dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(45).minusDays(1), I_AKTIVITET))))
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer)
+                .build();
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 40))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 5))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, 0))).isTrue();
+    }
+
+    @Test
     void bfhr_mor_med_bekreftet_uføretrygd_uten_aktivitetskrav_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).utenAktivitetskravDager(75);
