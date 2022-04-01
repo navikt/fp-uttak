@@ -157,20 +157,19 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad() {
         return rs.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
                 "Sammenfaller uttaksperioden med en periode hos den andre parten som har utbetaling > 0?")
-                .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmFlerbarnsdager())
+                .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmSamtidigUttak())
                 .ellers(sjekkOmGradertEtterSøknadMottattdato());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFlerbarnsdager() {
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
                 .hvis(new SjekkOmEnPartsPeriodeErFlerbarnsdager(), sjekkOmGradertEtterSøknadMottattdato())
-                .ellers(sjekkOmSamtidigUttak());
+                .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtidigUttak() {
         return rs.hvisRegel(SjekkOmSamtidigUttak.ID, "Har en av foreldrene huket av for samtidig uttak?")
-                .hvis(new SjekkOmSamtidigUttak(),
-                        Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false))
+                .hvis(new SjekkOmSamtidigUttak(), sjekkOmFlerbarnsdager())
                 .ellers(IkkeOppfylt.opprett("UT1162", IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK, false, false));
     }
 

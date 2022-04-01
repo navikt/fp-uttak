@@ -306,6 +306,7 @@ class SaldoUtregningTjenesteTest {
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato, fødselsdato.plusDays(5))
                 .periodeResultatType(INNVILGET)
                 .flerbarnsdager(true)
+                .samtidigUttak(true)
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator),
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FLERBARNSDAGER, identifikator)))
                 .build();
@@ -346,6 +347,7 @@ class SaldoUtregningTjenesteTest {
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
                 .innvilget(true)
                 .flerbarnsdager(true)
+                .samtidigUttak(true)
                 .uttakPeriodeAktiviteter(List.of(
                         new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED),
                         new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FLERBARNSDAGER, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
