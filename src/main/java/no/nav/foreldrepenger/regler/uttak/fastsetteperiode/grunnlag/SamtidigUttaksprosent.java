@@ -40,6 +40,14 @@ public class SamtidigUttaksprosent implements Comparable<SamtidigUttaksprosent> 
         return new SamtidigUttaksprosent(decimalValue().subtract(verdi));
     }
 
+    public SamtidigUttaksprosent add(SamtidigUttaksprosent samtidigUttaksprosent) {
+        return new SamtidigUttaksprosent(decimalValue().add(samtidigUttaksprosent.decimalValue()));
+    }
+
+    public boolean merEnn100() {
+        return this.compareTo(SamtidigUttaksprosent.HUNDRED) > 0;
+    }
+
     @Override
     public String toString() {
         return verdi.toString();
