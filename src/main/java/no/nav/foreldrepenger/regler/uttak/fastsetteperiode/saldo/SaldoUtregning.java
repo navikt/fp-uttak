@@ -330,7 +330,7 @@ public class SaldoUtregning {
         if (overlappende.isOpphold()) {
             frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
                     trekkdagerForOppholdsperiode(stønadskonto, overlappende));
-        } else if (!periode.isSamtidigUttak() && !overlappende.isSamtidigUttak()) {
+        } else if (!periode.isSamtidigUttak()) {
             var annenPartAktivitetMedKonto = aktivitetMedStønadskonto(stønadskonto, overlappende);
             if (annenPartAktivitetMedKonto.isPresent()) {
                 frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
