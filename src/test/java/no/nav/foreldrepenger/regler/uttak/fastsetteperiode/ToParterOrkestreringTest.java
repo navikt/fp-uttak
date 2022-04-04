@@ -8,7 +8,9 @@ import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontoty
 import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +31,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -626,6 +629,103 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         assertThat(resultat).hasSize(1);
         assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
+    void samtidig_uttak_automatiseres_i_berørt_hvis_samlet_lik_100_prosent_uttak() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh)
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                        new Trekkdager(5), new Utbetalingsgrad(40)))
+                                .innvilget(true)
+                                .samtidigUttak(true)
+                                .build()))
+                .behandling(morBehandling().berørtBehandling(true))
+                .søknad(søknad(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1), false,
+                                new SamtidigUttaksprosent(60)))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(60));
+    }
+
+    @Test
+    void samtidig_uttak_automatiseres_i_berørt_hvis_samlet_under_100_prosent_uttak() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh)
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                        new Trekkdager(5), new Utbetalingsgrad(30)))
+                                .innvilget(true)
+                                .samtidigUttak(true)
+                                .build()))
+                .behandling(morBehandling().berørtBehandling(true))
+                .søknad(søknad(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1), false,
+                                new SamtidigUttaksprosent(30)))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(30));
+    }
+
+    @Test
+    void samtidig_uttak_til_manuell_i_berørt_hvis_samlet_over_100_prosent_uttak() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh)
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                        new Trekkdager(5), new Utbetalingsgrad(60)))
+                                .innvilget(true)
+                                .samtidigUttak(true)
+                                .build()))
+                .behandling(morBehandling().berørtBehandling(true))
+                .søknad(søknad(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1), false,
+                                new SamtidigUttaksprosent(70)))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+    }
+
+    @Test
+    void overlappende_gradering_avslås_i_berørt_selv_om_samlet_under_100_prosent_uttak() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh)
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                        new Trekkdager(5), new Utbetalingsgrad(30)))
+                                .innvilget(true)
+                                .build()))
+                .behandling(morBehandling().berørtBehandling(true))
+                .søknad(søknad(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1)))
+                        .oppgittPeriode(gradertoppgittPeriode(MØDREKVOTE, fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1), BigDecimal.valueOf(30),
+                                Set.of(ARBEIDSFORHOLD)))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     private AnnenpartUttakPeriode annenpartPeriodeOpphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak) {

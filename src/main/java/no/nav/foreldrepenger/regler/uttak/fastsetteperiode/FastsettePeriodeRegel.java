@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmParteneMerEnn100ProsentUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
@@ -164,13 +165,19 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFlerbarnsdager() {
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
                 .hvis(new SjekkOmEnPartsPeriodeErFlerbarnsdager(), sjekkOmGradertEtterSøknadMottattdato())
-                .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
+                .ellers(sjekkOmMerEnn100ProsentSamletUttak());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtidigUttak() {
         return rs.hvisRegel(SjekkOmSamtidigUttak.ID, "Har en av foreldrene huket av for samtidig uttak?")
                 .hvis(new SjekkOmSamtidigUttak(), sjekkOmFlerbarnsdager())
                 .ellers(IkkeOppfylt.opprett("UT1162", IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK, false, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmMerEnn100ProsentSamletUttak() {
+        return rs.hvisRegel(SjekkOmParteneMerEnn100ProsentUttak.ID, SjekkOmParteneMerEnn100ProsentUttak.BESKRIVELSE)
+                .hvis(new SjekkOmParteneMerEnn100ProsentUttak(), Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false))
+                .ellers(sjekkOmGradertEtterSøknadMottattdato());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
