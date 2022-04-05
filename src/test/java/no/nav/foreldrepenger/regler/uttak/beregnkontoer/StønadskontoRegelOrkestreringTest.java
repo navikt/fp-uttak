@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.Dekningsgrad;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 class StønadskontoRegelOrkestreringTest {
 
@@ -45,10 +44,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(80);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
 
@@ -69,10 +68,10 @@ class StønadskontoRegelOrkestreringTest {
         assertThat(stønadskontoer.size()).isEqualTo(4);
         var forventetFellesperiode =
                 80 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(forventetFellesperiode);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(forventetFellesperiode);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     @Test
@@ -91,7 +90,7 @@ class StønadskontoRegelOrkestreringTest {
         assertThat(stønadskontoer.size()).isEqualTo(1);
         var forventetForeldrepenger = 80 + 75 + 75 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(),
                 grunnlag.getTermindato().get().minusDays(1));
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(forventetForeldrepenger);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(forventetForeldrepenger);
     }
 
     @Test
@@ -110,7 +109,7 @@ class StønadskontoRegelOrkestreringTest {
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
     }
 
     /*
@@ -135,9 +134,9 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(3);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(80);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
     }
 
     /*
@@ -163,10 +162,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(90);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
 
@@ -192,9 +191,9 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(3);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(90);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(95);
     }
 
     /*
@@ -221,11 +220,11 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 230);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(80 + 230);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     /*
@@ -251,10 +250,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 230);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(80 + 230);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
     }
 
     /*
@@ -281,11 +280,11 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 280);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(90 + 280);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
     }
 
     /*
@@ -311,10 +310,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 280);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(90 + 280);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
     }
 
     /*
@@ -341,11 +340,11 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 85);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(80 + 85);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     /*
@@ -371,10 +370,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(80 + 85);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(80 + 85);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
     }
 
     /*
@@ -401,11 +400,11 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(5);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 105);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(90 + 105);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
     }
 
     /*
@@ -431,10 +430,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        assertThat(stønadskontoer.get(Stønadskontotype.FELLESPERIODE)).isEqualTo(90 + 105);
-        assertThat(stønadskontoer.get(Stønadskontotype.FEDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.MØDREKVOTE)).isEqualTo(95);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FELLESPERIODE)).isEqualTo(90 + 105);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FEDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.MØDREKVOTE)).isEqualTo(95);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
     }
 
     /*
@@ -457,8 +456,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     /*
@@ -480,7 +479,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
     }
 
     /*
@@ -503,8 +502,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     /*
@@ -526,7 +525,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
     }
 
     /*
@@ -549,8 +548,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     /*
@@ -572,7 +571,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
     }
 
     /*
@@ -595,8 +594,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL)).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL)).isEqualTo(15);
     }
 
     /*
@@ -618,7 +617,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
     }
 
     /*
@@ -641,8 +640,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
-        assertThat(stønadskontoer.get((Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
+        assertThat(stønadskontoer.get((StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     /*
@@ -664,7 +663,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
     }
 
     /*
@@ -687,8 +686,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL)).isEqualTo(15);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL)).isEqualTo(15);
     }
 
     /*
@@ -710,7 +709,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
     }
 
     /*
@@ -732,7 +731,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 75 + 75);
     }
 
     /*
@@ -754,7 +753,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 75 + 75);
     }
 
     /*
@@ -776,7 +775,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 230 + 75 + 75);
     }
 
     /*
@@ -798,7 +797,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 280 + 75 + 75);
     }
 
     /*
@@ -820,7 +819,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(80 + 85 + 75 + 75);
     }
 
     /*
@@ -842,7 +841,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(130 + 105 + 75 + 75);
     }
 
     /*
@@ -864,7 +863,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(50 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(50 + 75 + 75);
     }
 
     /*
@@ -886,7 +885,7 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(100 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(100 + 75 + 75);
     }
 
     /*
@@ -910,8 +909,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(50 + 230 + 75 + 75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(50 + 230 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(230);
     }
 
     /*
@@ -935,8 +934,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(100 + 280 + 75 + 75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(100 + 280 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(280);
     }
 
     /*
@@ -959,8 +958,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(50 + 85 + 75 + 75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(50 + 85 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(85);
     }
 
     /*
@@ -984,8 +983,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(2); // FORELDREPENGER og FLERBARNSDAGER
-        assertThat(stønadskontoer.get(Stønadskontotype.FORELDREPENGER)).isEqualTo(100 + 105 + 75 + 75);
-        assertThat(stønadskontoer.get(Stønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FORELDREPENGER)).isEqualTo(100 + 105 + 75 + 75);
+        assertThat(stønadskontoer.get(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER)).isEqualTo(105);
     }
 
     /*

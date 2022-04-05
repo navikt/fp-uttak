@@ -4,17 +4,15 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-
 public class StønadskontoResultat {
 
-    private final Map<Stønadskontotype, Integer> stønadskontoer;
+    private final Map<StønadskontoBeregningStønadskontotype, Integer> stønadskontoer;
     private final String evalueringResultat;
     private final String innsendtGrunnlag;
     private final Integer antallFlerbarnsdager;
     private final Integer antallPrematurDager;
 
-    public StønadskontoResultat(Map<Stønadskontotype, Integer> stønadskontoer,
+    public StønadskontoResultat(Map<StønadskontoBeregningStønadskontotype, Integer> stønadskontoer,
                                 Integer antallFlerbarnsdager,
                                 String evalueringResultat,
                                 String innsendtGrunnlag,
@@ -29,7 +27,7 @@ public class StønadskontoResultat {
         this.innsendtGrunnlag = innsendtGrunnlag;
     }
 
-    public Map<Stønadskontotype, Integer> getStønadskontoer() {
+    public Map<StønadskontoBeregningStønadskontotype, Integer> getStønadskontoer() {
         return Collections.unmodifiableMap(stønadskontoer);
     }
 

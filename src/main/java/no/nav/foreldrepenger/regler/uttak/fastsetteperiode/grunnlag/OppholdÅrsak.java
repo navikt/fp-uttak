@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-
 public enum OppholdÅrsak {
 
     FELLESPERIODE_ANNEN_FORELDER,

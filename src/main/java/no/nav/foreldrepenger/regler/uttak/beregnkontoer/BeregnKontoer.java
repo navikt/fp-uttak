@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmMerEn
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmMorHarAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmToBarn;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.RuleService;
@@ -124,7 +123,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         // Uavhengig av dekningsgrad
         if (faktorer.erFødsel()) {
             konfigurasjoner.add(
-                    new Kontokonfigurasjon(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, Parametertype.FORELDREPENGER_FØR_FØDSEL));
+                    new Kontokonfigurasjon(StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL, Parametertype.FORELDREPENGER_FØR_FØDSEL));
         }
 
         return konfigurasjoner.toArray(Kontokonfigurasjon[]::new);
@@ -137,9 +136,9 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         int antallBarn = faktorer.getAntallLevendeBarn();
         if (antallBarn == 2) {
             konfigurasjoner.add(
-                    new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100));
+                    new Kontokonfigurasjon(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100));
         } else if (antallBarn >= 3) {
-            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER,
+            konfigurasjoner.add(new Kontokonfigurasjon(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER,
                     Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100));
         }
         return konfigurasjoner;
@@ -152,9 +151,9 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         int antallBarn = faktorer.getAntallLevendeBarn();
         if (antallBarn == 2) {
             konfigurasjoner.add(
-                    new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80));
+                    new Kontokonfigurasjon(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER, Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80));
         } else if (antallBarn >= 3) {
-            konfigurasjoner.add(new Kontokonfigurasjon(Stønadskontotype.FLERBARNSDAGER,
+            konfigurasjoner.add(new Kontokonfigurasjon(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER,
                     Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80));
         }
         return konfigurasjoner;

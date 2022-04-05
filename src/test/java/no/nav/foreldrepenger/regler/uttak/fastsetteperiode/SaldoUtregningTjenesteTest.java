@@ -10,11 +10,10 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Fasts
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -42,12 +41,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 class SaldoUtregningTjenesteTest {
 
@@ -298,7 +297,10 @@ class SaldoUtregningTjenesteTest {
     @Test
     void saldoutregning_flerbarnsdager() {
         var fødselsdato = LocalDate.of(2022, 3, 28);
-        var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 5*15)).konto(konto(FELLESPERIODE, (16+17)*5)).konto(konto(FLERBARNSDAGER, 17*5));
+        var kontoer = new Kontoer.Builder()
+                .konto(konto(MØDREKVOTE, 5*15))
+                .konto(konto(FELLESPERIODE, (16+17)*5))
+                .flerbarnsdager(17*5);
 
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
@@ -307,8 +309,7 @@ class SaldoUtregningTjenesteTest {
                 .periodeResultatType(INNVILGET)
                 .flerbarnsdager(true)
                 .samtidigUttak(true)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FLERBARNSDAGER, identifikator)))
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
                 .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusDays(5))
                 .innvilget(true)
@@ -324,15 +325,18 @@ class SaldoUtregningTjenesteTest {
 
         assertThat(resultat.saldoITrekkdager(MØDREKVOTE, identifikator)).isEqualTo(new Trekkdager(14*5));
         assertThat(resultat.saldoITrekkdager(MØDREKVOTE, forSelvstendigNæringsdrivende())).isEqualTo(new Trekkdager(14*5));
-        assertThat(resultat.saldoITrekkdager(FLERBARNSDAGER, identifikator)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.saldoITrekkdager(FLERBARNSDAGER, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16*5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16*5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16*5));
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(32*5));
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(32*5));
     }
 
     @Test
     void saldoutregning_flerbarnsdager_begge_fellesperiode() {
-        var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 5*15)).konto(konto(FELLESPERIODE, (16+17)*5)).konto(konto(FLERBARNSDAGER, 17*5));
+        var kontoer = new Kontoer.Builder()
+                .konto(konto(MØDREKVOTE, 5*15))
+                .konto(konto(FELLESPERIODE, (16+17)*5))
+                .flerbarnsdager(17*5);
 
         var fødselsdato = LocalDate.of(2022, 3, 28);
         var utregningsdato = LocalDate.MAX;
@@ -341,24 +345,22 @@ class SaldoUtregningTjenesteTest {
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
                 .periodeResultatType(INNVILGET)
                 .flerbarnsdager(true)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FLERBARNSDAGER, identifikator)))
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
                 .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
                 .innvilget(true)
                 .flerbarnsdager(true)
                 .samtidigUttak(true)
                 .uttakPeriodeAktiviteter(List.of(
-                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED),
-                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FLERBARNSDAGER, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
+                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
                 List.of(annenpartsPeriode), kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold),
                 null, null);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.saldoITrekkdager(FLERBARNSDAGER, identifikator)).isEqualTo(new Trekkdager(16*5)); // Burde vært 15*5? se kommentar ved frigitteDagerFlerbarnsdager
-        assertThat(resultat.saldoITrekkdager(FLERBARNSDAGER, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16*5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(15*5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(15*5));
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(31*5));
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(31*5));
     }
@@ -515,7 +517,7 @@ class SaldoUtregningTjenesteTest {
 
     @Test
     void skal_regne_riktig_flerbarnsdager_hvis_annenpart_har_nyoppstartet_arbeidsforhold() {
-        var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100)).konto(konto(FLERBARNSDAGER, 50));
+        var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100)).flerbarnsdager(50);
 
         var søkersArbeidsforhold = forArbeid(new Orgnummer("123"), "456");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 18))
@@ -543,7 +545,7 @@ class SaldoUtregningTjenesteTest {
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, søkersArbeidsforhold)).isEqualTo(new Trekkdager(97));
-        assertThat(resultat.saldoITrekkdager(FLERBARNSDAGER, søkersArbeidsforhold)).isEqualTo(new Trekkdager(49));
+        assertThat(resultat.restSaldoFlerbarnsdager(søkersArbeidsforhold)).isEqualTo(new Trekkdager(49));
     }
 
     @DisplayName("FAGSYSTEM-204667 Oppholdsperiode hos søker ligger før endringsdato, slik at den ikke knekkes mot annen parts perioder")
