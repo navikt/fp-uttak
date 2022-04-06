@@ -1,11 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
-import static org.assertj.core.api.Assertions.assertThat;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
+import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,28 +11,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class FastsettePerioderRegelOrkestreringTestBase {
     static final AktivitetIdentifikator ARBEIDSFORHOLD = ARBEIDSFORHOLD_1;

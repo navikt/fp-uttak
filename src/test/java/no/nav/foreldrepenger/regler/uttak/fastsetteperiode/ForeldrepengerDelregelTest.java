@@ -11,36 +11,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 class ForeldrepengerDelregelTest {
 
@@ -767,9 +745,9 @@ class ForeldrepengerDelregelTest {
     }
 
     private Kontoer.Builder foreldrepengerOgFlerbarnsdagerKonto(int foreldrepengerTrekkdager, int flerbarnsdagerTrekkdager) {
-        return new Kontoer.Builder().konto(
-                new Konto.Builder().type(Stønadskontotype.FORELDREPENGER).trekkdager(foreldrepengerTrekkdager))
-                .konto(new Konto.Builder().type(Stønadskontotype.FLERBARNSDAGER).trekkdager(flerbarnsdagerTrekkdager));
+        return new Kontoer.Builder()
+                .konto(new Konto.Builder().type(Stønadskontotype.FORELDREPENGER).trekkdager(foreldrepengerTrekkdager))
+                .flerbarnsdager(flerbarnsdagerTrekkdager);
     }
 
     private Søknad.Builder søknad(OppgittPeriode uttakPeriode) {

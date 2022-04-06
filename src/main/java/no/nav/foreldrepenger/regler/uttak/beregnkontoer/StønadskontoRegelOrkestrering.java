@@ -10,7 +10,6 @@ import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -38,7 +37,7 @@ public class StønadskontoRegelOrkestrering {
         return new StønadskontoResultat(stønadskontoer, antallFlerbarnsdager, evaluationJson, grunnlagJson, antallPrematurDager);
     }
 
-    private Map<Stønadskontotype, Integer> hentStønadskontoer(Evaluation evaluation) {
+    private Map<StønadskontoBeregningStønadskontotype, Integer> hentStønadskontoer(Evaluation evaluation) {
         var resultat = new Regelresultat(evaluation);
         if (resultat.oppfylt()) {
             var kontoer = resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);

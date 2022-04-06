@@ -10,6 +10,7 @@ public final class Kontoer {
     private List<Konto> kontoList = new ArrayList<>();
     private int minsterettDager = 0;
     private int utenAktivitetskravDager = 0;
+    private int flerbarnsdager = 0;
 
     private Kontoer() {
 
@@ -25,6 +26,10 @@ public final class Kontoer {
 
     public int getUtenAktivitetskravDager() {
         return utenAktivitetskravDager;
+    }
+
+    public int getFlerbarnsdager() {
+        return flerbarnsdager;
     }
 
     public static class Builder {
@@ -48,6 +53,11 @@ public final class Kontoer {
 
         public Builder utenAktivitetskravDager(int utenAktivitetskravDager) {
             kladd.utenAktivitetskravDager = utenAktivitetskravDager;
+            return this;
+        }
+
+        public Builder flerbarnsdager(int flerbarnsdager) {
+            kladd.flerbarnsdager = flerbarnsdager;
             return this;
         }
 

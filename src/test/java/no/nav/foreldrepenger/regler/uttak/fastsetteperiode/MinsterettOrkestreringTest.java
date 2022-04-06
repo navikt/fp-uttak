@@ -5,8 +5,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOpp
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FLERBARNSDAGER;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -65,7 +64,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void bfhr_mor_med_bekreftet_uføretrygd_flerbarn_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285), konto(FLERBARNSDAGER, 85))).minsterettDager(75);
+        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285))).flerbarnsdager(85).minsterettDager(75);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
         var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
@@ -178,7 +177,8 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void bfhr_mor_med_bekreftet_uføretrygd_uten_aktivitetskrav_flerbarn_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285), konto(FLERBARNSDAGER, 85))).utenAktivitetskravDager(75);
+        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285)))
+                .flerbarnsdager(85).utenAktivitetskravDager(75);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
         var oppgittPeriode2 = foreldrepenger(Virkedager.justerHelgTilMandag(fødselsdato.plusWeeks(49)), MorsAktivitet.UFØRE); // Strekker seg utover stønadsperioden
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));

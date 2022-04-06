@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {

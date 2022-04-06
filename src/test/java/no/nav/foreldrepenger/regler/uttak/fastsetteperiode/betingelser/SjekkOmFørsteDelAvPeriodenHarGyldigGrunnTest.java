@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnP
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {

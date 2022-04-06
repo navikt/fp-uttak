@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 
 
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 class SaldoUtregningTest {
 
@@ -138,7 +138,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(10), new Trekkdager(10));
+                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(10), new Trekkdager(10), Trekkdager.ZERO);
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(2);
         assertThat(saldoUtregning.getMaxDagerUtenAktivitetskrav()).isEqualTo(new Trekkdager(10));
@@ -156,7 +156,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5), Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -180,7 +180,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5), Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -205,7 +205,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, new Trekkdager(5));
+                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -229,7 +229,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, new Trekkdager(5));
+                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);

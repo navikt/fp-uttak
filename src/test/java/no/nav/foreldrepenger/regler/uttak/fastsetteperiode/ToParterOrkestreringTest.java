@@ -2,10 +2,10 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.TapendeSakOrkestreringTest.annenpartsPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FEDREKVOTE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -32,13 +32,13 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -703,6 +703,66 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+    }
+
+    @Test
+    void skal_gi_riktig_saldo_for_flerbarnsdager() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var annenpartUttakPeriode1 = AnnenpartUttakPeriode.Builder.uttak(fh, fh.plusWeeks(7).minusDays(1))
+                .uttakPeriodeAktivitet(
+                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(30),
+                                Utbetalingsgrad.HUNDRED))
+                .innvilget(true)
+                .build();
+        var annenpartUttakPeriode2 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(9), fh.plusWeeks(10).minusDays(1))
+                .uttakPeriodeAktivitet(
+                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                                Utbetalingsgrad.HUNDRED))
+                .innvilget(true)
+                .flerbarnsdager(true)
+                .samtidigUttak(true)
+                .build();
+        var annenpartUttakPeriode3 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(10), fh.plusWeeks(11).minusDays(1))
+                .uttakPeriodeAktivitet(
+                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                                Utbetalingsgrad.HUNDRED))
+                .innvilget(true)
+                .flerbarnsdager(true)
+                .samtidigUttak(false)
+                .build();
+        var annenpartUttakPeriode4 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(11), fh.plusWeeks(12).minusDays(1))
+                .uttakPeriodeAktivitet(
+                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                                Utbetalingsgrad.HUNDRED))
+                .innvilget(true)
+                .flerbarnsdager(false)
+                .samtidigUttak(false)
+                .build();
+        var grunnlag = basicGrunnlagFar(fh)
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartUttakPeriode1)
+                        .uttaksperiode(annenpartUttakPeriode2)
+                        .uttaksperiode(annenpartUttakPeriode3)
+                        .uttaksperiode(annenpartUttakPeriode4)
+                )
+                .søknad(søknad(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fh.plusWeeks(8), fh.plusWeeks(15).minusDays(1), true,
+                                new SamtidigUttaksprosent(100))
+                        )
+                ).kontoer(new Kontoer.Builder()
+                        .flerbarnsdager(40)
+                        .konto(konto(MØDREKVOTE, 100))
+                        .konto(konto(FELLESPERIODE, 100))
+                        .konto(konto(FEDREKVOTE, 100))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(6);
+        //Siste periode knekkes og siste 5 dagene går til manuell pga tom for flerbarnsdager
+        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(5).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(5).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
 
     @Test

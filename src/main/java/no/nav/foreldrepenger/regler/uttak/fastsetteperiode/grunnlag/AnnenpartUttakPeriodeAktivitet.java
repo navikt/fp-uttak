@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public class AnnenpartUttakPeriodeAktivitet {
     private final Stønadskontotype stønadskontotype;

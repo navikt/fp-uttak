@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
-
 public final class Konto {
 
     private Stønadskontotype type;

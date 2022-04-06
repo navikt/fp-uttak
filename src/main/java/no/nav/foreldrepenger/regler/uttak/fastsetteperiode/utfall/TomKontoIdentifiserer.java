@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 public class TomKontoIdentifiserer {
 
@@ -37,13 +37,13 @@ public class TomKontoIdentifiserer {
                     stønadskontotype, skalTrekkeDager);
             datoKontoGårTomIPeriode.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             if (uttakPeriode.isFlerbarnsdager()) {
-                var knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning,
-                        Stønadskontotype.FLERBARNSDAGER, skalTrekkeDager);
+                var knekkpunktFlerbarnsdager = finnDatoKontoGårTomIPeriodeFlerbarnsdager(uttakPeriode, aktivitet, saldoUtregning,
+                        skalTrekkeDager);
                 knekkpunktFlerbarnsdager.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
-            finnDatoMinsterettOppbrukt(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager)
+            finnDatoMinsterettOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
-            finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager)
+            finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
         }
         if (knekkpunkter.isEmpty()) {
@@ -66,12 +66,22 @@ public class TomKontoIdentifiserer {
         return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldo);
     }
 
+    private static Optional<LocalDate> finnDatoKontoGårTomIPeriodeFlerbarnsdager(OppgittPeriode oppgittPeriode,
+                                                                                 AktivitetIdentifikator aktivitet,
+                                                                                 SaldoUtregning saldoUtregning,
+                                                                                 boolean skalTrekkeDager) {
+        if (!skalTrekkeDager) {
+            return Optional.empty();
+        }
+        var saldo = saldoUtregning.restSaldoFlerbarnsdager(aktivitet);
+        return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldo);
+    }
+
     private static Optional<LocalDate> finnDatoMinsterettOppbrukt(OppgittPeriode oppgittPeriode,
                                                                   AktivitetIdentifikator aktivitet,
                                                                   SaldoUtregning saldoUtregning,
-                                                                  Stønadskontotype stønadskontotype,
                                                                   boolean skalTrekkeDager) {
-        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager || Stønadskontotype.FLERBARNSDAGER.equals(stønadskontotype) ) {
+        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager) {
             return Optional.empty();
         }
 
@@ -82,9 +92,8 @@ public class TomKontoIdentifiserer {
     private static Optional<LocalDate> finnDatoDagerUtenAktivitetskravOppbrukt(OppgittPeriode oppgittPeriode,
                                                                                AktivitetIdentifikator aktivitet,
                                                                                SaldoUtregning saldoUtregning,
-                                                                               Stønadskontotype stønadskontotype,
                                                                                boolean skalTrekkeDager) {
-        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager || Stønadskontotype.FLERBARNSDAGER.equals(stønadskontotype) ) {
+        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager) {
             return Optional.empty();
         }
 

@@ -1,6 +1,6 @@
-package no.nav.foreldrepenger.regler.uttak.felles.grunnlag;
+package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-public enum Stønadskontotype {
+public enum StønadskontoBeregningStønadskontotype {
     MØDREKVOTE,
     FEDREKVOTE,
     FELLESPERIODE,

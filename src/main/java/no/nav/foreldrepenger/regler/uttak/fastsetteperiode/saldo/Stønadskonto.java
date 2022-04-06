@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 public class Stønadskonto {
 

@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeI
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Stønadskontotype;
 
 public final class UttakPeriode extends LukketPeriode {
 

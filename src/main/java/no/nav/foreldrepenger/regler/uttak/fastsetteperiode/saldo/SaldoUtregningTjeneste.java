@@ -34,7 +34,8 @@ public final class SaldoUtregningTjeneste {
                 grunnlag.getAktiviteter(), grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null),
                 grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
                 new Trekkdager(grunnlag.getKontoer().getMinsterettDager()),
-                new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager()));
+                new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager()),
+                new Trekkdager(grunnlag.getKontoer().getFlerbarnsdager()));
     }
 
     private static List<FastsattUttakPeriode> knekkSøkersOppholdsperioder(List<FastsattUttakPeriode> annenpartsPerioder,
