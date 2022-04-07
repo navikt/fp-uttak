@@ -62,8 +62,8 @@ public class SaldoUtregning {
         this.berørtBehandling = berørtBehandling;
         this.minsterettDager = minsterettDager;
         this.utenAktivitetskravDager = utenAktivitetskravDager;
-        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder, berørtBehandling,
-                søkersAktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, flerbarnsdager);
+        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
+                søkersAktiviteter, flerbarnsdager);
     }
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer,
@@ -305,8 +305,18 @@ public class SaldoUtregning {
     }
 
     private boolean tapendePeriode(FastsattUttakPeriode periode, FastsattUttakPeriode overlappendePeriode) {
-        return SaldoUtregningUtil.tapendePeriode(periode, overlappendePeriode, berørtBehandling, sisteSøknadMottattTidspunktSøker,
-                sisteSøknadMottattTidspunktAnnenpart);
+        if (berørtBehandling) {
+            return true;
+        }
+        var periodeMottattDato = periode.getMottattDato();
+        var overlappendePeriodeMottattDato = overlappendePeriode.getMottattDato();
+        if (periodeMottattDato.isEmpty() || overlappendePeriodeMottattDato.isEmpty()) {
+            return false;
+        }
+        if (periodeMottattDato.get().isEqual(overlappendePeriodeMottattDato.get())) {
+            return sisteSøknadMottattTidspunktSøker.isBefore(sisteSøknadMottattTidspunktAnnenpart);
+        }
+        return periodeMottattDato.get().isBefore(overlappendePeriodeMottattDato.get());
     }
 
     private int frigitteDagerVanligeStønadskontoer(Stønadskontotype stønadskonto,

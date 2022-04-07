@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,25 +56,6 @@ final class SaldoUtregningUtil {
 
     static boolean overlapper(FastsattUttakPeriode periode, FastsattUttakPeriode periode2) {
         return !periode2.getFom().isAfter(periode.getTom()) && !periode2.getTom().isBefore(periode.getFom());
-    }
-
-    static boolean tapendePeriode(FastsattUttakPeriode periode,
-                                  FastsattUttakPeriode overlappendePeriode,
-                                  boolean berørtBehandling,
-                                  LocalDateTime sisteSøknadMottattTidspunktSøker,
-                                  LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
-        if (berørtBehandling) {
-            return true;
-        }
-        var periodeMottattDato = periode.getMottattDato();
-        var overlappendePeriodeMottattDato = overlappendePeriode.getMottattDato();
-        if (periodeMottattDato.isEmpty() || overlappendePeriodeMottattDato.isEmpty()) {
-            return false;
-        }
-        if (periodeMottattDato.get().isEqual(overlappendePeriodeMottattDato.get())) {
-            return sisteSøknadMottattTidspunktSøker.isBefore(sisteSøknadMottattTidspunktAnnenpart);
-        }
-        return periodeMottattDato.get().isBefore(overlappendePeriodeMottattDato.get());
     }
 
     static boolean innvilgetMedTrekkdager(FastsattUttakPeriode periode) {

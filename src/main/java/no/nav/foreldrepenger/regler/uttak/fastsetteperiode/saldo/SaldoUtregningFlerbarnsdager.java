@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtr
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.overlappendePeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.trekkDagerFraDelAvPeriode;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,26 +21,17 @@ class SaldoUtregningFlerbarnsdager {
 
     private final List<FastsattUttakPeriode> søkersPerioder;
     private final List<FastsattUttakPeriode> annenpartsPerioder;
-    private final boolean berørtBehandling;
     private final Set<AktivitetIdentifikator> søkersAktiviteter;
-    private final LocalDateTime sisteSøknadMottattTidspunktSøker;
-    private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final Trekkdager flerbarnsdager;
 
     public SaldoUtregningFlerbarnsdager(List<FastsattUttakPeriode> søkersPerioder,
                                         List<FastsattUttakPeriode> annenpartsPerioder,
-                                        boolean berørtBehandling,
                                         Set<AktivitetIdentifikator> søkersAktiviteter,
-                                        LocalDateTime sisteSøknadMottattTidspunktSøker,
-                                        LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
                                         Trekkdager flerbarnsdager) {
 
         this.søkersPerioder = søkersPerioder;
         this.annenpartsPerioder = annenpartsPerioder;
-        this.berørtBehandling = berørtBehandling;
         this.søkersAktiviteter = søkersAktiviteter;
-        this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
-        this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
         this.flerbarnsdager = flerbarnsdager;
     }
 
@@ -129,22 +119,19 @@ class SaldoUtregningFlerbarnsdager {
     private Trekkdager frigitteDager() {
         var sum = 0;
         for (var periode : søkersPerioder) {
-            var overlappendePerioderMedFlerbarnsdager = overlappendePeriode(periode, annenpartsPerioder)
-                    .stream()
-                    .filter(op -> op.isFlerbarnsdager())
-                    .toList();
-            for (var overlappendePeriode : overlappendePerioderMedFlerbarnsdager) {
-                if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)) {
-                    sum += frigitteDager(periode, overlappendePeriode);
+            if (periode.isFlerbarnsdager()) {
+                var overlappendePerioderMedFlerbarnsdager = overlappendePeriode(periode, annenpartsPerioder)
+                        .stream()
+                        .filter(op -> op.isFlerbarnsdager())
+                        .toList();
+                for (var overlappendePeriode : overlappendePerioderMedFlerbarnsdager) {
+                    if (innvilgetMedTrekkdager(periode)) {
+                        sum += frigitteDager(periode, overlappendePeriode);
+                    }
                 }
             }
         }
         return new Trekkdager(sum);
-    }
-
-    private boolean tapendePeriode(FastsattUttakPeriode periode, FastsattUttakPeriode overlappendePeriode) {
-        return SaldoUtregningUtil.tapendePeriode(periode, overlappendePeriode, berørtBehandling, sisteSøknadMottattTidspunktSøker,
-                sisteSøknadMottattTidspunktAnnenpart);
     }
 
     private Trekkdager dagerForUttaksperiode(AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
@@ -158,13 +145,13 @@ class SaldoUtregningFlerbarnsdager {
 
     private int frigitteDager(FastsattUttakPeriode periode,
                               FastsattUttakPeriode overlappende) {
-        if (!periode.isSamtidigUttak() && !overlappende.isSamtidigUttak() && overlappende.isFlerbarnsdager()) {
-            var flerbarnsdagerOverlappendePeriode = minTrekkdager(overlappende);
-            return trekkDagerFraDelAvPeriode(periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(),
-                    flerbarnsdagerOverlappendePeriode.decimalValue());
-
-        }
-        return 0;
+        var flerbarnsdagerOverlappendePeriode = minTrekkdager(overlappende);
+        var flerbarnsdagerPeriode = minTrekkdager(periode);
+        //Forenkling: Mulig vi trenger utvidelse her, kan bli feil hvis begge graderer flerbarnsdager
+        var min = flerbarnsdagerPeriode.compareTo(flerbarnsdagerOverlappendePeriode) > 0 ?
+                flerbarnsdagerPeriode : flerbarnsdagerOverlappendePeriode;
+        return trekkDagerFraDelAvPeriode(periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(),
+                min.decimalValue());
     }
 
     private Trekkdager minTrekkdager(FastsattUttakPeriode periode) {

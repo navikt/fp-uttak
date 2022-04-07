@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.TapendeSakOrkestreringTest.annenpartsPeriode;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.*;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -461,7 +462,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))
                                 .innvilget(false)
                                 .uttakPeriodeAktivitet(
-                                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE,
+                                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE,
                                                 new Trekkdager(80), Utbetalingsgrad.ZERO))
                                 .build()))
                 .behandling(new Behandling.Builder().søkerErMor(true).berørtBehandling(true))
@@ -520,11 +521,11 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(17),
-                                AktivitetIdentifikator.forFrilans(), true)))
+                                forFrilans(), true)))
                 .behandling(farBehandling())
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
@@ -548,7 +549,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
     @Test
     void oppholdsperioder_som_overlapper_med_annenpart_uten_trekkdager_skal_ikke_fjernes() {
-        var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE,
+        var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE,
                 Trekkdager.ZERO, Utbetalingsgrad.ZERO);
         var annenpartPeriodeUtenTrekkdager = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))
                 .innvilget(false)
@@ -558,9 +559,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(annenpartPeriodeUtenTrekkdager))
                 .behandling(farBehandling())
                 .rettOgOmsorg(beggeRett())
@@ -579,7 +580,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
     @Test
     void oppholdsperioder_som_overlapper_med_annenpart_innvilget_utsettelse_skal_fjernes() {
-        var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE,
+        var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE,
                 Trekkdager.ZERO, Utbetalingsgrad.ZERO);
         var annenpartPeriodeUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))
                 .innvilget(true)
@@ -589,9 +590,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         annenpartsPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(annenpartPeriodeUtsettelse))
                 .behandling(farBehandling())
                 .rettOgOmsorg(beggeRett())
@@ -615,7 +616,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
                         annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1),
-                                AktivitetIdentifikator.forFrilans(), true))
+                                forFrilans(), true))
                         .uttaksperiode(
                                 annenpartPeriodeOpphold(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1),
                                         OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)))
@@ -637,7 +638,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh)
                 .annenPart(new AnnenPart.Builder()
                         .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
-                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE,
                                         new Trekkdager(5), new Utbetalingsgrad(40)))
                                 .innvilget(true)
                                 .samtidigUttak(true)
@@ -662,7 +663,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh)
                 .annenPart(new AnnenPart.Builder()
                         .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
-                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE,
                                         new Trekkdager(5), new Utbetalingsgrad(30)))
                                 .innvilget(true)
                                 .samtidigUttak(true)
@@ -687,7 +688,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh)
                 .annenPart(new AnnenPart.Builder()
                         .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
-                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE,
                                         new Trekkdager(5), new Utbetalingsgrad(60)))
                                 .innvilget(true)
                                 .samtidigUttak(true)
@@ -710,13 +711,13 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var fh = LocalDate.of(2022, 4, 1);
         var annenpartUttakPeriode1 = AnnenpartUttakPeriode.Builder.uttak(fh, fh.plusWeeks(7).minusDays(1))
                 .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(30),
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(30),
                                 Utbetalingsgrad.HUNDRED))
                 .innvilget(true)
                 .build();
         var annenpartUttakPeriode2 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(9), fh.plusWeeks(10).minusDays(1))
                 .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5),
                                 Utbetalingsgrad.HUNDRED))
                 .innvilget(true)
                 .flerbarnsdager(true)
@@ -724,7 +725,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .build();
         var annenpartUttakPeriode3 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(10), fh.plusWeeks(11).minusDays(1))
                 .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5),
                                 Utbetalingsgrad.HUNDRED))
                 .innvilget(true)
                 .flerbarnsdager(true)
@@ -732,7 +733,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .build();
         var annenpartUttakPeriode4 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(11), fh.plusWeeks(12).minusDays(1))
                 .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5),
                                 Utbetalingsgrad.HUNDRED))
                 .innvilget(true)
                 .flerbarnsdager(false)
@@ -746,7 +747,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         .uttaksperiode(annenpartUttakPeriode4)
                 )
                 .søknad(søknad(Søknadstype.FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fh.plusWeeks(8), fh.plusWeeks(15).minusDays(1), true,
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fh.plusWeeks(8), fh.plusWeeks(17).minusDays(1), true,
                                 new SamtidigUttaksprosent(100))
                         )
                 ).kontoer(new Kontoer.Builder()
@@ -763,6 +764,51 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(resultat.get(5).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         assertThat(resultat.get(5).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        //5 dager over flerbarns-kvoten. Dette er pga vi ikke skal dobbelt trekke flerbarnsdager i perioder der begge har oppgitt flerbarnsdager
+        assertThat(resultat.get(5).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    void skal_ikke_trekke_dobbelt_flerbarnsdager_når_begge_foreldre_oppgir_flerbarnsdager() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var annenpartUttakPeriode1 = AnnenpartUttakPeriode.Builder.uttak(fh, fh.plusWeeks(7).minusDays(1))
+                .uttakPeriodeAktivitet(
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(30),
+                                Utbetalingsgrad.HUNDRED))
+                .innvilget(true)
+                .build();
+        var annenpartUttakPeriode2 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(9), fh.plusWeeks(10).minusDays(1))
+                .uttakPeriodeAktivitet(
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5),
+                                Utbetalingsgrad.HUNDRED))
+                .innvilget(true)
+                .flerbarnsdager(true)
+                .samtidigUttak(false)
+                .build();
+        var grunnlag = basicGrunnlagFar(fh)
+                .annenPart(new AnnenPart.Builder()
+                        .uttaksperiode(annenpartUttakPeriode1)
+                        .uttaksperiode(annenpartUttakPeriode2)
+                )
+                .søknad(søknad(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fh.plusWeeks(8), fh.plusWeeks(15).minusDays(1), true,
+                                new SamtidigUttaksprosent(100))
+                        )
+                ).kontoer(new Kontoer.Builder()
+                        .flerbarnsdager(34)
+                        .konto(konto(MØDREKVOTE, 100))
+                        .konto(konto(FELLESPERIODE, 100))
+                        .konto(konto(FEDREKVOTE, 100))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(4);
+        //Siste periode knekkes og siste 1 dagene går til manuell pga tom for flerbarnsdager
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(3).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(1));
     }
 
     @Test
@@ -771,7 +817,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh)
                 .annenPart(new AnnenPart.Builder()
                         .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
-                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FEDREKVOTE,
+                                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE,
                                         new Trekkdager(5), new Utbetalingsgrad(30)))
                                 .innvilget(true)
                                 .build()))
@@ -799,7 +845,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
                 .innvilget(true)
                 .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), stønadskontotype, trekkdager,
+                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), stønadskontotype, trekkdager,
                                 Utbetalingsgrad.HUNDRED))
                 .build();
     }
