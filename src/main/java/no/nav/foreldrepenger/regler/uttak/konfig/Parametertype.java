@@ -30,7 +30,11 @@ public enum Parametertype {
     UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
     UTTAK_ETTER_BARN_DØDT_UKER,
     PREMATURUKER_ANTALL_DAGER_FØR_TERMIN,
+    FAR_UTTAK_FØR_TERMIN_UKER,
+    FAR_UTTAK_ETTER_FØDSEL_UKER,
 
+    GRENSE_ETTER_FØDSELSDATO_ÅR,
+    @Deprecated(forRemoval = true)
     GRENSE_ETTER_FØDSELSDATO(Period.class);
 
     private final Class<?> klasseForVerdier;

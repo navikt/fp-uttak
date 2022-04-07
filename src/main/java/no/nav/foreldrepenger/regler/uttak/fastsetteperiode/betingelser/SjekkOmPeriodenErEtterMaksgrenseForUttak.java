@@ -33,8 +33,7 @@ public class SjekkOmPeriodenErEtterMaksgrenseForUttak extends LeafSpecification<
     }
 
     public static LocalDate regnUtMaksgrenseForLovligeUttaksdag(LocalDate familiehendelse, Konfigurasjon konfigurasjon) {
-        var maksGrenseRelativTilFamiliehendelse = konfigurasjon.getParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO, Period.class,
-                familiehendelse);
+        var maksGrenseRelativTilFamiliehendelse = Period.ofYears(konfigurasjon.getParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, familiehendelse));
         return familiehendelse.plus(maksGrenseRelativTilFamiliehendelse);
     }
 }

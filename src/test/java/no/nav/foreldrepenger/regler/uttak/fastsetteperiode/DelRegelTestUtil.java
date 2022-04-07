@@ -28,7 +28,8 @@ final class DelRegelTestUtil {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
                 grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(),
                 grunnlag.getSøknad().getMottattTidspunkt(),
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt());
+                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt(),
+                FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, StandardKonfigurasjon.KONFIGURASJON));
         oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),

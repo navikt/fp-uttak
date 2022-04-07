@@ -15,9 +15,9 @@ import java.util.Set;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 public class TomKontoIdentifiserer {
 
@@ -44,6 +44,8 @@ public class TomKontoIdentifiserer {
             finnDatoMinsterettOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
+                    .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
+            finnDatoFarRundtFødselOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
         }
         if (knekkpunkter.isEmpty()) {
@@ -99,6 +101,16 @@ public class TomKontoIdentifiserer {
 
         var saldoMinsterett = saldoUtregning.restSaldoDagerUtenAktivitetskrav(aktivitet);
         return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
+    }
+
+    private static Optional<LocalDate> finnDatoFarRundtFødselOppbrukt(OppgittPeriode oppgittPeriode,
+                                                                      AktivitetIdentifikator aktivitet,
+                                                                      SaldoUtregning saldoUtregning, boolean skalTrekkeDager) {
+        if (saldoUtregning.getFarUttakRundtFødselDager().equals(Trekkdager.ZERO) || !skalTrekkeDager || !saldoUtregning.erPeriodeRelevantForFarUttakRundtFødselDager(oppgittPeriode)) {
+            return Optional.empty();
+        }
+        var saldoFarRundtFødsel = saldoUtregning.restSaldoFarUttakRundtFødsel(aktivitet);
+        return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoFarRundtFødsel);
     }
 
     private static Optional<LocalDate> datoHvisSaldoOppbruktIPeriode(OppgittPeriode oppgittPeriode,

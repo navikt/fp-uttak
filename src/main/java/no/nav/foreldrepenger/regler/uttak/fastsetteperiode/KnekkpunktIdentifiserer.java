@@ -67,6 +67,9 @@ class KnekkpunktIdentifiserer {
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             leggTilKnekkpunkterForTerminFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
         }
+        if (!grunnlag.getBehandling().isSøkerMor()) {
+            knekkpunkter.addAll(FarUttakRundtFødsel.finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
+        }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
         knekkpunkter.addAll(knekkBasertPåYtelser(grunnlag));
 

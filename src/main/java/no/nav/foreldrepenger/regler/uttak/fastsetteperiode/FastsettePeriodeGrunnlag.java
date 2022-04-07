@@ -10,6 +10,8 @@ import java.util.Set;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
+import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 /**
@@ -247,6 +249,8 @@ public interface FastsettePeriodeGrunnlag {
     LocalDateTime getSisteSøknadMottattTidspunkt();
 
     boolean kreverBehandlingSammenhengendeUttak();
+
+    Optional<LukketPeriode> periodeFarRundtFødsel(Konfigurasjon konfigurasjon);
 
     Collection<PleiepengerPeriode> perioderMedPleiepenger();
 }

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,11 +20,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.fpsak.nare.evaluation.Resultat;
 
 class SjekkOmTomForAlleSineKontoerTest {
@@ -66,7 +67,7 @@ class SjekkOmTomForAlleSineKontoerTest {
         var sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), kontoer.build(),
-                uttakPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(), periodeStart.atStartOfDay(), null);
+                uttakPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(), periodeStart.atStartOfDay(), null, Optional.empty());
         var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);

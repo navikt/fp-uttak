@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +48,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 class SaldoUtregningTjenesteTest {
 
@@ -195,12 +197,14 @@ class SaldoUtregningTjenesteTest {
         if (grunnlag.getBehandling().isBerørtBehandling()) {
             return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(List.of(),
                     grunnlag.getAnnenPart().getUttaksperioder(), grunnlag.getKontoer(), aktuellPeriode.getFom(),
-                    new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder()), grunnlag.getArbeid().getAktiviteter());
+                    new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder()), grunnlag.getArbeid().getAktiviteter(),
+                    FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, StandardKonfigurasjon.KONFIGURASJON));
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), grunnlag.getAnnenPart().getUttaksperioder(),
                 grunnlag.getKontoer(), aktuellPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(),
                 grunnlag.getSøknad().getMottattTidspunkt(),
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt());
+                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt(),
+                FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, StandardKonfigurasjon.KONFIGURASJON));
     }
 
     @Test
@@ -261,7 +265,8 @@ class SaldoUtregningTjenesteTest {
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2.5), FELLESPERIODE, identifikator)))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(),
-                kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold), null, null);
+                kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold), null, null,
+                Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(97.5));
@@ -287,7 +292,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
                 List.of(annenpartsPeriode), kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(MØDREKVOTE, identifikator)).isEqualTo(Trekkdager.ZERO);
@@ -320,7 +325,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
                 List.of(annenpartsPeriode), kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(MØDREKVOTE, identifikator)).isEqualTo(new Trekkdager(14*5));
@@ -356,7 +361,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
                 List.of(annenpartsPeriode), kontoer.build(), utregningsdato, Set.of(identifikator, identifikatorNyttArbeidsforhold),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16*5));
@@ -389,7 +394,7 @@ class SaldoUtregningTjenesteTest {
                         new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode),
-                true, List.of(annenpartsPeriode), kontoer.build(), null, null);
+                true, List.of(annenpartsPeriode), kontoer.build(), null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16*5));
@@ -420,7 +425,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode),
                 List.of(), kontoer.build(), utregningsdato, Set.of(identifikator),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD));
@@ -449,7 +454,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode),
                 List.of(), kontoer.build(), utregningsdato, Set.of(identifikator),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(Trekkdager.ZERO);
@@ -482,7 +487,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode1, innvilgetPeriode2),
                 List.of(), kontoer.build(), utregningsdato, Set.of(identifikator),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(Trekkdager.ZERO);
@@ -506,7 +511,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(innvilgetPeriode),
                 List.of(), kontoer.build(), utregningsdato, Set.of(identifikator),
-                null, null);
+                null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(new Trekkdager(200-50 ));
@@ -540,7 +545,7 @@ class SaldoUtregningTjenesteTest {
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(
                 List.of(fastsattPeriode1, fastsattPeriode2, fastsattPeriode3), List.of(), kontoer.build(), utregningsdato,
-                Set.of(identifikator, identifikatorNyttArbeidsforhold1, identifikatorNyttArbeidsforhold2), null, null);
+                Set.of(identifikator, identifikatorNyttArbeidsforhold1, identifikatorNyttArbeidsforhold2), null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(5));
@@ -574,7 +579,7 @@ class SaldoUtregningTjenesteTest {
                         Utbetalingsgrad.HUNDRED))
                 .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode), false,
-                List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build(), null, null);
+                List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build(), null, null, Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, søkersArbeidsforhold)).isEqualTo(new Trekkdager(97));
@@ -614,7 +619,7 @@ class SaldoUtregningTjenesteTest {
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
                 List.of(annenpartUttaksperiode1, annenpartUttaksperiode2, annenpartUttaksperiode3), kontoer.build(),
                 LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON),
-                LocalDateTime.of(opphold.getFom(), LocalTime.NOON));
+                LocalDateTime.of(opphold.getFom(), LocalTime.NOON), Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 25 - 25 - 25 - 1
@@ -641,7 +646,7 @@ class SaldoUtregningTjenesteTest {
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
                 List.of(annenpartUttaksperiode), kontoer.build(),
                 LocalDateTime.of(annenpartUttaksperiode.getFom(), LocalTime.NOON),
-                LocalDateTime.of(opphold.getFom(), LocalTime.NOON));
+                LocalDateTime.of(opphold.getFom(), LocalTime.NOON), Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 3 - 2 - 1
@@ -673,7 +678,7 @@ class SaldoUtregningTjenesteTest {
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
                 List.of(annenpartUttaksperiode1, annenpartUttaksperiode2), kontoer.build(),
                 LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON),
-                LocalDateTime.of(opphold.getFom(), LocalTime.NOON));
+                LocalDateTime.of(opphold.getFom(), LocalTime.NOON), Optional.empty());
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 2 - 2 - 1 - 1
