@@ -10,13 +10,13 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
-class FarUttakRundtFødsel {
+public class FarUttakRundtFødsel {
 
     private FarUttakRundtFødsel() {
         //hindrer instansiering
     }
 
-    static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
         if (grunnlag.getKontoer().getFarUttakRundtFødselDager() == 0 || !grunnlag.getSøknad().gjelderTerminFødsel()) {
             return Optional.empty();
         }
