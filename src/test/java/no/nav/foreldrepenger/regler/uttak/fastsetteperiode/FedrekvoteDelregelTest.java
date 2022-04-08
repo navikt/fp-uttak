@@ -362,10 +362,28 @@ class FedrekvoteDelregelTest {
     }
 
     @Test
-    void fedrekvote_rundt_fødsel__men_før_fødsel_blir_avslått() {
+    void fedrekvote_rundt_fødsel__for_mange_dager_blir_avslått() {
+        var fødselsdato = LocalDate.of(2022, 10, 3);
+        var termindato = LocalDate.of(2022, 10, 5);
+
+        var oppgittPeriode = oppgittPeriode(fødselsdato, termindato.plusWeeks(2).plusDays(1));
+        var grunnlag = basicGrunnlag(fødselsdato)
+                .datoer(new Datoer.Builder().termin(termindato).fødsel(fødselsdato))
+                .behandling(new Behandling.Builder().søkerErMor(false))
+                .søknad(søknad(oppgittPeriode))
+                .kontoer(fedrekvoteKonto(10 * 5).farUttakRundtFødselDager(10))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isFalse();
+    }
+
+    @Test
+    void fedrekvote_rundt_fødsel_uten_termin_periode_før_fødsel_blir_avslått() {
         var fødselsdato = LocalDate.of(2022, 10, 1);
 
-        var oppgittPeriode = oppgittPeriode(fødselsdato.minusDays(2), fødselsdato.plusWeeks(1).plusDays(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.minusDays(2), fødselsdato.minusDays(1));
         var grunnlag = basicGrunnlag(fødselsdato)
                 .behandling(new Behandling.Builder().søkerErMor(false))
                 .søknad(søknad(oppgittPeriode))
@@ -381,7 +399,7 @@ class FedrekvoteDelregelTest {
     void fedrekvote_rundt_termin_blir_innvilget() {
         var termindato = LocalDate.of(2022, 10, 1);
 
-        var oppgittPeriode = oppgittPeriode(termindato.minusDays(3), termindato.plusWeeks(1).plusDays(1));
+        var oppgittPeriode = oppgittPeriode(termindato.minusDays(3), termindato.minusDays(1));
         var grunnlag = basicGrunnlag(termindato)
                 .behandling(new Behandling.Builder().søkerErMor(false))
                 .søknad(søknad(oppgittPeriode))
