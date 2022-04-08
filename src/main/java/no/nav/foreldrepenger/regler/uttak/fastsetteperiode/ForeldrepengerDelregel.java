@@ -190,7 +190,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørFødselErFarRundtFødsel() {
-        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet uttak rundt fødsel?")
+        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
                 .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), sjekkErDetAleneomsorgFar())
                 .ellers(Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
                                 Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false));
@@ -263,7 +263,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarRundtFødsel() {
-        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet uttak rundt fødsel?")
+        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
                 .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), sjekkOmAktivitetskravErOppfylt())
                 .ellers(sjekkOmGyldigGrunnForTidligOppstart());
     }
