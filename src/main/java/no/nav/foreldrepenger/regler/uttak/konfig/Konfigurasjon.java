@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Konfigurasjon {
 
@@ -19,6 +20,11 @@ public class Konfigurasjon {
 
     public int getParameter(Parametertype parametertype, final LocalDate dato) {
         return getParameter(parametertype, Integer.class, dato);
+    }
+
+    public Optional<Integer> getParameterHvisAktivVed(Parametertype parametertype, final LocalDate dato) {
+        return Optional.ofNullable(this.parameterMap.get(parametertype))
+                .flatMap(p -> p.getParameterHvisAktivVed(dato));
     }
 
     public <T> T getParameter(Parametertype parametertype, Class<T> klasse, final LocalDate dato) {
