@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
-import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -38,11 +36,5 @@ public class FarUttakRundtFødsel {
                 .orElse(familieHendelseDato)
                 .plus(farEtterFødsel);
         return Optional.of(new LukketPeriode(farUttakFom, farUttakTom));
-    }
-
-    static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        return utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon)
-                .map(p -> Set.of(p.getFom(), p.getTom()))
-                .orElse(Set.of());
     }
 }

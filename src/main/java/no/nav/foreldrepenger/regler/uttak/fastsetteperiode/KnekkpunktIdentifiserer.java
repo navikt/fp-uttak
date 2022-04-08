@@ -68,7 +68,7 @@ class KnekkpunktIdentifiserer {
             leggTilKnekkpunkterForTerminFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
         }
         if (!grunnlag.getBehandling().isSøkerMor()) {
-            knekkpunkter.addAll(FarUttakRundtFødsel.finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
+            knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
         knekkpunkter.addAll(knekkBasertPåYtelser(grunnlag));
@@ -229,6 +229,12 @@ class KnekkpunktIdentifiserer {
                 konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
         knekkpunkter.add(familiehendelseDato.plusWeeks(
                 konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
+    }
+
+    private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+        return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon)
+                .map(p -> Set.of(p.getFom(), p.getTom()))
+                .orElse(Set.of());
     }
 
     private static void leggTilKnekkpunkter(Set<LocalDate> knekkpunkter, List<? extends Periode> perioder) {
