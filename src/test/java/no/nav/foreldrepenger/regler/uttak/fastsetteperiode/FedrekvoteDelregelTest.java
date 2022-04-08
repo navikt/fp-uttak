@@ -362,7 +362,7 @@ class FedrekvoteDelregelTest {
     }
 
     @Test
-    void fedrekvote_rundt_fødsel__for_mange_dager_blir_avslått() {
+    void fedrekvote_rundt_fødsel_for_mange_dager_blir_avslått() {
         var fødselsdato = LocalDate.of(2022, 10, 3);
         var termindato = LocalDate.of(2022, 10, 5);
 
