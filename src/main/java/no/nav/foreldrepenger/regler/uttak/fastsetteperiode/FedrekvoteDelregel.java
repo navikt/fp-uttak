@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyldigGrunnForTidligOppstartHelePerioden;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarsUttakRundtFødselTilgjengeligeDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGyldigOverføringPgaAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGyldigOverføringPgaIkkeRett;
@@ -169,8 +170,14 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     public Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeStarterFørUke7EtterFamiliehendelse() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørUke7.ID, "Starter perioden før uke 7 etter termin/fødsel?")
-                .hvis(new SjekkOmPeriodenStarterFørUke7(konfigurasjon), uttakFørTerminFødsel())
+                .hvis(new SjekkOmPeriodenStarterFørUke7(konfigurasjon), sjekkOmFarsUttakRundtFødsel())
                 .ellers(delFlytForVanligUttak());
+    }
+
+    public Specification<FastsettePeriodeGrunnlag> sjekkOmFarsUttakRundtFødsel() {
+        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
+                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), delFlytForTidligUttak())
+                .ellers(uttakFørTerminFødsel());
     }
 
     public Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenGjelderFlerbarnsdager() {

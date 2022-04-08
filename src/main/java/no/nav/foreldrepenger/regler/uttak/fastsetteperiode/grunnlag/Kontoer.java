@@ -11,6 +11,7 @@ public final class Kontoer {
     private int minsterettDager = 0;
     private int utenAktivitetskravDager = 0;
     private int flerbarnsdager = 0;
+    private int farUttakRundtFødselDager = 0;
 
     private Kontoer() {
 
@@ -32,6 +33,10 @@ public final class Kontoer {
         return flerbarnsdager;
     }
 
+    public int getFarUttakRundtFødselDager() {
+        return farUttakRundtFødselDager;
+    }
+
     public static class Builder {
 
         private final Kontoer kladd = new Kontoer();
@@ -43,6 +48,11 @@ public final class Kontoer {
 
         public Builder kontoList(List<Konto.Builder> kontoList) {
             kladd.kontoList = kontoList.stream().map(Konto.Builder::build).collect(Collectors.toList());
+            return this;
+        }
+
+        public Builder farUttakRundtFødselDager(int farUttakRundtFødselDager) {
+            kladd.farUttakRundtFødselDager = farUttakRundtFødselDager;
             return this;
         }
 

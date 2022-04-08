@@ -709,6 +709,58 @@ class ForeldrepengerDelregelTest {
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1318");
     }
 
+    @Test
+    void bfhr_rundt_fødsel_blir_innvilget() {
+        var fødselsdato = LocalDate.of(2022, 10, 1);
+
+        var oppgittPeriode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).plusDays(1));
+        var grunnlag = grunnlagFar(fødselsdato)
+                .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(false))
+                .søknad(søknad(oppgittPeriode))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
+                .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isTrue();
+    }
+
+    @Test
+    void bfhr_rundt_fødsel_men_før_fødsel_blir_avslått() {
+        var fødselsdato = LocalDate.of(2022, 10, 1);
+
+        var oppgittPeriode = oppgittPeriode(fødselsdato.minusDays(2), fødselsdato.plusWeeks(1).plusDays(1));
+        var grunnlag = grunnlagFar(fødselsdato)
+                .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(false))
+                .søknad(søknad(oppgittPeriode))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
+                .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isFalse();
+    }
+
+    @Test
+    void bfhr_rundt_termin_blir_innvilget() {
+        var termindato = LocalDate.of(2022, 10, 1);
+
+        var oppgittPeriode = oppgittPeriode(termindato.minusDays(3), termindato.plusWeeks(1).plusDays(1));
+        var grunnlag = grunnlagFar(termindato)
+                .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(false))
+                .søknad(søknad(oppgittPeriode))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
+                .datoer(new Datoer.Builder().termin(termindato))
+                .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isTrue();
+    }
+
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {
         assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isTrue();

@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
+import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
@@ -267,6 +269,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean kreverBehandlingSammenhengendeUttak() {
         return regelGrunnlag.getBehandling().isKreverSammenhengendeUttak();
+    }
+
+    @Override
+    public Optional<LukketPeriode> periodeFarRundtFødsel(Konfigurasjon konfigurasjon) {
+        return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(regelGrunnlag, konfigurasjon);
     }
 
     @Override

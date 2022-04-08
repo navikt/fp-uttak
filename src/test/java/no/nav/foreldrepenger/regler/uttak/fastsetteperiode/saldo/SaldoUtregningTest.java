@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 class SaldoUtregningTest {
 
@@ -138,7 +140,8 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(10), new Trekkdager(10), Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null,
+                Trekkdager.ZERO, new Trekkdager(10), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(2);
         assertThat(saldoUtregning.getMaxDagerUtenAktivitetskrav()).isEqualTo(new Trekkdager(10));
@@ -156,7 +159,8 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null,
+                new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -180,7 +184,8 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null,
+                new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -205,7 +210,8 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null,
+                Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -229,7 +235,8 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
         var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO);
+                Set.of(AKTIVITET1_SØKER), null, null,
+                Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -237,6 +244,40 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-10));
         assertThat(saldoUtregning.saldo(FORELDREPENGER, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(10 - 15);
+    }
+
+    @Test
+    void vanlig_far_fødsel_gir_riktig_saldo_far_fødsel() {
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FEDREKVOTE, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(enTirsdag, enTirsdag)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
+                .build();
+        var perioderSøker = List.of(fastsattUttakPeriode);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker, List.of(), false,
+                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO,
+                Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
+        // Skal forbruke minsterett
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel()).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    void for_stort_trekk_far_fødsel_gir_riktig_saldo_far_fødsel() {
+        var fastsattUttakPeriode = new FastsattUttakPeriode.Builder()
+                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FEDREKVOTE, AKTIVITET1_SØKER)))
+                .periodeResultatType(Perioderesultattype.INNVILGET)
+                .tidsperiode(enTirsdag, enTirsdag)
+                .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
+                .build();
+        var perioderSøker = List.of(fastsattUttakPeriode);
+        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker, List.of(), false,
+                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO,
+                Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
+        // Skal forbruke minsterett
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-5));
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel()).isEqualTo(new Trekkdager(-5));
     }
 
     @Test

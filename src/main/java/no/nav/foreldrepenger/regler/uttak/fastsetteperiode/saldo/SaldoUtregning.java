@@ -26,9 +26,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public class SaldoUtregning {
 
@@ -42,6 +44,8 @@ public class SaldoUtregning {
     private final Trekkdager minsterettDager;
     private final Trekkdager utenAktivitetskravDager;
     private final SaldoUtregningFlerbarnsdager saldoUtregningFlerbarnsdager;
+    private final Optional<LukketPeriode> farUttakRundtFødselPeriode;
+    private final Trekkdager farUttakRundtFødselDager;
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                    List<FastsattUttakPeriode> søkersPerioder,
@@ -52,7 +56,9 @@ public class SaldoUtregning {
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
                    Trekkdager minsterettDager,
                    Trekkdager utenAktivitetskravDager,
-                   Trekkdager flerbarnsdager) {
+                   Trekkdager flerbarnsdager,
+                   Optional<LukketPeriode> farUttakRundtFødselPeriode,
+                   Trekkdager farUttakRundtFødselDager) {
         this.stønadskontoer = stønadskontoer;
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
@@ -64,6 +70,8 @@ public class SaldoUtregning {
         this.utenAktivitetskravDager = utenAktivitetskravDager;
         this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
                 søkersAktiviteter, flerbarnsdager);
+        this.farUttakRundtFødselPeriode = farUttakRundtFødselPeriode;
+        this.farUttakRundtFødselDager = farUttakRundtFødselDager;
     }
 
     SaldoUtregning(Set<Stønadskonto> stønadskontoer,
@@ -74,8 +82,8 @@ public class SaldoUtregning {
                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
         this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
-                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO, Trekkdager.ZERO,
-                Trekkdager.ZERO);
+                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart,
+                Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
     }
 
     /**
@@ -164,6 +172,39 @@ public class SaldoUtregning {
     private Trekkdager forbruktAvMinsterett(AktivitetIdentifikator aktivitet) {
         return stønadskontoer().stream()
                 .map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder))
+                .map(Trekkdager::new)
+                .reduce(Trekkdager.ZERO, Trekkdager::add);
+    }
+
+    public Trekkdager getFarUttakRundtFødselDager() {
+        return farUttakRundtFødselDager;
+    }
+
+    public boolean erPeriodeRelevantForFarUttakRundtFødselDager(OppgittPeriode periode) {
+        return farUttakRundtFødselPeriode.filter(periode::erOmsluttetAv).isPresent();
+    }
+
+    public Trekkdager restSaldoFarUttakRundtFødsel() {
+        if (Trekkdager.ZERO.equals(getFarUttakRundtFødselDager()) || farUttakRundtFødselPeriode.isEmpty()) {
+            return Trekkdager.ZERO;
+        }
+        return aktiviteterForSøker().stream()
+                .map(this::restSaldoFarUttakRundtFødsel)
+                .max(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
+    }
+
+    public Trekkdager restSaldoFarUttakRundtFødsel(AktivitetIdentifikator aktivitet) {
+        if (Trekkdager.ZERO.equals(getFarUttakRundtFødselDager()) || farUttakRundtFødselPeriode.isEmpty()) {
+            return Trekkdager.ZERO;
+        }
+        var forbruk = forbruktAvFarRundtFødsel(aktivitet);
+        return farUttakRundtFødselDager.subtract(forbruk);
+    }
+
+    private Trekkdager forbruktAvFarRundtFødsel(AktivitetIdentifikator aktivitet) {
+        return stønadskontoer().stream()
+                .map(k -> forbruktFarRundtFødsel(k, aktivitet, søkersPerioder))
                 .map(Trekkdager::new)
                 .reduce(Trekkdager.ZERO, Trekkdager::add);
     }
@@ -430,6 +471,48 @@ public class SaldoUtregning {
         for (var i = index + 1; i < perioder.size(); i++) {
             var periode = perioder.get(i);
             if (periode.isForbrukMinsterett()) {
+                return Optional.of(periode);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private BigDecimal forbruktFarRundtFødsel(Stønadskontotype stønadskonto,
+                                              AktivitetIdentifikator aktivitet,
+                                              List<FastsattUttakPeriode> søkersPerioder) {
+        var sum = BigDecimal.ZERO;
+        var periodeRundtFødsel = farUttakRundtFødselPeriode.orElseThrow();
+
+        for (var i = 0; i < søkersPerioder.size(); i++) {
+            var periodeSøker = søkersPerioder.get(i);
+            var tidsperiodeSøker = new LukketPeriode(periodeSøker.getFom(), periodeSøker.getTom());
+            if (!tidsperiodeSøker.erOmsluttetAv(periodeRundtFødsel)) {
+                continue;
+            }
+            var nestePeriodeSomForbrukerDager = nestePeriodeFarRundtFødsel(periodeRundtFødsel, søkersPerioder, i, aktivitet);
+            if (!aktivitetIPeriode(periodeSøker, aktivitet) &&
+                    (nestePeriodeSomForbrukerDager.isEmpty() || aktivitetIPeriode(nestePeriodeSomForbrukerDager.get(), aktivitet))) {
+                var perioderTomPeriode = søkersPerioder.subList(0, i + 1);
+                var ekisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
+                ekisterendeAktiviteter.remove(aktivitet);
+                var minForbrukteDagerEksisterendeAktiviteter = ekisterendeAktiviteter.stream()
+                        .map(a -> forbruktFarRundtFødsel(stønadskonto, a, perioderTomPeriode))
+                        .min(BigDecimal::compareTo)
+                        .orElseThrow();
+                sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
+            } else {
+                sum = sum.add(trekkdagerForUttaksperiode(stønadskonto, aktivitet, periodeSøker));
+            }
+        }
+        return sum;
+    }
+
+    private Optional<FastsattUttakPeriode> nestePeriodeFarRundtFødsel(LukketPeriode periodeRundtFødsel,
+                                                                      List<FastsattUttakPeriode> perioder, int index, AktivitetIdentifikator aktivitet) {
+        for (var i = index + 1; i < perioder.size(); i++) {
+            var periode = perioder.get(i);
+            var tidsperiode = new LukketPeriode(periode.getFom(), periode.getTom());
+            if (tidsperiode.erOmsluttetAv(periodeRundtFødsel) && aktivitetIPeriode(periode, aktivitet)) {
                 return Optional.of(periode);
             }
         }

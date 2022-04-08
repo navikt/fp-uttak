@@ -991,4 +991,43 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         assertThat(resultat.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
     }
 
+    @Test
+    void bare_far_har_rett_skal_innvilge_to_uker_rundt_fødsel_deretter_minsterett() {
+        //Søkt samme dag, men mor har søkt etter far
+        var fødselsdato = LocalDate.of(2022, 10, 6);
+        var termindato = LocalDate.of(2022, 10, 5);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .datoer(datoer(fødselsdato).termin(termindato))
+                .behandling(farBehandling())
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(5*40))
+                        .minsterettDager(5*8)
+                        .farUttakRundtFødselDager(10))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, termindato.minusDays(2), fødselsdato.plusWeeks(3).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(58).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(8);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Fødsel P1
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(3));
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Fødsel P2
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(7));
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING); // Brukt opp 10 dager ifm fødsel
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING); // Søker inn i første 6 uker
+        assertThat(resultat.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT); // MSP
+        assertThat(resultat.get(5).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // MSP tom på konto
+        assertThat(resultat.get(6).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Minsterett
+        assertThat(resultat.get(6).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(30)); // Minsterett
+        assertThat(resultat.get(7).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // Oppbrukt minsterett
+    }
+
 }

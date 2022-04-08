@@ -4,6 +4,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyld
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarsUttakRundtFødselTilgjengeligeDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOmsorgHelePerioden;
@@ -184,10 +185,15 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkalVæreFørFamileHendelse() {
         return rs.hvisRegel(SjekkOmPeriodenSlutterFørFamiliehendelse.ID, "Skal uttak være før termin/fødsel?")
-                .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(),
-                        Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
-                                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false))
+                .hvis(new SjekkOmPeriodenSlutterFørFamiliehendelse(), sjekkOmUttakFørFødselErFarRundtFødsel())
                 .ellers(sjekkErDetAleneomsorgFar());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørFødselErFarRundtFødsel() {
+        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
+                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), sjekkErDetAleneomsorgFar())
+                .ellers(Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
+                                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErDetAleneomsorgFar() {
@@ -253,6 +259,12 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
         return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
                 .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkFarUtenAleneomsorgHarDisponibleDager())
+                .ellers(sjekkOmUttakFørsteSeksUkerErFarRundtFødsel());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarRundtFødsel() {
+        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
+                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), sjekkOmAktivitetskravErOppfylt())
                 .ellers(sjekkOmGyldigGrunnForTidligOppstart());
     }
 

@@ -38,7 +38,8 @@ class RegelResultatBehandlerTest {
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),
                 oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(), grunnlag.getSøknad().getMottattTidspunkt(),
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt());
+                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt(),
+                FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, StandardKonfigurasjon.KONFIGURASJON));
         oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.getIdentifikator()));
         var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag,
                 StandardKonfigurasjon.KONFIGURASJON);

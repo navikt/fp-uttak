@@ -56,7 +56,7 @@ public class FastsettePerioderRegelOrkestrering {
         for (var aktuellPeriode : allePerioderSomSkalFastsettes) {
             FastsettePeriodeResultat resultat;
             do {
-                var saldoUtregningGrunnlag = saldoGrunnlag(grunnlag, resultatPerioder, aktuellPeriode, allePerioderSomSkalFastsettes);
+                var saldoUtregningGrunnlag = saldoGrunnlag(grunnlag, konfigurasjon, resultatPerioder, aktuellPeriode, allePerioderSomSkalFastsettes);
                 var saldoUtregning = lagUtregning(saldoUtregningGrunnlag);
                 resultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, aktuellPeriode, saldoUtregning);
                 resultatPerioder.add(resultat);
@@ -243,6 +243,7 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private SaldoUtregningGrunnlag saldoGrunnlag(RegelGrunnlag grunnlag,
+                                                 Konfigurasjon konfigurasjon,
                                                  List<FastsettePeriodeResultat> resultatPerioder,
                                                  OppgittPeriode aktuellPeriode,
                                                  List<OppgittPeriode> allePerioderSomSkalFastsettes) {
@@ -257,12 +258,13 @@ public class FastsettePerioderRegelOrkestrering {
         if (grunnlag.getBehandling().isBerørtBehandling()) {
             var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
             return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(søkersFastsattePerioder, annenpartPerioder,
-                    kontoer, utregningsdato, søktePerioder, alleAktiviteter);
+                    kontoer, utregningsdato, søktePerioder, alleAktiviteter, FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
         }
         var sisteSøknadMottattTidspunktAnnenpart =
                 grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt();
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder, kontoer, utregningsdato,
-                alleAktiviteter, grunnlag.getSøknad().getMottattTidspunkt(), sisteSøknadMottattTidspunktAnnenpart);
+                alleAktiviteter, grunnlag.getSøknad().getMottattTidspunkt(), sisteSøknadMottattTidspunktAnnenpart,
+                FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
     }
 
     private List<FastsattUttakPeriode> vedtaksperioder(RegelGrunnlag grunnlag) {

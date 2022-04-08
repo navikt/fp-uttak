@@ -10,8 +10,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEnPartsPeriodeErFlerbarnsdager;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEnePeriodenErFarsUttakRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmParteneMerEnn100ProsentUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
@@ -19,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmKo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpphørsdatoTrefferPerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpptjeningsvilkåretErOppfylt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmParteneMerEnn100ProsentUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFedrekvote;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFellesperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
@@ -165,6 +167,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFlerbarnsdager() {
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
                 .hvis(new SjekkOmEnPartsPeriodeErFlerbarnsdager(), sjekkOmGradertEtterSøknadMottattdato())
+                .ellers(sjekkOmFarRundtFødsel());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmFarRundtFødsel() {
+        return rs.hvisRegel(SjekkOmEnePeriodenErFarsUttakRundtFødsel.ID, "Gjelder perioden fars uttak rundt fødsel?")
+                .hvis(new SjekkOmEnePeriodenErFarsUttakRundtFødsel(konfigurasjon), sjekkOmGradertEtterSøknadMottattdato())
                 .ellers(sjekkOmMerEnn100ProsentSamletUttak());
     }
 
