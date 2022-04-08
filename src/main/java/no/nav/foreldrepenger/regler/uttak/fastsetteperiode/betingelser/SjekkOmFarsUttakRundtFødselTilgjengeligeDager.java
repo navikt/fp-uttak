@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -20,7 +21,7 @@ public class SjekkOmFarsUttakRundtFødselTilgjengeligeDager extends LeafSpecific
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSøkerMor() || grunnlag.periodeFarRundtFødsel(konfigurasjon).isEmpty()) {
+        if (grunnlag.isSøkerMor() || grunnlag.getSaldoUtregning().getFarUttakRundtFødselDager().equals(Trekkdager.ZERO) || grunnlag.periodeFarRundtFødsel(konfigurasjon).isEmpty()) {
             return nei();
         }
         var periodeForUttakRundtFødsel = grunnlag.periodeFarRundtFødsel(konfigurasjon).orElseThrow();
