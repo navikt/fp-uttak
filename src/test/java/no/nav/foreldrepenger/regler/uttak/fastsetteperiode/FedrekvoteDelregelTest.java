@@ -382,13 +382,6 @@ class FedrekvoteDelregelTest {
     }
 
     @Test
-    void dummy() {
-        var fødselsdato = LocalDate.of(2022, 9, 30);
-        var intervall = new LukketPeriode(fødselsdato, fødselsdato.plusWeeks(2));
-        System.out.println(Virkedager.beregnAntallVirkedager(intervall));
-    }
-
-    @Test
     void fedrekvote_rundt_fødsel_uten_termin_periode_før_fødsel_blir_avslått() {
         var fødselsdato = LocalDate.of(2022, 10, 1);
 
