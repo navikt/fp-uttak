@@ -83,8 +83,8 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, d_2010_01_01, null, 3)
 
                 .leggTilParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, d_2017_01_01, null, 6)
-                .leggTilParameter(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, d_2022_08_02, null, 2)
-                .leggTilParameter(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, d_2022_08_02, null, 2)
+                .leggTilParameter(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, d_2017_01_01, null, 2) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, d_2017_01_01, null, 2) // TODO: endre til aug 2022 etter overgang
                 //grenser
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO, d_2010_01_01, null, Period.ofYears(3))
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, d_2010_01_01, null, 3)
