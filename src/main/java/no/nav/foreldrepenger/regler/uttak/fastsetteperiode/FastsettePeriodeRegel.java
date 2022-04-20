@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmF�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmKontoErOpprettet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmManglendeSøktPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpphørsdatoTrefferPerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpptjeningsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmParteneMerEnn100ProsentUttak;
@@ -237,8 +237,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGjenståendeMinsterettVedNyStønadsperiode() {
-        return rs.hvisRegel(SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
-                .hvis(new SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager(false), sjekkOmUttaksperiodenEtterSøkersDødsdato())
+        return rs.hvisRegel(SjekkOmMinsterettHarDisponibleDager.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
+                .hvis(new SjekkOmMinsterettHarDisponibleDager(), sjekkOmUttaksperiodenEtterSøkersDødsdato())
                 .ellers(IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false));
     }
 
