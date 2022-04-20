@@ -24,10 +24,4 @@ class StandardKonfigurasjonTest {
                         LocalDate.of(1970, 12, 5)));
     }
 
-    @Test
-    void skal_få_exception_ved_bruk_av_feil_typer() {
-        assertThrows(IllegalArgumentException.class,
-                () -> StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT, String.class,
-                        LocalDate.now()));
-    }
 }
