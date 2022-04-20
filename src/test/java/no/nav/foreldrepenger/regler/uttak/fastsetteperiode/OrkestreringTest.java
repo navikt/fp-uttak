@@ -992,6 +992,56 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
+    public void to_tette_skal_innvilge_med_periode_etter_start_ny_stønadsperiode_gjenstående_minsterett() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
+        var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
+        var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+                .rettOgOmsorg(beggeRett())
+                .behandling(morBehandling())
+                .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(15*5))
+                        .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(16*5)).minsterettDager(22 * 5))
+                .søknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                        oppgittPeriode(FELLESPERIODE, nesteStønadsperiode.minusWeeks(4), nesteStønadsperiode.plusWeeks(12).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(5);
+        assertThat(resultat.stream().filter(r -> Perioderesultattype.AVSLÅTT.equals(r.getUttakPeriode().getPerioderesultattype())).count()).isEqualTo(1);
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(3).getUttakPeriode().getFom()).isEqualTo(nesteStønadsperiode);
+        assertThat(resultat.get(3).getUttakPeriode().getTom()).isEqualTo(nesteStønadsperiode.plusWeeks(3).minusDays(1));
+        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultat.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
+    }
+
+    @Test
+    public void to_tette_skal_avslå_med_periode_etter_start_ny_stønadsperiode_oppbrukt_minsterett() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
+        var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
+        var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
+                .rettOgOmsorg(beggeRett())
+                .behandling(farBehandling())
+                .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(15*5))
+                        .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(16*5)).minsterettDager(8 * 5))
+                .søknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(FEDREKVOTE, nesteStønadsperiode.minusWeeks(12), nesteStønadsperiode.minusWeeks(2).minusDays(1)),
+                        oppgittPeriode(FEDREKVOTE, nesteStønadsperiode, nesteStønadsperiode.plusWeeks(5).minusDays(1))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.stream().filter(r -> Perioderesultattype.AVSLÅTT.equals(r.getUttakPeriode().getPerioderesultattype())).count()).isEqualTo(1);
+        // Periode 0 er 8 uker FK innenfor minsteretten. Det var søkt om 10 uker men perioden blir knekt etter 8 uker pga minsterett
+        // Periode 1 er 2 uker FK utenfor minsteretten. Det var søkt om 10 uker og dette er restperioden på 2 uker
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getFom()).isEqualTo(nesteStønadsperiode.minusWeeks(4));
+        assertThat(resultat.get(1).getUttakPeriode().getTom()).isEqualTo(nesteStønadsperiode.minusWeeks(2).minusDays(1));
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultat.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
+    }
+
+    @Test
     void bare_far_har_rett_skal_innvilge_to_uker_rundt_fødsel_deretter_minsterett() {
         //Søkt samme dag, men mor har søkt etter far
         var fødselsdato = LocalDate.of(2022, 10, 6);

@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmF�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmKontoErOpprettet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmManglendeSøktPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpphørsdatoTrefferPerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpptjeningsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmParteneMerEnn100ProsentUttak;
@@ -231,10 +232,16 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNyStønadsperiode() {
         return rs.hvisRegel(SjekkOmPeriodenErEtterNyStønadsperiode.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
-            .hvis(new SjekkOmPeriodenErEtterNyStønadsperiode(),
-                IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false))
+            .hvis(new SjekkOmPeriodenErEtterNyStønadsperiode(), sjekkOmGjenståendeMinsterettVedNyStønadsperiode())
             .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());
     }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGjenståendeMinsterettVedNyStønadsperiode() {
+        return rs.hvisRegel(SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
+                .hvis(new SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager(false), sjekkOmUttaksperiodenEtterSøkersDødsdato())
+                .ellers(IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false));
+    }
+
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselsvilkåretErOppfylt() {
         return rs.hvisRegel(SjekkOmFødselsvilkåretErOppfylt.ID, "Er fødselsvilkåret oppfylt?")

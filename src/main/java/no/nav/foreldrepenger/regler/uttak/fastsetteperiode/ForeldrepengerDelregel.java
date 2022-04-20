@@ -277,7 +277,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGjelderMinsterett() {
         return rs.hvisRegel(SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager.ID, SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager.BESKRIVELSE)
-                .hvis(new SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager(), sjekkGraderingVedKunFarMedmorRettMinsterett())
+                .hvis(new SjekkOmMinsterettUtenAktivitetskravHarDisponibleDager(true), sjekkGraderingVedKunFarMedmorRettMinsterett())
                 .ellers(new AvslagAktivitetskravDelregel().getSpecification());
     }
 
