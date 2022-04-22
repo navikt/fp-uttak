@@ -1,11 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.konfig;
 
-import java.time.Period;
-
 public enum Parametertype {
 
     //Stønadskontoer
-
     EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100,
     EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80,
     EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100,
@@ -23,31 +20,24 @@ public enum Parametertype {
     FORELDREPENGER_100_PROSENT_FAR_HAR_RETT_DAGER,
     FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER,
     FORELDREPENGER_FØR_FØDSEL,
-    //Uttaksperidoer
 
+    //Rettigheter utenom konti
+    BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV,
+    BARE_FAR_DAGER_MINSTERETT,
+    BARE_FAR_MOR_UFØR_DAGER_MINSTERETT,
+    MOR_TO_TETTE_DAGER_MINSTERETT,
+    FAR_TO_TETTE_DAGER_MINSTERETT,
+
+    //Uttaksperidoer
     UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
     LOVLIG_UTTAK_FØR_FØDSEL_UKER,
     UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
     UTTAK_ETTER_BARN_DØDT_UKER,
-    PREMATURUKER_ANTALL_DAGER_FØR_TERMIN,
     FAR_UTTAK_FØR_TERMIN_UKER,
     FAR_UTTAK_ETTER_FØDSEL_UKER,
 
-    GRENSE_ETTER_FØDSELSDATO_ÅR,
-    @Deprecated(forRemoval = true)
-    GRENSE_ETTER_FØDSELSDATO(Period.class);
+    //Grenser
+    PREMATURUKER_ANTALL_DAGER_FØR_TERMIN,
+    GRENSE_ETTER_FØDSELSDATO_ÅR;
 
-    private final Class<?> klasseForVerdier;
-
-    Parametertype() {
-        this(Integer.class);
-    }
-
-    Parametertype(Class<?> klasseForVerdier) {
-        this.klasseForVerdier = klasseForVerdier;
-    }
-
-    public Class<?> getKlasseForVerdier() {
-        return klasseForVerdier;
-    }
 }

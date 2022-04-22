@@ -18,12 +18,7 @@ public class KonfigurasjonBuilder {
         return new KonfigurasjonBuilder();
     }
 
-    public KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Object verdi) {
-        if (!parametertype.getKlasseForVerdier().isAssignableFrom(verdi.getClass())) {
-            throw new IllegalArgumentException(
-                    "Utvikler-feil: kan legge til verdi fra klasse " + verdi.getClass() + " for " + parametertype);
-        }
-
+    public KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Integer verdi) {
         var parameterListe = parameterMap.get(parametertype);
         if (parameterListe == null) {
             Collection<Parameter> coll = new ArrayList<>();

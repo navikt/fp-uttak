@@ -18,28 +18,18 @@ public class Konfigurasjon {
         }
     }
 
-    public int getParameter(Parametertype parametertype, final LocalDate dato) {
-        return getParameter(parametertype, Integer.class, dato);
-    }
-
     public Optional<Integer> getParameterHvisAktivVed(Parametertype parametertype, final LocalDate dato) {
         return Optional.ofNullable(this.parameterMap.get(parametertype))
                 .flatMap(p -> p.getParameterHvisAktivVed(dato));
     }
 
-    public <T> T getParameter(Parametertype parametertype, Class<T> klasse, final LocalDate dato) {
-        return getParameterVerdier(parametertype, klasse).getParameter(dato);
+    public Integer getParameter(Parametertype parametertype, final LocalDate dato) {
+        return getParameterVerdier(parametertype).getParameter(dato);
     }
 
-    public <T> ParameterVerdier<T> getParameterVerdier(Parametertype parametertype, Class<T> klasse) {
-        if (!parametertype.getKlasseForVerdier().equals(klasse)) {
-            throw new IllegalArgumentException("Utvikler-feil: kan ikke spørre etter " + klasse.getName() + " for " + parametertype);
-        }
-        ParameterVerdier<T> resultat = this.parameterMap.get(parametertype);
-        if (resultat == null) {
-            throw new IllegalArgumentException("Konfigurasjon-feil/Utvikler-feil: mangler parameter av type " + parametertype);
-        }
-        return resultat;
+    public ParameterVerdier getParameterVerdier(Parametertype parametertype) {
+        return Optional.ofNullable(this.parameterMap.get(parametertype))
+                .orElseThrow(() -> new IllegalArgumentException("Konfigurasjon-feil/Utvikler-feil: mangler parameter av type " + parametertype));
     }
 
 }
