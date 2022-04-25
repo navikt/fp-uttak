@@ -290,7 +290,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {
         return rs.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
                 .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmBerørtBehandling())
-                .ellers(IkkeOppfylt.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, false, false));
+                .ellers(Manuellbehandling.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, Manuellbehandlingårsak.PERIODE_UAVKLART, true, true));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBerørtBehandling() {
