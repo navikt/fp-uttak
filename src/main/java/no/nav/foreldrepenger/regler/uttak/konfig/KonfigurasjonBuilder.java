@@ -27,8 +27,7 @@ public class KonfigurasjonBuilder {
         } else {
             var nyttParameter = new Parameter(fom, tom, verdi);
             var count = parameterListe.stream()
-                    .filter(p -> p.overlapper(nyttParameter.getFom()) || (nyttParameter.getTom() != null && p.overlapper(
-                            nyttParameter.getTom())))
+                    .filter(p -> p.overlapper(nyttParameter.getFom()) || (nyttParameter.getTom() != null && p.overlapper(nyttParameter.getTom())))
                     .count();
             if (count > 0L) {
                 throw new IllegalArgumentException("Overlappende perioder kan ikke eksistere i konfigurasjon.");
