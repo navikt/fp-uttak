@@ -34,9 +34,11 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER, d_2017_01_01, null, 250)
                 .leggTilParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, d_2017_01_01, null, 15)
                 //Minsteretter
-                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV, d_2017_01_01, null, 75)
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, d_2017_01_01, null, 75)
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, d_2017_01_01, null, 95)
                 .leggTilParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
-                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT, d_2017_01_01, null, 75) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, d_2017_01_01, null, 75) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, d_2017_01_01, null, 95) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 110) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.FAR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
                 //Uttaksperioder
@@ -81,9 +83,11 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER, d_2010_01_01, null, 250)
                 .leggTilParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, d_2010_01_01, null, 15)
                 //Minsteretter
-                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV, d_2017_01_01, null, 75)
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, d_2017_01_01, null, 75)
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, d_2017_01_01, null, 95)
                 .leggTilParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
-                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT, d_2017_01_01, null, 75) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, d_2017_01_01, null, 75) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, d_2017_01_01, null, 95) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 110) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.FAR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
 
