@@ -5,30 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
@@ -51,11 +30,10 @@ class RevurderingTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_SAMTYKKE);
-        //TODO quickFIX
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.skalUtbetale()).isTrue();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.skalUtbetale()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
     }
 
     @Test
