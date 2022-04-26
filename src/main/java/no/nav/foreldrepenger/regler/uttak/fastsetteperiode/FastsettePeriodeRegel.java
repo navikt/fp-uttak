@@ -74,6 +74,11 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Konfigurasjon konfigurasjon;
     private FeatureToggles featureToggles; //NOSONAR
 
+    private Specification<FastsettePeriodeGrunnlag> fomGradertEtterSøknadMottattdato;
+    private Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
+    private Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
+    private Specification<FastsettePeriodeGrunnlag> fomSamtykke;
+
     public FastsettePeriodeRegel(Konfigurasjon konfigurasjon, FeatureToggles featureToggles) {
         this.konfigurasjon = konfigurasjon;
         this.featureToggles = featureToggles;
@@ -102,10 +107,13 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtterSøkersDødsdato() {
-        return rs.hvisRegel(SjekkOmUttaksperiodenEtterSøkersDødsdato.ID, "Er uttaksperioden etter søkers dødsdato?")
-                .hvis(new SjekkOmUttaksperiodenEtterSøkersDødsdato(),
-                        Manuellbehandling.opprett("UT1275", IkkeOppfyltÅrsak.SØKER_DØD, Manuellbehandlingårsak.DØDSFALL, false, false))
-                .ellers(sjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato());
+        if (fomUttaksperiodenEtterSøkersDødsdato == null) {
+            fomUttaksperiodenEtterSøkersDødsdato = rs.hvisRegel(SjekkOmUttaksperiodenEtterSøkersDødsdato.ID, "Er uttaksperioden etter søkers dødsdato?")
+                    .hvis(new SjekkOmUttaksperiodenEtterSøkersDødsdato(),
+                            Manuellbehandling.opprett("UT1275", IkkeOppfyltÅrsak.SØKER_DØD, Manuellbehandlingårsak.DØDSFALL, false, false))
+                    .ellers(sjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato());
+        }
+        return fomUttaksperiodenEtterSøkersDødsdato;
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato() {
@@ -123,10 +131,13 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmOpphørsdatoTrefferPerioden() {
-        return rs.hvisRegel(SjekkOmOpphørsdatoTrefferPerioden.ID, "Inneholder perioden opphørsdato for medlemskap")
-                .hvis(new SjekkOmOpphørsdatoTrefferPerioden(),
-                        IkkeOppfylt.opprett("UT1250", IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM, false, false))
-                .ellers(sjekkOmFødselsvilkåretErOppfylt());
+        if (fomOpphørsdatoTrefferPerioden == null) {
+            fomOpphørsdatoTrefferPerioden = rs.hvisRegel(SjekkOmOpphørsdatoTrefferPerioden.ID, "Inneholder perioden opphørsdato for medlemskap")
+                    .hvis(new SjekkOmOpphørsdatoTrefferPerioden(),
+                            IkkeOppfylt.opprett("UT1250", IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM, false, false))
+                    .ellers(sjekkOmFødselsvilkåretErOppfylt());
+        }
+        return fomOpphørsdatoTrefferPerioden;
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse() {
@@ -288,9 +299,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {
-        return rs.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
-                .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmBerørtBehandling())
-                .ellers(IkkeOppfylt.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, false, false));
+        if (fomSamtykke == null) {
+            fomSamtykke = rs.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
+                    .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmBerørtBehandling())
+                    .ellers(IkkeOppfylt.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, false, false));
+        }
+        return fomSamtykke;
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBerørtBehandling() {
@@ -306,11 +320,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGradertEtterSøknadMottattdato() {
-        return rs.hvisRegel(SjekkOmErGradertFørSøknadMottattdato.ID, "Er perioden gradert etter mottattdato?")
-                .hvis(new SjekkOmErGradertFørSøknadMottattdato(),
-                        Manuellbehandling.opprett("UT1165", null, Manuellbehandlingårsak.SØKNADSFRIST, true, false,
-                                Optional.of(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD)))
-                .ellers(sjekkOmPeriodeErUtsettelse());
+        if (fomGradertEtterSøknadMottattdato == null) {
+            fomGradertEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErGradertFørSøknadMottattdato.ID, "Er perioden gradert etter mottattdato?")
+                    .hvis(new SjekkOmErGradertFørSøknadMottattdato(),
+                            Manuellbehandling.opprett("UT1165", null, Manuellbehandlingårsak.SØKNADSFRIST, true, false,
+                                    Optional.of(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD)))
+                    .ellers(sjekkOmPeriodeErUtsettelse());
+        }
+        return fomGradertEtterSøknadMottattdato;
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
