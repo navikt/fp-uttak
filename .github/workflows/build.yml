@@ -50,8 +50,7 @@ jobs:
         shell: bash
         run: |
           mvn versions:set -DnewVersion=${MVN_VERSION}
-          mvn jacoco:prepare-agent deploy jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dsonar.login=${SONAR_TOKEN}
+          mvn jacoco:prepare-agent deploy jacoco:report -e --batch-mode --settings .github/.m2/settings.xml
           mvn versions:revert
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
