@@ -157,9 +157,16 @@ public interface FastsettePeriodeGrunnlag {
     boolean isMorRett();
 
     /**
+     * Tilfelle av BareFarRett og oppgitt at MorMottarUføretrygd, 14-14 tredje ledd
+     *
+     * @return true dersom oppgitt.
+     */
+    boolean isMorOppgittUføretrygd();
+
+    /**
      * Tilfelle av BareFarRett og MorMottarUføretrygd, 14-14 tredje ledd
      *
-     * @return true dersom rett.
+     * @return true dersom bare far rett og bekreftet uføretrygd.
      */
     boolean isBareFarHarRettMorUføretrygd();
 
