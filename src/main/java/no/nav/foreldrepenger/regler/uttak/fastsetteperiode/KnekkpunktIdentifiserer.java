@@ -11,8 +11,10 @@ import java.util.stream.Stream;
 import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
@@ -65,10 +67,15 @@ class KnekkpunktIdentifiserer {
 
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getOppgittePerioder());
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
-            leggTilKnekkpunkterForTerminFødsel(knekkpunkter, familiehendelseDato, konfigurasjon);
-        }
-        if (!grunnlag.getBehandling().isSøkerMor()) {
-            knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
+            knekkpunkter.add(familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
+            var sakMedFarUttakRundtFødsel = grunnlag.getKontoer().getFarUttakRundtFødselDager() > 0;
+            var sakMedKvoter = grunnlag.getKontoer().getKontoList().stream().map(Konto::getType).noneMatch(Stønadskontotype.FORELDREPENGER::equals);
+            if (!sakMedFarUttakRundtFødsel || sakMedKvoter) {
+                knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
+            }
+            if (sakMedFarUttakRundtFødsel && sakMedKvoter) {
+                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
+            }
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
         knekkpunkter.addAll(knekkBasertPåYtelser(grunnlag));
@@ -222,14 +229,6 @@ class KnekkpunktIdentifiserer {
         return knekkpunkter;
     }
 
-    private static void leggTilKnekkpunkterForTerminFødsel(Set<LocalDate> knekkpunkter,
-                                                           LocalDate familiehendelseDato,
-                                                           Konfigurasjon konfigurasjon) {
-        knekkpunkter.add(familiehendelseDato.minusWeeks(
-                konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
-        knekkpunkter.add(familiehendelseDato.plusWeeks(
-                konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
-    }
 
     private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
         return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon)

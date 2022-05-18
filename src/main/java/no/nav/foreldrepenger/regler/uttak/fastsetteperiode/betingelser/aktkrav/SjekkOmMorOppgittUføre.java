@@ -20,6 +20,9 @@ public class SjekkOmMorOppgittUføre extends LeafSpecification<FastsettePeriodeG
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        if (fastsettePeriodeGrunnlag.isBareFarHarRettMorUføretrygd()) {
+            return ja();
+        }
         var morsAktivitetIPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode().getMorsAktivitet();
         return !fastsettePeriodeGrunnlag.isMorRett() && fastsettePeriodeGrunnlag.isFarRett() &&
                 Objects.equals(morsAktivitetIPeriode, MorsAktivitet.UFØRE) ? ja() : nei();
