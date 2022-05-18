@@ -67,14 +67,16 @@ class KnekkpunktIdentifiserer {
 
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getSøknad().getOppgittePerioder());
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
+            // Før Prop 15L 21/22: Første 6 uker forbeholdt mor, unntatt flerbarn og aleneomsorg
+            // Etter Prop 15L 21/22: Første 6 uker forbeholdt mor kun for kvoter. Far har opptil 10 dager samtidig uttak ifm fødsel
             knekkpunkter.add(familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
-            var sakMedFarUttakRundtFødsel = grunnlag.getKontoer().getFarUttakRundtFødselDager() > 0;
+            var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().getFarUttakRundtFødselDager() > 0;
             var sakMedKvoter = grunnlag.getKontoer().getKontoList().stream().map(Konto::getType).noneMatch(Stønadskontotype.FORELDREPENGER::equals);
-            if (!sakMedFarUttakRundtFødsel || sakMedKvoter) {
+            if (!hjemletFarUttakRundtFødsel || sakMedKvoter) {
                 knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
-            if (sakMedFarUttakRundtFødsel && sakMedKvoter) {
-                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
+            if (hjemletFarUttakRundtFødsel) {
+                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon, sakMedKvoter));
             }
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
@@ -230,9 +232,9 @@ class KnekkpunktIdentifiserer {
     }
 
 
-    private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+    private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon, boolean medTom) {
         return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon)
-                .map(p -> Set.of(p.getFom(), p.getTom()))
+                .map(p -> medTom ? Set.of(p.getFom(), p.getTom()) : Set.of(p.getFom()))
                 .orElse(Set.of());
     }
 

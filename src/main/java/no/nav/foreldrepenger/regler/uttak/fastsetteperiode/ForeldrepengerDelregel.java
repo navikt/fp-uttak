@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyld
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFamilieArbeidslivBalanse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettBalansertUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarsUttakRundtFødselTilgjengeligeDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettHarDisponibleDager;
@@ -266,8 +266,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarRundtFødsel() {
-        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
-                .hvis(new SjekkOmFamilieArbeidslivBalanse(), sjekkFarUtenAleneomsorgHarDisponibleDager())
+        return rs.hvisRegel(SjekkOmMinsterettBalansertUttak.ID, "Er det sak med minsterett for balansert uttak?")
+                .hvis(new SjekkOmMinsterettBalansertUttak(), sjekkFarUtenAleneomsorgHarDisponibleDager())
                 .ellers(sjekkOmGyldigGrunnForTidligOppstart());
     }
 
