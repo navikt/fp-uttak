@@ -262,10 +262,10 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
         return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
                 .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkFarUtenAleneomsorgHarDisponibleDager())
-                .ellers(sjekkOmUttakFørsteSeksUkerErFarRundtFødsel());
+                .ellers(sjekkOmUttakFørsteSeksUkerErFarMedFABalansertUttak());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarRundtFødsel() {
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarMedFABalansertUttak() {
         return rs.hvisRegel(SjekkOmMinsterettBalansertUttak.ID, "Er det sak med minsterett for balansert uttak?")
                 .hvis(new SjekkOmMinsterettBalansertUttak(), sjekkFarUtenAleneomsorgHarDisponibleDager())
                 .ellers(sjekkOmGyldigGrunnForTidligOppstart());
