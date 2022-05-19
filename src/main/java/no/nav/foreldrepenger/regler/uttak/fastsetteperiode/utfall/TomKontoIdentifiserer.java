@@ -113,7 +113,7 @@ public class TomKontoIdentifiserer {
         // Fra lovendring 2022: Far kan ta ut 10 dager samtidig rundt fødsel (før termin, etter fødsel) + far alene kan ta ut fritt før uke 6.
         // Regelen om at første 6 ukene er forbeholdt mor får dermed kun effekt for beggeRett, 1 barn, og utenom de 10 samtidige dagene
         if (saldoUtregning.getFarUttakRundtFødselDager().equals(Trekkdager.ZERO) || !skalTrekkeDager ||
-                oppgittPeriode.isFlerbarnsdager() || !Stønadskontotype.FEDREKVOTE.equals(stønadskontotype) ||
+                oppgittPeriode.isFlerbarnsdager() || Stønadskontotype.FORELDREPENGER.equals(stønadskontotype) ||
                 !saldoUtregning.erPeriodeRelevantForFarUttakRundtFødselDager(oppgittPeriode)) {
             return Optional.empty();
         }
