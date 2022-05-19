@@ -4,6 +4,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyld
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettBalansertUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarsUttakRundtFødselTilgjengeligeDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettHarDisponibleDager;
@@ -44,6 +45,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Konfigurasjon konfigurasjon;
 
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private Specification<FastsettePeriodeGrunnlag> bareFarRettIkkeAleneomsorgHarDisponibleDager;
 
     public ForeldrepengerDelregel() {
         // For dokumentasjonsgenerering
@@ -260,19 +262,19 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
         return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
                 .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkFarUtenAleneomsorgHarDisponibleDager())
-                .ellers(sjekkOmUttakFørsteSeksUkerErFarRundtFødsel());
+                .ellers(sjekkOmUttakFørsteSeksUkerErFarMedFABalansertUttak());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarRundtFødsel() {
-        return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
-                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), sjekkOmAktivitetskravErOppfylt())
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørsteSeksUkerErFarMedFABalansertUttak() {
+        return rs.hvisRegel(SjekkOmMinsterettBalansertUttak.ID, "Er det sak med minsterett for balansert uttak?")
+                .hvis(new SjekkOmMinsterettBalansertUttak(), sjekkFarUtenAleneomsorgHarDisponibleDager())
                 .ellers(sjekkOmGyldigGrunnForTidligOppstart());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigGrunnForTidligOppstart() {
         return rs.hvisRegel(SjekkGyldigGrunnForTidligOppstartHelePerioden.ID,
                 "Foreligger et gyldig grunn for hele perioden for tidlig oppstart?")
-                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkOmAktivitetskravErOppfylt())
+                .hvis(new SjekkGyldigGrunnForTidligOppstartHelePerioden(), sjekkFarUtenAleneomsorgHarDisponibleDager())
                 .ellers(Manuellbehandling.opprett("UT1200", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
 
@@ -304,9 +306,12 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkFarUtenAleneomsorgHarDisponibleDager() {
-        return rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
-                SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
-                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmAktivitetskravErOppfylt())
-                .ellers(Manuellbehandling.opprett("UT1203", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
+        if (bareFarRettIkkeAleneomsorgHarDisponibleDager == null) {
+            bareFarRettIkkeAleneomsorgHarDisponibleDager = rs.hvisRegel(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
+                            SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.BESKRIVELSE)
+                    .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmAktivitetskravErOppfylt())
+                    .ellers(Manuellbehandling.opprett("UT1203", null, Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
+        }
+        return bareFarRettIkkeAleneomsorgHarDisponibleDager;
     }
 }

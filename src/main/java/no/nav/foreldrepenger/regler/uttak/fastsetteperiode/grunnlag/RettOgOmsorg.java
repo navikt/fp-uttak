@@ -7,6 +7,7 @@ public final class RettOgOmsorg {
     private boolean samtykke;
     private boolean aleneomsorg;
     private boolean morUføretrygd;
+    private boolean morOppgittUføretrygd;
 
     private RettOgOmsorg() {
     }
@@ -29,6 +30,10 @@ public final class RettOgOmsorg {
 
     public boolean getMorUføretrygd() {
         return morUføretrygd;
+    }
+
+    public boolean getMorOppgittUføretrygd() {
+        return morOppgittUføretrygd;
     }
 
     public static class Builder {
@@ -56,6 +61,11 @@ public final class RettOgOmsorg {
 
         public Builder morUføretrygd(boolean morUføretrygd) {
             kladd.morUføretrygd = morUføretrygd;
+            return this;
+        }
+
+        public Builder morOppgittUføretrygd(boolean morOppgittUføretrygd) {
+            kladd.morOppgittUføretrygd = morOppgittUføretrygd;
             return this;
         }
 

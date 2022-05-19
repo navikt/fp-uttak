@@ -20,8 +20,13 @@ public class SjekkOmMorOppgittUføre extends LeafSpecification<FastsettePeriodeG
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        if (fastsettePeriodeGrunnlag.isMorRett() || !fastsettePeriodeGrunnlag.isFarRett()) {
+            return nei();
+        }
+        if (fastsettePeriodeGrunnlag.isMorOppgittUføretrygd()) {
+            return ja();
+        }
         var morsAktivitetIPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode().getMorsAktivitet();
-        return !fastsettePeriodeGrunnlag.isMorRett() && fastsettePeriodeGrunnlag.isFarRett() &&
-                Objects.equals(morsAktivitetIPeriode, MorsAktivitet.UFØRE) ? ja() : nei();
+        return Objects.equals(morsAktivitetIPeriode, MorsAktivitet.UFØRE) ? ja() : nei();
     }
 }
