@@ -180,6 +180,10 @@ public class SaldoUtregning {
         return farUttakRundtFødselDager;
     }
 
+    public boolean harFarUttakRundtFødselPeriode() {
+        return farUttakRundtFødselPeriode.isPresent();
+    }
+
     public boolean erPeriodeRelevantForFarUttakRundtFødselDager(OppgittPeriode periode) {
         return farUttakRundtFødselPeriode.filter(periode::erOmsluttetAv).isPresent();
     }

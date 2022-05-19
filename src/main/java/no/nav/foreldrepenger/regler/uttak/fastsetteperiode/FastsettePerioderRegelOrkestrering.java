@@ -224,10 +224,8 @@ public class FastsettePerioderRegelOrkestrering {
                                                   RegelGrunnlag regelGrunnlag,
                                                   SaldoUtregning saldoUtregning,
                                                   Konfigurasjon konfig) {
-        if (aktuellPeriode.getStønadskontotype() == null) {
-            return ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig);
-        }
-        return Optional.of(aktuellPeriode.getStønadskontotype());
+        return Optional.ofNullable(aktuellPeriode.getStønadskontotype())
+                .or(() -> ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig));
     }
 
     private boolean erFPFF(OppgittPeriode aktuellPeriode) {
@@ -248,7 +246,7 @@ public class FastsettePerioderRegelOrkestrering {
                                                  OppgittPeriode aktuellPeriode,
                                                  List<OppgittPeriode> allePerioderSomSkalFastsettes) {
         List<AnnenpartUttakPeriode> annenpartPerioder =
-                grunnlag.getAnnenPart() == null ? List.of() : grunnlag.getAnnenPart().getUttaksperioder();
+                Optional.ofNullable(grunnlag.getAnnenPart()).map(AnnenPart::getUttaksperioder).orElse(List.of());
 
         var vedtaksperioder = vedtaksperioder(grunnlag);
         var søkersFastsattePerioder = map(resultatPerioder, vedtaksperioder);
@@ -261,19 +259,17 @@ public class FastsettePerioderRegelOrkestrering {
                     kontoer, utregningsdato, søktePerioder, alleAktiviteter, FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
         }
         var sisteSøknadMottattTidspunktAnnenpart =
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt();
+                Optional.ofNullable(grunnlag.getAnnenPart()).map(AnnenPart::getSisteSøknadMottattTidspunkt).orElse(null);
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder, kontoer, utregningsdato,
                 alleAktiviteter, grunnlag.getSøknad().getMottattTidspunkt(), sisteSøknadMottattTidspunktAnnenpart,
                 FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon));
     }
 
     private List<FastsattUttakPeriode> vedtaksperioder(RegelGrunnlag grunnlag) {
-        if (grunnlag.getRevurdering() == null) {
-            return List.of();
-        }
-        return grunnlag.getRevurdering().getGjeldendeVedtak() == null ? List.of() : grunnlag.getRevurdering()
-                .getGjeldendeVedtak()
-                .getPerioder();
+        return Optional.ofNullable(grunnlag.getRevurdering())
+                .map(Revurdering::getGjeldendeVedtak)
+                .map(Vedtak::getPerioder)
+                .orElse(List.of());
     }
 
     private FastsattUttakPeriode map(UttakPeriode periode) {

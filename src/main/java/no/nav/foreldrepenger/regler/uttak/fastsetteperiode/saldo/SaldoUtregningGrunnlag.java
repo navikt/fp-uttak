@@ -47,21 +47,6 @@ public class SaldoUtregningGrunnlag {
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
     }
 
-    @Deprecated(forRemoval = true)
-    public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                   boolean berørtBehandling,
-                                                                   List<AnnenpartUttakPeriode> annenpartsPerioder,
-                                                                   Kontoer kontoer,
-                                                                   LocalDateTime sisteSøknadMottattTidspunktSøker,
-                                                                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
-        var aktiviteter = søkersFastsattePerioder.stream()
-                .flatMap(p -> p.getAktiviteter().stream())
-                .map(a -> a.getAktivitetIdentifikator())
-                .collect(Collectors.toSet());
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, berørtBehandling, annenpartsPerioder, List.of(),
-                kontoer, aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, Optional.empty());
-    }
-
     public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                                                    boolean berørtBehandling,
                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
