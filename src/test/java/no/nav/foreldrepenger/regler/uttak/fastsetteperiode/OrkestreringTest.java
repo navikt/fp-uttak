@@ -591,6 +591,31 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
+    void begge_rett_med_termin_fff_knekkes_riktig() {
+        var fødselsdato = LocalDate.of(2022, 10, 4);
+
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+                .konto(konto(MØDREKVOTE, 75)).konto(konto(FEDREKVOTE, 75)).konto(konto(FELLESPERIODE, 80))
+                .farUttakRundtFødselDager(10);
+        var periodeGrunnlag = RegelGrunnlagTestBuilder.create()
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .kontoer(kontoer)
+                .datoer(datoer(fødselsdato).termin(fødselsdato))
+                .behandling(morBehandling())
+                .rettOgOmsorg(beggeRett())
+                .søknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+                                false, null),
+                        oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1), false, null)))
+                .build();
+        var resultat = fastsettPerioder(periodeGrunnlag);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+    }
+
+    @Test
     void skalIkkeKasteExceptionVedUtsettelseFraDerSaldoGårUt() {
         var fødselsdato = LocalDate.of(2018, 8, 20);
         var aktivitetIdentifikator = AktivitetIdentifikator.annenAktivitet();
