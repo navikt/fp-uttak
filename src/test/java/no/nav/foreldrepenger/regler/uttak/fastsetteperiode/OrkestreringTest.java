@@ -1091,7 +1091,10 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                         .farUttakRundtFødselDager(10))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, termindato.minusDays(2), fødselsdato.plusWeeks(3).minusDays(1),
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, termindato.minusDays(2), fødselsdato.plusWeeks(2).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1),
                                 null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
                                 null))
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(58).minusDays(1),
@@ -1101,16 +1104,18 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
         var resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(6);
+        assertThat(resultat).hasSize(7);
         assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Før fødsel P1
         assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(3));
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Etter Fødsel P2
-        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(15));
-        assertThat(resultat.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT); // MSP
-        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // MSP tom på konto
-        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Minsterett
-        assertThat(resultat.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(22)); // Minsterett
-        assertThat(resultat.get(5).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // Oppbrukt minsterett
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Etter Fødsel P1
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(10));
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Etter Fødsel P2
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT); // MSP
+        assertThat(resultat.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // MSP tom på konto
+        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Minsterett
+        assertThat(resultat.get(5).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(22)); // Minsterett
+        assertThat(resultat.get(6).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // Oppbrukt minsterett
     }
 
 }
