@@ -39,11 +39,8 @@ public class FarUttakRundtFødsel {
                 .filter(d -> d.minus(farFørTermin).isBefore(familieHendelseDato))
                 .map(d -> d.minus(farFørTermin))
                 .orElse(familieHendelseDato);
-        // Bruker max(Termin, Fødsel) + 2uker - det er denne som trengs vurdering der F < T eller F < T-2u
-        var farUttakTom = Optional.ofNullable(datoer.getTermin())
-                .filter(d -> d.isAfter(familieHendelseDato))
-                .orElse(familieHendelseDato)
-                .plus(farEtterFødsel);
+        // Bruker fødsel + 6uker
+        var farUttakTom = familieHendelseDato.plus(farEtterFødsel);
         return Optional.of(new LukketPeriode(farUttakFom, farUttakTom));
     }
 }

@@ -304,6 +304,27 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
     }
 
+    @Test
+    void fedrekvote_med_for_mye_uttak_rundt_fødsel_blir_avkortet_og_innvilget_riktig() {
+        var fødselsdato = LocalDate.of(2022, 10, 4);
+        var termindato = fødselsdato.plusDays(1);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .datoer(datoer(fødselsdato).termin(termindato))
+                .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(15*5)).farUttakRundtFødselDager(10))
+                .søknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(termindato.minusDays(2), termindato.plusWeeks(1), PeriodeVurderingType.IKKE_VURDERT),
+                        oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), PeriodeVurderingType.IKKE_VURDERT)));
+
+        var resultater = fastsettPerioder(grunnlag);
+
+        assertThat(resultater).hasSize(4);
+
+        verifiserPeriode(resultater.get(0).getUttakPeriode(), termindato.minusDays(2), fødselsdato.minusDays(1), INNVILGET, FEDREKVOTE);
+        verifiserPeriode(resultater.get(1).getUttakPeriode(), fødselsdato, termindato.plusWeeks(1), INNVILGET, FEDREKVOTE);
+        verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(4).plusDays(1), INNVILGET, FEDREKVOTE);
+        verifiserPeriode(resultater.get(3).getUttakPeriode(), fødselsdato.plusWeeks(4).plusDays(2), fødselsdato.plusWeeks(6).minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
+    }
+
     private OppgittPeriode overføringPeriode(Stønadskontotype stønadskontotype,
                                              LocalDate fom,
                                              LocalDate tom,
