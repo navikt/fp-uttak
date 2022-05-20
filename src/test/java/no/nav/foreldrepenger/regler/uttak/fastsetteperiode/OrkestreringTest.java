@@ -565,6 +565,32 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
+    void mor_aleneomsorg_knekkes_riktig() {
+        var fødselsdato = LocalDate.of(2022, 10, 4);
+
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+                .konto(konto(FORELDREPENGER, 75)).farUttakRundtFødselDager(10);
+        var periodeGrunnlag = RegelGrunnlagTestBuilder.create()
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .kontoer(kontoer)
+                .datoer(datoer(fødselsdato))
+                .behandling(morBehandling())
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(false).aleneomsorg(true))
+                .søknad(søknad(Søknadstype.FØDSEL,
+                        oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+                                false, null),
+                        oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(100), false, null)))
+                .build();
+
+        var resultat = fastsettPerioder(periodeGrunnlag);
+        assertThat(resultat).hasSize(4);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+    }
+
+    @Test
     void skalIkkeKasteExceptionVedUtsettelseFraDerSaldoGårUt() {
         var fødselsdato = LocalDate.of(2018, 8, 20);
         var aktivitetIdentifikator = AktivitetIdentifikator.annenAktivitet();
