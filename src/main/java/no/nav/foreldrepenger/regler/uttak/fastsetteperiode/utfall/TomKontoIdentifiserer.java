@@ -45,8 +45,10 @@ public class TomKontoIdentifiserer {
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
-            if (saldoUtregning.harFarUttakRundtFødselPeriode()) {
-                finnDatoFarRundtFødselOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager, stønadskontotype)
+            if (saldoUtregning.harFarUttakRundtFødselPeriode() && Stønadskontotype.FEDREKVOTE.equals(stønadskontotype)) {
+                // Fra lovendring 2022: Far kan ta ut 10 dager samtidig rundt fødsel (før termin, etter fødsel) + far alene kan ta ut fritt før uke 6.
+                // Grensen på 10 samtidige dager rundt fødsel gjelder dermed kun tilfelle av kvoter og 1 barn
+                finnDatoFarRundtFødselOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
                         .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
 
@@ -108,13 +110,9 @@ public class TomKontoIdentifiserer {
 
     private static Optional<LocalDate> finnDatoFarRundtFødselOppbrukt(OppgittPeriode oppgittPeriode,
                                                                       AktivitetIdentifikator aktivitet,
-                                                                      SaldoUtregning saldoUtregning, boolean skalTrekkeDager,
-                                                                      Stønadskontotype stønadskontotype) {
-        // Fra lovendring 2022: Far kan ta ut 10 dager samtidig rundt fødsel (før termin, etter fødsel) + far alene kan ta ut fritt før uke 6.
-        // Regelen om at første 6 ukene er forbeholdt mor får dermed kun effekt for beggeRett, 1 barn, og utenom de 10 samtidige dagene
+                                                                      SaldoUtregning saldoUtregning, boolean skalTrekkeDager) {
         if (saldoUtregning.getFarUttakRundtFødselDager().equals(Trekkdager.ZERO) || !skalTrekkeDager ||
-                oppgittPeriode.isFlerbarnsdager() || Stønadskontotype.FORELDREPENGER.equals(stønadskontotype) ||
-                !saldoUtregning.erPeriodeRelevantForFarUttakRundtFødselDager(oppgittPeriode)) {
+                oppgittPeriode.isFlerbarnsdager() || !saldoUtregning.erPeriodeRelevantForFarUttakRundtFødselDager(oppgittPeriode)) {
             return Optional.empty();
         }
         var saldoFarRundtFødsel = saldoUtregning.restSaldoFarUttakRundtFødsel(aktivitet);

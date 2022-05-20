@@ -317,7 +317,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(4);
+        assertThat(resultat).hasSize(3);
         assertThat(resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).map(UttakPeriode::getPerioderesultattype).allMatch(INNVILGET::equals)).isTrue();
     }
 
