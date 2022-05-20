@@ -364,11 +364,11 @@ class FedrekvoteDelregelTest {
     }
 
     @Test
-    void fedrekvote_rundt_fødsel_for_mange_dager_blir_avslått() {
+    void fedrekvote_rundt_fødsel_for_mange_dager_før_termin_blir_avslått() {
         var fødselsdato = LocalDate.of(2022, 10, 3);
         var termindato = LocalDate.of(2022, 10, 5);
 
-        var oppgittPeriode = oppgittPeriode(fødselsdato, termindato.plusWeeks(2).plusDays(1));
+        var oppgittPeriode = oppgittPeriode(termindato.minusWeeks(3), fødselsdato.plusDays(1));
         var grunnlag = basicGrunnlag(fødselsdato)
                 .datoer(new Datoer.Builder().termin(termindato).fødsel(fødselsdato))
                 .behandling(new Behandling.Builder().søkerErMor(false))
