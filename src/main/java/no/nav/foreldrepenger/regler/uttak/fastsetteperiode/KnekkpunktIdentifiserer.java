@@ -76,7 +76,7 @@ class KnekkpunktIdentifiserer {
             if (!hjemletFarUttakRundtFødsel || sakMedKvoter || erMor) {
                 knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
-            if (hjemletFarUttakRundtFødsel) {
+            if (hjemletFarUttakRundtFødsel && !erMor) {
                 knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon, sakMedKvoter));
             }
         }
