@@ -104,6 +104,20 @@ class ForeldrepengerDelregelTest {
                 GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
 
+    @Test
+    void mor_aleneomsorg_før6ukerEtterFødsel_disponibleDager_ikkeGradering() {
+        var familiehendelseDato = LocalDate.of(2022, 10, 4);
+        var oppgittPeriode = oppgittPeriode(familiehendelseDato, familiehendelseDato.plusWeeks(6).minusDays(1));
+        var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
+                .kontoer(foreldrepengerKonto(100))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(false).morHarRett(false).aleneomsorg(true))
+                .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
+    }
+
     private OppgittPeriode gradertPeriode(LocalDate fom,
                                           LocalDate tom,
                                           AktivitetIdentifikator aktivitetIdentifikator,
