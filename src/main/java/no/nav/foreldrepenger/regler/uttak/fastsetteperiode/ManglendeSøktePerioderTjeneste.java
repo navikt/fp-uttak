@@ -91,9 +91,11 @@ final class ManglendeSøktePerioderTjeneste {
                 .stream()
                 .anyMatch(k -> k.getType().equals(Stønadskontotype.FORELDREPENGER));
         var stønadskontotype = harForeldrepengerKonto ? Stønadskontotype.FORELDREPENGER : Stønadskontotype.MØDREKVOTE;
+        var fomTidsperiodeForbeholdtMor = fomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
         return finnManglendeMellomliggendePerioder(fellesUttakBeggeParter, familiehendelse, stønadskontotype)
                 .stream()
                 .flatMap(p -> split(tomTidsperiodeForbeholdtMor.plusDays(1), p))
+                .flatMap(p -> split(fomTidsperiodeForbeholdtMor, p))
                 .filter(p -> periodeLiggerITidsrommetForbeholdtMor(grunnlag, konfigurasjon, p))
                 .sorted(Comparator.comparing(OppgittPeriode::getFom))
                 .collect(Collectors.toList());
