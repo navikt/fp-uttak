@@ -448,30 +448,26 @@ public class SaldoUtregning {
             if (!periodeSøker.isForbrukMinsterett()) {
                 continue;
             }
-            if (periodeSøker.isOpphold()) {
-                sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periodeSøker));
+            var nestePeriodeSomForbrukerDager = nestePeriodeSomForbrukerMinsterett(søkersPerioder, i);
+            if (!aktivitetIPeriode(periodeSøker, aktivitet) &&
+                    (nestePeriodeSomForbrukerDager.isEmpty() || aktivitetIPeriode(nestePeriodeSomForbrukerDager.get(), aktivitet))) {
+                var perioderTomPeriode = søkersPerioder.subList(0, i + 1);
+                var ekisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
+                ekisterendeAktiviteter.remove(aktivitet);
+                var minForbrukteDagerEksisterendeAktiviteter = ekisterendeAktiviteter.stream()
+                        .map(a -> forbruktSøkersMinsterett(stønadskonto, a, perioderTomPeriode))
+                        .min(BigDecimal::compareTo)
+                        .orElseThrow();
+                sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
             } else {
-                var nestePeriodeSomForbrukerDager = nestePeriodeSomForbrukerDager(søkersPerioder, i);
-                if (!aktivitetIPeriode(periodeSøker, aktivitet) &&
-                        (nestePeriodeSomForbrukerDager.isEmpty() || aktivitetIPeriode(nestePeriodeSomForbrukerDager.get(), aktivitet))) {
-                    var perioderTomPeriode = søkersPerioder.subList(0, i + 1);
-                    var ekisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
-                    ekisterendeAktiviteter.remove(aktivitet);
-                    var minForbrukteDagerEksisterendeAktiviteter = ekisterendeAktiviteter.stream()
-                            .map(a -> forbruktSøkersMinsterett(stønadskonto, a, perioderTomPeriode))
-                            .min(BigDecimal::compareTo)
-                            .orElseThrow();
-                    sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
-                } else {
-                    sum = sum.add(trekkdagerForUttaksperiode(stønadskonto, aktivitet, periodeSøker));
-                }
+                sum = sum.add(trekkdagerForUttaksperiode(stønadskonto, aktivitet, periodeSøker));
             }
         }
 
         return sum;
     }
 
-    private Optional<FastsattUttakPeriode> nestePeriodeSomForbrukerDager(List<FastsattUttakPeriode> perioder, int index) {
+    private Optional<FastsattUttakPeriode> nestePeriodeSomForbrukerMinsterett(List<FastsattUttakPeriode> perioder, int index) {
         for (var i = index + 1; i < perioder.size(); i++) {
             var periode = perioder.get(i);
             if (periode.isForbrukMinsterett()) {
