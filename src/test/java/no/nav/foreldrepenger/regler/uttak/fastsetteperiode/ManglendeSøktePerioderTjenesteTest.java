@@ -10,10 +10,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
@@ -390,6 +408,30 @@ class ManglendeSøktePerioderTjenesteTest {
         var msp = finnManglendeSøktePerioder(grunnlag);
 
         assertThat(msp).isEmpty();
+    }
+
+    @Test
+    void ikke_msp_før_3_uker_før_fødsel() {
+        var familiehendelsesDato = LocalDate.of(2022, 5, 25);
+        var grunnlag = grunnlagMedKontoer()
+                .søknad(new Søknad.Builder()
+                        .oppgittPeriode(oppgittPeriode(FELLESPERIODE, familiehendelsesDato.minusWeeks(5), familiehendelsesDato.minusWeeks(4)))
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, familiehendelsesDato.minusWeeks(2), familiehendelsesDato.minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelsesDato, familiehendelsesDato.plusWeeks(6).minusDays(1)))
+                )
+                .datoer(new Datoer.Builder().fødsel(familiehendelsesDato))
+                .build();
+
+        var manglendeSøktePerioder = finnManglendeSøktePerioder(grunnlag);
+
+        var mspFørFødsel = manglendeSøktePerioder.stream()
+                .filter(msp -> msp.getStønadskontotype().equals(FORELDREPENGER_FØR_FØDSEL))
+                .toList();
+        assertThat(mspFørFødsel).hasSize(1);
+
+        //bare msp fra uke 3 til uke 2 før fødsel
+        assertThat(mspFørFødsel.get(0).getFom()).isEqualTo(familiehendelsesDato.minusWeeks(3));
+        assertThat(mspFørFødsel.get(0).getTom()).isEqualTo(familiehendelsesDato.minusWeeks(2).minusDays(1));
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
