@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dødsdatoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvStilling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
@@ -1167,6 +1168,87 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Minsterett
         assertThat(resultat.get(5).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(22)); // Minsterett
         assertThat(resultat.get(6).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN); // Oppbrukt minsterett
+    }
+
+    @Test
+    void bare_far_har_rett_skal_innvilge_minsterett_men_ikke_etter_barns_død_selv_om_dager_igjen() {
+        //Søkt samme dag, men mor har søkt etter far
+        var fødselsdato = LocalDate.of(2022, 10, 6);
+        var dødsdato = fødselsdato.plusWeeks(10);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .datoer(datoer(fødselsdato).termin(fødselsdato).dødsdatoer(new Dødsdatoer.Builder().barnsDødsdato(dødsdato).alleBarnDøde(true)))
+                .behandling(farBehandling())
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(5*40))
+                        .minsterettDager(5*8)
+                        .farUttakRundtFødselDager(10))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(4).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(17).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(25), fødselsdato.plusWeeks(29).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(6);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Før fødsel P1
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(10));
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT); // MSP fom uke 6
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager((15-6)*5));
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Etter Fødsel P2
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING); // Fom dødsdato + 6 uker
+        assertThat(resultat.get(3).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.DØDSFALL);
+        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARN_DØD);
+        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+    }
+
+    @Test
+    void bare_far_har_rett_skal_innvilge_minsterett_men_ikke_etter_ny_stønad_selv_om_dager_igjen() { // TODO TFP-5067
+        //Søkt samme dag, men mor har søkt etter far
+        var fødselsdato = LocalDate.of(2022, 10, 6);
+        var nestesakStartDato = fødselsdato.plusWeeks(41);  // TOTETTE <= 45 uker (stønadsperiode begynner 3 uker før fødsel). OBS neste sak kan begyynne langt senere
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .datoer(datoer(fødselsdato).termin(fødselsdato).startdatoNesteStønadsperiode(nestesakStartDato))
+                .behandling(farBehandling())
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(5*40))
+                        .minsterettDager(5*15)
+                        .farUttakRundtFødselDager(10))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(24).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(40), fødselsdato.plusWeeks(43).minusDays(1),
+                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                                null))
+                );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(5);
+        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT); // Før fødsel P1
+        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager((15-6)*5));
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // MSP fom uke 6
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager((24-15)*5));
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT); // Etter Fødsel P2
+        assertThat(resultat.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager((40-24)*5));
+        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET); // Fom dødsdato + 6 uker
+        assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
+        // TODO
+        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager((43-41)*5));
     }
 
 }

@@ -30,14 +30,7 @@ public final class SaldoUtregningTjeneste {
 
         var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder());
         var stønadskontoer = lagStønadskontoer(grunnlag);
-        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(),
-                grunnlag.getAktiviteter(), grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null),
-                grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
-                new Trekkdager(grunnlag.getKontoer().getMinsterettDager()),
-                new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager()),
-                new Trekkdager(grunnlag.getKontoer().getFlerbarnsdager()),
-                grunnlag.getFarUttakRundtFødselPeriode(),
-                new Trekkdager(grunnlag.getKontoer().getFarUttakRundtFødselDager()));
+        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag);
     }
 
     private static List<FastsattUttakPeriode> knekkSøkersOppholdsperioder(List<FastsattUttakPeriode> annenpartsPerioder,

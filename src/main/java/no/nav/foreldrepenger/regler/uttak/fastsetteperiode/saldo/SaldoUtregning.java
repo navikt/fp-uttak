@@ -50,6 +50,27 @@ public class SaldoUtregning {
     SaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                    List<FastsattUttakPeriode> søkersPerioder,
                    List<FastsattUttakPeriode> annenpartsPerioder,
+                   SaldoUtregningGrunnlag grunnlag) {
+        this.stønadskontoer = stønadskontoer;
+        this.søkersPerioder = søkersPerioder;
+        this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
+        this.søkersAktiviteter = grunnlag.getAktiviteter();
+        this.sisteSøknadMottattTidspunktSøker = grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null);
+        this.sisteSøknadMottattTidspunktAnnenpart = grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null);
+        this.berørtBehandling = grunnlag.isBerørtBehandling();
+        this.minsterettDager = new Trekkdager(grunnlag.getKontoer().getMinsterettDager());
+        this.utenAktivitetskravDager = new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager());
+        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
+                søkersAktiviteter, new Trekkdager(grunnlag.getKontoer().getFlerbarnsdager()));
+        this.farUttakRundtFødselPeriode = grunnlag.getFarUttakRundtFødselPeriode();
+        this.farUttakRundtFødselDager = new Trekkdager(grunnlag.getKontoer().getFarUttakRundtFødselDager());
+    }
+
+
+    SaldoUtregning(Set<Stønadskonto> stønadskontoer,
+                   // NOSONAR
+                   List<FastsattUttakPeriode> søkersPerioder,
+                   List<FastsattUttakPeriode> annenpartsPerioder,
                    boolean berørtBehandling,
                    Set<AktivitetIdentifikator> søkersAktiviteter,
                    LocalDateTime sisteSøknadMottattTidspunktSøker,
