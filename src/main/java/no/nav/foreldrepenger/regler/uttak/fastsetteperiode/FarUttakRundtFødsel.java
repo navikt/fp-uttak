@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
@@ -25,8 +26,16 @@ public class FarUttakRundtFødsel {
         if (kontoer.getFarUttakRundtFødselDager() == 0 || !søknadstype.gjelderTerminFødsel()) {
             return Optional.empty();
         }
-        // TODO: finne ut hvor strengt dette skal være i fall f < t ller f > t
-        var familieHendelseDato = datoer.getFamiliehendelse(); // Presedens: omsorg, fødsel, eller termin
+        return utledFarsPeriodeRundtFødsel(kontoer.getFarUttakRundtFødselDager() == 0,
+                søknadstype.gjelderTerminFødsel(), datoer.getFamiliehendelse(), datoer.getTermin(), konfigurasjon);
+
+    }
+
+    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(boolean utenFarUttakRundtFødsel, boolean gjelderFødsel,
+                                                                      LocalDate familieHendelseDato, LocalDate terminDato, Konfigurasjon konfigurasjon) {
+        if (utenFarUttakRundtFødsel || !gjelderFødsel || familieHendelseDato == null) {
+            return Optional.empty();
+        }
         var farFørTermin = konfigurasjon.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, familieHendelseDato)
                 .map(Period::ofWeeks).orElse(Period.ZERO);
         var farEtterFødsel =  konfigurasjon.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, familieHendelseDato)
@@ -35,7 +44,7 @@ public class FarUttakRundtFødsel {
             return Optional.empty();
         }
         // Bruker min(Termin-2uker, Fødsel)
-        var farUttakFom = Optional.ofNullable(datoer.getTermin())
+        var farUttakFom = Optional.ofNullable(terminDato)
                 .filter(d -> d.minus(farFørTermin).isBefore(familieHendelseDato))
                 .map(d -> d.minus(farFørTermin))
                 .orElse(familieHendelseDato);

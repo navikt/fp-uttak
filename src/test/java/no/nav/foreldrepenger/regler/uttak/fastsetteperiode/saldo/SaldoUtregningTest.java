@@ -139,9 +139,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null,
-                Trekkdager.ZERO, new Trekkdager(10), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker,
+                Trekkdager.ZERO, new Trekkdager(10), Optional.empty(), Trekkdager.ZERO);
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(2);
         assertThat(saldoUtregning.getMaxDagerUtenAktivitetskrav()).isEqualTo(new Trekkdager(10));
@@ -158,9 +157,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null,
-                new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+                new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -183,9 +181,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null,
-                new Trekkdager(5), Trekkdager.ZERO, Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+                new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -209,9 +206,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null,
-                Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+                Trekkdager.ZERO, new Trekkdager(5), Optional.empty(), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -234,9 +230,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null,
-                Trekkdager.ZERO, new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+                Trekkdager.ZERO, new Trekkdager(5), Optional.empty(), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, true).decimalValue().intValue()).isEqualTo(10-15);
@@ -255,9 +250,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO,
-                Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker,
+                Trekkdager.ZERO, Trekkdager.ZERO, Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
         // Skal forbruke minsterett
         assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
         assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel()).isEqualTo(new Trekkdager(5));
@@ -272,9 +266,8 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker, List.of(), false,
-                Set.of(AKTIVITET1_SØKER), null, null, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO,
-                Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
+        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker,
+                Trekkdager.ZERO, Trekkdager.ZERO, Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
         // Skal forbruke minsterett
         assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-5));
         assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel()).isEqualTo(new Trekkdager(-5));
@@ -1374,5 +1367,29 @@ class SaldoUtregningTest {
                 List.of(oppholdAnnenpart, periodeAnnenpart), false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
+    }
+
+    private SaldoUtregning lagForenkletSaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
+                                                      List<FastsattUttakPeriode> søkersPerioder,
+                                                      Trekkdager minsterettDager,
+                                                      Trekkdager utenAktivitetskravDager,
+                                                      Optional<LukketPeriode> farUttakRundtFødselPeriode,
+                                                      Trekkdager farUttakRundtFødselDager) {
+        return new SaldoUtregning(stønadskontoer, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER),
+                null, null,
+                minsterettDager, utenAktivitetskravDager, Trekkdager.ZERO,
+                farUttakRundtFødselPeriode, farUttakRundtFødselDager);
+    }
+
+    private SaldoUtregning lagForenkletAvkortetSaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
+                                                              List<FastsattUttakPeriode> søkersPerioder,
+                                                              Trekkdager minsterettDager,
+                                                              Trekkdager avkortetMinsterettdager,
+                                                              Optional<LukketPeriode> farUttakRundtFødselPeriode,
+                                                              Trekkdager farUttakRundtFødselDager) {
+        return new SaldoUtregning(stønadskontoer, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER),
+                null, null,
+                minsterettDager, Trekkdager.ZERO, Trekkdager.ZERO,
+                farUttakRundtFødselPeriode, farUttakRundtFødselDager);
     }
 }

@@ -33,28 +33,26 @@ public enum Minsterett {
         var morHarUføretrygd = grunnlag.isMorHarUføretrygd();
         var bareFarHarRett = grunnlag.isBareFarHarRett();
         var aleneomsorg = grunnlag.isAleneomsorg();
-        if (minsterett || morHarUføretrygd) {
+        if (minsterett) {
             var antallDager = 0;
-            if (minsterett && toTette) {
+            if (toTette) {
                 // Begge skal ha minsterett
                 antallDager = grunnlag.isMor() ? MOR_TO_TETTE_MINSTERETT_DAGER : FAR_TO_TETTE_MINSTERETT_DAGER;
             }
-            if (minsterett && bareFarHarRett && !aleneomsorg) {
+            if (bareFarHarRett && !aleneomsorg) {
                 antallDager = toTette ? Math.max(BFHR_MINSTERETT_DAGER, FAR_TO_TETTE_MINSTERETT_DAGER) : BFHR_MINSTERETT_DAGER;
             }
             if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
-                antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(
-                        grunnlag.getDekningsgrad()) ? MINSTEDAGER_UFØRE_80_PROSENT : MINSTEDAGER_UFØRE_100_PROSENT;
+                antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ? MINSTEDAGER_UFØRE_80_PROSENT : MINSTEDAGER_UFØRE_100_PROSENT;
             }
-            if (minsterett) {
-                if (antallDager > 0) {
-                    retter.put(Minsterett.GENERELL_MINSTERETT, antallDager);
-                }
-                retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL,
-                        UTTAK_RUNDT_FØDSEL_DAGER); // Settes for begge. Brukes ifm berørt for begge og fakta uttak for far.
-            } else {
-                retter.put(Minsterett.UTEN_AKTIVITETSKRAV, antallDager);
+            if (antallDager > 0) {
+                retter.put(Minsterett.GENERELL_MINSTERETT, antallDager);
             }
+            // Settes for begge. Brukes ifm berørt for begge og fakta uttak for far.
+            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL, UTTAK_RUNDT_FØDSEL_DAGER);
+        } else if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
+            var antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ? MINSTEDAGER_UFØRE_80_PROSENT : MINSTEDAGER_UFØRE_100_PROSENT;
+            retter.put(Minsterett.UTEN_AKTIVITETSKRAV, antallDager);
         }
         return retter;
     }

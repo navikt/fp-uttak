@@ -47,6 +47,7 @@ public class SaldoUtregningGrunnlag {
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
     }
 
+    // Brukes av fpsak til utregning av alt
     public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                                                    boolean berørtBehandling,
                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
@@ -62,6 +63,7 @@ public class SaldoUtregningGrunnlag {
                 kontoer, aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, farUttakRundtFødselPeriode);
     }
 
+    // Brukes som input til fastsettingsregler - inneholder tidligere vedtatte før endringsdato + perioder opp til aktuell periode
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttak(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                                                     List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                     Kontoer kontoer,
@@ -74,6 +76,7 @@ public class SaldoUtregningGrunnlag {
                 aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, farUttakRundtFødselPeriode);
     }
 
+    // Brukes som input til fastsettingsregler for berørte behandlinger
     public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakBerørtBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                                                                     List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                                     Kontoer kontoer,
