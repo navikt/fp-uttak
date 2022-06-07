@@ -67,8 +67,7 @@ public class SaldoUtregning {
     }
 
 
-    SaldoUtregning(Set<Stønadskonto> stønadskontoer,
-                   // NOSONAR
+    SaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                    List<FastsattUttakPeriode> søkersPerioder,
                    List<FastsattUttakPeriode> annenpartsPerioder,
                    boolean berørtBehandling,
@@ -300,6 +299,23 @@ public class SaldoUtregning {
         return minSaldo(stønadskontoType) < 0;
     }
 
+    /**
+     * Forenklet implementasjon til bruk ifm berørt-vurderinger
+     */
+    public boolean negativSaldoKonservativ(Stønadskontotype stønadskontoType) {
+        var forbruktAnnenpart = minForbruktAnnenpart(stønadskontoType);
+        for (var aktivitet : aktiviteterForSøker()) {
+            var forbruktSøker = forbruktSøker(stønadskontoType, aktivitet, søkersPerioder);
+            var saldoTD =  getMaxDagerITrekkdager(stønadskontoType).subtract(new Trekkdager(forbruktSøker))
+                    .subtract(new Trekkdager(forbruktAnnenpart));
+            var saldo = saldoTD.decimalValue().setScale(0, saldoTD.mindreEnn0() ? RoundingMode.DOWN : RoundingMode.UP).intValue();
+            if (saldo < 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean nokDagerÅFrigiPåAnnenpart(Stønadskontotype stønadskontoType) {
         var saldo = minSaldo(stønadskontoType);
         if (saldo >= 0) {
@@ -322,6 +338,10 @@ public class SaldoUtregning {
 
     public boolean negativSaldoPåNoenKonto() {
         return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldo(stønadskonto.getStønadskontotype()));
+    }
+
+    public boolean negativSaldoPåNoenKontoKonservativ() {
+        return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldoKonservativ(stønadskonto.getStønadskontotype()));
     }
 
     public int getMaxDager(Stønadskontotype stønadskontotype) {
