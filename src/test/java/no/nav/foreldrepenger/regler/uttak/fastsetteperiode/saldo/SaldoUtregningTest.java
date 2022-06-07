@@ -1381,6 +1381,7 @@ class SaldoUtregningTest {
                 farUttakRundtFødselPeriode, farUttakRundtFødselDager);
     }
 
+    // TODO (jol): slett eller bruk ifm bortfalt/avkortet minsterett
     private SaldoUtregning lagForenkletAvkortetSaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
                                                               List<FastsattUttakPeriode> søkersPerioder,
                                                               Trekkdager minsterettDager,
