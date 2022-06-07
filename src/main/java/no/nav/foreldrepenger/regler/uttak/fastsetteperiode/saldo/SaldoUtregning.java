@@ -130,7 +130,7 @@ public class SaldoUtregning {
      */
     public Trekkdager saldoITrekkdager(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
         var forbruktSøker = forbruktSøker(stønadskonto, aktivitet, søkersPerioder);
-        var forbruktAnnenpart = minForbruktAnnenpart(stønadskonto);
+        var forbruktAnnenpart = minForbruktAvPerioder(stønadskonto, annenpartsPerioder);
         //frigitte dager er dager fra annenpart som blir ledig når søker tar uttak i samme periode
         var frigitteDager = frigitteDager(stønadskonto);
         return getMaxDagerITrekkdager(stønadskonto).subtract(new Trekkdager(forbruktSøker))
@@ -302,12 +302,15 @@ public class SaldoUtregning {
     /**
      * Forenklet implementasjon til bruk ifm berørt-vurderinger
      */
-    public boolean negativSaldoKonservativ(Stønadskontotype stønadskontoType) {
-        var forbruktAnnenpart = minForbruktAnnenpart(stønadskontoType);
-        for (var aktivitet : aktiviteterForSøker()) {
-            var forbruktSøker = forbruktSøker(stønadskontoType, aktivitet, søkersPerioder);
-            var saldoTD =  getMaxDagerITrekkdager(stønadskontoType).subtract(new Trekkdager(forbruktSøker))
-                    .subtract(new Trekkdager(forbruktAnnenpart));
+    private boolean sjekkNegativSaldoKonservativ(Stønadskontotype stønadskontoType,
+                                                 List<FastsattUttakPeriode> eneparten,
+                                                 Set<AktivitetIdentifikator> aktiviteterEneparten,
+                                                 List<FastsattUttakPeriode> andreparten) {
+        var startSaldo = getMaxDagerITrekkdager(stønadskontoType);
+        var forbruktAnnenpart = new Trekkdager(minForbruktAvPerioder(stønadskontoType, andreparten));
+        for (var aktivitet : aktiviteterEneparten) {
+            var forbruktSøker = forbruktSøker(stønadskontoType, aktivitet, eneparten);
+            var saldoTD =  startSaldo.subtract(new Trekkdager(forbruktSøker)).subtract(forbruktAnnenpart);
             var saldo = saldoTD.decimalValue().setScale(0, saldoTD.mindreEnn0() ? RoundingMode.DOWN : RoundingMode.UP).intValue();
             if (saldo < 0) {
                 return true;
@@ -341,7 +344,14 @@ public class SaldoUtregning {
     }
 
     public boolean negativSaldoPåNoenKontoKonservativ() {
-        return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldoKonservativ(stønadskonto.getStønadskontotype()));
+        return stønadskontoer.stream()
+                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto.getStønadskontotype(), søkersPerioder, søkersAktiviteter, annenpartsPerioder));
+    }
+
+    public boolean negativSaldoPåNoenKontoByttParterKonservativ() {
+        var aktiviteter = aktiviteterForAnnenpart();
+        return stønadskontoer.stream()
+                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto.getStønadskontotype(), annenpartsPerioder, aktiviteter, søkersPerioder));
     }
 
     public int getMaxDager(Stønadskontotype stønadskontotype) {
@@ -429,10 +439,10 @@ public class SaldoUtregning {
 
 
 
-    private int minForbruktAnnenpart(Stønadskontotype stønadskonto) {
+    private int minForbruktAvPerioder(Stønadskontotype stønadskonto, List<FastsattUttakPeriode> perioder) {
         Map<AktivitetIdentifikator, BigDecimal> forbrukte = new HashMap<>();
-        for (var periode : annenpartsPerioder) {
-            for (var annenpartAktivitet : aktiviteterIPerioder(annenpartsPerioder)) {
+        for (var periode : perioder) {
+            for (var annenpartAktivitet : aktiviteterIPerioder(perioder)) {
                 final BigDecimal trekkdager;
                 if (periode.isOpphold()) {
                     trekkdager = trekkdagerForOppholdsperiode(stønadskonto, periode);
@@ -589,6 +599,13 @@ public class SaldoUtregning {
 
     public Set<AktivitetIdentifikator> aktiviteterForSøker() {
         return søkersAktiviteter;
+    }
+
+    public Set<AktivitetIdentifikator> aktiviteterForAnnenpart() {
+        return  annenpartsPerioder.stream()
+                .flatMap(p -> p.getAktiviteter().stream())
+                .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
+                .collect(Collectors.toSet());
     }
 
     private boolean søktSamtidigUttak(Stønadskontotype stønadskontoType, FastsattUttakPeriode periode) {
