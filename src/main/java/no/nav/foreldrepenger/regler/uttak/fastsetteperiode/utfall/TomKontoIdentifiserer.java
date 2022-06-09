@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePerioderRegelOrkestrering.mapTilÅrsak;
 import static no.nav.foreldrepenger.regler.uttak.felles.Virkedager.justerHelgTilMandag;
 
 import java.math.BigDecimal;
@@ -14,7 +15,9 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
@@ -29,7 +32,9 @@ public class TomKontoIdentifiserer {
                                                            List<AktivitetIdentifikator> aktiviteter,
                                                            SaldoUtregning saldoUtregning,
                                                            Stønadskontotype stønadskontotype,
-                                                           boolean skalTrekkeDager) {
+                                                           boolean skalTrekkeDager,
+                                                           PeriodeResultatÅrsak periodeResultatÅrsak,
+                                                           UtfallType utfallType) {
 
         Map<LocalDate, TomKontoKnekkpunkt> knekkpunkter = new HashMap<>();
         for (var aktivitet : aktiviteter) {
@@ -41,9 +46,9 @@ public class TomKontoIdentifiserer {
                         skalTrekkeDager);
                 knekkpunktFlerbarnsdager.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             }
-            finnDatoMinsterettOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
+            finnDatoMinsterettOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager, utfallType, periodeResultatÅrsak)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
-            finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager)
+            finnDatoDagerUtenAktivitetskravOppbrukt(uttakPeriode, aktivitet, saldoUtregning, skalTrekkeDager, utfallType, periodeResultatÅrsak)
                     .ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));
             if (saldoUtregning.harFarUttakRundtFødselPeriode() && Stønadskontotype.FEDREKVOTE.equals(stønadskontotype)) {
                 // Fra lovendring 2022: Far kan ta ut 10 dager samtidig rundt fødsel (før termin, etter fødsel) + far alene kan ta ut fritt før uke 6.
@@ -87,8 +92,10 @@ public class TomKontoIdentifiserer {
     private static Optional<LocalDate> finnDatoMinsterettOppbrukt(OppgittPeriode oppgittPeriode,
                                                                   AktivitetIdentifikator aktivitet,
                                                                   SaldoUtregning saldoUtregning,
-                                                                  boolean skalTrekkeDager) {
-        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager) {
+                                                                  boolean skalTrekkeDager,
+                                                                  UtfallType utfallType,
+                                                                  PeriodeResultatÅrsak periodeResultatÅrsak) {
+        if (!trekkerMinsterett(oppgittPeriode, utfallType, periodeResultatÅrsak) || !skalTrekkeDager) {
             return Optional.empty();
         }
 
@@ -99,13 +106,20 @@ public class TomKontoIdentifiserer {
     private static Optional<LocalDate> finnDatoDagerUtenAktivitetskravOppbrukt(OppgittPeriode oppgittPeriode,
                                                                                AktivitetIdentifikator aktivitet,
                                                                                SaldoUtregning saldoUtregning,
-                                                                               boolean skalTrekkeDager) {
-        if (!oppgittPeriode.gjelderPeriodeMinsterett() || !skalTrekkeDager) {
+                                                                               boolean skalTrekkeDager,
+                                                                               UtfallType utfallType,
+                                                                               PeriodeResultatÅrsak periodeResultatÅrsak) {
+        if (!trekkerMinsterett(oppgittPeriode, utfallType, periodeResultatÅrsak) || !skalTrekkeDager) {
             return Optional.empty();
         }
 
         var saldoMinsterett = saldoUtregning.restSaldoDagerUtenAktivitetskrav(aktivitet);
         return datoHvisSaldoOppbruktIPeriode(oppgittPeriode, aktivitet, saldoMinsterett);
+    }
+
+    private static boolean trekkerMinsterett(OppgittPeriode oppgittPeriode, UtfallType utfallType, PeriodeResultatÅrsak resultatÅrsak) {
+        return FastsattUttakPeriode.trekkerMinsterett(Perioderesultattype.fra(utfallType), mapTilÅrsak(resultatÅrsak),
+                oppgittPeriode.isUtsettelse());
     }
 
     private static Optional<LocalDate> finnDatoFarRundtFødselOppbrukt(OppgittPeriode oppgittPeriode,
