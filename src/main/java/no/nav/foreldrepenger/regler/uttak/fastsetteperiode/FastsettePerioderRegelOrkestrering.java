@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -217,7 +218,7 @@ public class FastsettePerioderRegelOrkestrering {
         }
         var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig);
         return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(aktuellPeriode.getAktiviteter()), saldoUtregning,
-                stønadskontotype.orElse(null), regelresultat.trekkDagerFraSaldo());
+                stønadskontotype.orElse(null), regelresultat.trekkDagerFraSaldo(), regelresultat.getAvklaringÅrsak(), regelresultat.getUtfallType());
     }
 
     private Optional<Stønadskontotype> utledKonto(OppgittPeriode aktuellPeriode,
@@ -277,7 +278,7 @@ public class FastsettePerioderRegelOrkestrering {
                 .tidsperiode(periode.getFom(), periode.getTom())
                 .aktiviteter(mapAktiviteter(periode))
                 .flerbarnsdager(periode.isFlerbarnsdager())
-                .resultatÅrsak(mapTilÅrsak(periode))
+                .resultatÅrsak(mapTilÅrsak(periode.getPeriodeResultatÅrsak()))
                 .utsettelse(periode.getUtsettelseÅrsak() != null)
                 .oppholdÅrsak(periode.getOppholdÅrsak())
                 .samtidigUttak(periode.erSamtidigUttak())
@@ -285,15 +286,14 @@ public class FastsettePerioderRegelOrkestrering {
                 .build();
     }
 
-    private FastsattUttakPeriode.ResultatÅrsak mapTilÅrsak(UttakPeriode periode) {
-        var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
-        if (InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periodeResultatÅrsak)) {
+    public static FastsattUttakPeriode.ResultatÅrsak mapTilÅrsak(PeriodeResultatÅrsak årsak) {
+        if (InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT.equals(årsak)) {
             return FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT;
         }
-        if (InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(periodeResultatÅrsak)) {
+        if (InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(årsak)) {
             return FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
         }
-        if (IkkeOppfyltÅrsak.SØKNADSFRIST.equals(periodeResultatÅrsak)) {
+        if (IkkeOppfyltÅrsak.SØKNADSFRIST.equals(årsak)) {
             return FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
         }
         return FastsattUttakPeriode.ResultatÅrsak.ANNET;
