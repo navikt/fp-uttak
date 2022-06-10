@@ -8,9 +8,28 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
@@ -470,6 +489,22 @@ class KnekkpunktIdentifisererTest {
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
 
         assertThat(knekkpunkter).contains(innleggelseFom, innleggelseTom.plusDays(1));
+    }
+
+    @Test
+    void ikkeKnekkPåMottattDatoForFriUtsettelse() {
+        var mottattdato = LocalDate.of(2018, 10, 10);
+        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
+                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FRI, mottattdato, mottattdato, null);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
+                .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))
+                .behandling(new Behandling.Builder())
+                .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+
+        assertThat(knekkpunkter).doesNotContain(mottattdato);
     }
 
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
