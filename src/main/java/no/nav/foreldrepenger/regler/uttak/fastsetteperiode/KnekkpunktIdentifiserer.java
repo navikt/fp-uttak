@@ -200,7 +200,7 @@ class KnekkpunktIdentifiserer {
 
     private static void leggTilKnekkpunkterVedUtsettelse(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
         for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
-            if (oppgittPeriode.isUtsettelse()) {
+            if (oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.FERIE) || oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.ARBEID)) {
                 var mottattDato = oppgittPeriode.getTidligstMottattDato();
                 if (mottattDato.isPresent() && !oppgittPeriode.getFom().isAfter(mottattDato.get())) {
                     knekkpunkter.add(mottattDato.get());
