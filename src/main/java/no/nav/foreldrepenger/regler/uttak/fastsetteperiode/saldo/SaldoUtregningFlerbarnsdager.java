@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtr
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.overlappendePeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.trekkDagerFraDelAvPeriode;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,30 +58,21 @@ class SaldoUtregningFlerbarnsdager {
         return Optional.ofNullable(flerbarnsdager).orElse(Trekkdager.ZERO);
     }
 
+
     private Trekkdager forbruktSøker(AktivitetIdentifikator aktivitet,
                                      List<FastsattUttakPeriode> søkersPerioder) {
-        var sum = Trekkdager.ZERO;
+
+        return new Trekkdager(forbruktSøkerBD(aktivitet, søkersPerioder));
+    }
+
+
+    private BigDecimal forbruktSøkerBD(AktivitetIdentifikator aktivitet,
+                                       List<FastsattUttakPeriode> søkersPerioder) {
 
         var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
-        for (var i = 0; i < perioderMedFlerbarnsdager.size(); i++) {
-            var periodeSøker = perioderMedFlerbarnsdager.get(i);
-            var nestePeriodeSomIkkeErOpphold = SaldoUtregningUtil.nestePeriodeSomIkkeErOpphold(perioderMedFlerbarnsdager, i);
-            if (!aktivitetIPeriode(periodeSøker, aktivitet) &&
-                    (nestePeriodeSomIkkeErOpphold.isEmpty() || aktivitetIPeriode(nestePeriodeSomIkkeErOpphold.get(), aktivitet))) {
-                var perioderTomPeriode = perioderMedFlerbarnsdager.subList(0, i + 1);
-                var eksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
-                eksisterendeAktiviteter.remove(aktivitet);
-                var minForbrukteDagerEksisterendeAktiviteter = eksisterendeAktiviteter.stream()
-                        .map(a -> forbruktSøker(a, perioderTomPeriode))
-                        .min(Trekkdager::compareTo)
-                        .orElseThrow();
-                sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
-            } else {
-                sum = sum.add(dagerForUttaksperiode(aktivitet, periodeSøker));
-            }
-        }
-
-        return sum;
+        return ForbruksTeller.forbruksTeller(null, aktivitet, perioderMedFlerbarnsdager,
+                FastsattUttakPeriode::isOpphold, (s,p) -> BigDecimal.ZERO,
+                (p, a) -> p.isFlerbarnsdager());
     }
 
     private Trekkdager minForbruktAnnenpart() {
