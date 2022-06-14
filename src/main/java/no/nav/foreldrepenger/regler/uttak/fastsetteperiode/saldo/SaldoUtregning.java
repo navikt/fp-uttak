@@ -469,8 +469,7 @@ public class SaldoUtregning {
     private BigDecimal forbruktSøkersMinsterett(Stønadskontotype stønadskonto,
                                                 AktivitetIdentifikator aktivitet,
                                                 List<FastsattUttakPeriode> søkersPerioder) {
-        return ForbruksTeller.forbruksTeller(stønadskonto, aktivitet, søkersPerioder, p -> !p.isForbrukMinsterett(),
-                (s,p) -> BigDecimal.ZERO, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
+        return ForbruksTeller.forbruksTellerKontoKunForbruk(stønadskonto, aktivitet, søkersPerioder, p -> !p.isForbrukMinsterett());
     }
 
 
@@ -478,9 +477,8 @@ public class SaldoUtregning {
     private BigDecimal forbruktFarRundtFødsel(Stønadskontotype stønadskonto,
                                               AktivitetIdentifikator aktivitet,
                                               List<FastsattUttakPeriode> søkersPerioder) {
-        return ForbruksTeller.forbruksTeller(stønadskonto, aktivitet, søkersPerioder,
-                p -> !(new LukketPeriode(p.getFom(), p.getTom())).erOmsluttetAv(farUttakRundtFødselPeriode.orElseThrow()),
-                (s, p) -> BigDecimal.ZERO, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
+        return ForbruksTeller.forbruksTellerKontoKunForbruk(stønadskonto, aktivitet, søkersPerioder,
+                p -> !(new LukketPeriode(p.getFom(), p.getTom())).erOmsluttetAv(farUttakRundtFødselPeriode.orElseThrow()));
     }
 
     private BigDecimal trekkdagerForUttaksperiode(Stønadskontotype stønadskonto,

@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtr
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -16,6 +17,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 final class ForbruksTeller {
+
+    static BigDecimal forbruksTellerKontoKunForbruk(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet,
+                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> unntak) {
+        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, unntak,
+                (s,p) -> BigDecimal.ZERO, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
+    }
 
 
     static BigDecimal forbruksTeller(Stønadskontotype stønadskonto,
