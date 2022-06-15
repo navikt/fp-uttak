@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-public class Trekkdager {
+public class Trekkdager implements Comparable<Trekkdager> {
     public static final Trekkdager ZERO = new Trekkdager(0);
 
     private final BigDecimal value;
@@ -41,6 +41,7 @@ public class Trekkdager {
         return compareTo(ZERO) > 0;
     }
 
+    @Override
     public int compareTo(Trekkdager trekkdager) {
         return decimalValue().compareTo(trekkdager.decimalValue());
     }

@@ -42,9 +42,8 @@ final class ForbruksTeller {
         // Tilkommet aktivitet. Bruk minste forbruk inntil første forekomst - evt ZERO dersom ingen forekomster.
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
-            var eksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
-            eksisterendeAktiviteter.remove(aktivitet);
-            var minForbrukteDagerEksisterendeAktiviteter = eksisterendeAktiviteter.stream()
+            var minForbrukteDagerEksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode).stream()
+                    .filter(a -> !aktivitet.equals(a)) // Bør ikke være nødvendig
                     .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, unntak, unntaksTeller, aktivitetsfilter))
                     .min(Trekkdager::compareTo)
                     .orElse(Trekkdager.ZERO);
