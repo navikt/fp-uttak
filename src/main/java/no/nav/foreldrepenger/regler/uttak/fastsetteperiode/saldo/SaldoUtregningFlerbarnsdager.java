@@ -84,20 +84,17 @@ class SaldoUtregningFlerbarnsdager {
                 forbrukte.put(annenpartAktivitet, forbrukte.getOrDefault(annenpartAktivitet, Trekkdager.ZERO).add(trekkdager));
             }
         }
-        return forbrukte.values().stream().min((o1, o2) -> o1.compareTo(o2)).orElse(Trekkdager.ZERO);
+        return forbrukte.values().stream().min(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager minForbrukteDager(FastsattUttakPeriode periode) {
         if (!periode.isFlerbarnsdager()) {
             return Trekkdager.ZERO;
         }
-        Trekkdager minForbrukt = null;
-        for (var aktivitet : periode.getAktiviteter()) {
-            if (minForbrukt == null || minForbrukt.compareTo(aktivitet.getTrekkdager()) > 0) {
-                minForbrukt = aktivitet.getTrekkdager();
-            }
-        }
-        return minForbrukt == null ? Trekkdager.ZERO : minForbrukt;
+        return periode.getAktiviteter().stream()
+                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+                .min(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager frigitteDager() {
@@ -119,12 +116,10 @@ class SaldoUtregningFlerbarnsdager {
     }
 
     private Trekkdager dagerForUttaksperiode(AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
-        for (var periodeAktivitet : periode.getAktiviteter()) {
-            if (periodeAktivitet.getAktivitetIdentifikator().equals(aktivitet) && periode.isFlerbarnsdager()) {
-                return periodeAktivitet.getTrekkdager();
-            }
-        }
-        return Trekkdager.ZERO;
+        return periode.getAktiviteter().stream()
+                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && periode.isFlerbarnsdager())
+                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+                .findFirst().orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager frigitteDager(FastsattUttakPeriode periode,
@@ -141,12 +136,9 @@ class SaldoUtregningFlerbarnsdager {
         if (!periode.isFlerbarnsdager()) {
             return Trekkdager.ZERO;
         }
-        FastsattUttakPeriodeAktivitet aktivitetMedMinstTrekkdager = null;
-        for (var aktivitet : periode.getAktiviteter()) {
-            if (aktivitetMedMinstTrekkdager == null || aktivitet.getTrekkdager().compareTo(aktivitetMedMinstTrekkdager.getTrekkdager()) < 0) {
-                aktivitetMedMinstTrekkdager = aktivitet;
-            }
-        }
-        return aktivitetMedMinstTrekkdager == null ? Trekkdager.ZERO : aktivitetMedMinstTrekkdager.getTrekkdager();
+        return periode.getAktiviteter().stream()
+                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+                .min(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
     }
 }

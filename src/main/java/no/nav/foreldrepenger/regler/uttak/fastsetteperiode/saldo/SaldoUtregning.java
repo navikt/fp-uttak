@@ -273,7 +273,7 @@ public class SaldoUtregning {
      * @return et sett med stønadskontotyper.
      */
     public Set<Stønadskontotype> stønadskontoer() {
-        return stønadskontoer.stream().map(Stønadskonto::getStønadskontotype).collect(Collectors.toSet());
+        return stønadskontoer.stream().map(Stønadskonto::stønadskontoType).collect(Collectors.toSet());
     }
 
     /**
@@ -318,18 +318,18 @@ public class SaldoUtregning {
     }
 
     public boolean negativSaldoPåNoenKonto() {
-        return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldo(stønadskonto.getStønadskontotype()));
+        return stønadskontoer.stream().anyMatch(stønadskonto -> negativSaldo(stønadskonto.stønadskontoType()));
     }
 
     public boolean negativSaldoPåNoenKontoKonservativ() {
         return stønadskontoer.stream()
-                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto.getStønadskontotype(), søkersPerioder, søkersAktiviteter, annenpartsPerioder));
+                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto.stønadskontoType(), søkersPerioder, søkersAktiviteter, annenpartsPerioder));
     }
 
     public boolean negativSaldoPåNoenKontoByttParterKonservativ() {
         var aktiviteter = aktiviteterForAnnenpart();
         return stønadskontoer.stream()
-                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto.getStønadskontotype(), annenpartsPerioder, aktiviteter, søkersPerioder));
+                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto.stønadskontoType(), annenpartsPerioder, aktiviteter, søkersPerioder));
     }
 
     public int getMaxDager(Stønadskontotype stønadskontotype) {
@@ -350,8 +350,8 @@ public class SaldoUtregning {
 
     private Trekkdager getMaxDagerITrekkdager(Stønadskontotype stønadskontotype) {
         return stønadskontoer.stream()
-                .filter(stønadskonto -> stønadskonto.getStønadskontotype().equals(stønadskontotype))
-                .map(stønadskonto -> stønadskonto.getMaksdager())
+                .filter(stønadskonto -> stønadskonto.stønadskontoType().equals(stønadskontotype))
+                .map(stønadskonto -> stønadskonto.maksdager())
                 .findFirst()
                 .orElse(Trekkdager.ZERO);
     }

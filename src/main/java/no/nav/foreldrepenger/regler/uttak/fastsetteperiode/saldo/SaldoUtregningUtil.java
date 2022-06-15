@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ final class SaldoUtregningUtil {
     static boolean aktivitetIPeriode(FastsattUttakPeriode periode, AktivitetIdentifikator aktivitet) {
         return periode.getAktiviteter()
                 .stream()
-                .map(a -> a.getAktivitetIdentifikator())
+                .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
                 .anyMatch(aktivitetIdentifikator -> aktivitetIdentifikator.equals(aktivitet));
     }
 
@@ -35,13 +34,9 @@ final class SaldoUtregningUtil {
     }
 
     static List<FastsattUttakPeriode> overlappendePeriode(FastsattUttakPeriode periode, List<FastsattUttakPeriode> perioder) {
-        var resultat = new ArrayList<FastsattUttakPeriode>();
-        for (var periode2 : perioder) {
-            if (overlapper(periode, periode2)) {
-                resultat.add(periode2);
-            }
-        }
-        return resultat;
+        return perioder.stream()
+                .filter(p -> overlapper(periode, p))
+                .collect(Collectors.toList());
     }
 
     static boolean overlapper(FastsattUttakPeriode periode, FastsattUttakPeriode periode2) {
