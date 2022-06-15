@@ -456,9 +456,8 @@ public class SaldoUtregning {
     private Trekkdager forbruktSøker(Stønadskontotype stønadskonto,
                                      AktivitetIdentifikator aktivitet,
                                      List<FastsattUttakPeriode> søkersPerioder) {
-        return ForbruksTeller.forbruksTeller(stønadskonto, aktivitet, søkersPerioder,
-                FastsattUttakPeriode::isOpphold, this::trekkdagerForOppholdsperiode,
-                (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
+        return ForbruksTeller.forbruksTellerKontoMedUnntak(stønadskonto, aktivitet, søkersPerioder,
+                FastsattUttakPeriode::isOpphold, this::trekkdagerForOppholdsperiode);
     }
 
     private Trekkdager forbruktSøkersMinsterett(Stønadskontotype stønadskonto,
