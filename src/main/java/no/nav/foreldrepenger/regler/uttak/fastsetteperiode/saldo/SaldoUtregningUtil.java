@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,16 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 final class SaldoUtregningUtil {
 
     private SaldoUtregningUtil() {
-    }
-
-    static Optional<FastsattUttakPeriode> nestePeriodeSomIkkeErOpphold(List<FastsattUttakPeriode> perioder, int index) {
-        for (var i = index + 1; i < perioder.size(); i++) {
-            var periode = perioder.get(i);
-            if (!periode.isOpphold()) {
-                return Optional.of(periode);
-            }
-        }
-        return Optional.empty();
     }
 
     static boolean aktivitetIPeriode(FastsattUttakPeriode periode, AktivitetIdentifikator aktivitet) {
@@ -65,7 +54,7 @@ final class SaldoUtregningUtil {
                 .anyMatch(aktivitet -> aktivitet.getTrekkdager().merEnn0());
     }
 
-    static int trekkDagerFraDelAvPeriode(LocalDate delFom,
+    static Trekkdager trekkDagerFraDelAvPeriode(LocalDate delFom,
                                          LocalDate delTom,
                                          LocalDate periodeFom,
                                          LocalDate periodeTom,
@@ -73,11 +62,11 @@ final class SaldoUtregningUtil {
         var virkedagerInnenfor = Virkedager.beregnAntallVirkedager(delFom, delTom);
         var virkedagerHele = Virkedager.beregnAntallVirkedager(periodeFom, periodeTom);
         if (virkedagerHele == 0) {
-            return 0;
+            return Trekkdager.ZERO;
         }
-        return periodeTrekkdager.decimalValue().multiply(BigDecimal.valueOf(virkedagerInnenfor))
-                .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN)
-                .intValue();
+        var utregning = periodeTrekkdager.decimalValue().multiply(BigDecimal.valueOf(virkedagerInnenfor))
+                .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
+        return new Trekkdager(utregning);
     }
 
 }

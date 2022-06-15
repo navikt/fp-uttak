@@ -101,7 +101,7 @@ class SaldoUtregningFlerbarnsdager {
     }
 
     private Trekkdager frigitteDager() {
-        var sum = 0;
+        Trekkdager sum = Trekkdager.ZERO;
         for (var periode : søkersPerioder) {
             if (periode.isFlerbarnsdager()) {
                 var overlappendePerioderMedFlerbarnsdager = overlappendePeriode(periode, annenpartsPerioder)
@@ -110,12 +110,12 @@ class SaldoUtregningFlerbarnsdager {
                         .toList();
                 for (var overlappendePeriode : overlappendePerioderMedFlerbarnsdager) {
                     if (innvilgetMedTrekkdager(periode)) {
-                        sum += frigitteDager(periode, overlappendePeriode);
+                        sum = sum.add(frigitteDager(periode, overlappendePeriode));
                     }
                 }
             }
         }
-        return new Trekkdager(sum);
+        return sum;
     }
 
     private Trekkdager dagerForUttaksperiode(AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
@@ -127,7 +127,7 @@ class SaldoUtregningFlerbarnsdager {
         return Trekkdager.ZERO;
     }
 
-    private int frigitteDager(FastsattUttakPeriode periode,
+    private Trekkdager frigitteDager(FastsattUttakPeriode periode,
                               FastsattUttakPeriode overlappende) {
         var flerbarnsdagerOverlappendePeriode = minTrekkdager(overlappende);
         var flerbarnsdagerPeriode = minTrekkdager(periode);

@@ -25,10 +25,6 @@ public class Trekkdager {
         return value;
     }
 
-    public int intValue() {
-        return decimalValue().intValue();
-    }
-
     public Trekkdager add(Trekkdager trekkdager) {
         return new Trekkdager(decimalValue().add(trekkdager.decimalValue()));
     }
