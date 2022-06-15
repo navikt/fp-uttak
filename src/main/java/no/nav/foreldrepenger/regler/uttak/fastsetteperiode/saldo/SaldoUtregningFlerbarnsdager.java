@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtr
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.overlappendePeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.trekkDagerFraDelAvPeriode;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,16 +61,9 @@ class SaldoUtregningFlerbarnsdager {
     private Trekkdager forbruktSøker(AktivitetIdentifikator aktivitet,
                                      List<FastsattUttakPeriode> søkersPerioder) {
 
-        return new Trekkdager(forbruktSøkerBD(aktivitet, søkersPerioder));
-    }
-
-
-    private BigDecimal forbruktSøkerBD(AktivitetIdentifikator aktivitet,
-                                       List<FastsattUttakPeriode> søkersPerioder) {
-
-        var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
+       var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
         return ForbruksTeller.forbruksTeller(null, aktivitet, perioderMedFlerbarnsdager,
-                FastsattUttakPeriode::isOpphold, (s,p) -> BigDecimal.ZERO,
+                FastsattUttakPeriode::isOpphold, (s,p) -> Trekkdager.ZERO,
                 (p, a) -> p.isFlerbarnsdager());
     }
 
@@ -142,8 +134,7 @@ class SaldoUtregningFlerbarnsdager {
         //Forenkling: Mulig vi trenger utvidelse her, kan bli feil hvis begge graderer flerbarnsdager
         var min = flerbarnsdagerPeriode.compareTo(flerbarnsdagerOverlappendePeriode) > 0 ?
                 flerbarnsdagerPeriode : flerbarnsdagerOverlappendePeriode;
-        return trekkDagerFraDelAvPeriode(periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(),
-                min.decimalValue());
+        return trekkDagerFraDelAvPeriode(periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(), min);
     }
 
     private Trekkdager minTrekkdager(FastsattUttakPeriode periode) {

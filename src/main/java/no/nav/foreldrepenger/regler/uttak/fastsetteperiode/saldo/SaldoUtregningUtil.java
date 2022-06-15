@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
@@ -68,13 +69,13 @@ final class SaldoUtregningUtil {
                                          LocalDate delTom,
                                          LocalDate periodeFom,
                                          LocalDate periodeTom,
-                                         BigDecimal periodeTrekkdager) {
+                                         Trekkdager periodeTrekkdager) {
         var virkedagerInnenfor = Virkedager.beregnAntallVirkedager(delFom, delTom);
         var virkedagerHele = Virkedager.beregnAntallVirkedager(periodeFom, periodeTom);
         if (virkedagerHele == 0) {
             return 0;
         }
-        return periodeTrekkdager.multiply(BigDecimal.valueOf(virkedagerInnenfor))
+        return periodeTrekkdager.decimalValue().multiply(BigDecimal.valueOf(virkedagerInnenfor))
                 .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN)
                 .intValue();
     }
