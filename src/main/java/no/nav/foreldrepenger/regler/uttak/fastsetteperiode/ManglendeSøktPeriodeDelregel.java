@@ -3,10 +3,12 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAlleDisponibleDagerIgjenMinsterett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
@@ -52,9 +54,24 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåAlleSineKonto(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
-                .hvis(new SjekkOmTomForAlleSineKontoer(),
-                        IkkeOppfylt.opprett("UT1088", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .hvis(new SjekkOmTomForAlleSineKontoer(), sjekkOmSakGjelderBareFarRettTomKonto(rs))
                 .ellers(sjekkOmDagerIgjenPåAlleAktiviteter(rs));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSakGjelderBareFarRettTomKonto(Ruleset<FastsettePeriodeGrunnlag> rs) {
+        return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
+                .hvis(new SjekkOmBareFarHarRett(), sjekkOmDagerIgjenPåMinsterett(rs))
+                .ellers(ut1088());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmDagerIgjenPåMinsterett(Ruleset<FastsettePeriodeGrunnlag> rs) {
+        return rs.hvisRegel(SjekkOmErAlleDisponibleDagerIgjenMinsterett.ID, SjekkOmErAlleDisponibleDagerIgjenMinsterett.BESKRIVELSE)
+                .hvis(new SjekkOmErAlleDisponibleDagerIgjenMinsterett(), IkkeOppfylt.opprett("UT1089", IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT, false, false))
+                .ellers(ut1088());
+    }
+
+    private FastsettePeriodeUtfall ut1088() {
+        return IkkeOppfylt.opprett("UT1088", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDagerIgjenPåAlleAktiviteter(Ruleset<FastsettePeriodeGrunnlag> rs) {
