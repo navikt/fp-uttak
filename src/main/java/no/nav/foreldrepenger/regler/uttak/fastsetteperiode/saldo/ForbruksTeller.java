@@ -63,24 +63,20 @@ final class ForbruksTeller {
         return sum;
     }
 
+    // Index til første periode som inneholder aktivitet, 0 dersom finnes fra start, max dersom ikke funnet
     private static int førstePeriodeMedAktivitetIkkeUnntak(AktivitetIdentifikator aktivitet,
                                                            List<FastsattUttakPeriode> perioder,
                                                            Predicate<FastsattUttakPeriode> unntak) {
-        var førsteIkkeUnntak = førstePeriodeIkkeUnntak(perioder, unntak);
-        for (var i = førsteIkkeUnntak; i < perioder.size(); i++) {
-            var periode = perioder.get(i);
-            if (!unntak.test(periode) && aktivitetIPeriode(periode, aktivitet)) {
-                return i == førsteIkkeUnntak ? 0 : i;
-            }
-        }
-        return perioder.size();
-    }
-
-    private static int førstePeriodeIkkeUnntak(List<FastsattUttakPeriode> perioder,
-                                               Predicate<FastsattUttakPeriode> unntak) {
+        var førsteIkkeUnntak = -1;
         for (var i = 0; i < perioder.size(); i++) {
-            if (!unntak.test(perioder.get(i))) {
-                return i;
+            var periode = perioder.get(i);
+            if (!unntak.test(periode)) {
+                if (førsteIkkeUnntak == -1) {
+                    førsteIkkeUnntak = i;
+                }
+                if (aktivitetIPeriode(periode, aktivitet)) {
+                    return i == førsteIkkeUnntak ? 0 : i;
+                }
             }
         }
         return perioder.size();
