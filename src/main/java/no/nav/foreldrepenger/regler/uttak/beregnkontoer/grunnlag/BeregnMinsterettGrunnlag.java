@@ -9,6 +9,7 @@ public class BeregnMinsterettGrunnlag {
     private boolean mor;
     private boolean bareFarHarRett;
     private boolean aleneomsorg;
+    private boolean gjelderFødsel = true;
     private Dekningsgrad dekningsgrad;
     private LocalDate familieHendelseDato;
     private LocalDate familieHendelseDatoNesteSak;
@@ -34,6 +35,10 @@ public class BeregnMinsterettGrunnlag {
 
     public boolean isAleneomsorg() {
         return aleneomsorg;
+    }
+
+    public boolean isGjelderFødsel() {
+        return gjelderFødsel;
     }
 
     public Dekningsgrad getDekningsgrad() {
@@ -74,6 +79,11 @@ public class BeregnMinsterettGrunnlag {
 
         public Builder aleneomsorg(boolean aleneomsorg) {
             grunnlag.aleneomsorg =  aleneomsorg;
+            return this;
+        }
+
+        public Builder gjelderFødsel(boolean gjelderFødsel) {
+            grunnlag.gjelderFødsel =  gjelderFødsel;
             return this;
         }
 

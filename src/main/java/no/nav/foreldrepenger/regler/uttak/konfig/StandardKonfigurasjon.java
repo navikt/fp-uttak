@@ -39,7 +39,9 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, d_2017_01_01, null, 75) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, d_2017_01_01, null, 95) // TODO: endre til aug 2022 etter overgang
-                .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 110) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, d_2017_01_01, null, 10) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_FØDSEL, d_2017_01_01, null, 110) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_ADOPSJON, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.FAR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
                 //Uttaksperioder
                 .leggTilParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, d_2017_01_01, null, 6)
@@ -50,6 +52,7 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, d_2017_01_01, null, 6) // TODO: endre til aug 2022 etter overgang
                 //grenser
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, d_2017_01_01, null, 3)
+                .leggTilParameter(Parametertype.TO_TETTE_MELLOMROM_UKER, d_2017_01_01, null, 48)  // TODO: endre til aug 2022 el 48 uker tidligere etter overgang
                 .leggTilParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, d_2019_07_01, null, 52)
                 .build();
         var d_2010_01_01 = LocalDate.of(2010, Month.JANUARY, 1);
@@ -83,12 +86,14 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.FORELDREPENGER_80_PROSENT_HAR_RETT_DAGER, d_2010_01_01, null, 250)
                 .leggTilParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, d_2010_01_01, null, 15)
                 //Minsteretter
-                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, d_2017_01_01, null, 75)
-                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, d_2017_01_01, null, 95)
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, d_2010_01_01, null, 75)
+                .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, d_2010_01_01, null, 95)
                 .leggTilParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, d_2017_01_01, null, 75) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, d_2017_01_01, null, 95) // TODO: endre til aug 2022 etter overgang
-                .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 110) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, d_2017_01_01, null, 10) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_FØDSEL, d_2017_01_01, null, 110) // TODO: endre til aug 2022 etter overgang
+                .leggTilParameter(Parametertype.MOR_TO_TETTE_DAGER_ADOPSJON, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
                 .leggTilParameter(Parametertype.FAR_TO_TETTE_DAGER_MINSTERETT, d_2017_01_01, null, 40) // TODO: endre til aug 2022 etter overgang
 
                 //Uttaksperioder
@@ -100,6 +105,7 @@ public class StandardKonfigurasjon {
                 .leggTilParameter(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, d_2017_01_01, null, 6) // TODO: endre til aug 2022 etter overgang
                 //grenser
                 .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, d_2010_01_01, null, 3)
+                .leggTilParameter(Parametertype.TO_TETTE_MELLOMROM_UKER, d_2017_01_01, null, 48)  // TODO: endre til aug 2022 el 48 uker tidligere etter overgang
                 .leggTilParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, d_2019_07_01, null, 52)
                 .build();
     }

@@ -12,7 +12,25 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -167,12 +185,12 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public boolean isSakMedMinsterett() {
-        return regelGrunnlag.getKontoer().getMinsterettDager() > 0;
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.MINSTERETT) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.MINSTERETT) > 0;
     }
 
     @Override
     public boolean isSakMedDagerUtenAktivitetskrav() {
-        return regelGrunnlag.getKontoer().getUtenAktivitetskravDager() > 0;
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV) > 0;
     }
 
     @Override

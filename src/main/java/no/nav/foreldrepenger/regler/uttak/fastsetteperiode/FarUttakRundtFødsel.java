@@ -7,6 +7,7 @@ import java.util.Optional;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -23,11 +24,10 @@ public class FarUttakRundtFødsel {
     }
 
     public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(Datoer datoer, Kontoer kontoer, Søknadstype søknadstype, Konfigurasjon konfigurasjon) {
-        if (kontoer.getFarUttakRundtFødselDager() == 0 || !søknadstype.gjelderTerminFødsel()) {
+        if (!kontoer.harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) || kontoer.getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) == 0 || !søknadstype.gjelderTerminFødsel()) {
             return Optional.empty();
         }
-        return utledFarsPeriodeRundtFødsel(kontoer.getFarUttakRundtFødselDager() == 0,
-                søknadstype.gjelderTerminFødsel(), datoer.getFamiliehendelse(), datoer.getTermin(), konfigurasjon);
+        return utledFarsPeriodeRundtFødsel(false, søknadstype.gjelderTerminFødsel(), datoer.getFamiliehendelse(), datoer.getTermin(), konfigurasjon);
 
     }
 

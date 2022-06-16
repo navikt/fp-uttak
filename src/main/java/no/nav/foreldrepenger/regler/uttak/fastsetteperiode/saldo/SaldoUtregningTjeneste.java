@@ -112,9 +112,9 @@ public final class SaldoUtregningTjeneste {
 
     private static Set<Stønadskonto> lagStønadskontoer(SaldoUtregningGrunnlag grunnlag) {
         return grunnlag.getKontoer()
-                .getKontoList()
+                .getStønadskontotyper()
                 .stream()
-                .map(konto -> new Stønadskonto(konto.getType(), new Trekkdager(konto.getTrekkdager())))
+                .map(konto -> new Stønadskonto(konto, new Trekkdager(grunnlag.getKontoer().getStønadskontoTrekkdager(konto))))
                 .collect(Collectors.toSet());
     }
 

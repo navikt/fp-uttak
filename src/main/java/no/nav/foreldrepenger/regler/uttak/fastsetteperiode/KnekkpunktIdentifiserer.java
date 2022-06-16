@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
@@ -70,8 +70,8 @@ class KnekkpunktIdentifiserer {
             // Før Prop 15L 21/22: Første 6 uker forbeholdt mor, unntatt flerbarn og aleneomsorg
             // Etter Prop 15L 21/22: Første 6 uker forbeholdt mor kun for kvoter. Far har opptil 10 dager samtidig uttak ifm fødsel
             knekkpunkter.add(familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
-            var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().getFarUttakRundtFødselDager() > 0;
-            var sakMedKvoter = grunnlag.getKontoer().getKontoList().stream().map(Konto::getType).noneMatch(Stønadskontotype.FORELDREPENGER::equals);
+            var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
+            var sakMedKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
             var erMor = grunnlag.getBehandling().isSøkerMor();
             if (!hjemletFarUttakRundtFødsel || sakMedKvoter || erMor) {
                 knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
