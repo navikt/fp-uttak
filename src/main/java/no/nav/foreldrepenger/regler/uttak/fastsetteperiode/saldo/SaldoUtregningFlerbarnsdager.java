@@ -57,30 +57,14 @@ class SaldoUtregningFlerbarnsdager {
         return Optional.ofNullable(flerbarnsdager).orElse(Trekkdager.ZERO);
     }
 
+
     private Trekkdager forbruktSøker(AktivitetIdentifikator aktivitet,
                                      List<FastsattUttakPeriode> søkersPerioder) {
-        var sum = Trekkdager.ZERO;
 
-        var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
-        for (var i = 0; i < perioderMedFlerbarnsdager.size(); i++) {
-            var periodeSøker = perioderMedFlerbarnsdager.get(i);
-            var nestePeriodeSomIkkeErOpphold = SaldoUtregningUtil.nestePeriodeSomIkkeErOpphold(perioderMedFlerbarnsdager, i);
-            if (!aktivitetIPeriode(periodeSøker, aktivitet) &&
-                    (nestePeriodeSomIkkeErOpphold.isEmpty() || aktivitetIPeriode(nestePeriodeSomIkkeErOpphold.get(), aktivitet))) {
-                var perioderTomPeriode = perioderMedFlerbarnsdager.subList(0, i + 1);
-                var eksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode);
-                eksisterendeAktiviteter.remove(aktivitet);
-                var minForbrukteDagerEksisterendeAktiviteter = eksisterendeAktiviteter.stream()
-                        .map(a -> forbruktSøker(a, perioderTomPeriode))
-                        .min(Trekkdager::compareTo)
-                        .orElseThrow();
-                sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
-            } else {
-                sum = sum.add(dagerForUttaksperiode(aktivitet, periodeSøker));
-            }
-        }
-
-        return sum;
+       var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
+        return ForbruksTeller.forbruksTeller(null, aktivitet, perioderMedFlerbarnsdager,
+                FastsattUttakPeriode::isOpphold, (s,p) -> Trekkdager.ZERO,
+                (p, a) -> p.isFlerbarnsdager());
     }
 
     private Trekkdager minForbruktAnnenpart() {
@@ -100,24 +84,21 @@ class SaldoUtregningFlerbarnsdager {
                 forbrukte.put(annenpartAktivitet, forbrukte.getOrDefault(annenpartAktivitet, Trekkdager.ZERO).add(trekkdager));
             }
         }
-        return forbrukte.values().stream().min((o1, o2) -> o1.compareTo(o2)).orElse(Trekkdager.ZERO);
+        return forbrukte.values().stream().min(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager minForbrukteDager(FastsattUttakPeriode periode) {
         if (!periode.isFlerbarnsdager()) {
             return Trekkdager.ZERO;
         }
-        Trekkdager minForbrukt = null;
-        for (var aktivitet : periode.getAktiviteter()) {
-            if (minForbrukt == null || minForbrukt.compareTo(aktivitet.getTrekkdager()) > 0) {
-                minForbrukt = aktivitet.getTrekkdager();
-            }
-        }
-        return minForbrukt == null ? Trekkdager.ZERO : minForbrukt;
+        return periode.getAktiviteter().stream()
+                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+                .min(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager frigitteDager() {
-        var sum = 0;
+        Trekkdager sum = Trekkdager.ZERO;
         for (var periode : søkersPerioder) {
             if (periode.isFlerbarnsdager()) {
                 var overlappendePerioderMedFlerbarnsdager = overlappendePeriode(periode, annenpartsPerioder)
@@ -126,44 +107,38 @@ class SaldoUtregningFlerbarnsdager {
                         .toList();
                 for (var overlappendePeriode : overlappendePerioderMedFlerbarnsdager) {
                     if (innvilgetMedTrekkdager(periode)) {
-                        sum += frigitteDager(periode, overlappendePeriode);
+                        sum = sum.add(frigitteDager(periode, overlappendePeriode));
                     }
                 }
             }
         }
-        return new Trekkdager(sum);
+        return sum;
     }
 
     private Trekkdager dagerForUttaksperiode(AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
-        for (var periodeAktivitet : periode.getAktiviteter()) {
-            if (periodeAktivitet.getAktivitetIdentifikator().equals(aktivitet) && periode.isFlerbarnsdager()) {
-                return periodeAktivitet.getTrekkdager();
-            }
-        }
-        return Trekkdager.ZERO;
+        return periode.getAktiviteter().stream()
+                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && periode.isFlerbarnsdager())
+                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+                .findFirst().orElse(Trekkdager.ZERO);
     }
 
-    private int frigitteDager(FastsattUttakPeriode periode,
+    private Trekkdager frigitteDager(FastsattUttakPeriode periode,
                               FastsattUttakPeriode overlappende) {
         var flerbarnsdagerOverlappendePeriode = minTrekkdager(overlappende);
         var flerbarnsdagerPeriode = minTrekkdager(periode);
         //Forenkling: Mulig vi trenger utvidelse her, kan bli feil hvis begge graderer flerbarnsdager
         var min = flerbarnsdagerPeriode.compareTo(flerbarnsdagerOverlappendePeriode) > 0 ?
                 flerbarnsdagerPeriode : flerbarnsdagerOverlappendePeriode;
-        return trekkDagerFraDelAvPeriode(periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(),
-                min.decimalValue());
+        return trekkDagerFraDelAvPeriode(periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(), min);
     }
 
     private Trekkdager minTrekkdager(FastsattUttakPeriode periode) {
         if (!periode.isFlerbarnsdager()) {
             return Trekkdager.ZERO;
         }
-        FastsattUttakPeriodeAktivitet aktivitetMedMinstTrekkdager = null;
-        for (var aktivitet : periode.getAktiviteter()) {
-            if (aktivitetMedMinstTrekkdager == null || aktivitet.getTrekkdager().compareTo(aktivitetMedMinstTrekkdager.getTrekkdager()) < 0) {
-                aktivitetMedMinstTrekkdager = aktivitet;
-            }
-        }
-        return aktivitetMedMinstTrekkdager == null ? Trekkdager.ZERO : aktivitetMedMinstTrekkdager.getTrekkdager();
+        return periode.getAktiviteter().stream()
+                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+                .min(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
     }
 }
