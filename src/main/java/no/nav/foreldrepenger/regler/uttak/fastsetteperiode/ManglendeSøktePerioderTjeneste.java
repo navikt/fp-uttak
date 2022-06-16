@@ -86,10 +86,8 @@ final class ManglendeSøktePerioderTjeneste {
                 fellesUttakBeggeParter.add(new LukketPeriode(tomTidsperiodeForbeholdtMor.plusDays(1), tomTidsperiodeForbeholdtMor.plusDays(1)));
             }
         }
-        var harForeldrepengerKonto = grunnlag.getKontoer()
-                .getKontoList()
-                .stream()
-                .anyMatch(k -> k.getType().equals(Stønadskontotype.FORELDREPENGER));
+        var harForeldrepengerKonto = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
+
         var stønadskontotype = harForeldrepengerKonto ? Stønadskontotype.FORELDREPENGER : Stønadskontotype.MØDREKVOTE;
         var fomTidsperiodeForbeholdtMor = fomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
         return finnManglendeMellomliggendePerioder(fellesUttakBeggeParter, familiehendelse, stønadskontotype)

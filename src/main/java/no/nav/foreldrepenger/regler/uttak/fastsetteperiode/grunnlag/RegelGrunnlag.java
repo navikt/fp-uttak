@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 
@@ -50,7 +49,7 @@ public class RegelGrunnlag {
     }
 
     public Set<Stønadskontotype> getGyldigeStønadskontotyper() {
-        return kontoer.getKontoList().stream().map(Konto::getType).collect(Collectors.toSet());
+        return kontoer.getStønadskontotyper();
     }
 
     public boolean erRevurdering() {

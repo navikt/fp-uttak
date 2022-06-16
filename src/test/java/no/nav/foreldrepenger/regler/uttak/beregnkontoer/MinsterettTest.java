@@ -1,12 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.BFHR_MINSTERETT_DAGER;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.ETTER_NY_STØNADSPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.FAR_UTTAK_RUNDT_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.GENERELL_MINSTERETT;
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.MINSTEDAGER_UFØRE_100_PROSENT;
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.MINSTEDAGER_UFØRE_80_PROSENT;
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.MOR_TO_TETTE_MINSTERETT_DAGER;
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.UTTAK_RUNDT_FØDSEL_DAGER;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.finnMinsterett;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnMinsterettGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.Dekningsgrad;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 class MinsterettTest {
 
@@ -26,20 +24,22 @@ class MinsterettTest {
                 .mor(false)
                 .morHarUføretrygd(true)
                 .bareFarHarRett(true)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
-        assertThat(finnMinsterett(grunnlag80)).containsEntry(GENERELL_MINSTERETT, MINSTEDAGER_UFØRE_80_PROSENT);
+        assertThat(finnMinsterett(grunnlag80)).containsEntry(GENERELL_MINSTERETT,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, LocalDate.now()));
 
         var grunnlag100 = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
                 .mor(false)
                 .morHarUføretrygd(true)
                 .bareFarHarRett(true)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
-        assertThat(finnMinsterett(grunnlag100)).containsEntry(GENERELL_MINSTERETT, MINSTEDAGER_UFØRE_100_PROSENT);
+        assertThat(finnMinsterett(grunnlag100)).containsEntry(GENERELL_MINSTERETT,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, LocalDate.now()));
     }
 
     @Test
@@ -47,12 +47,13 @@ class MinsterettTest {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
                 .mor(true)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .bareFarHarRett(false)
                 .aleneomsorg(false)
                 .build();
-        assertThat(finnMinsterett(grunnlag)).containsEntry(FAR_UTTAK_RUNDT_FØDSEL, UTTAK_RUNDT_FØDSEL_DAGER);
+        assertThat(finnMinsterett(grunnlag)).containsEntry(FAR_UTTAK_RUNDT_FØDSEL,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, LocalDate.now()));
     }
 
     @Test
@@ -60,11 +61,12 @@ class MinsterettTest {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
                 .mor(false)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .bareFarHarRett(true)
                 .build();
-        assertThat(finnMinsterett(grunnlag)).containsEntry(GENERELL_MINSTERETT, BFHR_MINSTERETT_DAGER);
+        assertThat(finnMinsterett(grunnlag)).containsEntry(GENERELL_MINSTERETT,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, LocalDate.now()));
     }
 
     @Test
@@ -72,7 +74,7 @@ class MinsterettTest {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(false)
                 .mor(true)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
         assertThat(finnMinsterett(grunnlag)).isEmpty();
@@ -86,7 +88,7 @@ class MinsterettTest {
                 .aleneomsorg(true)
                 .bareFarHarRett(true)
                 .morHarUføretrygd(true)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
         assertThat(finnMinsterett(grunnlag)).doesNotContainKey(GENERELL_MINSTERETT);
@@ -97,11 +99,13 @@ class MinsterettTest {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
                 .mor(true)
-                .familieHendelseDato(LocalDate.MIN)
-                .familieHendelseDatoNesteSak(LocalDate.MIN.plusWeeks(40))
+                .gjelderFødsel(true)
+                .familieHendelseDato(LocalDate.now())
+                .familieHendelseDatoNesteSak(LocalDate.now().plusWeeks(40))
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
-        assertThat(finnMinsterett(grunnlag)).containsEntry(GENERELL_MINSTERETT, MOR_TO_TETTE_MINSTERETT_DAGER);
+        assertThat(finnMinsterett(grunnlag)).containsEntry(ETTER_NY_STØNADSPERIODE,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TO_TETTE_DAGER_FØDSEL, LocalDate.now()));
     }
 
     @Test
@@ -109,12 +113,12 @@ class MinsterettTest {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
                 .mor(true)
-                .familieHendelseDato(LocalDate.MIN)
+                .familieHendelseDato(LocalDate.now())
                 //Barna ikke tett nok til minsteretten
-                .familieHendelseDatoNesteSak(LocalDate.MIN.plusWeeks(50))
+                .familieHendelseDatoNesteSak(LocalDate.now().plusWeeks(50))
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
-        assertThat(finnMinsterett(grunnlag)).doesNotContainKey(GENERELL_MINSTERETT);
+        assertThat(finnMinsterett(grunnlag)).containsEntry(ETTER_NY_STØNADSPERIODE, 0);
     }
 
 }

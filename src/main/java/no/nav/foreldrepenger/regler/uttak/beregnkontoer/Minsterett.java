@@ -7,51 +7,59 @@ import java.util.Map;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnMinsterettGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.Dekningsgrad;
+import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public enum Minsterett {
 
     GENERELL_MINSTERETT,
     FAR_UTTAK_RUNDT_FØDSEL,
+    ETTER_NY_STØNADSPERIODE,
     UTEN_AKTIVITETSKRAV;
 
-    //TODO Inn i konfig
-    public static final int MINSTEDAGER_UFØRE_100_PROSENT = 75;
-    public static final int MINSTEDAGER_UFØRE_80_PROSENT = 95;
-
-    public static final int MOR_TO_TETTE_MINSTERETT_DAGER = 110;
-    public static final int FAR_TO_TETTE_MINSTERETT_DAGER = 40;
-    public static final int BFHR_MINSTERETT_DAGER = 40;
-    public static final int UTTAK_RUNDT_FØDSEL_DAGER = 10;
-
-    public static final int TO_TETTE_UKER_MELLOM_FAMHENDELSE = 48;
 
     public static Map<Minsterett, Integer> finnMinsterett(BeregnMinsterettGrunnlag grunnlag) {
 
+        var fhDato = grunnlag.getFamilieHendelseDato();
         var toTette = toTette(grunnlag.getFamilieHendelseDato(), grunnlag.getFamilieHendelseDatoNesteSak());
         var retter = new HashMap<Minsterett, Integer>();
         var minsterett = grunnlag.isMinsterett();
         var morHarUføretrygd = grunnlag.isMorHarUføretrygd();
         var bareFarHarRett = grunnlag.isBareFarHarRett();
         var aleneomsorg = grunnlag.isAleneomsorg();
+        if (minsterett && toTette) {
+            var antallDager = 0;
+            if (grunnlag.isMor() && grunnlag.isGjelderFødsel()) {
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TO_TETTE_DAGER_FØDSEL, fhDato);
+            } else if (grunnlag.isMor()) {
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TO_TETTE_DAGER_ADOPSJON, fhDato);
+            } else {
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_TO_TETTE_DAGER_MINSTERETT, fhDato);
+            }
+            retter.put(ETTER_NY_STØNADSPERIODE, antallDager);
+        } else if (grunnlag.getFamilieHendelseDatoNesteSak() != null){
+            retter.put(ETTER_NY_STØNADSPERIODE, 0);
+        }
         if (minsterett) {
             var antallDager = 0;
-            if (toTette) {
-                // Begge skal ha minsterett
-                antallDager = grunnlag.isMor() ? MOR_TO_TETTE_MINSTERETT_DAGER : FAR_TO_TETTE_MINSTERETT_DAGER;
-            }
             if (bareFarHarRett && !aleneomsorg) {
-                antallDager = toTette ? Math.max(BFHR_MINSTERETT_DAGER, FAR_TO_TETTE_MINSTERETT_DAGER) : BFHR_MINSTERETT_DAGER;
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
             }
             if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
-                antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ? MINSTEDAGER_UFØRE_80_PROSENT : MINSTEDAGER_UFØRE_100_PROSENT;
+                antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, fhDato) :
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, fhDato);
             }
             if (antallDager > 0) {
                 retter.put(Minsterett.GENERELL_MINSTERETT, antallDager);
             }
             // Settes for begge. Brukes ifm berørt for begge og fakta uttak for far.
-            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL, UTTAK_RUNDT_FØDSEL_DAGER);
+            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL,
+                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, fhDato));
         } else if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
-            var antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ? MINSTEDAGER_UFØRE_80_PROSENT : MINSTEDAGER_UFØRE_100_PROSENT;
+            var antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
+                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, fhDato) :
+                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, fhDato);
             retter.put(Minsterett.UTEN_AKTIVITETSKRAV, antallDager);
         }
         return retter;
@@ -59,10 +67,12 @@ public enum Minsterett {
 
 
     private static boolean toTette(LocalDate familieHendelseDato, LocalDate familieHendelseDatoNesteSak) {
-        if (familieHendelseDato == null || familieHendelseDatoNesteSak == null) {
+        if (familieHendelseDatoNesteSak == null) {
             return false;
         }
-        var grenseToTette = familieHendelseDato.plus(Period.ofWeeks(TO_TETTE_UKER_MELLOM_FAMHENDELSE)).plusDays(1);
+        // TODO: avklare med PE om gjelder for første sak etter WLB eller andre sak etter WLB
+        var toTetteGrense = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.TO_TETTE_MELLOMROM_UKER, familieHendelseDato);
+        var grenseToTette = familieHendelseDato.plus(Period.ofWeeks(toTetteGrense)).plusDays(1);
         return grenseToTette.isAfter(familieHendelseDatoNesteSak);
     }
 }

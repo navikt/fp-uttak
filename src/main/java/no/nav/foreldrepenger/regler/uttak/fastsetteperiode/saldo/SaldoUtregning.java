@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -57,12 +58,12 @@ public class SaldoUtregning {
         this.sisteSøknadMottattTidspunktSøker = grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null);
         this.sisteSøknadMottattTidspunktAnnenpart = grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null);
         this.berørtBehandling = grunnlag.isBerørtBehandling();
-        this.minsterettDager = new Trekkdager(grunnlag.getKontoer().getMinsterettDager());
-        this.utenAktivitetskravDager = new Trekkdager(grunnlag.getKontoer().getUtenAktivitetskravDager());
+        this.minsterettDager = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.MINSTERETT) ? new Trekkdager(grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.MINSTERETT)) : Trekkdager.ZERO;
+        this.utenAktivitetskravDager = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV) ? new Trekkdager(grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV)) : Trekkdager.ZERO;
         this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
-                søkersAktiviteter, new Trekkdager(grunnlag.getKontoer().getFlerbarnsdager()));
+                søkersAktiviteter, grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FLERBARN) ? new Trekkdager(grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN)) : Trekkdager.ZERO);
         this.farUttakRundtFødselPeriode = grunnlag.getFarUttakRundtFødselPeriode();
-        this.farUttakRundtFødselDager = new Trekkdager(grunnlag.getKontoer().getFarUttakRundtFødselDager());
+        this.farUttakRundtFødselDager = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) ? new Trekkdager(grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL)) : Trekkdager.ZERO;
     }
 
 
