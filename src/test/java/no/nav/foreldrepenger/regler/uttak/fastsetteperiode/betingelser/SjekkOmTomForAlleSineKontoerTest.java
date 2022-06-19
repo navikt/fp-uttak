@@ -58,7 +58,8 @@ class SjekkOmTomForAlleSineKontoerTest {
                 new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(15 * 5))
                 .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(10 * 5));
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
+                .kontoer(kontoer)
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode).mottattTidspunkt(periodeStart.atStartOfDay()))
                 .behandling(new Behandling.Builder().søkerErMor(true))
                 .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -66,8 +67,8 @@ class SjekkOmTomForAlleSineKontoerTest {
 
         var sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), kontoer.build(),
-                uttakPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(), periodeStart.atStartOfDay(), null, Optional.empty());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag,
+                uttakPeriode.getFom());
         var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);

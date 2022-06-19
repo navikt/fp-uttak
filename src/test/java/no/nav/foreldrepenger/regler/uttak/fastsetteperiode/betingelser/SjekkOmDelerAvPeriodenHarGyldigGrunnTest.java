@@ -110,9 +110,8 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     private Evaluation evaluer(OppgittPeriode søknadsperiode, RegelGrunnlag grunnlag) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),
-                søknadsperiode.getFom(), grunnlag.getArbeid().getAktiviteter(), grunnlag.getSøknad().getMottattTidspunkt(),
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt(), Optional.empty());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag,
+                søknadsperiode.getFom());
         return new SjekkOmDelerAvPeriodenHarGyldigGrunn().evaluate(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
                         søknadsperiode));

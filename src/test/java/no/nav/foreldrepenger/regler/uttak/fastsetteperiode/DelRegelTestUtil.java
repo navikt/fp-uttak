@@ -8,6 +8,7 @@ import java.util.Set;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
+import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
@@ -26,14 +27,23 @@ final class DelRegelTestUtil {
                                                     RegelGrunnlag grunnlag,
                                                     List<FastsattUttakPeriode> søkersFastsattePerioder) {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
-                grunnlag.getKontoer(), oppgittPeriode.getFom(), grunnlag.getArbeid().getAktiviteter(),
-                grunnlag.getSøknad().getMottattTidspunkt(),
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt(),
-                FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, StandardKonfigurasjon.KONFIGURASJON));
+                grunnlag, oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
                         oppgittPeriode)));
+    }
+
+    static FastsettePerioderRegelresultat kjørRegel(OppgittPeriode oppgittPeriode,
+                                                    RegelGrunnlag grunnlag,
+                                                    List<FastsattUttakPeriode> søkersFastsattePerioder,
+                                                    LukketPeriode farRundtFødselIntervall) {
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
+                grunnlag, oppgittPeriode.getFom());
+        oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
+        return new FastsettePerioderRegelresultat(REGEL.evaluer(
+                new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall,
+                        SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), oppgittPeriode)));
     }
 
     static OppgittPeriode overføringsperiode(Stønadskontotype stønadskontotype,

@@ -74,12 +74,12 @@ public final class Kontoer {
 
         public Builder minsterettDager(int minsterettDager) {
             this.minsterettDager = minsterettDager;
-            kladd.spesialkonti.put(Spesialkontotype.MINSTERETT, minsterettDager);
+            kladd.spesialkonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
             return this;
         }
 
-        public Builder etterNyStønadsperiodeDager(int etterNySakDager) {
-            kladd.spesialkonti.put(Spesialkontotype.ETTER_NY_STØNADSPERIODE, etterNySakDager);
+        public Builder etterNesteStønadsperiodeDager(int etterNesteSakDager) {
+            kladd.spesialkonti.put(Spesialkontotype.TETTE_FØDSLER, etterNesteSakDager);
             return this;
         }
 

@@ -358,7 +358,8 @@ class FedrekvoteDelregelTest {
                 .kontoer(fedrekvoteKonto(10 * 5).farUttakRundtFødselDager(10))
                 .build();
 
-        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag, List.of(),
+                new LukketPeriode(fødselsdato, fødselsdato.plusWeeks(6)));
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }
@@ -409,7 +410,9 @@ class FedrekvoteDelregelTest {
                 .kontoer(fedrekvoteKonto(10 * 5).farUttakRundtFødselDager(10))
                 .build();
 
-        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag, List.of(),
+                new LukketPeriode(termindato.minusWeeks(2), termindato.plusWeeks(6)));
+
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }

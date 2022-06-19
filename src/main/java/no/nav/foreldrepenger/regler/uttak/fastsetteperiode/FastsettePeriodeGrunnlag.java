@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 /**
@@ -186,6 +185,13 @@ public interface FastsettePeriodeGrunnlag {
      */
     boolean isSakMedMinsterett();
 
+    /**
+     * Har saken en minsterett for uttak som gjelder etter start av neste stønadsperiode.
+     *
+     * @return true dersom saken tilsier en minsterett for uttak.
+     */
+    boolean isSakMedRettEtterStartNesteStønadsperiode();
+
     SaldoUtregning getSaldoUtregning();
 
     /**
@@ -220,9 +226,9 @@ public interface FastsettePeriodeGrunnlag {
     boolean erAlleBarnDøde();
 
     /**
-     * Eventuell dato for start av ny stønadsperiode (nytt barn)
+     * Aktuell periode begyunner på eller etter startdato neste stønadsperiode
      */
-    Optional<LocalDate> getStartNyStønadsperiode();
+    boolean etterStartNesteStønadsperiode();
 
     /**
      * Inngangsvilkår
@@ -257,7 +263,7 @@ public interface FastsettePeriodeGrunnlag {
 
     boolean kreverBehandlingSammenhengendeUttak();
 
-    Optional<LukketPeriode> periodeFarRundtFødsel(Konfigurasjon konfigurasjon);
+    Optional<LukketPeriode> periodeFarRundtFødsel();
 
     Collection<PleiepengerPeriode> perioderMedPleiepenger();
 }

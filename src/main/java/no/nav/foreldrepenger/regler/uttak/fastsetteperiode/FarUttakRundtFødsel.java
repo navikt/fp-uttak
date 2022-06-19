@@ -2,12 +2,14 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -17,6 +19,14 @@ public class FarUttakRundtFødsel {
 
     private FarUttakRundtFødsel() {
         //hindrer instansiering
+    }
+
+    public static boolean erKontoRelevant(Stønadskontotype konto) {
+        return Objects.equals(Stønadskontotype.FEDREKVOTE, konto);
+    }
+
+    public static boolean erPeriodeRelevant(LukketPeriode farRundtFødselIntervall, LukketPeriode periode) {
+        return farRundtFødselIntervall != null && periode.erOmsluttetAv(farRundtFødselIntervall);
     }
 
     public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
