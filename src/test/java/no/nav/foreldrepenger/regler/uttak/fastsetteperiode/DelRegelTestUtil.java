@@ -30,7 +30,7 @@ final class DelRegelTestUtil {
                 grunnlag, oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
+                new FastsettePeriodeGrunnlagImpl(grunnlag, null, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
                         oppgittPeriode)));
     }
 

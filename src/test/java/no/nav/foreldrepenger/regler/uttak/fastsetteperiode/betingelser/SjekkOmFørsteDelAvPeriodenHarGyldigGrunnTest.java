@@ -51,7 +51,7 @@ class SjekkOmFørsteDelAvPeriodenHarGyldigGrunnTest {
     private Resultat evaluer(RegelGrunnlag grunnlag, OppgittPeriode søknadsperiode) {
         var sjekkOmFørsteDelHarGyldigGrunn = new SjekkOmFørsteDelAvPeriodenHarGyldigGrunn();
         var evaluation = sjekkOmFørsteDelHarGyldigGrunn.evaluate(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, null, søknadsperiode));
+                new FastsettePeriodeGrunnlagImpl(grunnlag, null, null, søknadsperiode));
         return evaluation.result();
     }
 

@@ -46,13 +46,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final LukketPeriode farRundtFødselIntervall;
 
-    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning, OppgittPeriode aktuellPeriode) {
-        this.regelGrunnlag = regelGrunnlag;
-        this.saldoUtregning = saldoUtregning;
-        this.aktuellPeriode = aktuellPeriode;
-        this.farRundtFødselIntervall = null;
-    }
-
     public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag, LukketPeriode farRundtFødselIntervall,
                                         SaldoUtregning saldoUtregning, OppgittPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;

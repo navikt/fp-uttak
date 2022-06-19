@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +43,7 @@ class SjekkOmTomForAlleSineKontoerTest {
     }
 
     private List<Stønadskontotype> stønadskontotypene(RegelGrunnlag grunnlag) {
-        return SjekkOmTomForAlleSineKontoer.hentSøkerSineKontoer(new FastsettePeriodeGrunnlagImpl(grunnlag, null, null));
+        return SjekkOmTomForAlleSineKontoer.hentSøkerSineKontoer(new FastsettePeriodeGrunnlagImpl(grunnlag, null, null, null));
     }
 
     @Test
@@ -70,7 +69,7 @@ class SjekkOmTomForAlleSineKontoerTest {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag,
                 uttakPeriode.getFom());
         var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
+                new FastsettePeriodeGrunnlagImpl(grunnlag, null, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
     }
 
