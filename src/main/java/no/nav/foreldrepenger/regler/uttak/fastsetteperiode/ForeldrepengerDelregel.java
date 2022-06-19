@@ -42,6 +42,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     public static final String ID = "FP_VK XX10";
     private static final String FØDSEL = "Er det fødsel?";
+    private static final String ELLER = " eller ";
 
     private Konfigurasjon konfigurasjon;
 
@@ -280,8 +281,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGjelderMinsterett() {
-        return rs.hvisRegel(SjekkOmMinsterettHarDisponibleDager.ID + " eller " + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.ID,
-                        SjekkOmMinsterettHarDisponibleDager.BESKRIVELSE + " eller " + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.BESKRIVELSE)
+        return rs.hvisRegel(SjekkOmMinsterettHarDisponibleDager.ID + ELLER + SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.ID + ELLER + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.ID,
+                        SjekkOmMinsterettHarDisponibleDager.BESKRIVELSE + ELLER + SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.BESKRIVELSE + ELLER + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.BESKRIVELSE)
                 .hvis(new SjekkOmMinsterettHarDisponibleDager().eller(new SjekkOmEtterNesteStønadsperiodeHarDisponibleDager())
                         .eller(new SjekkOmUføreUtenAktivitetskravHarDisponibleDager()), sjekkGraderingVedKunFarMedmorRettMinsterett())
                 .ellers(new AvslagAktivitetskravDelregel().getSpecification());
