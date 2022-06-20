@@ -62,16 +62,6 @@ final class ForbruksTeller {
         return sum;
     }
 
-    //    static Optional<FastsattUttakPeriode> nestePeriodeSomIkkeErOpphold(List<FastsattUttakPeriode> perioder, int index) {
-    //        for (var i = index + 1; i < perioder.size(); i++) {
-    //            var periode = perioder.get(i);
-    //            if (!periode.isOpphold()) {
-    //                return Optional.of(periode);
-    //            }
-    //        }
-    //        return Optional.empty();
-    //    }
-
     // Index til første periode som inneholder aktivitet, 0 dersom finnes fra start, max dersom ikke funnet
     private static int førstePeriodeSomTellesMedAktivitet(AktivitetIdentifikator aktivitet,
                                                           List<FastsattUttakPeriode> perioder,
