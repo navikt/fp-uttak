@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyldigGrunnForTidligOppstartHelePerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareMorHarRett;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMinsterettBalansertUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarsUttakRundtFødselTilgjengeligeDager;
@@ -41,6 +42,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     public static final String ID = "FP_VK XX10";
     private static final String FØDSEL = "Er det fødsel?";
+    private static final String ELLER = " eller ";
 
     private Konfigurasjon konfigurasjon;
 
@@ -194,7 +196,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakFørFødselErFarRundtFødsel() {
         return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
-                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), sjekkErDetAleneomsorgFar())
+                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(), sjekkErDetAleneomsorgFar())
                 .ellers(Manuellbehandling.opprett("UT1193", IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
                                 Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL, false, false));
     }
@@ -279,9 +281,10 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGjelderMinsterett() {
-        return rs.hvisRegel(SjekkOmMinsterettHarDisponibleDager.ID + " eller " + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.ID,
-                        SjekkOmMinsterettHarDisponibleDager.BESKRIVELSE + " eller " + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.BESKRIVELSE)
-                .hvis(new SjekkOmMinsterettHarDisponibleDager().eller(new SjekkOmUføreUtenAktivitetskravHarDisponibleDager()), sjekkGraderingVedKunFarMedmorRettMinsterett())
+        return rs.hvisRegel(SjekkOmMinsterettHarDisponibleDager.ID + ELLER + SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.ID + ELLER + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.ID,
+                        SjekkOmMinsterettHarDisponibleDager.BESKRIVELSE + ELLER + SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.BESKRIVELSE + ELLER + SjekkOmUføreUtenAktivitetskravHarDisponibleDager.BESKRIVELSE)
+                .hvis(new SjekkOmMinsterettHarDisponibleDager().eller(new SjekkOmEtterNesteStønadsperiodeHarDisponibleDager())
+                        .eller(new SjekkOmUføreUtenAktivitetskravHarDisponibleDager()), sjekkGraderingVedKunFarMedmorRettMinsterett())
                 .ellers(new AvslagAktivitetskravDelregel().getSpecification());
     }
 

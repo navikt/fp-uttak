@@ -14,7 +14,7 @@ public enum Minsterett {
 
     GENERELL_MINSTERETT,
     FAR_UTTAK_RUNDT_FØDSEL,
-    ETTER_NY_STØNADSPERIODE,
+    TETTE_FØDSLER,
     UTEN_AKTIVITETSKRAV;
 
 
@@ -30,15 +30,15 @@ public enum Minsterett {
         if (minsterett && toTette) {
             var antallDager = 0;
             if (grunnlag.isMor() && grunnlag.isGjelderFødsel()) {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TO_TETTE_DAGER_FØDSEL, fhDato);
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_FØDSEL, fhDato);
             } else if (grunnlag.isMor()) {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TO_TETTE_DAGER_ADOPSJON, fhDato);
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_ADOPSJON, fhDato);
             } else {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_TO_TETTE_DAGER_MINSTERETT, fhDato);
+                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_TETTE_SAKER_DAGER_MINSTERETT, fhDato);
             }
-            retter.put(ETTER_NY_STØNADSPERIODE, antallDager);
+            retter.put(TETTE_FØDSLER, antallDager);
         } else if (grunnlag.getFamilieHendelseDatoNesteSak() != null){
-            retter.put(ETTER_NY_STØNADSPERIODE, 0);
+            retter.put(TETTE_FØDSLER, 0);
         }
         if (minsterett) {
             var antallDager = 0;
@@ -71,7 +71,7 @@ public enum Minsterett {
             return false;
         }
         // TODO: avklare med PE om gjelder for første sak etter WLB eller andre sak etter WLB
-        var toTetteGrense = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.TO_TETTE_MELLOMROM_UKER, familieHendelseDato);
+        var toTetteGrense = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.TETTE_SAKER_MELLOMROM_UKER, familieHendelseDato);
         var grenseToTette = familieHendelseDato.plus(Period.ofWeeks(toTetteGrense)).plusDays(1);
         return grenseToTette.isAfter(familieHendelseDatoNesteSak);
     }

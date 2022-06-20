@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -110,11 +109,10 @@ class SjekkOmDelerAvPeriodenHarGyldigGrunnTest {
     }
 
     private Evaluation evaluer(OppgittPeriode søknadsperiode, RegelGrunnlag grunnlag) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag.getKontoer(),
-                søknadsperiode.getFom(), grunnlag.getArbeid().getAktiviteter(), grunnlag.getSøknad().getMottattTidspunkt(),
-                grunnlag.getAnnenPart() == null ? null : grunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt(), Optional.empty());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag,
+                søknadsperiode.getFom());
         return new SjekkOmDelerAvPeriodenHarGyldigGrunn().evaluate(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
+                new FastsettePeriodeGrunnlagImpl(grunnlag, null, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
                         søknadsperiode));
     }
 

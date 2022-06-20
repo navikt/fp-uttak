@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 public enum Spesialkontotype {
     // Andre typer rettigheter, utvidelser, perioder med spesielle regler.
     FLERBARN,
-    MINSTERETT,
+    BARE_FAR_MINSTERETT,
     FAR_RUNDT_FØDSEL,
-    ETTER_NY_STØNADSPERIODE,
+    TETTE_FØDSLER,
     UTEN_AKTIVITETSKRAV;
 }

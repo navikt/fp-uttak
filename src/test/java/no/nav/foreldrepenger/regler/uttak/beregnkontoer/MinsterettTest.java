@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.ETTER_NY_STØNADSPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.TETTE_FØDSLER;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.FAR_UTTAK_RUNDT_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.GENERELL_MINSTERETT;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.Minsterett.finnMinsterett;
@@ -104,8 +104,8 @@ class MinsterettTest {
                 .familieHendelseDatoNesteSak(LocalDate.now().plusWeeks(40))
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
-        assertThat(finnMinsterett(grunnlag)).containsEntry(ETTER_NY_STØNADSPERIODE,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TO_TETTE_DAGER_FØDSEL, LocalDate.now()));
+        assertThat(finnMinsterett(grunnlag)).containsEntry(TETTE_FØDSLER,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_FØDSEL, LocalDate.now()));
     }
 
     @Test
@@ -118,7 +118,7 @@ class MinsterettTest {
                 .familieHendelseDatoNesteSak(LocalDate.now().plusWeeks(50))
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
-        assertThat(finnMinsterett(grunnlag)).containsEntry(ETTER_NY_STØNADSPERIODE, 0);
+        assertThat(finnMinsterett(grunnlag)).containsEntry(TETTE_FØDSLER, 0);
     }
 
 }

@@ -18,15 +18,15 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 final class ForbruksTeller {
 
     static Trekkdager forbruksTellerKontoKunForbruk(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet,
-                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> unntak) {
-        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, unntak,
+                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> tellPeriode) {
+        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode,
                 (s,p) -> Trekkdager.ZERO, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
     }
 
     static Trekkdager forbruksTellerKontoMedUnntak(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet,
-                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> unntak,
+                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> tellPeriode,
                                                    BiFunction<Stønadskontotype, FastsattUttakPeriode, Trekkdager> unntaksTeller) {
-        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, unntak,
+        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode,
                 unntaksTeller, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
     }
 
@@ -34,17 +34,17 @@ final class ForbruksTeller {
     static Trekkdager forbruksTeller(Stønadskontotype stønadskonto,
                                      AktivitetIdentifikator aktivitet,
                                      List<FastsattUttakPeriode> søkersPerioder,
-                                     Predicate<FastsattUttakPeriode> unntak,
+                                     Predicate<FastsattUttakPeriode> tellPeriode,
                                      BiFunction<Stønadskontotype, FastsattUttakPeriode, Trekkdager> unntaksTeller,
                                      BiPredicate<FastsattUttakPeriode, FastsattUttakPeriodeAktivitet> aktivitetsfilter) {
         var sum = Trekkdager.ZERO;
-        var startindex = førstePeriodeMedAktivitetIkkeUnntak(aktivitet, søkersPerioder, unntak);
+        var startindex = førstePeriodeSomTellesMedAktivitet(aktivitet, søkersPerioder, tellPeriode);
         // Tilkommet aktivitet. Bruk minste forbruk inntil første forekomst - evt ZERO dersom ingen forekomster.
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
             var minForbrukteDagerEksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode).stream()
                     .filter(a -> !aktivitet.equals(a)) // Bør ikke være nødvendig
-                    .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, unntak, unntaksTeller, aktivitetsfilter))
+                    .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, tellPeriode, unntaksTeller, aktivitetsfilter))
                     .min(Trekkdager::compareTo)
                     .orElse(Trekkdager.ZERO);
             sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
@@ -52,10 +52,10 @@ final class ForbruksTeller {
 
         for (var i = startindex; i < søkersPerioder.size(); i++) {
             var periodeSøker = søkersPerioder.get(i);
-            if (unntak.test(periodeSøker)) {
-                sum = sum.add(unntaksTeller.apply(stønadskonto, periodeSøker));
-            } else {
+            if (tellPeriode.test(periodeSøker)) {
                 sum = sum.add(trekkdagerForUttaksperiode(aktivitet, periodeSøker, aktivitetsfilter));
+            } else {
+                sum = sum.add(unntaksTeller.apply(stønadskonto, periodeSøker));
             }
         }
 
@@ -63,18 +63,18 @@ final class ForbruksTeller {
     }
 
     // Index til første periode som inneholder aktivitet, 0 dersom finnes fra start, max dersom ikke funnet
-    private static int førstePeriodeMedAktivitetIkkeUnntak(AktivitetIdentifikator aktivitet,
-                                                           List<FastsattUttakPeriode> perioder,
-                                                           Predicate<FastsattUttakPeriode> unntak) {
-        var førsteIkkeUnntak = -1;
+    private static int førstePeriodeSomTellesMedAktivitet(AktivitetIdentifikator aktivitet,
+                                                          List<FastsattUttakPeriode> perioder,
+                                                          Predicate<FastsattUttakPeriode> tellPeriode) {
+        var førstePeriodeSomTelles = -1;
         for (var i = 0; i < perioder.size(); i++) {
             var periode = perioder.get(i);
-            if (!unntak.test(periode)) {
-                if (førsteIkkeUnntak == -1) {
-                    førsteIkkeUnntak = i;
+            if (tellPeriode.test(periode)) {
+                if (førstePeriodeSomTelles == -1) {
+                    førstePeriodeSomTelles = i;
                 }
                 if (aktivitetIPeriode(periode, aktivitet)) {
-                    return i == førsteIkkeUnntak ? 0 : i;
+                    return i == førstePeriodeSomTelles ? 0 : i;
                 }
             }
         }

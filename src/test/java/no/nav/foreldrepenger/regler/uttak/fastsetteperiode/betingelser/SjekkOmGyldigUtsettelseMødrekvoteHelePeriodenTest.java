@@ -206,6 +206,6 @@ class SjekkOmGyldigUtsettelseMødrekvoteHelePeriodenTest {
 
     private Resultat evaluer(OppgittPeriode oppgittPeriode, RegelGrunnlag grunnlag) {
         return new SjekkOmGyldigUtsettelseMødrekvoteHelePerioden().evaluate(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, null, oppgittPeriode)).result();
+                new FastsettePeriodeGrunnlagImpl(grunnlag, null, null, oppgittPeriode)).result();
     }
 }

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,6 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUtt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
@@ -29,8 +31,7 @@ public final class SaldoUtregningTjeneste {
                 grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
 
         var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder());
-        var stønadskontoer = lagStønadskontoer(grunnlag);
-        return new SaldoUtregning(stønadskontoer, søkersFastsattePerioder, annenpartsPerioder, grunnlag);
+        return new SaldoUtregning(grunnlag.getStønadskonti(), søkersFastsattePerioder, annenpartsPerioder, grunnlag);
     }
 
     private static List<FastsattUttakPeriode> knekkSøkersOppholdsperioder(List<FastsattUttakPeriode> annenpartsPerioder,
@@ -108,14 +109,6 @@ public final class SaldoUtregningTjeneste {
     private static AnnenpartUttakPeriode knekk(AnnenpartUttakPeriode ap, LocalDate nyFom, LocalDate nyTom) {
         var aktiviteterForPeriodeFørKnekkpunkt = aktiviteterForPeriodeFørKnekkpunkt(ap, nyFom, nyTom);
         return ap.kopiMedNyPeriode(nyFom, nyTom, aktiviteterForPeriodeFørKnekkpunkt);
-    }
-
-    private static Set<Stønadskonto> lagStønadskontoer(SaldoUtregningGrunnlag grunnlag) {
-        return grunnlag.getKontoer()
-                .getStønadskontotyper()
-                .stream()
-                .map(konto -> new Stønadskonto(konto, new Trekkdager(grunnlag.getKontoer().getStønadskontoTrekkdager(konto))))
-                .collect(Collectors.toSet());
     }
 
     private static FastsattUttakPeriode map(AnnenpartUttakPeriode annenpartsPeriode) {

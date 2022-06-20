@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEnPartsPeriodeErFlerbarnsdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEnePeriodenErFarsUttakRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
@@ -29,7 +30,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeUavklartUtenomNoenTyper;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterNyStønadsperiode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterNesteStønadsperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenGjelderFlerbarnsdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
@@ -184,7 +185,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFarRundtFødsel() {
         return rs.hvisRegel(SjekkOmEnePeriodenErFarsUttakRundtFødsel.ID, "Gjelder perioden fars uttak rundt fødsel?")
-                .hvis(new SjekkOmEnePeriodenErFarsUttakRundtFødsel(konfigurasjon), sjekkOmGradertEtterSøknadMottattdato())
+                .hvis(new SjekkOmEnePeriodenErFarsUttakRundtFødsel(), sjekkOmGradertEtterSøknadMottattdato())
                 .ellers(sjekkOmMerEnn100ProsentSamletUttak());
     }
 
@@ -238,18 +239,18 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
         return rs.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID, SjekkOmPeriodenErEtterMaksgrenseForUttak.BESKRIVELSE)
                 .hvis(new SjekkOmPeriodenErEtterMaksgrenseForUttak(konfigurasjon),
                         IkkeOppfylt.opprett("UT1085", IkkeOppfyltÅrsak.UTTAK_ETTER_3_ÅRSGRENSE, false, false))
-                .ellers(sjekkOmPeriodeEtterNyStønadsperiode());
+                .ellers(sjekkOmPeriodeEtterNesteStønadsperiode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNyStønadsperiode() {
-        return rs.hvisRegel(SjekkOmPeriodenErEtterNyStønadsperiode.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
-            .hvis(new SjekkOmPeriodenErEtterNyStønadsperiode(), sjekkOmGjenståendeMinsterettVedNyStønadsperiode())
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNesteStønadsperiode() {
+        return rs.hvisRegel(SjekkOmPeriodenErEtterNesteStønadsperiode.ID, SjekkOmPeriodenErEtterNesteStønadsperiode.BESKRIVELSE)
+            .hvis(new SjekkOmPeriodenErEtterNesteStønadsperiode(), sjekkOmGjenståendeDagerEtterNesteStønadsperiode())
             .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmGjenståendeMinsterettVedNyStønadsperiode() {
-        return rs.hvisRegel(SjekkOmMinsterettHarDisponibleDager.ID, SjekkOmPeriodenErEtterNyStønadsperiode.BESKRIVELSE)
-                .hvis(new SjekkOmMinsterettHarDisponibleDager(), sjekkOmUttaksperiodenEtterSøkersDødsdato())
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGjenståendeDagerEtterNesteStønadsperiode() {
+        return rs.hvisRegel(SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.ID, SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.BESKRIVELSE)
+                .hvis(new SjekkOmEtterNesteStønadsperiodeHarDisponibleDager(), sjekkOmUttaksperiodenEtterSøkersDødsdato())
                 .ellers(IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false));
     }
 

@@ -98,6 +98,6 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
                 .build();
         var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom, IKKE_VURDERT,
                 INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT);
-        return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, aktuellPeriode);
+        return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);
     }
 }

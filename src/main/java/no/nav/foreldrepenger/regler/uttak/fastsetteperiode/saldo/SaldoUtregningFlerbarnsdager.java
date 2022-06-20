@@ -63,7 +63,7 @@ class SaldoUtregningFlerbarnsdager {
 
        var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
         return ForbruksTeller.forbruksTeller(null, aktivitet, perioderMedFlerbarnsdager,
-                FastsattUttakPeriode::isOpphold, (s,p) -> Trekkdager.ZERO,
+                p -> !p.isOpphold(), (s,p) -> Trekkdager.ZERO,
                 (p, a) -> p.isFlerbarnsdager());
     }
 

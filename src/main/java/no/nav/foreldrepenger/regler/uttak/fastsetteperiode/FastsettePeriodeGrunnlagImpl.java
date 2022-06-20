@@ -35,7 +35,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Plei
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
@@ -45,10 +44,14 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final OppgittPeriode aktuellPeriode;
 
-    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning, OppgittPeriode aktuellPeriode) {
+    private final LukketPeriode farRundtFødselIntervall;
+
+    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag, LukketPeriode farRundtFødselIntervall,
+                                        SaldoUtregning saldoUtregning, OppgittPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;
         this.saldoUtregning = saldoUtregning;
         this.aktuellPeriode = aktuellPeriode;
+        this.farRundtFødselIntervall = farRundtFødselIntervall;
     }
 
     @Override
@@ -185,12 +188,17 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public boolean isSakMedMinsterett() {
-        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.MINSTERETT) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.MINSTERETT) > 0;
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.BARE_FAR_MINSTERETT) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT) > 0;
     }
 
     @Override
     public boolean isSakMedDagerUtenAktivitetskrav() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV) > 0;
+    }
+
+    @Override
+    public boolean isSakMedRettEtterStartNesteStønadsperiode() {
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
     }
 
     @Override
@@ -250,8 +258,9 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public Optional<LocalDate> getStartNyStønadsperiode() {
-        return regelGrunnlag.getDatoer().getStartdatoNesteStønadsperiode();
+    public boolean erAktuellPeriodeEtterStartNesteStønadsperiode() {
+        var fom = aktuellPeriode.getFom();
+        return regelGrunnlag.getDatoer().getStartdatoNesteStønadsperiode().filter(d -> !fom.isBefore(d)).isPresent();
     }
 
     @Override
@@ -295,8 +304,8 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public Optional<LukketPeriode> periodeFarRundtFødsel(Konfigurasjon konfigurasjon) {
-        return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(regelGrunnlag, konfigurasjon);
+    public Optional<LukketPeriode> periodeFarRundtFødsel() {
+        return Optional.ofNullable(farRundtFødselIntervall);
     }
 
     @Override

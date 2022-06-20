@@ -176,7 +176,7 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     public Specification<FastsettePeriodeGrunnlag> sjekkOmFarsUttakRundtFødsel() {
         return rs.hvisRegel(SjekkOmFarsUttakRundtFødselTilgjengeligeDager.ID, "Er det hjemlet fars uttak rundt fødsel?")
-                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(konfigurasjon), delFlytForTidligUttak())
+                .hvis(new SjekkOmFarsUttakRundtFødselTilgjengeligeDager(), delFlytForTidligUttak())
                 .ellers(uttakFørTerminFødsel());
     }
 

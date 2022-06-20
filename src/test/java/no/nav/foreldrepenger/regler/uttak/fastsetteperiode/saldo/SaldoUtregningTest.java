@@ -8,7 +8,9 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Støn
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,8 +35,8 @@ class SaldoUtregningTest {
     private final LocalDate enTirsdag = LocalDate.of(2019, 2, 19);
 
 
-    private Stønadskonto stønadskonto(Stønadskontotype kontoType, int trekkdager) {
-        return new Stønadskonto(kontoType, new Trekkdager(trekkdager));
+    private Map.Entry<Stønadskontotype, Trekkdager> stønadskonto(Stønadskontotype kontoType, int trekkdager) {
+        return Map.entry(kontoType, new Trekkdager(trekkdager));
     }
 
     @Test
@@ -45,7 +47,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 0)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 0)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isZero();
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isZero();
@@ -59,7 +61,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 10)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 10)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isEqualTo(10 - 5);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(10 - 5);
@@ -78,7 +80,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 12)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 12)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isEqualTo(12 - 5 - 5);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(12 - 5 - 5);
@@ -92,7 +94,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 12)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 12)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(2);
     }
@@ -105,7 +107,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 12)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 12)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(-1);
     }
@@ -118,7 +120,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(MØDREKVOTE)).isEqualTo(10 - 15);
@@ -139,7 +141,7 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode1, fastsattUttakPeriode2);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 15)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FORELDREPENGER, 15), perioderSøker,
                 Trekkdager.ZERO, new Trekkdager(10), Optional.empty(), Trekkdager.ZERO);
         assertThat(saldoUtregning.restSaldoDagerUtenAktivitetskrav(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(7));
         assertThat(saldoUtregning.saldo(FORELDREPENGER)).isEqualTo(2);
@@ -157,7 +159,7 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FORELDREPENGER, 10), perioderSøker,
                 new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(5-15);
@@ -181,7 +183,7 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FORELDREPENGER, 10), perioderSøker,
                 new Trekkdager(5), Trekkdager.ZERO, Optional.empty(), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
@@ -206,7 +208,7 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FORELDREPENGER, 10), perioderSøker,
                 Trekkdager.ZERO, new Trekkdager(5), Optional.empty(), Trekkdager.ZERO);
         // Skal beholde dager pga minsterett 5 derfor 5-15
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
@@ -230,7 +232,7 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FORELDREPENGER, 10)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FORELDREPENGER, 10), perioderSøker,
                 Trekkdager.ZERO, new Trekkdager(5), Optional.empty(), Trekkdager.ZERO);
         // Skal forbruke minsterett
         assertThat(saldoUtregning.nettoSaldoJustertForMinsterett(FORELDREPENGER, AKTIVITET1_SØKER, false).decimalValue().intValue()).isEqualTo(10-15);
@@ -250,11 +252,12 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FEDREKVOTE, 10), perioderSøker,
                 Trekkdager.ZERO, Trekkdager.ZERO, Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
         // Skal forbruke minsterett
-        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(5));
-        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel()).isEqualTo(new Trekkdager(5));
+        var rundtFødsel = new LukketPeriode(enTirsdag, enTirsdag);
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER, rundtFødsel)).isEqualTo(new Trekkdager(5));
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(rundtFødsel)).isEqualTo(new Trekkdager(5));
     }
 
     @Test
@@ -266,11 +269,12 @@ class SaldoUtregningTest {
                 .resultatÅrsak(FastsattUttakPeriode.ResultatÅrsak.ANNET)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = lagForenkletSaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker,
+        var saldoUtregning = lagForenkletSaldoUtregning(Map.of(FEDREKVOTE, 10), perioderSøker,
                 Trekkdager.ZERO, Trekkdager.ZERO, Optional.of(new LukketPeriode(enTirsdag, enTirsdag)), new Trekkdager(10));
         // Skal forbruke minsterett
-        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER)).isEqualTo(new Trekkdager(-5));
-        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel()).isEqualTo(new Trekkdager(-5));
+        var rundtFødsel = new LukketPeriode(enTirsdag, enTirsdag);
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(AKTIVITET1_SØKER, rundtFødsel)).isEqualTo(new Trekkdager(-5));
+        assertThat(saldoUtregning.restSaldoFarUttakRundtFødsel(rundtFødsel)).isEqualTo(new Trekkdager(-5));
     }
 
     @Test
@@ -282,7 +286,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER), null, null);
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET1_SØKER)).isEqualTo(10 - 15);
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET2_SØKER)).isEqualTo(10 - 20);
@@ -298,7 +302,7 @@ class SaldoUtregningTest {
                 .tidsperiode(enTirsdag, enTirsdag)
                 .build();
         var perioderSøker = List.of(fastsattUttakPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER), null, null);
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET1_SØKER)).isEqualTo(5);
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET2_SØKER)).isZero();
@@ -320,7 +324,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER),
                 null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isEqualTo(3);
@@ -344,7 +348,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER),
                 null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isEqualTo(8);
@@ -374,7 +378,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode1, annenpartPeriode2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER),
                 null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isEqualTo(11);
@@ -399,7 +403,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 true, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
     }
@@ -421,7 +425,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
     }
@@ -443,7 +447,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), enTirsdag.atStartOfDay(), enTirsdag.atStartOfDay().plusHours(2));
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
     }
@@ -465,7 +469,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), enTirsdag.atStartOfDay().plusHours(2), enTirsdag.atStartOfDay());
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(15);
     }
@@ -485,7 +489,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(15);
     }
@@ -505,7 +509,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
     }
@@ -523,7 +527,7 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2019, 2, 18), LocalDate.of(2019, 2, 18))
                 .build();
         var perioderSøker = List.of(periodeSøker1, periodeSøker2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 10)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 10)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(10 - 5);
     }
@@ -547,7 +551,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(periodeSøker);
         var perioderAnnenpart = List.of(oppholdAnnenpart, periodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(20 - 5 - 7);
     }
@@ -571,7 +575,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(periodeSøker, oppholdsperiodeSøker);
         var perioderAnnenpart = List.of(periodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20), stønadskonto(MØDREKVOTE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20), stønadskonto(MØDREKVOTE, 20)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER), null,
                 null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(20 - 2);
@@ -593,7 +597,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 10), stønadskonto(FELLESPERIODE, 20)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER),
                 null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE, AKTIVITET1_SØKER)).isEqualTo(3);
@@ -625,7 +629,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(periodeSøker1, oppholdsperiodeSøker);
         var perioderAnnenpart = List.of(oppholdsperiodeAnnenpart, periodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20), stønadskonto(MØDREKVOTE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20), stønadskonto(MØDREKVOTE, 20)),
                 perioderSøker, perioderAnnenpart, true, Set.of(AKTIVITET1_SØKER), null,
                 null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(20 - 2);
@@ -646,7 +650,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkerPeriode);
         var perioderAnnenpart = List.of(annenpartPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(20 - 12);
     }
@@ -675,7 +679,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(periodeSøker1, oppholdsperiodeSøker);
         var perioderAnnenpart = List.of(oppholdsperiodeAnnenpart, periodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 20), stønadskonto(FEDREKVOTE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 20), stønadskonto(FEDREKVOTE, 20)),
                 perioderSøker, perioderAnnenpart, true, Set.of(AKTIVITET1_SØKER), null,
                 null);
         assertThat(saldoUtregning.saldo(FEDREKVOTE)).isEqualTo(20 - 2);
@@ -708,7 +712,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker, periode2Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isFalse();
@@ -735,7 +739,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
@@ -762,7 +766,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isFalse();
@@ -791,7 +795,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isFalse();
@@ -818,7 +822,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
@@ -840,7 +844,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 30)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 30)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
@@ -869,7 +873,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
@@ -895,7 +899,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isTrue();
@@ -928,7 +932,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker, periode2Søker);
         var perioderAnnenpart = List.of(periode1Annenpart, periode2Annenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20), stønadskonto(FEDREKVOTE, 20)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20), stønadskonto(FEDREKVOTE, 20)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER), null,
                 null);
 
@@ -945,7 +949,7 @@ class SaldoUtregningTest {
                 .build();
 
         var perioderSøker = List.of(periode1Søker);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.søktSamtidigUttak(FELLESPERIODE)).isTrue();
@@ -961,7 +965,7 @@ class SaldoUtregningTest {
                 .build();
 
         var perioderSøker = List.of(periode1Søker);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, List.of(), false,
                 Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.søktSamtidigUttak(FELLESPERIODE)).isFalse();
@@ -994,7 +998,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker);
         var perioderAnnenpart = List.of(opphold1, opphold2, uttakAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         //1 per søknadsperioder + 1 for resterende opphold der det ikke er søkt
@@ -1028,7 +1032,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker, periode2Søker);
         var perioderAnnenpart = List.of(opphold, uttakAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 20)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(16);
@@ -1065,7 +1069,7 @@ class SaldoUtregningTest {
         var perioderSøker = List.of(periode1Søker, periode2Søker, periode3Søker);
         var perioderAnnenpart = List.of(oppholdAnnenpart, uttakAnnenpart);
         var saldoUtregning = new SaldoUtregning(
-                Set.of(stønadskonto(FELLESPERIODE, 51), stønadskonto(FEDREKVOTE, 75), stønadskonto(MØDREKVOTE, 75)), perioderSøker,
+                Map.ofEntries(stønadskonto(FELLESPERIODE, 51), stønadskonto(FEDREKVOTE, 75), stønadskonto(MØDREKVOTE, 75)), perioderSøker,
                 perioderAnnenpart, true, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(0);
@@ -1096,7 +1100,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periode1Søker, oppholdSøker);
         var perioderAnnenpart = List.of(innvilgetPeriodeAnnenpart, avslåttPeriodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FEDREKVOTE, 10)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FEDREKVOTE)).isEqualTo(9);
@@ -1127,10 +1131,10 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periodeSøker);
         var perioderAnnenpart = List.of(innvilgetPeriodeAnnenpart, oppholdAnnenpart1, oppholdAnnenpart2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10), stønadskonto(MØDREKVOTE, 10)),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FEDREKVOTE, 10), stønadskonto(MØDREKVOTE, 10)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FEDREKVOTE)).isZero();
-        var saldoUtregningBerørt = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10), stønadskonto(MØDREKVOTE, 10)),
+        var saldoUtregningBerørt = new SaldoUtregning(Map.ofEntries(stønadskonto(FEDREKVOTE, 10), stønadskonto(MØDREKVOTE, 10)),
                 perioderSøker, perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregningBerørt.saldo(FEDREKVOTE)).isZero();
     }
@@ -1151,7 +1155,7 @@ class SaldoUtregningTest {
 
         var perioderSøker = List.of(periodeSøker);
         var perioderAnnenpart = List.of(innvilgetPeriodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 100)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 100)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldoITrekkdager(FELLESPERIODE)).isEqualTo(new Trekkdager(92));
     }
@@ -1171,9 +1175,9 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkersPeriode);
         var perioderAnnenpart = List.of(annenpartsPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 10)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 10)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER), null, null);
-        var saldoUtregningBerørtBehandling = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 10)), perioderSøker,
+        var saldoUtregningBerørtBehandling = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 10)), perioderSøker,
                 perioderAnnenpart, true, Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isFalse();
@@ -1190,7 +1194,7 @@ class SaldoUtregningTest {
 
         List<FastsattUttakPeriode> perioderSøker = List.of();
         var perioderAnnenpart = List.of(innvilgetPeriodeAnnenpart);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 10)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FEDREKVOTE, 10)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
         assertThat(saldoUtregning.saldo(FEDREKVOTE)).isEqualTo(10);
     }
@@ -1210,7 +1214,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkersPeriode);
         var perioderAnnenpart = List.of(annenpartsPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 75)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FEDREKVOTE, 75)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FEDREKVOTE)).isTrue();
@@ -1230,7 +1234,7 @@ class SaldoUtregningTest {
                 .build();
         var perioderSøker = List.of(søkersPeriode);
         var perioderAnnenpart = List.of(annenpartsPeriode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FEDREKVOTE, 75)), perioderSøker, perioderAnnenpart,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FEDREKVOTE, 75)), perioderSøker, perioderAnnenpart,
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         //-20 dager på saldo, bare 19 dager igjen å frigi fra annenpart
@@ -1251,7 +1255,7 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
                 .build();
         var perioderAnnenpart = List.of(annenpartsPeriode1, annenpartsPeriode2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 75), stønadskonto(FELLESPERIODE, 80)), List.of(),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 75), stønadskonto(FELLESPERIODE, 80)), List.of(),
                 perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isZero();
@@ -1276,7 +1280,7 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
                 .build();
         var søkersPerioder = List.of(periodeUtenNyttArbeidsforhold, opphold, periodeMedNyttArbeidsforhold);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(MØDREKVOTE, 75)), søkersPerioder, List.of(), false,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 75)), søkersPerioder, List.of(), false,
                 Set.of(AKTIVITET1_SØKER, AKTIVITET2_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(MØDREKVOTE, AKTIVITET1_SØKER)).isZero();
@@ -1296,7 +1300,7 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2020, 2, 21), LocalDate.of(2020, 5, 5))
                 .build();
         var søkersPerioder = List.of(periode);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 75)), søkersPerioder, List.of(periodeAnnenpart),
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 75)), søkersPerioder, List.of(periodeAnnenpart),
                 false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(75);
@@ -1331,7 +1335,7 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2020, 5, 23), LocalDate.of(2020, 5, 23))
                 .build();
         var søkersPerioder = List.of(periode1, periode2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 5)), søkersPerioder,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 5)), søkersPerioder,
                 List.of(periodeAnnenpart1, periodeAnnenpart2, periodeAnnenpart3), false, Set.of(AKTIVITET1_SØKER),
                 null, null);
 
@@ -1363,34 +1367,22 @@ class SaldoUtregningTest {
                 .tidsperiode(LocalDate.of(2021, 8, 15), LocalDate.of(2021, 8, 15))
                 .build();
         var søkersPerioder = List.of(samtidigUttak, søkersPeriode2);
-        var saldoUtregning = new SaldoUtregning(Set.of(stønadskonto(FELLESPERIODE, 10)), søkersPerioder,
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(FELLESPERIODE, 10)), søkersPerioder,
                 List.of(oppholdAnnenpart, periodeAnnenpart), false, Set.of(AKTIVITET1_SØKER), null, null);
 
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
     }
 
-    private SaldoUtregning lagForenkletSaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
+    private SaldoUtregning lagForenkletSaldoUtregning(Map<Stønadskontotype, Integer> stønadskontoer, // NOSONAR
                                                       List<FastsattUttakPeriode> søkersPerioder,
                                                       Trekkdager minsterettDager,
                                                       Trekkdager utenAktivitetskravDager,
                                                       Optional<LukketPeriode> farUttakRundtFødselPeriode,
                                                       Trekkdager farUttakRundtFødselDager) {
-        return new SaldoUtregning(stønadskontoer, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER),
+        var konti = new EnumMap<Stønadskontotype, Trekkdager>(Stønadskontotype.class);
+        stønadskontoer.forEach((key, value) -> konti.put(key, new Trekkdager(value)));
+        return new SaldoUtregning(konti, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER),
                 null, null,
-                minsterettDager, utenAktivitetskravDager, Trekkdager.ZERO,
-                farUttakRundtFødselPeriode, farUttakRundtFødselDager);
-    }
-
-    // TODO (jol): slett eller bruk ifm bortfalt/avkortet minsterett
-    private SaldoUtregning lagForenkletAvkortetSaldoUtregning(Set<Stønadskonto> stønadskontoer, // NOSONAR
-                                                              List<FastsattUttakPeriode> søkersPerioder,
-                                                              Trekkdager minsterettDager,
-                                                              Trekkdager avkortetMinsterettdager,
-                                                              Optional<LukketPeriode> farUttakRundtFødselPeriode,
-                                                              Trekkdager farUttakRundtFødselDager) {
-        return new SaldoUtregning(stønadskontoer, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER),
-                null, null,
-                minsterettDager, Trekkdager.ZERO, Trekkdager.ZERO,
-                farUttakRundtFødselPeriode, farUttakRundtFødselDager);
+                minsterettDager, utenAktivitetskravDager, Trekkdager.ZERO, farUttakRundtFødselDager);
     }
 }

@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -12,17 +11,14 @@ public class SjekkOmEnePeriodenErFarsUttakRundtFødsel extends LeafSpecification
 
     public static final String ID = "FP_VK 30.0.10";
 
-    private Konfigurasjon konfigurasjon;
-
-    public SjekkOmEnePeriodenErFarsUttakRundtFødsel(Konfigurasjon konfigurasjon) {
+    public SjekkOmEnePeriodenErFarsUttakRundtFødsel() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        var farRundtFødselPeriode = grunnlag.periodeFarRundtFødsel(konfigurasjon);
+        var farRundtFødselPeriode = grunnlag.periodeFarRundtFødsel();
         // Far og periode innenfor intervall rundt fødsel
         if (!grunnlag.isSøkerMor() && farRundtFødselPeriode.filter(aktuellPeriode::erOmsluttetAv).isPresent()) {
             return ja();
