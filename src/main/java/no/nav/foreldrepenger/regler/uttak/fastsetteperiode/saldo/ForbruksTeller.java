@@ -43,7 +43,7 @@ final class ForbruksTeller {
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
             var minForbrukteDagerEksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode).stream()
-                    .filter(a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode) == 0) // Tell aktiviteter som finnes fra start
+                    .filter(a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode) < startindex) // Tell aktiviteter begynner tidligere
                     .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, tellPeriode, unntaksTeller, aktivitetsfilter))
                     .min(Trekkdager::compareTo)
                     .orElse(Trekkdager.ZERO);
@@ -61,6 +61,16 @@ final class ForbruksTeller {
 
         return sum;
     }
+
+    //    static Optional<FastsattUttakPeriode> nestePeriodeSomIkkeErOpphold(List<FastsattUttakPeriode> perioder, int index) {
+    //        for (var i = index + 1; i < perioder.size(); i++) {
+    //            var periode = perioder.get(i);
+    //            if (!periode.isOpphold()) {
+    //                return Optional.of(periode);
+    //            }
+    //        }
+    //        return Optional.empty();
+    //    }
 
     // Index til første periode som inneholder aktivitet, 0 dersom finnes fra start, max dersom ikke funnet
     private static int førstePeriodeSomTellesMedAktivitet(AktivitetIdentifikator aktivitet,
