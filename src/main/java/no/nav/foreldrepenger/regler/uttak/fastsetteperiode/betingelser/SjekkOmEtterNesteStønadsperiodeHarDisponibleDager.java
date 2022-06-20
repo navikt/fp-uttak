@@ -18,7 +18,7 @@ public class SjekkOmEtterNesteStønadsperiodeHarDisponibleDager extends LeafSpec
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSakMedRettEtterStartNesteStønadsperiode() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett() && grunnlag.etterStartNesteStønadsperiode()) {
+        if (grunnlag.isSakMedRettEtterStartNesteStønadsperiode() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett() && grunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldo = grunnlag.getSaldoUtregning().restSaldoEtterNesteStønadsperiode(aktivitet);
                 if (saldo.merEnn0()) {

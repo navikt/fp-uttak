@@ -258,7 +258,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public boolean etterStartNesteStønadsperiode() {
+    public boolean erAktuellPeriodeEtterStartNesteStønadsperiode() {
         var fom = aktuellPeriode.getFom();
         return regelGrunnlag.getDatoer().getStartdatoNesteStønadsperiode().filter(d -> !fom.isBefore(d)).isPresent();
     }

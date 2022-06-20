@@ -228,7 +228,7 @@ public interface FastsettePeriodeGrunnlag {
     /**
      * Aktuell periode begyunner på eller etter startdato neste stønadsperiode
      */
-    boolean etterStartNesteStønadsperiode();
+    boolean erAktuellPeriodeEtterStartNesteStønadsperiode();
 
     /**
      * Inngangsvilkår

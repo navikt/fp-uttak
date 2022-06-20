@@ -17,6 +17,6 @@ public class SjekkOmPeriodenErEtterNesteStønadsperiode extends LeafSpecificatio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.etterStartNesteStønadsperiode() ? ja() : nei();
+        return grunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode() ? ja() : nei();
     }
 }

@@ -38,7 +38,7 @@ final class ForbruksTeller {
                                      BiFunction<Stønadskontotype, FastsattUttakPeriode, Trekkdager> unntaksTeller,
                                      BiPredicate<FastsattUttakPeriode, FastsattUttakPeriodeAktivitet> aktivitetsfilter) {
         var sum = Trekkdager.ZERO;
-        var startindex = førstePeriodeMedAktivitetIkkeUnntak(aktivitet, søkersPerioder, tellPeriode);
+        var startindex = førstePeriodeSomTellesMedAktivitet(aktivitet, søkersPerioder, tellPeriode);
         // Tilkommet aktivitet. Bruk minste forbruk inntil første forekomst - evt ZERO dersom ingen forekomster.
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
@@ -63,18 +63,18 @@ final class ForbruksTeller {
     }
 
     // Index til første periode som inneholder aktivitet, 0 dersom finnes fra start, max dersom ikke funnet
-    private static int førstePeriodeMedAktivitetIkkeUnntak(AktivitetIdentifikator aktivitet,
-                                                           List<FastsattUttakPeriode> perioder,
-                                                           Predicate<FastsattUttakPeriode> ikkeUnntak) {
-        var førsteIkkeUnntak = -1;
+    private static int førstePeriodeSomTellesMedAktivitet(AktivitetIdentifikator aktivitet,
+                                                          List<FastsattUttakPeriode> perioder,
+                                                          Predicate<FastsattUttakPeriode> tellPeriode) {
+        var førstePeriodeSomTelles = -1;
         for (var i = 0; i < perioder.size(); i++) {
             var periode = perioder.get(i);
-            if (ikkeUnntak.test(periode)) {
-                if (førsteIkkeUnntak == -1) {
-                    førsteIkkeUnntak = i;
+            if (tellPeriode.test(periode)) {
+                if (førstePeriodeSomTelles == -1) {
+                    førstePeriodeSomTelles = i;
                 }
                 if (aktivitetIPeriode(periode, aktivitet)) {
-                    return i == førsteIkkeUnntak ? 0 : i;
+                    return i == førstePeriodeSomTelles ? 0 : i;
                 }
             }
         }
