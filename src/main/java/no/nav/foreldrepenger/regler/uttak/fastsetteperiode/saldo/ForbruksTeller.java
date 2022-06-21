@@ -43,7 +43,7 @@ final class ForbruksTeller {
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
             var minForbrukteDagerEksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode).stream()
-                    .filter(a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode) == 0) // Tell aktiviteter som finnes fra start
+                    .filter(a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode) < startindex) // Tell aktiviteter begynner tidligere
                     .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, tellPeriode, unntaksTeller, aktivitetsfilter))
                     .min(Trekkdager::compareTo)
                     .orElse(Trekkdager.ZERO);
