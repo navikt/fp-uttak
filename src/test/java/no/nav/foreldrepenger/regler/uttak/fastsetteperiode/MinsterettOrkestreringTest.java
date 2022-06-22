@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT;
@@ -56,7 +57,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harManuellPeriode(p.getUttakPeriode(), Manuellbehandlingårsak.MOR_UFØR, 20))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 20))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
     }
@@ -100,7 +101,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 75))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harManuellPeriode(p.getUttakPeriode(), Manuellbehandlingårsak.MOR_UFØR, 5))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 5))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
     }
 
     @Test
@@ -147,7 +148,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harManuellPeriode(p.getUttakPeriode(), Manuellbehandlingårsak.MOR_UFØR, 5))).isTrue(); // Søkt ufør, ikke dager igjen på minstekvote
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 5))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
     }
@@ -216,7 +217,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 75))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harManuellPeriode(p.getUttakPeriode(), Manuellbehandlingårsak.MOR_UFØR, 5))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 5))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
     }
 
     private boolean harPeriode(UttakPeriode p, Perioderesultattype prt, PeriodeResultatÅrsak prå, int dager) {
