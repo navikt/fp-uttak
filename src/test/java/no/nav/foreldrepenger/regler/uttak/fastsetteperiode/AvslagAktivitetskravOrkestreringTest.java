@@ -47,7 +47,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     @Test
-    void mor_med_bekreftet_uføretrygd_skal_gå_til_manuell() {
+    void mor_med_bekreftet_uføretrygd_skal_avslås() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2018, 1, 1));
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(200)).minsterettDager(20);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
@@ -62,7 +62,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR);
-        assertThat(fastsattePerioder.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT);
     }
 
     @Test
@@ -102,7 +102,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     @Test
-    void mor_med_bekreftet_uføretrygd_skal_gå_til_manuell_dager_uten_aktivitetskrav() {
+    void mor_med_bekreftet_uføretrygd_skal_gå_til_avslås_mangler_dager_uten_aktivitetskrav() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2018, 1, 1));
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(200)).utenAktivitetskravDager(20);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
@@ -117,7 +117,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR);
-        assertThat(fastsattePerioder.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT);
     }
 
     @Test
@@ -139,7 +139,29 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     @Test
-    void ukjent_mors_aktivitet_skal_gå_til_manuell_hvis_ikke_dokumentert() {
+    void ukjent_mors_aktivitet_skal_gå_til_manuell_hvis_dokumentert() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var kontoer = kontoerMedFellesperiode();
+        var oppgittPeriode = fellesperiode(fødselsdato, null);
+        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
+                new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(),
+                        IKKE_I_AKTIVITET_DOKUMENTERT));
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode).dokumentasjon(dokumentasjon);
+
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(beggeRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(
+                Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+    }
+
+    @Test
+    void ukjent_mors_aktivitet_fellesperiode_manuell_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
         var oppgittPeriode = fellesperiode(fødselsdato, null);
@@ -155,6 +177,24 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(
                 Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+    }
+
+    @Test
+    void ukjent_mors_aktivitet_foreldrepenger_skal_avslås_hvis_ikke_dokumentert() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 50));
+        var oppgittPeriode = foreldrepenger(fødselsdato, null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
+
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT);
     }
 
     @Test

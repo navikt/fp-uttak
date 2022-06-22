@@ -23,6 +23,7 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     MOR_IKKE_RETT_FP(4075, "Ikke rett til fellesperiode fordi mor ikke har rett til foreldrepenger"),
     UTTAK_ETTER_NY_STØNADSPERIODE(4104, "Uttak etter start av ny stønadsperiode"),
     FAR_PERIODE_FØR_FØDSEL(4105, "Far/medmor søker uttak før fødsel/omsorg"),
+    AKTIVITET_UKJENT_UDOKUMENTERT(4107, "Aktivitetskravet ikke oppgitt eller ikke dokumentert"),
 
     // Adopsjon
     FØR_OMSORGSOVERTAKELSE(4100, "Uttak før omsorgsovertakelse"),
