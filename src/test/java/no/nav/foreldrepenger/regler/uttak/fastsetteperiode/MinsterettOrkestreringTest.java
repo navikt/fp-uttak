@@ -1,12 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -43,9 +45,12 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(75);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
         var utsettelseFra = Virkedager.justerHelgTilMandag(fødselsdato.plusMonths(6));
-        var oppgittPeriodeU1 =  foreldrepengerUtsettelse(utsettelseFra, Virkedager.plusVirkedager(utsettelseFra, 19), MorsAktivitet.UFØRE);
+        var oppgittPeriodeU1 =  foreldrepengerUtsettelse(utsettelseFra, Virkedager.plusVirkedager(utsettelseFra, 19), MorsAktivitet.UTDANNING);
         var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriodeU1, oppgittPeriode2));
+        var dokumentasjon = new Dokumentasjon.Builder()
+                .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(oppgittPeriodeU1.getFom(), oppgittPeriodeU1.getTom(), IKKE_I_AKTIVITET_IKKE_DOKUMENTERT));
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).dokumentasjon(dokumentasjon)
+                .oppgittePerioder(List.of(oppgittPeriode, oppgittPeriodeU1, oppgittPeriode2));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
@@ -57,7 +62,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 20))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT, 20))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
     }
