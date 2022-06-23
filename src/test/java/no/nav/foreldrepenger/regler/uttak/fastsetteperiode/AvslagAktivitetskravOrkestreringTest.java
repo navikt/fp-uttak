@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Støn
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -195,6 +196,31 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT);
+    }
+
+    @Test
+    void ukjent_mors_aktivitet_fri_uteettelse_foreldrepenger_skal_avslås_hvis_minsterett_ikke_dokumentert() {
+        var fødselsdato = LocalDate.of(2022, 9, 1);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 75)).minsterettDager(1);
+        var oppgittPeriode = foreldrepenger(fødselsdato, null);
+        var utsettelse1 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1),
+                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, null);
+        var utsettelse2 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(17).minusDays(1),
+                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FRI, fødselsdato, fødselsdato, null);
+
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, utsettelse1, utsettelse2));
+
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT);
+        assertThat(fastsattePerioder.get(2).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+        assertThat(fastsattePerioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
     }
 
     @Test
