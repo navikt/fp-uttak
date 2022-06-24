@@ -5,7 +5,10 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Aktiv
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forSelvstendigNæringsdrivende;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -373,6 +376,98 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(11).minusDays(1));
         assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+    }
+
+    @Test
+    void msp_pga_fødselshendelse_etter_termin_skal_innvilge_mødrekvote() {
+        var termindato = LocalDate.of(2022, 6, 23);
+        var fødselsdato = termindato.plusWeeks(1);
+        var fellesperiode = oppgittPeriode(FELLESPERIODE, termindato.minusWeeks(3), termindato.minusWeeks(2).minusDays(1));
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(5).minusDays(1));
+        //Hull skapt av justering ved fødselshendelsen
+        var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
+                .søknad(søknad(FØDSEL, fellesperiode, fpff, mødrekvote1, mødrekvote2))
+                .build();
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(5);
+
+        //msp skal innvilges som mødrekvote
+        assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(5));
+        assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.MSP_INNVILGET);
+        var aktivitet = grunnlag.getArbeid().getAktiviteter().stream().findFirst().orElseThrow();
+        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.HUNDRED);
+    }
+
+    @Test
+    void msp_pga_fødselshendelse_etter_termin_skal_innvilge_mødrekvote_søker_over_uke_6() {
+        var termindato = LocalDate.of(2022, 6, 16);
+        var fødselsdato = LocalDate.of(2022, 6, 23);
+        var fellesperiode = oppgittPeriode(FELLESPERIODE, LocalDate.of(2022, 5, 26), LocalDate.of(2022, 6, 1));
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2022, 6, 2), LocalDate.of(2022, 6, 22));
+        var mødrekvote1 = oppgittPeriode(MØDREKVOTE, LocalDate.of(2022, 6, 23), LocalDate.of(2022, 7, 29));
+        //Hull skapt av justering ved fødselshendelsen
+        var mødrekvote2 = oppgittPeriode(MØDREKVOTE, LocalDate.of(2022, 8, 25), LocalDate.of(2022, 8, 31));
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
+                .søknad(søknad(FØDSEL, fellesperiode, fpff, mødrekvote1, mødrekvote2))
+                .build();
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(5);
+
+        //msp skal innvilges som mødrekvote
+        assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(LocalDate.of(2022, 8, 1));
+        assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2022, 8, 3));
+        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.MSP_INNVILGET);
+        var aktivitet = grunnlag.getArbeid().getAktiviteter().stream().findFirst().orElseThrow();
+        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(3));
+        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.HUNDRED);
+    }
+
+    @Test
+    void msp_første_6_ukene_som_ikke_er_opprettet_av_fødselshendelse_skal_avlås() {
+        var termindato = LocalDate.of(2022, 6, 21);
+        var fødselsdato = termindato.plusDays(3);
+        var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
+        var mødrekvote1 = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1));
+        //hull mellom 3-4
+        var mødrekvote2 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5).minusDays(1));
+        //hull mellom 5-6
+        var mødrekvote3 = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1));
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
+                .søknad(søknad(FØDSEL, fpff, mødrekvote1, mødrekvote2, mødrekvote3))
+                .build();
+        var perioder = fastsettPerioder(grunnlag);
+        var aktivitet = grunnlag.getArbeid().getAktiviteter().stream().findFirst().orElseThrow();
+
+        assertThat(perioder).hasSize(6);
+
+        assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
+        assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
+        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
+
+        assertThat(perioder.get(4).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(5));
+        assertThat(perioder.get(4).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(perioder.get(4).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
+        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
     private PeriodeMedAvklartMorsAktivitet aktivitetAvklart(LocalDate fom, LocalDate tom) {
