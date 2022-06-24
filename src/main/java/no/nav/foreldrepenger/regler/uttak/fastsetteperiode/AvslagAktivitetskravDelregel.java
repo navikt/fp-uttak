@@ -15,10 +15,12 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOpp
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmAktivitetErDokumentert;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmFriUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorArbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorBekreftetUføre;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorInnlagt;
@@ -29,7 +31,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.S
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorSyk;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorUtdanning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorsAktivitetErKjent;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmErUttakUtenAktivitetskrav;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmUttakOgUtenAktivitetskrav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -116,14 +118,21 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorBekreftetUføretrygdErUttak() {
-        return rs.hvisRegel(SjekkOmErUttakUtenAktivitetskrav.ID, SjekkOmErUttakUtenAktivitetskrav.BESKRIVELSE)
-                .hvis(new SjekkOmErUttakUtenAktivitetskrav(), avslå("UT1324", AKTIVITET_UKJENT_UDOKUMENTERT))
+        return rs.hvisRegel(SjekkOmUttakOgUtenAktivitetskrav.ID, SjekkOmUttakOgUtenAktivitetskrav.BESKRIVELSE)
+                .hvis(new SjekkOmUttakOgUtenAktivitetskrav(), avslå("UT1324", AKTIVITET_UKJENT_UDOKUMENTERT))
                 .ellers(utfall1314AvklarAktivitetSituasjon());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUkjentAktivitetErUttakUtenAktivitetskrav() {
-        return rs.hvisRegel(SjekkOmErUttakUtenAktivitetskrav.ID, SjekkOmErUttakUtenAktivitetskrav.BESKRIVELSE)
-                .hvis(new SjekkOmErUttakUtenAktivitetskrav(), avslå("UT1323", AKTIVITET_UKJENT_UDOKUMENTERT))
+        return rs.hvisRegel(SjekkOmUttakOgUtenAktivitetskrav.ID, SjekkOmUttakOgUtenAktivitetskrav.BESKRIVELSE)
+                .hvis(new SjekkOmUttakOgUtenAktivitetskrav(), avslå("UT1323", AKTIVITET_UKJENT_UDOKUMENTERT))
+                .ellers(sjekkOmUkjentAktivitetErFriUtsettelse());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmUkjentAktivitetErFriUtsettelse() {
+        // Pga praksis med tekniske perioder u/aktivitet fra søknader fram til første uttak.
+        return rs.hvisRegel(SjekkOmFriUtsettelse.ID, SjekkOmFriUtsettelse.BESKRIVELSE)
+                .hvis(new SjekkOmFriUtsettelse(), avslå("UT1325", BARE_FAR_RETT_IKKE_SØKT))
                 .ellers(Manuellbehandling.opprett("UT1315", null,
                         Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
     }
