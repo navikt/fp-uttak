@@ -41,21 +41,23 @@ public enum Minsterett {
             retter.put(TETTE_FØDSLER, 0);
         }
         if (minsterett) {
-            var antallDager = 0;
-            if (bareFarHarRett && !aleneomsorg) {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
-            }
-            if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
+            // Settes for begge parter. Brukes ifm berørt for begge og fakta uttak for far.
+            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL,
+                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, fhDato));
+        }
+        if (minsterett && bareFarHarRett && !aleneomsorg) {
+            var antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
+            if (morHarUføretrygd) {
                 antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, fhDato) :
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, fhDato);
             }
-            if (bareFarHarRett && grunnlag.getAntallBarn() == 2) {
+            if (grunnlag.getAntallBarn() == 2) {
                 antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, fhDato);
             }
-            if (bareFarHarRett && grunnlag.getAntallBarn() > 2) {
+            if (grunnlag.getAntallBarn() > 2) {
                 antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, fhDato);
@@ -63,9 +65,6 @@ public enum Minsterett {
             if (antallDager > 0) {
                 retter.put(Minsterett.GENERELL_MINSTERETT, antallDager);
             }
-            // Settes for begge. Brukes ifm berørt for begge og fakta uttak for far.
-            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL,
-                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, fhDato));
         } else if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
             var antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
                     StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, fhDato) :
