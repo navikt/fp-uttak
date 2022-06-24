@@ -43,6 +43,33 @@ class MinsterettTest {
     }
 
     @Test
+    void bfhr_mor_ufør_flerbarn() {
+        var grunnlag80 = new BeregnMinsterettGrunnlag.Builder()
+                .minsterett(true)
+                .mor(false)
+                .antallBarn(2)
+                .morHarUføretrygd(true)
+                .bareFarHarRett(true)
+                .familieHendelseDato(LocalDate.now())
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
+                .build();
+        assertThat(finnMinsterett(grunnlag80)).containsEntry(GENERELL_MINSTERETT,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, LocalDate.now()));
+
+        var grunnlag100 = new BeregnMinsterettGrunnlag.Builder()
+                .minsterett(true)
+                .mor(false)
+                .antallBarn(4)
+                .morHarUføretrygd(true)
+                .bareFarHarRett(true)
+                .familieHendelseDato(LocalDate.now())
+                .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+                .build();
+        assertThat(finnMinsterett(grunnlag100)).containsEntry(GENERELL_MINSTERETT,
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, LocalDate.now()));
+    }
+
+    @Test
     void begge_rett() {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)

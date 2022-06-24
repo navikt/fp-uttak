@@ -50,6 +50,16 @@ public enum Minsterett {
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, fhDato) :
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, fhDato);
             }
+            if (bareFarHarRett && grunnlag.getAntallBarn() == 2) {
+                antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, fhDato);
+            }
+            if (bareFarHarRett && grunnlag.getAntallBarn() > 2) {
+                antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, fhDato);
+            }
             if (antallDager > 0) {
                 retter.put(Minsterett.GENERELL_MINSTERETT, antallDager);
             }

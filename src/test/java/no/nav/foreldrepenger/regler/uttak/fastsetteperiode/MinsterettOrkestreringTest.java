@@ -69,11 +69,12 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
     @Test
     void bfhr_mor_med_bekreftet_uføretrygd_flerbarn_skal_godkjennes() {
-        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285))).flerbarnsdager(85).minsterettDager(75);
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 2, 1));
+        var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285))).flerbarnsdager(85).minsterettDager(85);
         var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
         var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
+        var oppgittPeriode3 = foreldrepenger(fødselsdato.plusYears(2), MorsAktivitet.UFØRE);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2, oppgittPeriode3));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
@@ -83,10 +84,13 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(0).getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(1).getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(2).getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 195)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(4).getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(5).getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 0)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(6).getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 5)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(7).getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1)).isTrue();
     }
 
     @Test
