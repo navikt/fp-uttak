@@ -10,6 +10,7 @@ public class BeregnMinsterettGrunnlag {
     private boolean bareFarHarRett;
     private boolean aleneomsorg;
     private boolean gjelderFødsel = true;
+    private int antallBarn = 1;
     private Dekningsgrad dekningsgrad;
     private LocalDate familieHendelseDato;
     private LocalDate familieHendelseDatoNesteSak;
@@ -39,6 +40,10 @@ public class BeregnMinsterettGrunnlag {
 
     public boolean isGjelderFødsel() {
         return gjelderFødsel;
+    }
+
+    public int getAntallBarn() {
+        return antallBarn;
     }
 
     public Dekningsgrad getDekningsgrad() {
@@ -84,6 +89,11 @@ public class BeregnMinsterettGrunnlag {
 
         public Builder gjelderFødsel(boolean gjelderFødsel) {
             grunnlag.gjelderFødsel =  gjelderFødsel;
+            return this;
+        }
+
+        public Builder antallBarn(int antallBarn) {
+            grunnlag.antallBarn =  antallBarn;
             return this;
         }
 
