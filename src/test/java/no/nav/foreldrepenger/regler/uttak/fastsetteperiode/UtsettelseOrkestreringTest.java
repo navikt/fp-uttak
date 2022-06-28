@@ -2,6 +2,11 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.utsettelse;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.uttak;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.ARBEID;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.FERIE;
@@ -12,13 +17,9 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utset
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSy
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
@@ -614,6 +616,160 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(p2.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(10));
 
         assertThat(p3.getStønadskontotype()).isEqualTo(MØDREKVOTE);
+    }
+
+    @Test
+    void fri_utsettelse_første_6_ukene_skal_gå_til_manuell_pre_wlb() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .kontoer(defaultKontoer())
+                .søknad(søknad(FØDSEL,
+                        utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), FRI),
+                        oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1), false, SamtidigUttaksprosent.HUNDRED)
+                ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
+    void fri_utsettelse_første_6_ukene_skal_innvilges_for_far_begge_rett() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .kontoer(defaultKontoer().farUttakRundtFødselDager(10))
+                .søknad(søknad(FØDSEL,
+                        utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), FRI),
+                        oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1), false, SamtidigUttaksprosent.HUNDRED),
+                        utsettelsePeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), FRI),
+                        oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(5).minusDays(1), false, new SamtidigUttaksprosent(50)),
+                        utsettelsePeriode(fødselsdato.plusWeeks(5), fødselsdato.plusWeeks(8).minusDays(1), FRI),
+                        oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15))
+                        ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(6);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+
+        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
+    void fri_utsettelse_første_6_ukene_skal_innvilges_for_bfhr() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100).minsterettDager(40).farUttakRundtFødselDager(10))
+                .søknad(søknad(FØDSEL,
+                        utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), FRI),
+                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1)),
+                        utsettelsePeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), FRI),
+                        gradertoppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(5).minusDays(1), BigDecimal.valueOf(50)),
+                        utsettelsePeriode(fødselsdato.plusWeeks(5), fødselsdato.plusWeeks(8).minusDays(1), FRI, MorsAktivitet.ARBEID),
+                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10))
+                ).dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(6),
+                        fødselsdato.plusWeeks(10), PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET))));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(7);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+
+        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+
+        assertThat(perioder.get(6).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
+    void fri_utsettelse_før_termin_far_begge_rett() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .kontoer(defaultKontoer().farUttakRundtFødselDager(10))
+                .søknad(søknad(FØDSEL,
+                        utsettelsePeriode(fødselsdato.minusWeeks(1), fødselsdato.plusWeeks(1).minusDays(1), FRI),
+                        oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(5).minusDays(1), false, SamtidigUttaksprosent.HUNDRED)
+                ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(3);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+    }
+
+    @Test
+    void fri_utsettelse_før_termin_bfhr() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100).minsterettDager(40).farUttakRundtFødselDager(10))
+                .søknad(søknad(FØDSEL,
+                        utsettelsePeriode(fødselsdato.minusWeeks(1), fødselsdato.plusWeeks(1).minusDays(1), FRI),
+                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1))
+                ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(3);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {
