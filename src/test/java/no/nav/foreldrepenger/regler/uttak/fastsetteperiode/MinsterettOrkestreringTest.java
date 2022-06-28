@@ -8,11 +8,14 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOpp
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -60,8 +63,10 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 40))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 35))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT, 20))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
@@ -85,11 +90,14 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(harPeriode(fastsattePerioder.get(0).getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5)).isTrue();
-        assertThat(harPeriode(fastsattePerioder.get(1).getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(1).getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 40)).isTrue();
         assertThat(harPeriode(fastsattePerioder.get(2).getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 195)).isTrue();
-        assertThat(harPeriode(fastsattePerioder.get(4).getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(4).getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 40)).isTrue();
         assertThat(harPeriode(fastsattePerioder.get(5).getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 0)).isTrue();
-        assertThat(harPeriode(fastsattePerioder.get(6).getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 5)).isTrue();
+        assertThat(harPeriode(fastsattePerioder.get(6).getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 5)).isTrue();
         assertThat(harPeriode(fastsattePerioder.get(7).getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1)).isTrue();
     }
 
@@ -108,7 +116,8 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 75))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 75))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 5))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
     }
@@ -133,7 +142,8 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(4);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 190))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 5))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, 0))).isTrue();
     }
@@ -155,8 +165,10 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 40))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 35))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 5))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
@@ -183,7 +195,8 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 40))).isTrue(); // Akt krav oppfylt
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 35))).isTrue(); // Mellomliggende
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue(); // Akt krav ikke oppfylt - innvilget fra uføre
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 40))).isTrue(); // Akt krav ikke oppfylt - innvilget fra uføre
     }
 
     @Test
@@ -203,8 +216,10 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 40))).isTrue();
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 35))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 40))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 35))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, IKKE_STØNADSDAGER_IGJEN, -1))).isTrue();
     }
@@ -224,9 +239,117 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, 75))).isTrue();
+        assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET,
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, 75))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, BARE_FAR_RETT_IKKE_SØKT, 5))).isTrue();
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.AVSLÅTT, AKTIVITET_UKJENT_UDOKUMENTERT, 5))).isTrue();; // Søkt ufør, ikke dager igjen på minstekvote
+    }
+
+    @Test
+    void bfhr_flerbarnsdager_skal_også_trekkes_fra_minsteretten() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(5).flerbarnsdager(5);
+        //Uten mors aktivitet bruker opp minsterett
+        var oppgittPeriode1 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1));
+        var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1),
+                true, null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(
+                List.of(oppgittPeriode1, oppgittPeriode2));
+
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder).hasSize(2);
+
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+    }
+
+    @Test
+    void bfhr_flerbarnsdager_minsterett_skal_gå_tom_for_dager_selv_om_ikke_minsterett_brukes_opp() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40)).minsterettDager(17).flerbarnsdager(10);
+        var oppgittPeriode1 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(14).minusDays(1),
+                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+        var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(17).minusDays(1),
+                true, null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2))
+                .dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(oppgittPeriode1.getFom(),
+                        oppgittPeriode1.getTom(), I_AKTIVITET)));
+
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder).hasSize(2);
+
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                FORELDREPENGER_KUN_FAR_HAR_RETT);
+
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+    }
+
+    @Test
+    void bfhr_flerbarnsdager_minsterett_skal_gå_tom_for_dager_når_tomt_for_flerbarnsdager() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40)).minsterettDager(10).flerbarnsdager(10);
+        var oppgittPeriode1 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+                true, null);
+        var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1),
+                true, null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
+
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder).hasSize(2);
+
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+    }
+
+    @Test
+    void bfhr_flerbarnsdager_trekker_minsterett() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40)).minsterettDager(25).flerbarnsdager(20);
+        var oppgittPeriode1 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+                true, null);
+        var gradertPeriode = OppgittPeriode.forGradering(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10),
+                BigDecimal.TEN, null, true, Set.of(ARBEIDSFORHOLD), PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
+                null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittePerioder(List.of(oppgittPeriode1, gradertPeriode));
+
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(bareFarRett())
+                .søknad(søknad)
+                .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder).hasSize(2);
+
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
     }
 
     private boolean harPeriode(UttakPeriode p, Perioderesultattype prt, PeriodeResultatÅrsak prå, int dager) {

@@ -23,16 +23,19 @@ class SaldoUtregningFlerbarnsdager {
     private final List<FastsattUttakPeriode> annenpartsPerioder;
     private final Set<AktivitetIdentifikator> søkersAktiviteter;
     private final Trekkdager flerbarnsdager;
+    private final Trekkdager minsterettDager;
 
     public SaldoUtregningFlerbarnsdager(List<FastsattUttakPeriode> søkersPerioder,
                                         List<FastsattUttakPeriode> annenpartsPerioder,
                                         Set<AktivitetIdentifikator> søkersAktiviteter,
-                                        Trekkdager flerbarnsdager) {
+                                        Trekkdager flerbarnsdager,
+                                        Trekkdager minsterettDager) {
 
         this.søkersPerioder = søkersPerioder;
         this.annenpartsPerioder = annenpartsPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
         this.flerbarnsdager = flerbarnsdager;
+        this.minsterettDager = minsterettDager;
     }
 
     Trekkdager restSaldo() {
@@ -61,16 +64,18 @@ class SaldoUtregningFlerbarnsdager {
     private Trekkdager forbruktSøker(AktivitetIdentifikator aktivitet,
                                      List<FastsattUttakPeriode> søkersPerioder) {
 
-       var perioderMedFlerbarnsdager = søkersPerioder.stream().filter(p -> p.isFlerbarnsdager()).toList();
+       var perioderMedFlerbarnsdager = søkersPerioder.stream()
+               .filter(p -> trekkFlerbarnsdager(p))
+               .toList();
         return ForbruksTeller.forbruksTeller(null, aktivitet, perioderMedFlerbarnsdager,
                 p -> !p.isOpphold(), (s,p) -> Trekkdager.ZERO,
-                (p, a) -> p.isFlerbarnsdager());
+                (p, a) -> trekkFlerbarnsdager(p));
     }
 
     private Trekkdager minForbruktAnnenpart() {
         Map<AktivitetIdentifikator, Trekkdager> forbrukte = new HashMap<>();
         var annenpartsPerioderMedFlerbarnsdager = annenpartsPerioder.stream()
-                .filter(ap -> ap.isFlerbarnsdager())
+                .filter(ap -> trekkFlerbarnsdager(ap))
                 .toList();
         for (var periode : annenpartsPerioderMedFlerbarnsdager) {
             for (var annenpartAktivitet : aktiviteterIPerioder(annenpartsPerioder)) {
@@ -87,8 +92,12 @@ class SaldoUtregningFlerbarnsdager {
         return forbrukte.values().stream().min(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
+    private boolean trekkFlerbarnsdager(FastsattUttakPeriode periode) {
+        return periode.isFlerbarnsdager() && (periode.isForbrukMinsterett() || minsterettDager.equals(Trekkdager.ZERO));
+    }
+
     private Trekkdager minForbrukteDager(FastsattUttakPeriode periode) {
-        if (!periode.isFlerbarnsdager()) {
+        if (!trekkFlerbarnsdager(periode)) {
             return Trekkdager.ZERO;
         }
         return periode.getAktiviteter().stream()
@@ -100,10 +109,10 @@ class SaldoUtregningFlerbarnsdager {
     private Trekkdager frigitteDager() {
         Trekkdager sum = Trekkdager.ZERO;
         for (var periode : søkersPerioder) {
-            if (periode.isFlerbarnsdager()) {
+            if (trekkFlerbarnsdager(periode)) {
                 var overlappendePerioderMedFlerbarnsdager = overlappendePeriode(periode, annenpartsPerioder)
                         .stream()
-                        .filter(op -> op.isFlerbarnsdager())
+                        .filter(op -> trekkFlerbarnsdager(op))
                         .toList();
                 for (var overlappendePeriode : overlappendePerioderMedFlerbarnsdager) {
                     if (innvilgetMedTrekkdager(periode)) {
@@ -117,7 +126,7 @@ class SaldoUtregningFlerbarnsdager {
 
     private Trekkdager dagerForUttaksperiode(AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
         return periode.getAktiviteter().stream()
-                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && periode.isFlerbarnsdager())
+                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && trekkFlerbarnsdager(periode))
                 .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
                 .findFirst().orElse(Trekkdager.ZERO);
     }
@@ -133,7 +142,7 @@ class SaldoUtregningFlerbarnsdager {
     }
 
     private Trekkdager minTrekkdager(FastsattUttakPeriode periode) {
-        if (!periode.isFlerbarnsdager()) {
+        if (!trekkFlerbarnsdager(periode)) {
             return Trekkdager.ZERO;
         }
         return periode.getAktiviteter().stream()

@@ -685,7 +685,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1317");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, "UT1317");
     }
 
     @Test
@@ -704,7 +704,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1318");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, "UT1318");
     }
 
     @Test
@@ -723,7 +723,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1317");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, "UT1317");
     }
 
     @Test
@@ -742,7 +742,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR, "UT1318");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, "UT1318");
     }
 
     @Test

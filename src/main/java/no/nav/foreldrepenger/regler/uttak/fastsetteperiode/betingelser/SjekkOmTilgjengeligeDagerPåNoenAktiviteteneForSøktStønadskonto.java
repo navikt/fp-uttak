@@ -6,7 +6,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID)
-public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class  SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.5";
     public static final String BESKRIVELSE = "Har noen aktiviteter disponible stønadsdager på kvoten?";

@@ -14,8 +14,8 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     GRADERING_ALENEOMSORG(2032, "Gradering ved aleneomsorg"),
     GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT(2033, "Gradering foreldrepenger, kun far har rett"),
     GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT(2034, "Gradering foreldrepenger, kun mor har rett"),
-    GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR(2035, "Gradering foreldrepenger, kun far har rett  mor er ufør"),
-    FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR(2036, "Foreldrepenger, kun far har rett mor er ufør"),
+    GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(2035, "Gradering foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
+    FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(2036, "Innvilget foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
 
     // Overføring årsaker
     OVERFØRING_ANNEN_PART_IKKE_RETT(2020, "Overføring - annen part ikke rett"),

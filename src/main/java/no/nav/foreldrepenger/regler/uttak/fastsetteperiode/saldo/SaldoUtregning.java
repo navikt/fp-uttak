@@ -57,7 +57,8 @@ public class SaldoUtregning {
         this.sisteSøknadMottattTidspunktAnnenpart = grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null);
         this.berørtBehandling = grunnlag.isBerørtBehandling();
         this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
-                søkersAktiviteter, grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN));
+                søkersAktiviteter, grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN),
+                grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT));
         this.stønadskonti.putAll(stønadskontoer);
         Arrays.stream(Spesialkontotype.values()).forEach(k -> this.spesialkonti.put(k, grunnlag.getSpesialkontoTrekkdager(k)));
     }
@@ -73,7 +74,8 @@ public class SaldoUtregning {
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
                    Trekkdager minsterettDager,
                    Trekkdager utenAktivitetskravDager,
-                   Trekkdager flerbarnsdager, Trekkdager farUttakRundtFødselDager) {
+                   Trekkdager flerbarnsdager,
+                   Trekkdager farUttakRundtFødselDager) {
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
@@ -81,7 +83,7 @@ public class SaldoUtregning {
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.berørtBehandling = berørtBehandling;
         this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
-                søkersAktiviteter, flerbarnsdager);
+                søkersAktiviteter, flerbarnsdager, minsterettDager);
         this.stønadskonti.putAll(stønadskontoer);
         this.spesialkonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
         this.spesialkonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
