@@ -6,13 +6,16 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAlleDisponibleDagerIgjenMinsterett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenOpprettetAvFødselshendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -104,10 +107,15 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeGjelderMorsReserverteUker(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmPeriodenInnenforUkerReservertMor.ID, "Innenfor mors reserverte uker")
-                .hvis(new SjekkOmPeriodenInnenforUkerReservertMor(konfigurasjon),
-                        IkkeOppfylt.opprett("UT1094", IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL, true, false))
-                .ellers(Manuellbehandling.opprett("UT1095", null,
-                        Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
+                .hvis(new SjekkOmPeriodenInnenforUkerReservertMor(konfigurasjon), sjekkOmPeriodeErOpprettetAvFødselshendelse(rs))
+                .ellers(Manuellbehandling.opprett("UT1095", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErOpprettetAvFødselshendelse(Ruleset<FastsettePeriodeGrunnlag> rs) {
+        return rs.hvisRegel(SjekkOmPeriodenOpprettetAvFødselshendelse.ID, SjekkOmPeriodenOpprettetAvFødselshendelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenOpprettetAvFødselshendelse(konfigurasjon),
+                        Oppfylt.opprett("UT1097", InnvilgetÅrsak.MSP_INNVILGET, true, true))
+                .ellers(IkkeOppfylt.opprett("UT1094", IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL, true, false));
     }
 
 }
