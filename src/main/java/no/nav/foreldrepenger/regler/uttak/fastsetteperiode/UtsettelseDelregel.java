@@ -2,17 +2,21 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarHarDagerRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselErFørUke33;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFørTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSykdomSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTidsperiodeForbeholdtMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaBarnetsInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSøkerInnleggelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmFriUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -100,8 +104,30 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), varBarnetInnlagtSjekk)
-                .ellers(Manuellbehandling.opprett("UT1357", null,
-                        Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+                .ellers(sjekkOmSøkerErMor());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor() {
+        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
+                .hvis(new SjekkOmSøkerErMor(), manuellUT1357())
+                .ellers(sjekkOmFarHarDagerRundtFødsel());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmFarHarDagerRundtFødsel() {
+        return rs.hvisRegel(SjekkOmFarHarDagerRundtFødsel.ID, SjekkOmFarHarDagerRundtFødsel.BESKRIVELSE)
+                .hvis(new SjekkOmFarHarDagerRundtFødsel(), sjekkOmFriUtsettelse())
+                .ellers(manuellUT1357());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmFriUtsettelse() {
+        return rs.hvisRegel(SjekkOmFriUtsettelse.ID, SjekkOmFriUtsettelse.BESKRIVELSE)
+                .hvis(new SjekkOmFriUtsettelse(),
+                        Oppfylt.opprett("UT1361", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false))
+                .ellers(manuellUT1357());
+    }
+
+    private FastsettePeriodeUtfall manuellUT1357() {
+        return Manuellbehandling.opprett("UT1357", null, Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaBarnInnlagtPrematur() {

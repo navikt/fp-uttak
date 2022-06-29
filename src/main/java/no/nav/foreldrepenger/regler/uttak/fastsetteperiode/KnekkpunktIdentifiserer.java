@@ -71,13 +71,13 @@ class KnekkpunktIdentifiserer {
             // Etter Prop 15L 21/22: Første 6 uker forbeholdt mor kun for kvoter. Far har opptil 10 dager samtidig uttak ifm fødsel
             knekkpunkter.add(familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
             var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
-            var sakMedKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
+            var sakUtenKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
             var erMor = grunnlag.getBehandling().isSøkerMor();
-            if (!hjemletFarUttakRundtFødsel || sakMedKvoter || erMor) {
+            if (!hjemletFarUttakRundtFødsel || sakUtenKvoter || erMor) {
                 knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
             if (hjemletFarUttakRundtFødsel && !erMor) {
-                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon, sakMedKvoter));
+                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon, sakUtenKvoter));
             }
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
