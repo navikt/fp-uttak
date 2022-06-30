@@ -54,7 +54,8 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
         assertThat(finnMinsterett(grunnlag80)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, LocalDate.now()));
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, LocalDate.now())
+        + StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, LocalDate.now()));
 
         var grunnlag100 = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
@@ -66,7 +67,8 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
         assertThat(finnMinsterett(grunnlag100)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, LocalDate.now()));
+                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, LocalDate.now())
+        + StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, LocalDate.now()));
     }
 
     @Test
