@@ -18,6 +18,7 @@ public class BeregnKontoerGrunnlag {
     private LocalDate termindato;
     //adopsjon
     private LocalDate omsorgsovertakelseDato;
+    private boolean minsterett = true;
 
     private BeregnKontoerGrunnlag() {
     }
@@ -48,6 +49,10 @@ public class BeregnKontoerGrunnlag {
 
     public boolean erFødsel() {
         return fødselsdato != null || termindato != null;
+    }
+
+    public boolean isMinsterett() {
+        return minsterett;
     }
 
     public Optional<LocalDate> getFødselsdato() {
@@ -116,6 +121,11 @@ public class BeregnKontoerGrunnlag {
 
         public Builder omsorgsovertakelseDato(LocalDate dato) {
             kladd.omsorgsovertakelseDato = dato;
+            return this;
+        }
+
+        public Builder minsterett(boolean minsterett) {
+            kladd.minsterett = minsterett;
             return this;
         }
 

@@ -43,7 +43,7 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
                     // Legg ekstra dager til foreldrepenger eller fellesperiode.
                     if ((kontokonfigurasjon.getStønadskontotype().equals(StønadskontoBeregningStønadskontotype.FORELDREPENGER))) {
                         antallDager += antallExtraBarnDager;
-                        if (kunFarRettIkkeAleneomsorgFlerbarnsdager(grunnlag)) {
+                        if (kunFarRettIkkeAleneomsorgFlerbarnsdager(grunnlag) && !grunnlag.isMinsterett()) {
                             kontoerMap.put(StønadskontoBeregningStønadskontotype.FLERBARNSDAGER, antallExtraBarnDager);
                         }
                     } else if (kontokonfigurasjon.getStønadskontotype().equals(StønadskontoBeregningStønadskontotype.FELLESPERIODE)) {
