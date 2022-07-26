@@ -45,7 +45,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <fpsak.nare.version>2.2.5</fpsak.nare.version>
-        <jupiter.version>5.8.2</jupiter.version>
+        <jupiter.version>5.9.0</jupiter.version>
         <assertj.version>3.23.1</assertj.version>
     </properties>
 
