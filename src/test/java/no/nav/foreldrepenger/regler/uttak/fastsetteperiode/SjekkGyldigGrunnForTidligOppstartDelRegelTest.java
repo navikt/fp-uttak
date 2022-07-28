@@ -18,8 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     private final FastsettePerioderRegelOrkestrering regelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
-    //TODO PFP-8743 endre til å sjekke på GyldigGrunnPerioder og ikke om periodeverudering er OK
-
     @Test
     void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);

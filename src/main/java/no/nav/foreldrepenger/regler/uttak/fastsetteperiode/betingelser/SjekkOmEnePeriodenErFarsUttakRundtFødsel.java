@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -26,12 +25,8 @@ public class SjekkOmEnePeriodenErFarsUttakRundtFødsel extends LeafSpecification
 
         // Mor og annanpart har periode innenfor intervall rundt fødsel
         if (grunnlag.isSøkerMor() && farRundtFødselPeriode.isPresent()) {
-            for (var periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
-                if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, periodeAnnenPart)
-                        && periodeAnnenPart.erOmsluttetAv(farRundtFødselPeriode.get())) {
-                    return ja();
-                }
-            }
+            return grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(app -> app.erOmsluttetAv(farRundtFødselPeriode.get()))
+                .isPresent() ? ja() : nei();
         }
         return nei();
 

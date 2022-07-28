@@ -1272,7 +1272,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    void bare_far_har_rett_skal_innvilge_minsterett_men_ikke_etter_ny_stønad_selv_om_dager_igjen() { // TODO TFP-5067
+    void bare_far_har_rett_skal_innvilge_minsterett_men_ikke_etter_ny_stønad_selv_om_dager_igjen() {
         //Søkt samme dag, men mor har søkt etter far
         var fødselsdato = LocalDate.of(2022, 10, 6);
         var nestesakStartDato = fødselsdato.plusWeeks(41);  // TOTETTE <= 45 uker (stønadsperiode begynner 3 uker før fødsel). OBS neste sak kan begyynne langt senere

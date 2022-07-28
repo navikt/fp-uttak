@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
@@ -200,6 +201,8 @@ public interface FastsettePeriodeGrunnlag {
      * @return list av annenpart sin uttaksperioder
      */
     List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder();
+
+    Optional<AnnenpartUttakPeriode> getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(Predicate<AnnenpartUttakPeriode> filter);
 
     LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt();
 

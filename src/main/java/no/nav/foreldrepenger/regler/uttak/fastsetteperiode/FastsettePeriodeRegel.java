@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAdopsjonsvilkåretErOppfylt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAkseptert150ProsentSamtidigUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
@@ -197,8 +198,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMerEnn100ProsentSamletUttak() {
         return rs.hvisRegel(SjekkOmParteneMerEnn100ProsentUttak.ID, SjekkOmParteneMerEnn100ProsentUttak.BESKRIVELSE)
-                .hvis(new SjekkOmParteneMerEnn100ProsentUttak(), Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false))
+                .hvis(new SjekkOmParteneMerEnn100ProsentUttak(), sjekkOmAkseptert150ProsentUttak())
                 .ellers(sjekkOmGradertEtterSøknadMottattdato());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptert150ProsentUttak() {
+        return rs.hvisRegel(SjekkOmAkseptert150ProsentSamtidigUttak.ID, SjekkOmAkseptert150ProsentSamtidigUttak.BESKRIVELSE)
+            .hvis(new SjekkOmAkseptert150ProsentSamtidigUttak(), sjekkOmGradertEtterSøknadMottattdato())
+            .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
