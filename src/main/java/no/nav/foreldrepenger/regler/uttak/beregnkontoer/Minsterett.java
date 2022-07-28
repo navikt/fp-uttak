@@ -47,34 +47,25 @@ public enum Minsterett {
         }
         if (minsterett && bareFarHarRett && !aleneomsorg) {
             var antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
+            var flerbarnDager = 0;
             if (morHarUføretrygd) {
                 antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, fhDato) :
                         StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, fhDato);
             }
             if (grunnlag.getAntallBarn() == 2) {
-                var toBarnDager = Dekningsgrad.DEKNINGSGRAD_80.equals(
-                        grunnlag.getDekningsgrad()) ? StandardKonfigurasjon.KONFIGURASJON.getParameter(
-                        Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80,
-                        fhDato) : StandardKonfigurasjon.KONFIGURASJON.getParameter(
-                        Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, fhDato);
-                if (morHarUføretrygd) {
-                    antallDager += toBarnDager;
-                } else {
-                    antallDager = toBarnDager;
-                }
+                flerbarnDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, fhDato);
             }
             if (grunnlag.getAntallBarn() > 2) {
-                var treBarnDager = Dekningsgrad.DEKNINGSGRAD_80.equals(
-                        grunnlag.getDekningsgrad()) ? StandardKonfigurasjon.KONFIGURASJON.getParameter(
-                        Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80,
-                        fhDato) : StandardKonfigurasjon.KONFIGURASJON.getParameter(
-                        Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, fhDato);
-                if (morHarUføretrygd) {
-                    antallDager += treBarnDager;
-                } else {
-                    antallDager = treBarnDager;
-                }
+                flerbarnDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
+                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, fhDato);
+            }
+            if (flerbarnDager > 0) {
+                var dagerFørTilleggAvFlerbarn = morHarUføretrygd ? antallDager : 0;
+                antallDager = dagerFørTilleggAvFlerbarn + flerbarnDager;
             }
             if (antallDager > 0) {
                 retter.put(Minsterett.GENERELL_MINSTERETT, antallDager);
@@ -93,7 +84,6 @@ public enum Minsterett {
         if (familieHendelseDatoNesteSak == null) {
             return false;
         }
-        // TODO: avklare med PE om gjelder for første sak etter WLB eller andre sak etter WLB
         var toTetteGrense = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.TETTE_SAKER_MELLOMROM_UKER, familieHendelseDato);
         var grenseToTette = familieHendelseDato.plus(Period.ofWeeks(toTetteGrense)).plusDays(1);
         return grenseToTette.isAfter(familieHendelseDatoNesteSak);

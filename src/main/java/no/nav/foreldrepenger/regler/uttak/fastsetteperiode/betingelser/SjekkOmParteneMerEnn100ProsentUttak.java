@@ -1,15 +1,12 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
-import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -41,28 +38,20 @@ public class SjekkOmParteneMerEnn100ProsentUttak extends LeafSpecification<Fasts
     }
 
     private SamtidigUttaksprosent uttaksprosentAnnenpart(FastsettePeriodeGrunnlag grunnlag) {
-        var annenpartsPeriode = finnOverlappendePeriode(grunnlag.getAktuellPeriode(),
-                grunnlag.getAnnenPartUttaksperioder());
+        var annenpartsPeriode = grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(app -> true);
 
-        return annenpartsPeriode.map(ap -> {
-            if (ap.isUtsettelse() && ap.isInnvilget()) {
-                return SamtidigUttaksprosent.HUNDRED;
-            }
-            return ap.getAktiviteter().stream()
-                    .filter(a -> a.getUtbetalingsgrad().harUtbetaling())
-                    .min(Comparator.comparing(AnnenpartUttakPeriodeAktivitet::getUtbetalingsgrad))
-                    .map(a -> new SamtidigUttaksprosent(a.getUtbetalingsgrad().decimalValue()))
-                    .orElse(SamtidigUttaksprosent.ZERO);
-        }).orElse(SamtidigUttaksprosent.ZERO);
+        return annenpartsPeriode.map(this::getSamtidigUttaksprosent).orElse(SamtidigUttaksprosent.ZERO);
     }
 
-    private Optional<AnnenpartUttakPeriode> finnOverlappendePeriode(OppgittPeriode aktuellPeriode,
-                                                                    List<AnnenpartUttakPeriode> annenPartUttaksperioder) {
-        for (AnnenpartUttakPeriode annenpartUttakPeriode : annenPartUttaksperioder) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, annenpartUttakPeriode)) {
-                return Optional.of(annenpartUttakPeriode);
-            }
+    private SamtidigUttaksprosent getSamtidigUttaksprosent(AnnenpartUttakPeriode ap) {
+        if (ap.isUtsettelse() && ap.isInnvilget()) {
+            return SamtidigUttaksprosent.HUNDRED;
         }
-        return Optional.empty();
+        return ap.getAktiviteter().stream()
+                .filter(a -> a.getUtbetalingsgrad().harUtbetaling())
+                .min(Comparator.comparing(AnnenpartUttakPeriodeAktivitet::getUtbetalingsgrad))
+                .map(a -> new SamtidigUttaksprosent(a.getUtbetalingsgrad().decimalValue()))
+                .orElse(SamtidigUttaksprosent.ZERO);
     }
+
 }

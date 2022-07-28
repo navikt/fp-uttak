@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -21,12 +21,7 @@ public class SjekkOmEnPartsPeriodeErFlerbarnsdager extends LeafSpecification<Fas
         if (oppgittPeriode.isFlerbarnsdager()) {
             return ja();
         }
-        for (var periodeAnnenPart : grunnlag.getAnnenPartUttaksperioder()) {
-            if (PerioderUtenHelgUtil.perioderUtenHelgOverlapper(oppgittPeriode, periodeAnnenPart)
-                    && periodeAnnenPart.isFlerbarnsdager()) {
-                return ja();
-            }
-        }
-        return nei();
+        return grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(AnnenpartUttakPeriode::isFlerbarnsdager)
+            .isPresent() ? ja() : nei();
     }
 }

@@ -8,6 +8,7 @@ public class SamtidigUttaksprosent implements Comparable<SamtidigUttaksprosent> 
 
     public static final SamtidigUttaksprosent ZERO = new SamtidigUttaksprosent(0);
     public static final SamtidigUttaksprosent TEN = new SamtidigUttaksprosent(10);
+    public static final SamtidigUttaksprosent FIFTY = new SamtidigUttaksprosent(50);
     public static final SamtidigUttaksprosent HUNDRED = new SamtidigUttaksprosent(100);
 
     private final BigDecimal verdi;
@@ -46,6 +47,10 @@ public class SamtidigUttaksprosent implements Comparable<SamtidigUttaksprosent> 
 
     public boolean merEnn100() {
         return this.compareTo(SamtidigUttaksprosent.HUNDRED) > 0;
+    }
+
+    public boolean merEnn50() {
+        return this.compareTo(SamtidigUttaksprosent.FIFTY) > 0;
     }
 
     @Override

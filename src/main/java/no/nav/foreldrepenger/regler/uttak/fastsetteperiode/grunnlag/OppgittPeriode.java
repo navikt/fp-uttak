@@ -170,7 +170,6 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public boolean gjelderPeriodeMinsterett() {
-        // TODO WLB - Tilpasse til mekanismene som brukes for å søke med bakgrunn i minsterett ulike scenarier. Denne er konservativ nå.
         return kanTrekkeAvMinsterett();
     }
 
