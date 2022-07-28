@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -36,7 +35,7 @@ public class FastsettePerioderRegelOrkestrering {
     private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
     public List<FastsettePeriodeResultat> fastsettePerioder(RegelGrunnlag grunnlag, FeatureToggles featureToggles) {
-        return fastsettePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON, featureToggles);
+        return fastsettePerioder(grunnlag, Konfigurasjon.STANDARD, featureToggles);
     }
 
     public List<FastsettePeriodeResultat> fastsettePerioder(RegelGrunnlag grunnlag,

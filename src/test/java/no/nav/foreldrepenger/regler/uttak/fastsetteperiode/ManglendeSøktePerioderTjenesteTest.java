@@ -34,11 +34,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 class ManglendeSøktePerioderTjenesteTest {
 
-    private final Konfigurasjon konfigurasjon = StandardKonfigurasjon.KONFIGURASJON;
+    private final Konfigurasjon konfigurasjon = Konfigurasjon.STANDARD;
     private final int mødrekvoteDager = konfigurasjon.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
             LocalDate.of(2018, 6, 1));
     private final int fedrekvoteDager = konfigurasjon.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT,
@@ -435,7 +434,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
-        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
     }
 
     private RettOgOmsorg.Builder aleneomsorg() {

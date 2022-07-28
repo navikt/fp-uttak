@@ -10,11 +10,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningG
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 final class DelRegelTestUtil {
 
-    private static final FastsettePeriodeRegel REGEL = new FastsettePeriodeRegel(StandardKonfigurasjon.KONFIGURASJON, new FeatureTogglesForTester());
+    private static final FastsettePeriodeRegel REGEL = new FastsettePeriodeRegel(Konfigurasjon.STANDARD, new FeatureTogglesForTester());
 
     private DelRegelTestUtil() {
     }
