@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnMinsterettGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.Dekningsgrad;
+import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 class MinsterettTest {
 
@@ -28,7 +28,7 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
         assertThat(finnMinsterett(grunnlag80)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, LocalDate.now()));
 
         var grunnlag100 = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
@@ -39,7 +39,7 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
         assertThat(finnMinsterett(grunnlag100)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, LocalDate.now()));
     }
 
     @Test
@@ -54,8 +54,8 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_80)
                 .build();
         assertThat(finnMinsterett(grunnlag80)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, LocalDate.now())
-        + StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, LocalDate.now())
+        + Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, LocalDate.now()));
 
         var grunnlag100 = new BeregnMinsterettGrunnlag.Builder()
                 .minsterett(true)
@@ -67,8 +67,8 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
         assertThat(finnMinsterett(grunnlag100)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, LocalDate.now())
-        + StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, LocalDate.now())
+        + Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, LocalDate.now()));
     }
 
     @Test
@@ -82,7 +82,7 @@ class MinsterettTest {
                 .aleneomsorg(false)
                 .build();
         assertThat(finnMinsterett(grunnlag)).containsEntry(FAR_UTTAK_RUNDT_FØDSEL,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, LocalDate.now()));
     }
 
     @Test
@@ -95,7 +95,7 @@ class MinsterettTest {
                 .bareFarHarRett(true)
                 .build();
         assertThat(finnMinsterett(grunnlag)).containsEntry(GENERELL_MINSTERETT,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, LocalDate.now()));
     }
 
     @Test
@@ -134,7 +134,7 @@ class MinsterettTest {
                 .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
                 .build();
         assertThat(finnMinsterett(grunnlag)).containsEntry(TETTE_FØDSLER,
-                StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_FØDSEL, LocalDate.now()));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_FØDSEL, LocalDate.now()));
     }
 
     @Test

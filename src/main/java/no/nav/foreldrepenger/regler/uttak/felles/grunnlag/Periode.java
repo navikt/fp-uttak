@@ -28,16 +28,16 @@ public class Periode {
         return !(dato.isBefore(fom) || dato.isAfter(tom));
     }
 
-    public boolean overlapper(LukketPeriode periode) {
+    public boolean overlapper(Periode periode) {
         return overlapper(periode.getFom()) || overlapper(periode.getTom()) || erOmsluttetAv(periode);
     }
 
     //Også true hvis perioden er lik
-    public boolean erOmsluttetAv(LukketPeriode periode) {
+    public boolean erOmsluttetAv(Periode periode) {
         return !periode.getFom().isAfter(fom) && !periode.getTom().isBefore(tom);
     }
 
-    public boolean erLik(LukketPeriode periode) {
+    public boolean erLik(Periode periode) {
         return Objects.equals(getFom(), periode.getFom()) && Objects.equals(getTom(), periode.getTom());
     }
 

@@ -19,20 +19,18 @@ public class KonfigurasjonBuilder {
     }
 
     public KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Integer verdi) {
+        var nyParameter = new Parameter(fom, tom, verdi);
         var parameterListe = parameterMap.get(parametertype);
         if (parameterListe == null) {
             Collection<Parameter> coll = new ArrayList<>();
-            coll.add(new Parameter(fom, tom, verdi));
+            coll.add(nyParameter);
             parameterMap.put(parametertype, coll);
         } else {
-            var nyttParameter = new Parameter(fom, tom, verdi);
-            var count = parameterListe.stream()
-                    .filter(p -> p.overlapper(nyttParameter.getFom()) || (nyttParameter.getTom() != null && p.overlapper(nyttParameter.getTom())))
-                    .count();
-            if (count > 0L) {
+            var overlapp = parameterListe.stream().anyMatch(nyParameter::overlapper);
+            if (overlapp) {
                 throw new IllegalArgumentException("Overlappende perioder kan ikke eksistere i konfigurasjon.");
             }
-            parameterListe.add(nyttParameter);
+            parameterListe.add(nyParameter);
         }
         return this;
     }

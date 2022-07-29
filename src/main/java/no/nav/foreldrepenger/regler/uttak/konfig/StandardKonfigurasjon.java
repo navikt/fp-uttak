@@ -3,11 +3,14 @@ package no.nav.foreldrepenger.regler.uttak.konfig;
 import java.time.LocalDate;
 import java.time.Month;
 
+@Deprecated(forRemoval = true)
 public class StandardKonfigurasjon {
 
+    @Deprecated(forRemoval = true)
     public static final Konfigurasjon KONFIGURASJON;
 
     //Søknadsdialog trenger støtte før 2019
+    @Deprecated(forRemoval = true)
     public static final Konfigurasjon SØKNADSDIALOG;
 
     static {

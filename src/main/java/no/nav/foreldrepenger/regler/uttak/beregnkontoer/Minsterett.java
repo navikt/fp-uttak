@@ -7,8 +7,8 @@ import java.util.Map;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnMinsterettGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.Dekningsgrad;
+import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 public enum Minsterett {
 
@@ -30,11 +30,11 @@ public enum Minsterett {
         if (minsterett && toTette) {
             var antallDager = 0;
             if (grunnlag.isMor() && grunnlag.isGjelderFødsel()) {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_FØDSEL, fhDato);
+                antallDager = Konfigurasjon.STANDARD.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_FØDSEL, fhDato);
             } else if (grunnlag.isMor()) {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_ADOPSJON, fhDato);
+                antallDager = Konfigurasjon.STANDARD.getParameter(Parametertype.MOR_TETTE_SAKER_DAGER_ADOPSJON, fhDato);
             } else {
-                antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_TETTE_SAKER_DAGER_MINSTERETT, fhDato);
+                antallDager = Konfigurasjon.STANDARD.getParameter(Parametertype.FAR_TETTE_SAKER_DAGER_MINSTERETT, fhDato);
             }
             retter.put(TETTE_FØDSLER, antallDager);
         } else if (grunnlag.getFamilieHendelseDatoNesteSak() != null){
@@ -42,26 +42,25 @@ public enum Minsterett {
         }
         if (minsterett) {
             // Settes for begge parter. Brukes ifm berørt for begge og fakta uttak for far.
-            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL,
-                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, fhDato));
+            retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL, Konfigurasjon.STANDARD.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, fhDato));
         }
         if (minsterett && bareFarHarRett && !aleneomsorg) {
-            var antallDager = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
+            var antallDager = Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
             var flerbarnDager = 0;
             if (morHarUføretrygd) {
                 antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
-                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, fhDato) :
-                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, fhDato);
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_80_PROSENT, fhDato) :
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_MINSTERETT_100_PROSENT, fhDato);
             }
             if (grunnlag.getAntallBarn() == 2) {
                 flerbarnDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
-                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
-                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, fhDato);
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.EKSTRA_DAGER_TO_BARN_FOR_DEKNINGSGRAD_100, fhDato);
             }
             if (grunnlag.getAntallBarn() > 2) {
                 flerbarnDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
-                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
-                        StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, fhDato);
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_80, fhDato) :
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.EKSTRA_DAGER_TRE_ELLER_FLERE_BARN_FOR_DEKNINGSGRAD_100, fhDato);
             }
             if (flerbarnDager > 0) {
                 var dagerFørTilleggAvFlerbarn = morHarUføretrygd ? antallDager : 0;
@@ -72,8 +71,8 @@ public enum Minsterett {
             }
         } else if (morHarUføretrygd && bareFarHarRett && !aleneomsorg) {
             var antallDager = Dekningsgrad.DEKNINGSGRAD_80.equals(grunnlag.getDekningsgrad()) ?
-                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, fhDato) :
-                    StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, fhDato);
+                Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_80_PROSENT, fhDato) :
+                Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_MOR_UFØR_DAGER_UTEN_AKTIVITETSKRAV_100_PROSENT, fhDato);
             retter.put(Minsterett.UTEN_AKTIVITETSKRAV, antallDager);
         }
         return retter;
@@ -84,7 +83,7 @@ public enum Minsterett {
         if (familieHendelseDatoNesteSak == null) {
             return false;
         }
-        var toTetteGrense = StandardKonfigurasjon.KONFIGURASJON.getParameter(Parametertype.TETTE_SAKER_MELLOMROM_UKER, familieHendelseDato);
+        var toTetteGrense = Konfigurasjon.STANDARD.getParameter(Parametertype.TETTE_SAKER_MELLOMROM_UKER, familieHendelseDato);
         var grenseToTette = familieHendelseDato.plus(Period.ofWeeks(toTetteGrense)).plusDays(1);
         return grenseToTette.isAfter(familieHendelseDatoNesteSak);
     }

@@ -15,11 +15,10 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
-import no.nav.foreldrepenger.regler.uttak.konfig.StandardKonfigurasjon;
 
 class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
 
-    private final Konfigurasjon konfigurasjon = StandardKonfigurasjon.KONFIGURASJON;
+    private final Konfigurasjon konfigurasjon = Konfigurasjon.STANDARD;
     private final int mødrekvoteDager = konfigurasjon.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
             LocalDate.of(2018, 6, 1));
     private final int fedrekvoteDager = konfigurasjon.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT,
@@ -45,7 +44,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .datoer(new Datoer.Builder().fødsel(fødsel))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(fødsel);
@@ -74,7 +73,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(adopsjonsDato).stebarnsadopsjon(false))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(adopsjonsDato);
@@ -97,7 +96,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, farFom, farFom.plusDays(10))))
                 .build();
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).hasSize(1);
     }
 
@@ -247,7 +246,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         AnnenpartUttakPeriode.Builder.uttak(hullDato.plusDays(1), fødselsdato.plusWeeks(10)).build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(hullDato);
         assertThat(msp.get(0).getTom()).isEqualTo(hullDato);
@@ -280,7 +279,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         .uttaksperiode(annenpartAvslåttMødrekvote))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(annenpartAvslåttMødrekvote.getFom());
         assertThat(msp.get(0).getTom()).isEqualTo(familiehendelse.plusWeeks(8).minusDays(1));
@@ -319,7 +318,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                                         .build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).hasSize(0);
     }
 
@@ -336,7 +335,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         AnnenpartUttakPeriode.Builder.uttak(annenPartStart, annenPartStart.plusWeeks(10)).build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).isEmpty();
     }
 
@@ -351,7 +350,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .datoer(new Datoer.Builder().fødsel(familiehendelse))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(6));
@@ -376,7 +375,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .datoer(new Datoer.Builder().fødsel(familiehendelse))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(2);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse().plusWeeks(3).plusDays(1));
@@ -400,7 +399,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp.get(0).getFom()).isNotEqualTo(familiehendelse.plusWeeks(7));
     }
@@ -440,7 +439,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         .uttaksperiode(annenpartAvslåttMødrekvote))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(annenpartAvslåttMødrekvote.getFom());
@@ -473,7 +472,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         .uttaksperiode(annenpartInnvilgetUtsettelse))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(annenpartInnvilgetUtsettelse.getTom().plusDays(1));
@@ -498,7 +497,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .annenPart(new AnnenPart.Builder().uttaksperiode(annenpartInnvilgetMødrekvote))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(annenpartInnvilgetMødrekvote.getTom().plusDays(1));
@@ -516,7 +515,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
@@ -542,7 +541,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .annenPart(new AnnenPart.Builder())
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
@@ -562,7 +561,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getDatoer().getFamiliehendelse());
@@ -582,7 +581,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(familiehendelse.plusDays(3)))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getAdopsjon().getAnkomstNorgeDato());
@@ -605,7 +604,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         AnnenpartUttakPeriode.Builder.uttak(omsorgsovertakelse, førsteUttaksdato.minusDays(1)).build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).isEmpty();
     }
@@ -625,7 +624,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         AnnenpartUttakPeriode.Builder.uttak(omsorgsovertakelse, førsteUttaksdato.minusWeeks(1)).build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getTom().plusDays(1));
         assertThat(msp.get(0).getTom()).isEqualTo(førsteUttaksdato.minusDays(1));
@@ -646,7 +645,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         AnnenpartUttakPeriode.Builder.uttak(omsorgsovertakelse.plusWeeks(1), førsteUttaksdato.minusWeeks(1)).build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
         assertThat(msp).hasSize(2);
         assertThat(msp.get(0).getFom()).isEqualTo(omsorgsovertakelse);
         assertThat(msp.get(0).getTom()).isEqualTo(grunnlag.getAnnenPart().getUttaksperioder().get(0).getFom().minusDays(1));
@@ -667,7 +666,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(familiehendelse.plusDays(3)))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(2);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getAdopsjon().getAnkomstNorgeDato());
@@ -695,7 +694,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                                 .build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         //Lager manglende søkt bare for fredagen, ok ikke helgen
         assertThat(msp).hasSize(1);
@@ -713,7 +712,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).isEmpty();
     }
@@ -729,7 +728,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato.minusWeeks(1)))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getOpptjening().getSkjæringstidspunkt());
@@ -749,7 +748,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                         AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8)).build()))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).isEmpty();
     }
@@ -768,7 +767,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .revurdering(new Revurdering.Builder().endringsdato(fødselsdato.plusWeeks(18)))
                 .build();
 
-        var msp = finnManglendeSøktePerioder(grunnlag, StandardKonfigurasjon.KONFIGURASJON);
+        var msp = finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
 
         assertThat(msp).hasSize(1);
         assertThat(msp.get(0).getFom()).isEqualTo(grunnlag.getRevurdering().getEndringsdato());
