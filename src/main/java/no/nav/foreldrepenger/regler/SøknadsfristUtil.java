@@ -17,4 +17,11 @@ public final class SøknadsfristUtil {
     public static LocalDate finnSøknadsfrist(LocalDate periodeStart) {
         return periodeStart.plusMonths(SØKNADSFRIST_MÅNEDER).with(TemporalAdjusters.lastDayOfMonth());
     }
+
+    public static boolean erPeriodeInnenSøknadsfrist(LocalDate søknadMottattDato, LocalDate periodeStart) {
+        var førsteLovligeUttaksdato = SøknadsfristUtil.finnFørsteLoveligeUttaksdag(søknadMottattDato);
+
+        var forTidligUttak = periodeStart != null && periodeStart.isBefore(førsteLovligeUttaksdato);
+        return !forTidligUttak;
+    }
 }
