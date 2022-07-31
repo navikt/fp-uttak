@@ -65,6 +65,21 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
+    void farMedAleneomsorgSkalIkkeHaMsp() {
+        var fødsel = LocalDate.of(2022, 7, 29);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+            .datoer(new Datoer.Builder().fødsel(fødsel))
+            .behandling(farBehandling())
+            .rettOgOmsorg(aleneomsorg())
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødsel, fødsel.plusDays(10)))
+                .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødsel.plusWeeks(3), fødsel.plusWeeks(10))))
+            .build();
+        var msp = finnManglendeSøktePerioder(grunnlag);
+        assertThat(msp).isEmpty();
+    }
+
+    @Test
     void skal_opprette_msp_før_fødsel_men_ikke_mer_enn_3_øker_før_fødsel() {
         var familiehendelsesDato = LocalDate.of(2019, 12, 11);
 
@@ -438,7 +453,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private RettOgOmsorg.Builder aleneomsorg() {
-        return new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).aleneomsorg(true).samtykke(false);
+        return new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).aleneomsorg(true).samtykke(false);
     }
 
     private RegelGrunnlag.Builder grunnlagMedKontoer() {
