@@ -35,7 +35,7 @@ final class ManglendeSøktePerioderTjeneste {
             throw new IllegalArgumentException("Krever minst en oppgitt periode");
         }
         final List<OppgittPeriode> msPerioder;
-        if (bareFarRett(grunnlag)) {
+        if (bareFarRett(grunnlag) && !grunnlag.getRettOgOmsorg().getAleneomsorg()) {
             msPerioder = finnManglendeSøktPeriodeBareFarHarRett(grunnlag, konfigurasjon).stream().toList();
         } else if (grunnlag.getSøknad().gjelderAdopsjon()) {
             msPerioder = List.of();
