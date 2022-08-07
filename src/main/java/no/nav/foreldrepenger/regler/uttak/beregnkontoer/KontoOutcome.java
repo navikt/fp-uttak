@@ -24,12 +24,12 @@ public class KontoOutcome implements RuleReasonRef {
         return kontoer;
     }
 
-    public Integer getAntallExtraBarnDager() {
-        return antallExtraBarnDager;
+    public int getAntallExtraBarnDager() {
+        return antallExtraBarnDager != null ? antallExtraBarnDager : 0;
     }
 
-    public Integer getAntallPrematurDager() {
-        return antallPrematurDager;
+    public int getAntallPrematurDager() {
+        return antallPrematurDager != null ? antallPrematurDager : 0;
     }
 
     public KontoOutcome medKontoer(Map<StønadskontoBeregningStønadskontotype, Integer> kontoer) {

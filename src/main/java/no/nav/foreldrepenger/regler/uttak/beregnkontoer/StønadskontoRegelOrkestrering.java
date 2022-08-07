@@ -5,11 +5,11 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
+import no.nav.fpsak.nare.evaluation.Resultat;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
 
@@ -37,7 +37,7 @@ public class StønadskontoRegelOrkestrering {
     }
 
     private Map<StønadskontoBeregningStønadskontotype, Integer> hentStønadskontoer(EvaluationSummary evaluationSummary) {
-        if (Regelresultat.oppfylt(evaluationSummary)) {
+        if (!evaluationSummary.leafEvaluations(Resultat.JA).isEmpty()) {
             return evaluationSummary.allOutcomes().stream()
                 .filter(KontoOutcome.class::isInstance)
                 .map(e -> ((KontoOutcome) e).getKontoer())
@@ -46,14 +46,14 @@ public class StønadskontoRegelOrkestrering {
         return Collections.emptyMap();
     }
 
-    private Integer hentAntallFlerbarnsdager(EvaluationSummary evaluationSummary) {
+    private int hentAntallFlerbarnsdager(EvaluationSummary evaluationSummary) {
         return evaluationSummary.allOutcomes().stream()
             .filter(KontoOutcome.class::isInstance)
             .map(e -> ((KontoOutcome) e).getAntallExtraBarnDager())
             .findFirst().orElse(0);
     }
 
-    private Integer hentAntallPrematurDager(EvaluationSummary evaluationSummary) {
+    private int hentAntallPrematurDager(EvaluationSummary evaluationSummary) {
         return evaluationSummary.allOutcomes().stream()
             .filter(KontoOutcome.class::isInstance)
             .map(e -> ((KontoOutcome) e).getAntallPrematurDager())

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -30,6 +31,9 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
 
     @Override
     public Evaluation evaluate(BeregnKontoerGrunnlag grunnlag) {
+        if (Arrays.stream(kontokonfigurasjoner).findAny().isEmpty()) {
+            return manglerOpptjening();
+        }
         Map<StønadskontoBeregningStønadskontotype, Integer> kontoerMap = new EnumMap<>(StønadskontoBeregningStønadskontotype.class);
         var antallPrematurDager = 0;
 
@@ -109,5 +113,10 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
         eval.setEvaluationProperty(ANTALL_PREMATUR_DAGER, antallPrematurDager);
 
         return eval;
+    }
+
+    private Evaluation manglerOpptjening() {
+        var utfall = KontoOutcome.ikkeOppfylt("Hverken far eller mor har opptjent rett til foreldrepenger.");
+        return nei(utfall);
     }
 }
