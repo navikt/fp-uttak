@@ -16,6 +16,11 @@ public class Regelresultat {
         return !evaluationSummary.leafEvaluations(Resultat.JA).isEmpty();
     }
 
+    public static boolean oppfylt(EvaluationSummary evaluationSummary) {
+        return !evaluationSummary.leafEvaluations(Resultat.JA).isEmpty();
+    }
+
+
     public <T> T getProperty(String tag, Class<T> clazz) {
         var obj = getProperty(tag);
         if (obj != null && !clazz.isAssignableFrom(obj.getClass())) {

@@ -1,11 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -15,6 +13,10 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(OpprettKontoer.ID)
 class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
+
+    private static final String KONTOER = "KONTOER";
+    private static final String ANTALL_FLERBARN_DAGER = "ANTALL_FLERBARN_DAGER";
+    private static final String ANTALL_PREMATUR_DAGER = "ANTALL_PREMATUR_DAGER";
 
     private final Konfigurasjon konfigurasjon;
     private final Kontokonfigurasjon[] kontokonfigurasjoner;
@@ -98,13 +100,14 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
     private Evaluation beregnetMedResultat(Map<StønadskontoBeregningStønadskontotype, Integer> kontoer,
                                            Integer antallExtraBarnDager,
                                            Integer antallPrematurDager) {
-        var eval = ja();
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(BeregnKontoerPropertyType.KONTOER, kontoer);
-        properties.put(BeregnKontoerPropertyType.ANTALL_FLERBARN_DAGER, antallExtraBarnDager);
-        properties.put(BeregnKontoerPropertyType.ANTALL_PREMATUR_DAGER, antallPrematurDager);
+        var eval = KontoEvaluation.konti()
+            .medKontoer(kontoer)
+            .medAntallExtraBarnDager(antallExtraBarnDager)
+            .medAntallPrematurDager(antallPrematurDager);
+        eval.setEvaluationProperty(KONTOER, kontoer);
+        eval.setEvaluationProperty(ANTALL_FLERBARN_DAGER, antallExtraBarnDager);
+        eval.setEvaluationProperty(ANTALL_PREMATUR_DAGER, antallPrematurDager);
 
-        eval.setEvaluationProperties(properties);
         return eval;
     }
 }

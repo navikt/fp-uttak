@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -42,7 +41,6 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         if (utfallSpesifiserere.isEmpty()) {
             return;
         }
-        utfall.setEvaluationProperties(new HashMap<>());
         utfallSpesifiserere.forEach(utfallSpesifiserer -> utfallSpesifiserer.accept(utfall, grunnlag));
     }
 
@@ -67,8 +65,8 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
             this.hovedUtfall = UtfallType.AVSLÅTT;
             this.ruleReasonRef = new RuleReasonRefImpl(String.valueOf(årsak.getId()), årsak.getBeskrivelse());
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.UTFALL, UtfallType.AVSLÅTT);
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, årsak);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.UTFALL, UtfallType.AVSLÅTT);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, årsak);
             });
             return this;
         }
@@ -76,8 +74,8 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         public Builder oppfylt(InnvilgetÅrsak innvilgetÅrsak) {
             this.hovedUtfall = UtfallType.INNVILGET;
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.UTFALL, UtfallType.INNVILGET);
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, innvilgetÅrsak);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.UTFALL, UtfallType.INNVILGET);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, innvilgetÅrsak);
             });
             return this;
         }
@@ -89,14 +87,12 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         }
 
         public Builder medTrekkDagerFraSaldo(boolean trekkDagerFraSaldo) {
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.getEvaluationProperties()
-                    .put(FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, trekkDagerFraSaldo));
+            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, trekkDagerFraSaldo));
             return this;
         }
 
         public Builder medAvslåttGradering(GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak) {
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.getEvaluationProperties()
-                    .put(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
+            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
             return this;
         }
 
@@ -107,10 +103,9 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
                         periodeResultatÅrsak.getBeskrivelse());
             }
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.UTFALL, UtfallType.MANUELL_BEHANDLING);
-                singleEvaluation.getEvaluationProperties()
-                        .put(FastsettePeriodePropertyType.MANUELL_BEHANDLING_ÅRSAK, manuellbehandlingårsak);
-                singleEvaluation.getEvaluationProperties().put(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, periodeResultatÅrsak);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.UTFALL, UtfallType.MANUELL_BEHANDLING);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.MANUELL_BEHANDLING_ÅRSAK, manuellbehandlingårsak);
+                singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, periodeResultatÅrsak);
             });
             return this;
         }
@@ -120,8 +115,7 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
         }
 
         public Builder utbetal(boolean utbetal) {
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.getEvaluationProperties()
-                    .put(FastsettePeriodePropertyType.UTBETAL, utbetal));
+            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(FastsettePeriodePropertyType.UTBETAL, utbetal));
             return this;
         }
     }
