@@ -22,7 +22,6 @@ import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.RuleReasonRef;
-import no.nav.fpsak.nare.evaluation.RuleReasonRefImpl;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
@@ -65,7 +64,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkKunFarRettNode(Ruleset<BeregnKontoerGrunnlag> rs) {
-        RuleReasonRef ingenOpptjentRett = new RuleReasonRefImpl("", "Hverken far eller mor har opptjent rett til foreldrepenger.");
+        RuleReasonRef ingenOpptjentRett = KontoOutcome.ikkeOppfylt("Hverken far eller mor har opptjent rett til foreldrepenger.");
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, "Sjekk om kun far har rett til foreldrepenger?")
                 .hvis(new SjekkOmBareFarHarRett(), opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().berettiget(
                         Konfigurasjonsfaktorer.Berettiget.FAR))/*opprettKontoerForBareFarHarRettTilForeldrepenger(rs)*/)

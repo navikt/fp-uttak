@@ -5,12 +5,19 @@ import java.util.Map;
 import no.nav.fpsak.nare.evaluation.RuleReasonRef;
 
 public class KontoOutcome implements RuleReasonRef {
+    private String reasonText = "";
     private Map<StønadskontoBeregningStønadskontotype, Integer> kontoer;
     private Integer antallExtraBarnDager;
     private Integer antallPrematurDager;
 
     KontoOutcome(Map<StønadskontoBeregningStønadskontotype, Integer> kontoer) {
         this.kontoer = kontoer;
+    }
+
+    static KontoOutcome ikkeOppfylt(String text) {
+        var outcome = new KontoOutcome(Map.of());
+        outcome.reasonText = text;
+        return outcome;
     }
 
     public Map<StønadskontoBeregningStønadskontotype, Integer> getKontoer() {
@@ -42,7 +49,7 @@ public class KontoOutcome implements RuleReasonRef {
 
     @Override
     public String getReasonTextTemplate() {
-        return "konto";
+        return reasonText;
     }
 
     @Override
