@@ -100,10 +100,10 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
     private Evaluation beregnetMedResultat(Map<StønadskontoBeregningStønadskontotype, Integer> kontoer,
                                            Integer antallExtraBarnDager,
                                            Integer antallPrematurDager) {
-        var eval = KontoEvaluation.konti()
-            .medKontoer(kontoer)
+        var outcome = new KontoOutcome(kontoer)
             .medAntallExtraBarnDager(antallExtraBarnDager)
             .medAntallPrematurDager(antallPrematurDager);
+        var eval = ja(outcome);
         eval.setEvaluationProperty(KONTOER, kontoer);
         eval.setEvaluationProperty(ANTALL_FLERBARN_DAGER, antallExtraBarnDager);
         eval.setEvaluationProperty(ANTALL_PREMATUR_DAGER, antallPrematurDager);

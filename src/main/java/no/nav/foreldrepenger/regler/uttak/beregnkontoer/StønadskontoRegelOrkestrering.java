@@ -38,25 +38,25 @@ public class StønadskontoRegelOrkestrering {
 
     private Map<StønadskontoBeregningStønadskontotype, Integer> hentStønadskontoer(EvaluationSummary evaluationSummary) {
         if (Regelresultat.oppfylt(evaluationSummary)) {
-            return evaluationSummary.leafEvaluations().stream()
-                .filter(KontoEvaluation.class::isInstance)
-                .map(e -> ((KontoEvaluation) e).getKontoer())
+            return evaluationSummary.allOutcomes().stream()
+                .filter(KontoOutcome.class::isInstance)
+                .map(e -> ((KontoOutcome) e).getKontoer())
                 .findFirst().orElseThrow(() -> new IllegalStateException("Noe har gått galt, har ikke fått beregnet noen stønadskontoer"));
         }
         return Collections.emptyMap();
     }
 
     private Integer hentAntallFlerbarnsdager(EvaluationSummary evaluationSummary) {
-        return evaluationSummary.leafEvaluations().stream()
-            .filter(KontoEvaluation.class::isInstance)
-            .map(e -> ((KontoEvaluation) e).getAntallExtraBarnDager())
+        return evaluationSummary.allOutcomes().stream()
+            .filter(KontoOutcome.class::isInstance)
+            .map(e -> ((KontoOutcome) e).getAntallExtraBarnDager())
             .findFirst().orElse(0);
     }
 
     private Integer hentAntallPrematurDager(EvaluationSummary evaluationSummary) {
-        return evaluationSummary.leafEvaluations().stream()
-            .filter(KontoEvaluation.class::isInstance)
-            .map(e -> ((KontoEvaluation) e).getAntallPrematurDager())
+        return evaluationSummary.allOutcomes().stream()
+            .filter(KontoOutcome.class::isInstance)
+            .map(e -> ((KontoOutcome) e).getAntallPrematurDager())
             .findFirst().orElse(0);
     }
 
