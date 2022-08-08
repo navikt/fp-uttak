@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -55,12 +54,7 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
     public static final String ID = "FP_VK 10";
     private static final String RESERVERT_MØDREKVOTE = "Er perioden innenfor dager reservert for mødrekvote etter fødsel?";
 
-    private Konfigurasjon konfigurasjon;
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
-
-    public MødrekvoteDelregel(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
-    }
 
     public MødrekvoteDelregel() {
         // For regeldokumentasjon
@@ -168,7 +162,7 @@ public class MødrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeInnenfor6ukerEtterFødsel() {
         return rs.hvisRegel(SjekkOmPeriodenInnenforUkerReservertMor.ID, RESERVERT_MØDREKVOTE)
-                .hvis(new SjekkOmPeriodenInnenforUkerReservertMor(konfigurasjon), sjekkOmSøkerErMor())
+                .hvis(new SjekkOmPeriodenInnenforUkerReservertMor(), sjekkOmSøkerErMor())
                 .ellers(sjekkOmSøkerHarOmsorgForBarnet());
     }
 

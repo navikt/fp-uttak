@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -39,12 +38,7 @@ import no.nav.fpsak.nare.specification.Specification;
 public class UtsettelseDelregelSammenhengendeUttak implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 18";
-    private Konfigurasjon konfigurasjon;
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
-
-    public UtsettelseDelregelSammenhengendeUttak(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
-    }
 
     public UtsettelseDelregelSammenhengendeUttak() {
         // For regeldokumentasjon
@@ -96,7 +90,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
 
         var sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID,
                 SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
-                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkOmSøkerErArbeidstaker)
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(), sjekkOmSøkerErArbeidstaker)
                 .ellers(IkkeOppfylt.opprett("UT1101", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE, true, true));
 
         var sjekkOmSøknadGjelderFødsel = rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID,
@@ -137,7 +131,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
 
         var sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID,
                 SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
-                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkOmBareFarHarRettNode)
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(), sjekkOmBareFarHarRettNode)
                 .ellers(Manuellbehandling.opprett("UT1111", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
 
@@ -238,7 +232,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
                 .ellers(sjekkOmBareFarHarRettNode);
 
         var sjekkOmUttakFørUke33 = rs.hvisRegel(SjekkOmFødselErFørUke33.ID, SjekkOmFødselErFørUke33.BESKRIVELSE)
-                .hvis(new SjekkOmFødselErFørUke33(konfigurasjon), sjekkOmFørTermin)
+                .hvis(new SjekkOmFødselErFørUke33(), sjekkOmFørTermin)
                 .ellers(sjekkOmBareFarHarRettNode);
 
         return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
@@ -250,7 +244,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
     private Specification<FastsettePeriodeGrunnlag> delregelForHV() {
         var sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID,
                 SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
-                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon),
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(),
                         Oppfylt.opprett("UT1131", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID, false, false))
                 .ellers(Manuellbehandling.opprett("UT1130", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
@@ -269,7 +263,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
     private Specification<FastsettePeriodeGrunnlag> delregelForTiltakViaNav() {
         var sjekkOmUtsettelseEtterUke6 = rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID,
                 SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
-                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon),
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(),
                         Oppfylt.opprett("UT1135", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID, false, false))
                 .ellers(Manuellbehandling.opprett("UT1134", IkkeOppfyltÅrsak.UTSETTELSE_INNENFOR_DE_FØRSTE_6_UKENE,
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));

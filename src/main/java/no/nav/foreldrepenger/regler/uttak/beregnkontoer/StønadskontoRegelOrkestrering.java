@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.evaluation.Resultat;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
@@ -18,13 +17,9 @@ public class StønadskontoRegelOrkestrering {
     private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
     public StønadskontoResultat beregnKontoer(BeregnKontoerGrunnlag grunnlag) {
-        return beregnKontoer(grunnlag, Konfigurasjon.STANDARD);
-    }
-
-    public StønadskontoResultat beregnKontoer(BeregnKontoerGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
         var grunnlagJson = toJson(grunnlag);
 
-        var beregnKontoer = new BeregnKontoer(konfigurasjon);
+        var beregnKontoer = new BeregnKontoer();
         var evaluation = beregnKontoer.evaluer(grunnlag);
         var evaluationJson = EvaluationSerializer.asJson(evaluation);
 

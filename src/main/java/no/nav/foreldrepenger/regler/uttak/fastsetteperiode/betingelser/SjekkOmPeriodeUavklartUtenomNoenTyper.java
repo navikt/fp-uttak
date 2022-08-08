@@ -14,11 +14,8 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
 
     public static final String ID = "FP_VK 30.5.1";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmPeriodeUavklartUtenomNoenTyper(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodeUavklartUtenomNoenTyper() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
 
     }
 
@@ -38,7 +35,7 @@ public class SjekkOmPeriodeUavklartUtenomNoenTyper extends LeafSpecification<Fas
     }
 
     private boolean tidligOppstart(FastsettePeriodeGrunnlag grunnlag, OppgittPeriode oppgittPeriode) {
-        var ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+        var ukerReservertForMor = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
                 grunnlag.getFamiliehendelse());
 
         return !grunnlag.isSøkerMor() && (Stønadskontotype.FEDREKVOTE.equals(oppgittPeriode.getStønadskontotype())

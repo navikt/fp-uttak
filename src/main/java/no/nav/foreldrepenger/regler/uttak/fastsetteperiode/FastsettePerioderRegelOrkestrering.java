@@ -25,8 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdenti
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureToggles;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 
@@ -34,16 +32,10 @@ public class FastsettePerioderRegelOrkestrering {
 
     private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
-    public List<FastsettePeriodeResultat> fastsettePerioder(RegelGrunnlag grunnlag, FeatureToggles featureToggles) {
-        return fastsettePerioder(grunnlag, Konfigurasjon.STANDARD, featureToggles);
-    }
+    public List<FastsettePeriodeResultat> fastsettePerioder(RegelGrunnlag grunnlag) {
 
-    public List<FastsettePeriodeResultat> fastsettePerioder(RegelGrunnlag grunnlag,
-                                                            Konfigurasjon konfigurasjon,
-                                                            FeatureToggles featureToggles) {
-
-        var fastsettePeriodeRegel = new FastsettePeriodeRegel(konfigurasjon, featureToggles);
-        var orkestreringTillegg = lagOrkestreringTillegg(grunnlag, konfigurasjon);
+        var fastsettePeriodeRegel = new FastsettePeriodeRegel();
+        var orkestreringTillegg = lagOrkestreringTillegg(grunnlag);
 
         var allePerioderSomSkalFastsettes = samletUttaksperioder(grunnlag, orkestreringTillegg).stream()
                 .filter(periode -> !erHelg(periode))
@@ -52,7 +44,7 @@ public class FastsettePerioderRegelOrkestrering {
                 .collect(Collectors.toList());
         validerOverlapp(map(allePerioderSomSkalFastsettes));
 
-        var farRundtFødselIntervall = FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon).orElse(null);
+        var farRundtFødselIntervall = FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag).orElse(null);
 
         var resultatPerioder = new ArrayList<FastsettePeriodeResultat>();
         for (var aktuellPeriode : allePerioderSomSkalFastsettes) {
@@ -60,7 +52,7 @@ public class FastsettePerioderRegelOrkestrering {
             do {
                 var saldoUtregningGrunnlag = saldoGrunnlag(grunnlag, resultatPerioder, aktuellPeriode, allePerioderSomSkalFastsettes);
                 var saldoUtregning = lagUtregning(saldoUtregningGrunnlag);
-                resultat = fastsettPeriode(fastsettePeriodeRegel, konfigurasjon, grunnlag, aktuellPeriode, saldoUtregning, farRundtFødselIntervall);
+                resultat = fastsettPeriode(fastsettePeriodeRegel, grunnlag, aktuellPeriode, saldoUtregning, farRundtFødselIntervall);
                 resultatPerioder.add(resultat);
                 validerOverlapp(map(resultatPerioder));
                 if (resultat.harFørtTilKnekk()) {
@@ -124,20 +116,18 @@ public class FastsettePerioderRegelOrkestrering {
                 .collect(Collectors.toList());
     }
 
-    private FastsettePeriodeResultat fastsettPeriode(FastsettePeriodeRegel fastsettePeriodeRegel,
-                                                     Konfigurasjon konfigurasjon,
-                                                     RegelGrunnlag grunnlag,
+    private FastsettePeriodeResultat fastsettPeriode(FastsettePeriodeRegel fastsettePeriodeRegel, RegelGrunnlag grunnlag,
                                                      OppgittPeriode aktuellPeriode,
                                                      SaldoUtregning saldoUtregning,
                                                      LukketPeriode farRundtFødselIntervall) {
         var fastsettePeriodeGrunnlag = new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall, saldoUtregning, aktuellPeriode);
-        var regelResultatBehandler = new RegelResultatBehandler(saldoUtregning, grunnlag, konfigurasjon);
+        var regelResultatBehandler = new RegelResultatBehandler(saldoUtregning, grunnlag);
 
         var evaluering = fastsettePeriodeRegel.evaluer(fastsettePeriodeGrunnlag);
         var inputJson = toJson(fastsettePeriodeGrunnlag);
         var regelJson = EvaluationSerializer.asJson(evaluering);
         var regelResultatBehandlerResultat = behandleRegelresultat(evaluering, aktuellPeriode, regelResultatBehandler, grunnlag,
-                konfigurasjon, saldoUtregning, farRundtFødselIntervall);
+                saldoUtregning, farRundtFødselIntervall);
 
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson,
                 regelResultatBehandlerResultat.getEtterKnekkPeriode());
@@ -168,30 +158,28 @@ public class FastsettePerioderRegelOrkestrering {
         return etterKnekk;
     }
 
-    private OrkestreringTillegg lagOrkestreringTillegg(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, konfigurasjon);
-        var manglendeSøktPerioder = finnManglendeSøktePerioder(grunnlag, konfigurasjon);
+    private OrkestreringTillegg lagOrkestreringTillegg(RegelGrunnlag grunnlag) {
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
+        var manglendeSøktPerioder = finnManglendeSøktePerioder(grunnlag);
         return new OrkestreringTillegg(manglendeSøktPerioder, knekkpunkter);
     }
 
-    private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+    private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
         if (grunnlag.getBehandling().isKreverSammenhengendeUttak()) {
-            return ManglendeSøktePerioderForSammenhengendeUttakTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
+            return ManglendeSøktePerioderForSammenhengendeUttakTjeneste.finnManglendeSøktePerioder(grunnlag);
         }
-        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, konfigurasjon);
+        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag);
     }
 
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,
                                                                  OppgittPeriode aktuellPeriode,
                                                                  RegelResultatBehandler behandler,
-                                                                 RegelGrunnlag regelGrunnlag,
-                                                                 Konfigurasjon konfig,
-                                                                 SaldoUtregning saldoUtregning,
+                                                                 RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning,
                                                                  LukketPeriode farRundtFødselIntervall) {
         var regelresultat = new FastsettePerioderRegelresultat(evaluering);
         var utfallType = regelresultat.getUtfallType();
 
-        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, konfig, saldoUtregning, regelresultat, farRundtFødselIntervall);
+        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, saldoUtregning, regelresultat, farRundtFødselIntervall);
 
         return switch (utfallType) {
             case AVSLÅTT -> behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
@@ -212,27 +200,22 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(OppgittPeriode aktuellPeriode,
-                                                        RegelGrunnlag regelGrunnlag,
-                                                        Konfigurasjon konfig,
-                                                        SaldoUtregning saldoUtregning,
+                                                        RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning,
                                                         FastsettePerioderRegelresultat regelresultat,
                                                         LukketPeriode farRundtFødselIntervall) {
         if (erFPFF(aktuellPeriode)) {
             return Optional.empty();
         }
-        var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig);
+        var stønadskontotype = utledKonto(aktuellPeriode, regelGrunnlag, saldoUtregning);
         var startdatoNesteStønadsperiode = regelGrunnlag.getDatoer().getStartdatoNesteStønadsperiode().orElse(null);
         return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(aktuellPeriode.getAktiviteter()), saldoUtregning,
                 stønadskontotype.orElse(null), farRundtFødselIntervall, startdatoNesteStønadsperiode,
                 regelresultat.trekkDagerFraSaldo(), regelresultat.getAvklaringÅrsak(), regelresultat.getUtfallType());
     }
 
-    private Optional<Stønadskontotype> utledKonto(OppgittPeriode aktuellPeriode,
-                                                  RegelGrunnlag regelGrunnlag,
-                                                  SaldoUtregning saldoUtregning,
-                                                  Konfigurasjon konfig) {
+    private Optional<Stønadskontotype> utledKonto(OppgittPeriode aktuellPeriode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
         return Optional.ofNullable(aktuellPeriode.getStønadskontotype())
-                .or(() -> ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, saldoUtregning, konfig));
+                .or(() -> ValgAvStønadskontoTjeneste.velgStønadskonto(aktuellPeriode, regelGrunnlag, saldoUtregning));
     }
 
     private boolean erFPFF(OppgittPeriode aktuellPeriode) {

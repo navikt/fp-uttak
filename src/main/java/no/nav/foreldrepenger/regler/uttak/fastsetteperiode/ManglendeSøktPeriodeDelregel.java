@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -32,15 +31,8 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
 
     public static final String ID = "FP_VK 10.7.FRI";
 
-    private Konfigurasjon konfigurasjon;
-
-    public ManglendeSøktPeriodeDelregel() {
+    ManglendeSøktPeriodeDelregel() {
         // For dokumentasjonsgenerering
-    }
-
-
-    ManglendeSøktPeriodeDelregel(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -107,13 +99,13 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeGjelderMorsReserverteUker(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmPeriodenInnenforUkerReservertMor.ID, "Innenfor mors reserverte uker")
-                .hvis(new SjekkOmPeriodenInnenforUkerReservertMor(konfigurasjon), sjekkOmPeriodeErOpprettetAvFødselshendelse(rs))
+                .hvis(new SjekkOmPeriodenInnenforUkerReservertMor(), sjekkOmPeriodeErOpprettetAvFødselshendelse(rs))
                 .ellers(Manuellbehandling.opprett("UT1095", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErOpprettetAvFødselshendelse(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmPeriodenOpprettetAvFødselshendelse.ID, SjekkOmPeriodenOpprettetAvFødselshendelse.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodenOpprettetAvFødselshendelse(konfigurasjon),
+                .hvis(new SjekkOmPeriodenOpprettetAvFødselshendelse(),
                         Oppfylt.opprett("UT1097", InnvilgetÅrsak.MSP_INNVILGET, true, true))
                 .ellers(IkkeOppfylt.opprett("UT1094", IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL, true, false));
     }

@@ -12,16 +12,13 @@ public class SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato extends LeafSpec
 
     public static final String ID = "FP_VK 17.1.1.1";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato(Konfigurasjon konfigurasjon) {
+    public SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        var antallUkerUttakEtterBarnDødt = konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER,
+        var antallUkerUttakEtterBarnDødt = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER,
                 fastsettePeriodeGrunnlag.getFamiliehendelse());
         if (fastsettePeriodeGrunnlag.getDødsdatoForBarn() != null) {
             var dødsdatoForBarn = fastsettePeriodeGrunnlag.getDødsdatoForBarn();

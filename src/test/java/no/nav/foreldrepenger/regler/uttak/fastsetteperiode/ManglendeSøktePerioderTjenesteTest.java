@@ -37,14 +37,13 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 class ManglendeSøktePerioderTjenesteTest {
 
-    private final Konfigurasjon konfigurasjon = Konfigurasjon.STANDARD;
-    private final int mødrekvoteDager = konfigurasjon.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
+    private final int mødrekvoteDager = Konfigurasjon.STANDARD.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
             LocalDate.of(2018, 6, 1));
-    private final int fedrekvoteDager = konfigurasjon.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT,
+    private final int fedrekvoteDager = Konfigurasjon.STANDARD.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT,
             LocalDate.of(2018, 6, 1));
-    private final int fellesperiodDedager = konfigurasjon.getParameter(Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER,
+    private final int fellesperiodDedager = Konfigurasjon.STANDARD.getParameter(Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER,
             LocalDate.of(2018, 6, 1));
-    private final int førFødselDager = konfigurasjon.getParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 6, 1));
+    private final int førFødselDager = Konfigurasjon.STANDARD.getParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 6, 1));
 
     @Test
     void farMedAleneomsorgMedInnvilgetAnnetPartPerioder() {
@@ -449,7 +448,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
-        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag, Konfigurasjon.STANDARD);
+        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag);
     }
 
     private RettOgOmsorg.Builder aleneomsorg() {

@@ -19,11 +19,8 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
     public static final String ID = "FP_VK 10.4";
     public static final String BESKRIVELSE = "Er perioden opprettet pga justering ved fødselshendelse?";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmPeriodenOpprettetAvFødselshendelse(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenOpprettetAvFødselshendelse() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -44,7 +41,7 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
             return nei();
         }
 
-        var antallUkerEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, fødselsdato);
+        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, fødselsdato);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
 
         //Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i perioden. Burde være veldig få saker

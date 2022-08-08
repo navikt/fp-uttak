@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -34,15 +33,8 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
 
     public static final String ID = "FP_VK XX10";
 
-    private Konfigurasjon konfigurasjon;
-
-    public ForeldrepengerFørFødselDelregel() {
+    ForeldrepengerFørFødselDelregel() {
         // For dokumentasjonsgenerering
-    }
-
-
-    ForeldrepengerFørFødselDelregel(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -59,7 +51,7 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterForTidligNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent.ID, "Starter perioden for tidlig?")
-                .hvis(new SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent(konfigurasjon),
+                .hvis(new SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent(),
                         Manuellbehandling.opprett("UT1070", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false))
                 .ellers(sjekkOmGradering(rs));
     }

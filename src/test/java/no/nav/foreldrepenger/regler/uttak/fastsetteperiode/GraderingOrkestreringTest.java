@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
 
 class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -208,8 +207,8 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                                         prosent50, Set.of(ARBEIDSFORHOLD_1))));
 
         var fastsettePeriodeGrunnlag = grunnlag.build();
-        var resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag,
-                new FeatureTogglesForTester());
+        var resultat = fastsettePerioderRegelOrkestrering.fastsettePerioder(fastsettePeriodeGrunnlag
+        );
 
 
         assertThat(resultat).hasSize(5);

@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -50,14 +49,8 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
-    private Konfigurasjon konfigurasjon;
-
-    public FellesperiodeDelregel() {
+    FellesperiodeDelregel() {
         // For dokumentasjonsgenerering
-    }
-
-    FellesperiodeDelregel(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -117,7 +110,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørLovligUttakFørFamiliehendelse() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID,
                 SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
-                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(konfigurasjon),
+                .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(),
                         IkkeOppfylt.opprett("UT1040", IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL, false,
                                 false))
                 .ellers(sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel());
@@ -125,7 +118,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel() {
         return rs.hvisRegel(SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel.ID, "Starter perioden før 3 uker før termin/fødsel?")
-                .hvis(new SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(konfigurasjon), sjekkOmGraderingIPerioden())
+                .hvis(new SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(), sjekkOmGraderingIPerioden())
                 .ellers(sjekkOmUttakSkjerEtterDeFørsteUkene());
     }
 
@@ -139,7 +132,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerEtterDeFørsteUkene() {
         return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
-                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), sjekkSaldoForMor())
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(), sjekkSaldoForMor())
                 .ellers(Manuellbehandling.opprett("UT1048", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
     }
 
@@ -164,7 +157,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
         return rs.hvisRegel(SjekkOmUttakSkjerEtterDeFørsteUkene.ID, SjekkOmUttakSkjerEtterDeFørsteUkene.BESKRIVELSE)
-                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(konfigurasjon), delFlytForVanligUttak())
+                .hvis(new SjekkOmUttakSkjerEtterDeFørsteUkene(), delFlytForVanligUttak())
                 .ellers(sjekkOmPeriodenSlutterFørFamiliehendelse());
     }
 

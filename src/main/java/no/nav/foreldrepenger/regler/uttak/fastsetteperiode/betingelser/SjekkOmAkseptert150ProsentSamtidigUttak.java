@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,10 +35,11 @@ public class SjekkOmAkseptert150ProsentSamtidigUttak extends LeafSpecification<F
         var annenpartsOverlappKonto = grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(app -> true)
             .map(AnnenpartUttakPeriode::getAktiviteter).orElse(Set.of()).stream()
             .map(AnnenpartUttakPeriodeAktivitet::getStønadskontotype)
+            .filter(Objects::nonNull)
             .filter(AKT_KONTI::contains)
             .collect(Collectors.toSet());
         // Ser etter kombo MK/FK (<= 100%) + Fellesperiode (<= 50%)
-        if (annenpartsOverlappKonto.isEmpty() || !AKT_KONTI.contains(aktuellPeriode.getStønadskontotype()) ||
+        if (annenpartsOverlappKonto.isEmpty() || aktuellPeriode.getStønadskontotype() == null || !AKT_KONTI.contains(aktuellPeriode.getStønadskontotype()) ||
             (KVOTE_KONTI.contains(aktuellPeriode.getStønadskontotype()) && !annenpartsOverlappKonto.contains(Stønadskontotype.FELLESPERIODE)) ||
             (FELLESPERIODE.equals(aktuellPeriode.getStønadskontotype()) && annenpartsOverlappKonto.stream().noneMatch(KVOTE_KONTI::contains))) {
             return nei();

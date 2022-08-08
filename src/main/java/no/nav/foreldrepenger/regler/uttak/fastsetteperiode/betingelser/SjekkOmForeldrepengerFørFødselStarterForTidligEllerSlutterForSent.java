@@ -10,12 +10,10 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent.ID)
 public class SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
-    private final Konfigurasjon konfigurasjon;
     public static final String ID = "FP_VK 27.3.2";
 
-    public SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent(Konfigurasjon konfigurasjon) {
+    public SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -24,7 +22,7 @@ public class SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent
 
         var familiehendelse = grunnlag.getFamiliehendelse();
 
-        var ukerFørFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse);
+        var ukerFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse);
 
         var førsteLovligeDag = familiehendelse.minusWeeks(ukerFørFødsel);
         var sisteLovligeDag = familiehendelse.minusDays(1);

@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -34,11 +33,6 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     public static final String ID = "FP_VK 18";
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
-    private Konfigurasjon konfigurasjon;
-
-    public UtsettelseDelregel(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
-    }
 
     public UtsettelseDelregel() {
         // For regeldokumentasjon
@@ -72,7 +66,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
         return rs.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
-                .hvis(new SjekkOmTidsperiodeForbeholdtMor(konfigurasjon), sjekkOmSykdomSkade())
+                .hvis(new SjekkOmTidsperiodeForbeholdtMor(), sjekkOmSykdomSkade())
                 .ellers(sjekkOmBareFarHarRett());
     }
 
@@ -138,7 +132,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselFørUke33() {
         return rs.hvisRegel(SjekkOmFødselErFørUke33.ID, SjekkOmFødselErFørUke33.BESKRIVELSE)
-                .hvis(new SjekkOmFødselErFørUke33(konfigurasjon), sjekkOmPeriodenErFørTermin())
+                .hvis(new SjekkOmFødselErFørUke33(), sjekkOmPeriodenErFørTermin())
                 .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 

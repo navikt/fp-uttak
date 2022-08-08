@@ -10,18 +10,15 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 class RegelResultatBehandler {
 
     private final SaldoUtregning saldoUtregning;
     private final RegelGrunnlag regelGrunnlag;
-    private final Konfigurasjon konfigurasjon;
 
-    RegelResultatBehandler(SaldoUtregning saldoUtregning, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
+    RegelResultatBehandler(SaldoUtregning saldoUtregning, RegelGrunnlag regelGrunnlag) {
         this.saldoUtregning = saldoUtregning;
         this.regelGrunnlag = regelGrunnlag;
-        this.konfigurasjon = konfigurasjon;
     }
 
     RegelResultatBehandlerResultat innvilgAktuellPeriode(OppgittPeriode oppgittPeriode,
@@ -96,7 +93,7 @@ class RegelResultatBehandler {
     }
 
     private Optional<Stønadskontotype> utledKonto(OppgittPeriode oppgittPeriode) {
-        return velgStønadskonto(oppgittPeriode, regelGrunnlag, saldoUtregning, konfigurasjon);
+        return velgStønadskonto(oppgittPeriode, regelGrunnlag, saldoUtregning);
     }
 
     private Set<UttakPeriodeAktivitet> lagAktiviteter(OppgittPeriode oppgittPeriode,

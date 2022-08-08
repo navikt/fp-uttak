@@ -29,26 +29,26 @@ public class FarUttakRundtFødsel {
         return farRundtFødselIntervall != null && periode.erOmsluttetAv(farRundtFødselIntervall);
     }
 
-    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        return utledFarsPeriodeRundtFødsel(grunnlag.getDatoer(), grunnlag.getKontoer(), grunnlag.getSøknad().getType(), konfigurasjon);
+    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag) {
+        return utledFarsPeriodeRundtFødsel(grunnlag.getDatoer(), grunnlag.getKontoer(), grunnlag.getSøknad().getType());
     }
 
-    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(Datoer datoer, Kontoer kontoer, Søknadstype søknadstype, Konfigurasjon konfigurasjon) {
+    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(Datoer datoer, Kontoer kontoer, Søknadstype søknadstype) {
         if (!kontoer.harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) || kontoer.getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) == 0 || !søknadstype.gjelderTerminFødsel()) {
             return Optional.empty();
         }
-        return utledFarsPeriodeRundtFødsel(false, søknadstype.gjelderTerminFødsel(), datoer.getFamiliehendelse(), datoer.getTermin(), konfigurasjon);
+        return utledFarsPeriodeRundtFødsel(false, søknadstype.gjelderTerminFødsel(), datoer.getFamiliehendelse(), datoer.getTermin());
 
     }
 
     public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(boolean utenFarUttakRundtFødsel, boolean gjelderFødsel,
-                                                                      LocalDate familieHendelseDato, LocalDate terminDato, Konfigurasjon konfigurasjon) {
+                                                                      LocalDate familieHendelseDato, LocalDate terminDato) {
         if (utenFarUttakRundtFødsel || !gjelderFødsel || familieHendelseDato == null) {
             return Optional.empty();
         }
-        var farFørTermin = konfigurasjon.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, familieHendelseDato)
+        var farFørTermin = Konfigurasjon.STANDARD.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, familieHendelseDato)
                 .map(Period::ofWeeks).orElse(Period.ZERO);
-        var farEtterFødsel =  konfigurasjon.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, familieHendelseDato)
+        var farEtterFødsel =  Konfigurasjon.STANDARD.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, familieHendelseDato)
                 .map(Period::ofWeeks).orElse(Period.ZERO);
         if (farFørTermin.equals(Period.ZERO) && farEtterFødsel.equals(Period.ZERO)) {
             return Optional.empty();

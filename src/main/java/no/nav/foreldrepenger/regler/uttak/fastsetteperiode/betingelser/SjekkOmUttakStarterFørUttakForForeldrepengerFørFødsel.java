@@ -12,18 +12,15 @@ public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel extends Le
 
     public static final String ID = "FP_VK 27.5";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(Konfigurasjon konfigurasjon) {
+    public SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        var ukerFørFødselUttaksgrenseForeldrepenger = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
+        var ukerFørFødselUttaksgrenseForeldrepenger = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
                 grunnlag.getFamiliehendelse());
         if (startDatoUttak.isBefore(grunnlag.getFamiliehendelse().minusWeeks(ukerFørFødselUttaksgrenseForeldrepenger))) {
             return ja();
