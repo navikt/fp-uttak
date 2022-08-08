@@ -16,13 +16,13 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.regler.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktørId;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
@@ -233,7 +233,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     void helePeriodenUtenforSøknadsfrist() {
         var fødselsdato = LocalDate.of(2017, 11, 1);
         var sisteUttaksdag = fødselsdato.plusWeeks(6).minusDays(1);
-        var søknadsfrist = SøknadsfristUtil.finnSøknadsfrist(sisteUttaksdag);
+        var søknadsfrist = sisteUttaksdag.plusMonths(3).with(TemporalAdjusters.lastDayOfMonth());
         var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                 null, false, PeriodeVurderingType.IKKE_VURDERT, søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1), null);
         var mødrekvote = OppgittPeriode.forVanligPeriode(MØDREKVOTE, fødselsdato, sisteUttaksdag, null, false,

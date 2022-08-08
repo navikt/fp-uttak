@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningG
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UttakOutcome;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 class RegelResultatBehandlerTest {
@@ -42,8 +42,7 @@ class RegelResultatBehandlerTest {
         var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag,
                 Konfigurasjon.STANDARD);
 
-        var regelresultat = new FastsettePerioderRegelresultat(null, false, true, null, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, null,
-                UtfallType.AVSLÅTT);
+        var regelresultat = new FastsettePerioderRegelresultat(null, UttakOutcome.ikkeOppfylt(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN).medTrekkDagerFraSaldo(true));
         var resultat = behandler.avslåAktuellPeriode(oppgittPeriode, regelresultat, Optional.of(knekkpunkt), false);
 
         assertThat(resultat.getPeriode().getFom()).isEqualTo(fom);

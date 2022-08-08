@@ -1,7 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
-import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.*;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.FLERBARNSDAGER;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.beregnkontoer.StønadskontoBeregningStønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -68,12 +72,13 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(4);
-        var forventetFellesperiode =
-                80 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
+        var ekstradager = Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
+        var forventetFellesperiode = 80 + ekstradager;
         assertThat(stønadskontoer.get(FELLESPERIODE)).isEqualTo(forventetFellesperiode);
         assertThat(stønadskontoer.get(FEDREKVOTE)).isEqualTo(75);
         assertThat(stønadskontoer.get(MØDREKVOTE)).isEqualTo(75);
         assertThat(stønadskontoer.get((FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
+        assertThat(stønadskontoResultat.getAntallPrematurDager()).isEqualTo(ekstradager);
     }
 
     @Test
@@ -90,9 +95,10 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.size()).isEqualTo(1);
-        var forventetForeldrepenger = 80 + 75 + 75 + Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(),
-                grunnlag.getTermindato().get().minusDays(1));
+        var ekstradager = Virkedager.beregnAntallVirkedager(grunnlag.getFødselsdato().get(), grunnlag.getTermindato().get().minusDays(1));
+        var forventetForeldrepenger = 80 + 75 + 75 + ekstradager;
         assertThat(stønadskontoer.get(FORELDREPENGER)).isEqualTo(forventetForeldrepenger);
+        assertThat(stønadskontoResultat.getAntallPrematurDager()).isEqualTo(ekstradager);
     }
 
     @Test
@@ -112,6 +118,8 @@ class StønadskontoRegelOrkestreringTest {
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
         assertThat(stønadskontoer.get(FLERBARNSDAGER)).isEqualTo(85);
+        assertThat(stønadskontoResultat.getAntallFlerbarnsdager()).isEqualTo(85);
+        assertThat(stønadskontoResultat.getAntallPrematurDager()).isZero();
     }
 
     /*

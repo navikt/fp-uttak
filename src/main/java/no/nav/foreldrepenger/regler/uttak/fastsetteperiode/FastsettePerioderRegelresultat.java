@@ -1,71 +1,66 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UttakOutcome;
 import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.evaluation.Resultat;
+import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
 
-class FastsettePerioderRegelresultat extends Regelresultat {
+class FastsettePerioderRegelresultat {
 
-    private final boolean skalUtbetale;
-    private final boolean trekkDagerFraSaldo;
-    private final GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
-    private final PeriodeResultatÅrsak avklaringÅrsak;
-    private final Manuellbehandlingårsak manuellbehandlingårsak;
-    private final UtfallType utfallType;
+    private final EvaluationSummary evaluationSummary;
+    private final UttakOutcome utfall;
 
     FastsettePerioderRegelresultat(Evaluation evaluation) {
-        super(evaluation);
-        skalUtbetale = getProperty(FastsettePeriodePropertyType.UTBETAL, Boolean.class) != null && getProperty(
-                FastsettePeriodePropertyType.UTBETAL, Boolean.class);
-        trekkDagerFraSaldo = getProperty(FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, Boolean.class) != null && getProperty(
-                FastsettePeriodePropertyType.TREKK_DAGER_FRA_SALDO, Boolean.class);
-        graderingIkkeInnvilgetÅrsak = getProperty(FastsettePeriodePropertyType.GRADERING_IKKE_OPPFYLT_ÅRSAK,
-                GraderingIkkeInnvilgetÅrsak.class);
-        avklaringÅrsak = getProperty(FastsettePeriodePropertyType.AVKLARING_ÅRSAK, PeriodeResultatÅrsak.class);
-        manuellbehandlingårsak = getProperty(FastsettePeriodePropertyType.MANUELL_BEHANDLING_ÅRSAK, Manuellbehandlingårsak.class);
-        utfallType = getProperty(FastsettePeriodePropertyType.UTFALL, UtfallType.class);
+        this.evaluationSummary = new EvaluationSummary(evaluation);
+        this.utfall = evaluationSummary.allOutcomes().stream()
+            .filter(UttakOutcome.class::isInstance)
+            .map(UttakOutcome.class::cast)
+            .findFirst().orElseThrow();
     }
 
     public FastsettePerioderRegelresultat(Evaluation evaluation,
-                                          boolean skalUtbetale,
-                                          boolean trekkDagerFraSaldo,
-                                          GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak,
-                                          PeriodeResultatÅrsak avklaringÅrsak,
-                                          Manuellbehandlingårsak manuellbehandlingårsak,
-                                          UtfallType utfallType) {
-        super(evaluation);
-        this.skalUtbetale = skalUtbetale;
-        this.trekkDagerFraSaldo = trekkDagerFraSaldo;
-        this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
-        this.avklaringÅrsak = avklaringÅrsak;
-        this.manuellbehandlingårsak = manuellbehandlingårsak;
-        this.utfallType = utfallType;
+                                          UttakOutcome utfall) {
+        this.evaluationSummary = new EvaluationSummary(evaluation);
+        this.utfall = utfall;
+    }
+
+    public boolean oppfylt() {
+        return !evaluationSummary.leafEvaluations(Resultat.JA).isEmpty();
     }
 
     UtfallType getUtfallType() {
-        return utfallType;
+        return utfall.getUtfallType();
     }
 
     Manuellbehandlingårsak getManuellbehandlingårsak() {
-        return manuellbehandlingårsak;
+        return utfall.getManuellbehandlingårsak();
     }
 
     PeriodeResultatÅrsak getAvklaringÅrsak() {
-        return avklaringÅrsak;
+        return utfall.getPeriodeÅrsak();
     }
 
     GraderingIkkeInnvilgetÅrsak getGraderingIkkeInnvilgetÅrsak() {
-        return graderingIkkeInnvilgetÅrsak;
+        return utfall.getGraderingIkkeInnvilgetÅrsak();
     }
 
     boolean trekkDagerFraSaldo() {
-        return trekkDagerFraSaldo;
+        return utfall.trekkDagerFraSaldo();
     }
 
     boolean skalUtbetale() {
-        return skalUtbetale;
+        return utfall.skalUtbetale();
     }
+
+    public String sluttpunktId() {
+        return evaluationSummary.leafEvaluations().stream()
+            .filter(e -> e.ruleIdentification() != null)
+            .findFirst()
+            .map(Evaluation::ruleIdentification).orElse(null);
+    }
+
 }

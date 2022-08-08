@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 
+import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
@@ -15,6 +14,10 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(OpprettKontoer.ID)
 class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
+
+    private static final String KONTOER = "KONTOER";
+    private static final String ANTALL_FLERBARN_DAGER = "ANTALL_FLERBARN_DAGER";
+    private static final String ANTALL_PREMATUR_DAGER = "ANTALL_PREMATUR_DAGER";
 
     private final Konfigurasjon konfigurasjon;
     private final Kontokonfigurasjon[] kontokonfigurasjoner;
@@ -28,6 +31,9 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
 
     @Override
     public Evaluation evaluate(BeregnKontoerGrunnlag grunnlag) {
+        if (Arrays.stream(kontokonfigurasjoner).findAny().isEmpty()) {
+            return manglerOpptjening();
+        }
         Map<StønadskontoBeregningStønadskontotype, Integer> kontoerMap = new EnumMap<>(StønadskontoBeregningStønadskontotype.class);
         var antallPrematurDager = 0;
 
@@ -98,13 +104,19 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
     private Evaluation beregnetMedResultat(Map<StønadskontoBeregningStønadskontotype, Integer> kontoer,
                                            Integer antallExtraBarnDager,
                                            Integer antallPrematurDager) {
-        var eval = ja();
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(BeregnKontoerPropertyType.KONTOER, kontoer);
-        properties.put(BeregnKontoerPropertyType.ANTALL_FLERBARN_DAGER, antallExtraBarnDager);
-        properties.put(BeregnKontoerPropertyType.ANTALL_PREMATUR_DAGER, antallPrematurDager);
+        var outcome = new KontoOutcome(kontoer)
+            .medAntallExtraBarnDager(antallExtraBarnDager)
+            .medAntallPrematurDager(antallPrematurDager);
+        var eval = ja(outcome);
+        eval.setEvaluationProperty(KONTOER, kontoer);
+        eval.setEvaluationProperty(ANTALL_FLERBARN_DAGER, antallExtraBarnDager);
+        eval.setEvaluationProperty(ANTALL_PREMATUR_DAGER, antallPrematurDager);
 
-        eval.setEvaluationProperties(properties);
         return eval;
+    }
+
+    private Evaluation manglerOpptjening() {
+        var utfall = KontoOutcome.ikkeOppfylt("Hverken far eller mor har opptjent rett til foreldrepenger.");
+        return nei(utfall);
     }
 }

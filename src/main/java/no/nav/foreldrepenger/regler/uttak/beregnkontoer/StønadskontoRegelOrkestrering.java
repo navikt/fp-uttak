@@ -5,14 +5,13 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.regler.Regelresultat;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerPropertyType;
 import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.fpsak.nare.evaluation.Evaluation;
+import no.nav.fpsak.nare.evaluation.Resultat;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
+import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
 
 public class StønadskontoRegelOrkestrering {
 
@@ -29,39 +28,36 @@ public class StønadskontoRegelOrkestrering {
         var evaluation = beregnKontoer.evaluer(grunnlag);
         var evaluationJson = EvaluationSerializer.asJson(evaluation);
 
-        var stønadskontoer = hentStønadskontoer(evaluation);
-        var antallFlerbarnsdager = hentAntallFlerbarnsdager(evaluation);
-        var antallPrematurDager = hentAntallPrematurDager(evaluation);
+        var summary = new EvaluationSummary(evaluation);
+        var stønadskontoer = hentStønadskontoer(summary);
+        var antallFlerbarnsdager = hentAntallFlerbarnsdager(summary);
+        var antallPrematurDager = hentAntallPrematurDager(summary);
 
         return new StønadskontoResultat(stønadskontoer, antallFlerbarnsdager, evaluationJson, grunnlagJson, antallPrematurDager);
     }
 
-    private Map<StønadskontoBeregningStønadskontotype, Integer> hentStønadskontoer(Evaluation evaluation) {
-        var resultat = new Regelresultat(evaluation);
-        if (resultat.oppfylt()) {
-            var kontoer = resultat.getProperty(BeregnKontoerPropertyType.KONTOER, Map.class);
-            if (kontoer != null) {
-                return kontoer;
-            }
-            throw new IllegalStateException("Noe har gått galt, har ikke fått beregnet noen stønadskontoer");
+    private Map<StønadskontoBeregningStønadskontotype, Integer> hentStønadskontoer(EvaluationSummary evaluationSummary) {
+        if (!evaluationSummary.leafEvaluations(Resultat.JA).isEmpty()) {
+            return evaluationSummary.allOutcomes().stream()
+                .filter(KontoOutcome.class::isInstance)
+                .map(e -> ((KontoOutcome) e).getKontoer())
+                .findFirst().orElseThrow(() -> new IllegalStateException("Noe har gått galt, har ikke fått beregnet noen stønadskontoer"));
         }
         return Collections.emptyMap();
     }
 
-    private Integer hentAntallFlerbarnsdager(Evaluation evaluation) {
-        var regelresultat = new Regelresultat(evaluation);
-        if (regelresultat.oppfylt()) {
-            return regelresultat.getProperty(BeregnKontoerPropertyType.ANTALL_FLERBARN_DAGER, Integer.class);
-        }
-        return 0;
+    private int hentAntallFlerbarnsdager(EvaluationSummary evaluationSummary) {
+        return evaluationSummary.allOutcomes().stream()
+            .filter(KontoOutcome.class::isInstance)
+            .map(e -> ((KontoOutcome) e).getAntallExtraBarnDager())
+            .findFirst().orElse(0);
     }
 
-    private Integer hentAntallPrematurDager(Evaluation evaluation) {
-        var regelresultat = new Regelresultat(evaluation);
-        if (regelresultat.oppfylt()) {
-            return regelresultat.getProperty(BeregnKontoerPropertyType.ANTALL_PREMATUR_DAGER, Integer.class);
-        }
-        return 0;
+    private int hentAntallPrematurDager(EvaluationSummary evaluationSummary) {
+        return evaluationSummary.allOutcomes().stream()
+            .filter(KontoOutcome.class::isInstance)
+            .map(e -> ((KontoOutcome) e).getAntallPrematurDager())
+            .findFirst().orElse(0);
     }
 
     private String toJson(BeregnKontoerGrunnlag grunnlag) {
