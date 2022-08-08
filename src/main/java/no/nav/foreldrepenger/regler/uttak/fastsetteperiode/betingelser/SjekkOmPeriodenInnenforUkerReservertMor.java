@@ -13,11 +13,8 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
     public static final String ID = "FP_VK 10.3";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmPeriodenInnenforUkerReservertMor(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenInnenforUkerReservertMor() {
         super(SjekkOmPeriodenInnenforUkerReservertMor.class.getSimpleName());
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -26,7 +23,7 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
         var familiehendelse = grunnlag.getFamiliehendelse();
 
-        var antallUkerEtterFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
 
         var periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse,
                 familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));

@@ -15,16 +15,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 final class MspBfhrUtil {
 
-    static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRett(RegelGrunnlag grunnlag,
-                                                                       Konfigurasjon konfigurasjon) {
+    static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRett(RegelGrunnlag grunnlag) {
         if (grunnlag.getSøknad().gjelderAdopsjon()) {
             return forAdopsjon(grunnlag);
         }
-        return forTerminFødsel(grunnlag, konfigurasjon);
+        return forTerminFødsel(grunnlag);
     }
 
     private static List<OppgittPeriode> forAdopsjon(RegelGrunnlag grunnlag) {
@@ -33,10 +31,9 @@ final class MspBfhrUtil {
         return fraDato(grunnlag, senesteLovligeStartdatoVedAdopsjon, førsteSøkteDag);
     }
 
-    private static List<OppgittPeriode> forTerminFødsel(RegelGrunnlag grunnlag,
-                                                        Konfigurasjon konfigurasjon) {
+    private static List<OppgittPeriode> forTerminFødsel(RegelGrunnlag grunnlag) {
         var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
-        var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(konfigurasjon, familiehendelse);
+        var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(familiehendelse);
         var bareFarSomHarRettMåHaStartdato = Virkedager.plusVirkedager(tomTidsperiodeForbeholdtMor, 1);
         return fraDato(grunnlag, bareFarSomHarRettMåHaStartdato, tomTidsperiodeForbeholdtMor);
     }

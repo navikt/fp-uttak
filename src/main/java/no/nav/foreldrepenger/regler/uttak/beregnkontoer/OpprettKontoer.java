@@ -19,13 +19,11 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
     private static final String ANTALL_FLERBARN_DAGER = "ANTALL_FLERBARN_DAGER";
     private static final String ANTALL_PREMATUR_DAGER = "ANTALL_PREMATUR_DAGER";
 
-    private final Konfigurasjon konfigurasjon;
     private final Kontokonfigurasjon[] kontokonfigurasjoner;
     public static final String ID = "Opprett kontoer";
 
-    OpprettKontoer(Konfigurasjon konfigurasjon, Kontokonfigurasjon... kontokonfigurasjontoner) {
+    OpprettKontoer(Kontokonfigurasjon... kontokonfigurasjontoner) {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
         this.kontokonfigurasjoner = kontokonfigurasjontoner;
     }
 
@@ -43,7 +41,7 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
         // Opprette alle kontoer utenom samtidig uttak
         for (var kontokonfigurasjon : kontokonfigurasjoner) {
             if (kontokonfigurasjon.getStønadskontotype() != StønadskontoBeregningStønadskontotype.FLERBARNSDAGER) {
-                var antallDager = konfigurasjon.getParameter(kontokonfigurasjon.getParametertype(),
+                var antallDager = Konfigurasjon.STANDARD.getParameter(kontokonfigurasjon.getParametertype(),
                         grunnlag.getFamiliehendelsesdato());
                 if (antallExtraBarnDager > 0) {
                     // Legg ekstra dager til foreldrepenger eller fellesperiode.
@@ -75,7 +73,7 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
     private int finnEkstraFlerbarnsdager(BeregnKontoerGrunnlag grunnlag) {
         for (var kontokonfigurasjon : kontokonfigurasjoner) {
             if (kontokonfigurasjon.getStønadskontotype() == StønadskontoBeregningStønadskontotype.FLERBARNSDAGER) {
-                return konfigurasjon.getParameter(kontokonfigurasjon.getParametertype(), grunnlag.getFamiliehendelsesdato());
+                return Konfigurasjon.STANDARD.getParameter(kontokonfigurasjon.getParametertype(), grunnlag.getFamiliehendelsesdato());
             }
         }
         return 0;
@@ -94,7 +92,7 @@ class OpprettKontoer extends LeafSpecification<BeregnKontoerGrunnlag> {
 
         var fødselsdato = grunnlag.getFødselsdato();
         var termindato = grunnlag.getTermindato();
-        return PrematurukerUtil.oppfyllerKravTilPrematuruker(fødselsdato.orElse(null), termindato.orElse(null), konfigurasjon);
+        return PrematurukerUtil.oppfyllerKravTilPrematuruker(fødselsdato.orElse(null), termindato.orElse(null));
     }
 
     private boolean kunFarRettIkkeAleneomsorgFlerbarnsdager(BeregnKontoerGrunnlag grunnlag) {

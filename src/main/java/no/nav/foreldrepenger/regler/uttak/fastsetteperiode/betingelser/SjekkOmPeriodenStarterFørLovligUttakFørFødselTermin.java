@@ -17,12 +17,9 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
 
     public static final String ID = "FP_VK 27.2";
     public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før fødsel/termin";
-    private final Konfigurasjon konfigurasjon;
 
-
-    public SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -30,7 +27,7 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
         var hendelseDato = hendelseDato(grunnlag);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        var ukerFørFamiliehendelseUttaksgrense = konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
+        var ukerFørFamiliehendelseUttaksgrense = Konfigurasjon.STANDARD.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, hendelseDato);
         if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFamiliehendelseUttaksgrense))) {
             return ja();
         }

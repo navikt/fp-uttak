@@ -30,9 +30,9 @@ class KnekkpunktIdentifiserer {
         //hindrer instansiering
     }
 
-    static Set<LocalDate> finnKnekkpunkter(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        var minimumsgrenseForLovligUttak = finnMinimumgrenseLovligUttak(grunnlag, konfigurasjon);
-        var maksimumsgrenseForLovligeUttak = finnMaksgrenseForLovligUttak(grunnlag, konfigurasjon);
+    static Set<LocalDate> finnKnekkpunkter(RegelGrunnlag grunnlag) {
+        var minimumsgrenseForLovligUttak = finnMinimumgrenseLovligUttak(grunnlag);
+        var maksimumsgrenseForLovligeUttak = finnMaksgrenseForLovligUttak(grunnlag);
         var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
 
         Set<LocalDate> knekkpunkter = new TreeSet<>();
@@ -42,8 +42,7 @@ class KnekkpunktIdentifiserer {
         knekkpunkter.add(maksimumsgrenseForLovligeUttak);
         grunnlag.getDatoer().getStartdatoNesteStønadsperiode().ifPresent(knekkpunkter::add);
 
-        if (PrematurukerUtil.oppfyllerKravTilPrematuruker(grunnlag.getDatoer().getFødsel(), grunnlag.getDatoer().getTermin(),
-                konfigurasjon)) {
+        if (PrematurukerUtil.oppfyllerKravTilPrematuruker(grunnlag.getDatoer().getFødsel(), grunnlag.getDatoer().getTermin())) {
             knekkpunkter.add(grunnlag.getDatoer().getTermin());
         }
 
@@ -55,7 +54,7 @@ class KnekkpunktIdentifiserer {
             knekkpunkter.add(grunnlag.getDatoer()
                     .getDødsdatoer()
                     .getBarnsDødsdato()
-                    .plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
+                    .plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
         }
 
         if (medlemskapOpphørsdatoFinnes(grunnlag)) {
@@ -69,15 +68,15 @@ class KnekkpunktIdentifiserer {
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             // Før Prop 15L 21/22: Første 6 uker forbeholdt mor, unntatt flerbarn og aleneomsorg
             // Etter Prop 15L 21/22: Første 6 uker forbeholdt mor kun for kvoter. Far har opptil 10 dager samtidig uttak ifm fødsel
-            knekkpunkter.add(familiehendelseDato.minusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
+            knekkpunkter.add(familiehendelseDato.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
             var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
             var sakUtenKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
             var erMor = grunnlag.getBehandling().isSøkerMor();
             if (!hjemletFarUttakRundtFødsel || sakUtenKvoter || erMor) {
-                knekkpunkter.add(familiehendelseDato.plusWeeks(konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
+                knekkpunkter.add(familiehendelseDato.plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
             if (hjemletFarUttakRundtFødsel && !erMor) {
-                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, konfigurasjon, sakUtenKvoter));
+                knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, sakUtenKvoter));
             }
         }
         knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
@@ -114,14 +113,14 @@ class KnekkpunktIdentifiserer {
                 .collect(Collectors.toSet());
     }
 
-    private static LocalDate finnMinimumgrenseLovligUttak(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+    private static LocalDate finnMinimumgrenseLovligUttak(RegelGrunnlag grunnlag) {
         if (grunnlag.getSøknad().getType() == Søknadstype.TERMIN) {
             var termin = grunnlag.getDatoer().getTermin();
-            return termin.minusWeeks(konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, termin));
+            return termin.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, termin));
         }
         var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
         return familiehendelseDato.minusWeeks(
-                konfigurasjon.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
+            Konfigurasjon.STANDARD.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
     }
 
     private static Set<LocalDate> knekkpunkterPåArbeid(Arbeid arbeid) {
@@ -177,9 +176,8 @@ class KnekkpunktIdentifiserer {
         leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedAvklartMorsAktivitet());
     }
 
-    private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        return SjekkOmPeriodenErEtterMaksgrenseForUttak.regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getDatoer().getFamiliehendelse(),
-                konfigurasjon);
+    private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag) {
+        return SjekkOmPeriodenErEtterMaksgrenseForUttak.regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getDatoer().getFamiliehendelse());
     }
 
     private static void leggTilKnekkpunkterPåMottattDato(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
@@ -233,8 +231,8 @@ class KnekkpunktIdentifiserer {
     }
 
 
-    private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon, boolean medTom) {
-        return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag, konfigurasjon)
+    private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, boolean medTom) {
+        return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag)
                 .map(p -> medTom ? Set.of(p.getFom(), p.getTom()) : Set.of(p.getFom()))
                 .orElse(Set.of());
     }

@@ -15,25 +15,23 @@ public class SjekkOmPeriodenErEtterMaksgrenseForUttak extends LeafSpecification<
 
     public static final String ID = "FP_VK 15.6";
     public static final String BESKRIVELSE = "Er hele perioden innenfor maksimalgrense for foreldrepenger?";
-    private final Konfigurasjon konfigurasjon;
 
-    public SjekkOmPeriodenErEtterMaksgrenseForUttak(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenErEtterMaksgrenseForUttak() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        var grense = regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getFamiliehendelse(), konfigurasjon);
+        var grense = regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getFamiliehendelse());
         if (oppgittPeriode.getFom().isAfter(grense) || oppgittPeriode.getFom().equals(grense)) {
             return ja();
         }
         return nei();
     }
 
-    public static LocalDate regnUtMaksgrenseForLovligeUttaksdag(LocalDate familiehendelse, Konfigurasjon konfigurasjon) {
-        var maksGrenseRelativTilFamiliehendelse = Period.ofYears(konfigurasjon.getParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, familiehendelse));
+    public static LocalDate regnUtMaksgrenseForLovligeUttaksdag(LocalDate familiehendelse) {
+        var maksGrenseRelativTilFamiliehendelse = Period.ofYears(Konfigurasjon.STANDARD.getParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, familiehendelse));
         return familiehendelse.plus(maksGrenseRelativTilFamiliehendelse);
     }
 }

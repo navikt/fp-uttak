@@ -16,11 +16,8 @@ public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<Fastsette
     public static final String ID = "FP_VK 10.2.1";
     public static final String BESKRIVELSE = "Er perioden i tidsperioden forbeholdt mor?";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmTidsperiodeForbeholdtMor(Konfigurasjon konfigurasjon) {
+    public SjekkOmTidsperiodeForbeholdtMor() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -36,12 +33,12 @@ public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<Fastsette
     }
 
     private LocalDate fomDatoForbeholdtMor(LocalDate familiehendelse) {
-        var antallUkerFør = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse);
+        var antallUkerFør = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse);
         return familiehendelse.minusWeeks(antallUkerFør).minusDays(1);
     }
 
     private LocalDate tomDatoForbeholdtMor(LocalDate familiehendelse) {
-        var antallUkerEtter = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtter = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
         return familiehendelse.plusWeeks(antallUkerEtter).minusDays(1);
     }
 }

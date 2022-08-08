@@ -33,7 +33,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 class KnekkpunktIdentifisererTest {
 
@@ -45,7 +44,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(datoer(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).containsOnly(fødselsdato.minusWeeks(12), //tidligste mulige uttak
                 fødselsdato.minusWeeks(3),  //foreldrepenger før fødsel
@@ -64,7 +63,7 @@ class KnekkpunktIdentifisererTest {
                 .medlemskap(new Medlemskap.Builder().opphørsdato(opphørsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(opphørsdato);
     }
@@ -77,7 +76,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().omsorgsovertakelse(adopsjonsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).containsOnly(adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
                 adopsjonsdato, adopsjonsdato.plusYears(3)    //siste mulige uttak for foreldrepenger
@@ -94,7 +93,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().omsorgsovertakelse(adopsjonsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).containsOnly(adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
                 adopsjonsdato,
@@ -118,7 +117,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().omsorgsovertakelse(adopsjonsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).containsOnly(adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
                 adopsjonsdato,
@@ -147,7 +146,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
         knekkpunkter.removeAll(standardKnekkpunktFødsel(fødselsdato, førsteLovligeSøknadsperiode));
         assertThat(knekkpunkter).containsExactlyInAnyOrder(uttakStartdato, knekkdato);
     }
@@ -167,7 +166,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
         knekkpunkter.removeAll(standardKnekkpunktFødsel(fødselsdato, førsteLovligeSøknadsperiode));
         assertThat(knekkpunkter).containsExactlyInAnyOrder(knekkdato, uttakStartdato, uttakStartdato.plusDays(11),
                 knekkdato.plusDays(1));
@@ -187,7 +186,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
         knekkpunkter.removeAll(standardKnekkpunktFødsel(fødselsdato, førsteLovligeSøknadsperiode));
         assertThat(knekkpunkter).containsExactlyInAnyOrder(uttakStartdato, uttakStartdato.plusDays(7), uttakStartdato.plusDays(1),
                 uttakStartdato.plusDays(6));
@@ -212,7 +211,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
         knekkpunkter.removeAll(standardKnekkpunktFødsel(fødselsdato, førsteLovligeSøknadsperiode));
         assertThat(knekkpunkter).containsExactlyInAnyOrder(stønadsperiodeFom, stønadsperiodeTom.plusDays(1), annenPartPeriodeFom,
                 annenPartPeriodeTom.plusDays(1));
@@ -232,7 +231,7 @@ class KnekkpunktIdentifisererTest {
                 .søknad(new Søknad.Builder().oppgittPeriode(gradertStønadsperiode))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(mottattdato);
     }
@@ -250,7 +249,7 @@ class KnekkpunktIdentifisererTest {
                 .søknad(new Søknad.Builder().oppgittPeriode(gradertStønadsperiode))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(mottattdato);
     }
@@ -267,7 +266,7 @@ class KnekkpunktIdentifisererTest {
                 .søknad(new Søknad.Builder().oppgittPeriode(gradering))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(mottattdato);
     }
@@ -284,7 +283,7 @@ class KnekkpunktIdentifisererTest {
                 .søknad(new Søknad.Builder().oppgittPeriode(gradering))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).doesNotContain(mottattdato);
     }
@@ -301,7 +300,7 @@ class KnekkpunktIdentifisererTest {
                 .behandling(new Behandling.Builder())
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(mottattdato);
     }
@@ -317,7 +316,7 @@ class KnekkpunktIdentifisererTest {
                 .behandling(new Behandling.Builder())
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(mottattdato);
     }
@@ -333,7 +332,7 @@ class KnekkpunktIdentifisererTest {
                 .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(mottattdato);
     }
@@ -349,7 +348,7 @@ class KnekkpunktIdentifisererTest {
                 .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).doesNotContain(mottattdato);
     }
@@ -365,7 +364,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(datoer(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(LocalDate.of(2019, 5, 17), LocalDate.of(2019, 5, 18));
     }
@@ -380,7 +379,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termin))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(termin, fødselsdato);
     }
@@ -399,7 +398,7 @@ class KnekkpunktIdentifisererTest {
                                         new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende(), startdato2)))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(startdato1, startdato2);
     }
@@ -415,7 +414,7 @@ class KnekkpunktIdentifisererTest {
                         new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans(), startdato)))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).doesNotContain(startdato);
     }
@@ -431,7 +430,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(datoer(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(dokFom, dokTom.plusDays(1));
     }
@@ -448,7 +447,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(datoer(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(dokFom, dokTom.plusDays(1));
     }
@@ -467,7 +466,7 @@ class KnekkpunktIdentifisererTest {
                 .datoer(datoer(fødselsdato))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         //Første lovlige dato for første periode ligger midt i perioden. Skal derfor knekkes for å avlås
         assertThat(knekkpunkter).contains(LocalDate.of(2020, 8, 1));
@@ -486,7 +485,7 @@ class KnekkpunktIdentifisererTest {
                 .ytelser(new Ytelser(pleiepenger))
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).contains(innleggelseFom, innleggelseTom.plusDays(1));
     }
@@ -502,7 +501,7 @@ class KnekkpunktIdentifisererTest {
                 .behandling(new Behandling.Builder())
                 .build();
 
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag, Konfigurasjon.STANDARD);
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
         assertThat(knekkpunkter).doesNotContain(mottattdato);
     }

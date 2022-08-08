@@ -34,8 +34,8 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         // Skal ikke instansieres
     }
 
-    static List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
-        var manglendePerioderIUkerForbeholdtMor = finnManglendeSøktIUkerForbeholdtMor(grunnlag, konfigurasjon);
+    static List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
+        var manglendePerioderIUkerForbeholdtMor = finnManglendeSøktIUkerForbeholdtMor(grunnlag);
         var manglendePerioderIUkerFarMedAleneomsorg = finnManglendeSøktePerioderTilFarMedAleneomsorg(grunnlag);
         List<OppgittPeriode> manglendePerioder = new ArrayList<>();
         manglendePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
@@ -87,13 +87,13 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return Collections.emptyList();
     }
 
-    private static List<OppgittPeriode> finnManglendeSøktIUkerForbeholdtMor(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+    private static List<OppgittPeriode> finnManglendeSøktIUkerForbeholdtMor(RegelGrunnlag grunnlag) {
         if (grunnlag.getBehandling().isSøkerMor() && grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
-            return utledManglendeForMorFraOppgittePerioder(grunnlag, konfigurasjon);
+            return utledManglendeForMorFraOppgittePerioder(grunnlag);
         }
         if (farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) && !grunnlag.getRettOgOmsorg().getAleneomsorg()) {
             var oppholdFar = utledManglendeSøktForFar(grunnlag.getDatoer().getFamiliehendelse(),
-                    grunnlag.getSøknad().getOppgittePerioder(), konfigurasjon);
+                    grunnlag.getSøknad().getOppgittePerioder());
             if (oppholdFar.isPresent()) {
                 return List.of(oppholdFar.get());
             }
@@ -146,11 +146,9 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return perioder.stream().min(Comparator.comparing(LukketPeriode::getFom)).orElseThrow().getFom();
     }
 
-    private static Optional<OppgittPeriode> utledManglendeSøktForFar(LocalDate familiehendelse,
-                                                                     List<OppgittPeriode> uttaksperioder,
-                                                                     Konfigurasjon konfigurasjon) {
+    private static Optional<OppgittPeriode> utledManglendeSøktForFar(LocalDate familiehendelse, List<OppgittPeriode> uttaksperioder) {
         var førstePeriode = uttaksperioder.get(0);
-        var ukerForbeholdtMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var ukerForbeholdtMor = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
         if (familiehendelse.plusWeeks(ukerForbeholdtMor).isBefore(førstePeriode.getFom())) {
             var nyPeriode = lagManglendeSøktPeriode(familiehendelse.plusWeeks(ukerForbeholdtMor), førstePeriode.getFom().minusDays(1),
                     Stønadskontotype.FORELDREPENGER);
@@ -167,15 +165,15 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return grunnlag.getSøknad().getType().gjelderTerminFødsel();
     }
 
-    private static List<OppgittPeriode> utledManglendeForMorFraOppgittePerioder(RegelGrunnlag grunnlag, Konfigurasjon konfigurasjon) {
+    private static List<OppgittPeriode> utledManglendeForMorFraOppgittePerioder(RegelGrunnlag grunnlag) {
         var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
         var uttakPerioder = slåSammenUttakForBeggeParter(grunnlag).stream()
                 .sorted(Comparator.comparing(Periode::getFom))
                 .collect(Collectors.toList());
         var mspFørFødsel = finnManglendeSøktFørFødsel(uttakPerioder, familiehendelseDato,
-                grunnlag.getSøknad().getType(), grunnlag.getGyldigeStønadskontotyper(), konfigurasjon);
+                grunnlag.getSøknad().getType(), grunnlag.getGyldigeStønadskontotyper());
         var mspEtterFødsel = finnPerioderEtterFødsel(uttakPerioder, familiehendelseDato,
-                grunnlag.getGyldigeStønadskontotyper(), konfigurasjon);
+                grunnlag.getGyldigeStønadskontotyper());
 
         return Stream.of(mspFørFødsel, mspEtterFødsel)
                 .flatMap(Collection::stream)
@@ -235,12 +233,11 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
     private static List<OppgittPeriode> finnManglendeSøktFørFødsel(List<LukketPeriode> søktePerioder,
                                                                    LocalDate familiehendelseDato,
                                                                    Søknadstype søknadstype,
-                                                                   Set<Stønadskontotype> gyldigeStønadskontotyper,
-                                                                   Konfigurasjon konfigurasjon) {
+                                                                   Set<Stønadskontotype> gyldigeStønadskontotyper) {
         if (Søknadstype.ADOPSJON.equals(søknadstype)) {
             return List.of();
         }
-        var antallUkerFpffFørFødsel = konfigurasjon.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
+        var antallUkerFpffFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
                 familiehendelseDato);
         var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
 
@@ -296,9 +293,8 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
 
     private static List<OppgittPeriode> finnPerioderEtterFødsel(List<LukketPeriode> søktePerioder,
                                                                 LocalDate familiehendelseDato,
-                                                                Set<Stønadskontotype> gyldigeStønadskontotyper,
-                                                                Konfigurasjon konfigurasjon) {
-        var mødrekvoteEtterFødselUker = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+                                                                Set<Stønadskontotype> gyldigeStønadskontotyper) {
+        var mødrekvoteEtterFødselUker = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
                 familiehendelseDato);
         var betingetPeriodeEtterFødsel = new LukketPeriode(familiehendelseDato,
                 familiehendelseDato.plusWeeks(mødrekvoteEtterFødselUker).minusDays(1));

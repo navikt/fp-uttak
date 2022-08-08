@@ -10,7 +10,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 
 /**
  * Brukes ved når det skal trekkes dager fra periode uten stønadskontotype
@@ -20,15 +19,12 @@ final class ValgAvStønadskontoTjeneste {
     private ValgAvStønadskontoTjeneste() {
     }
 
-    static Optional<Stønadskontotype> velgStønadskonto(OppgittPeriode periode,
-                                                       RegelGrunnlag regelGrunnlag,
-                                                       SaldoUtregning saldoUtregning,
-                                                       Konfigurasjon konfigurasjon) {
+    static Optional<Stønadskontotype> velgStønadskonto(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
         if (periode.getStønadskontotype() != null) {
             throw new IllegalArgumentException("Forventet periode uten stønadskontotype");
         }
         if (periode.isUtsettelse()) {
-            return velgStønadskontoForUtsettelse(periode, regelGrunnlag, saldoUtregning, konfigurasjon);
+            return velgStønadskontoForUtsettelse(periode, regelGrunnlag, saldoUtregning);
         }
         return velgStønadskontoVanligPeriode(periode, regelGrunnlag, saldoUtregning);
     }
@@ -39,11 +35,8 @@ final class ValgAvStønadskontoTjeneste {
         return velg(periode, regelGrunnlag, saldoUtregning);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(OppgittPeriode periode,
-                                                                            RegelGrunnlag regelGrunnlag,
-                                                                            SaldoUtregning saldoUtregning,
-                                                                            Konfigurasjon konfigurasjon) {
-        if (periodeErPleiepenger(periode, regelGrunnlag, konfigurasjon)) {
+    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
+        if (periodeErPleiepenger(periode, regelGrunnlag)) {
             return stønadskontoVedPleiepenger(regelGrunnlag);
         }
         return velg(periode, regelGrunnlag, saldoUtregning);
@@ -60,9 +53,9 @@ final class ValgAvStønadskontoTjeneste {
         return Optional.empty();
     }
 
-    private static boolean periodeErPleiepenger(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, Konfigurasjon konfigurasjon) {
+    private static boolean periodeErPleiepenger(OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
         return PrematurukerUtil.oppfyllerKravTilPrematuruker(regelGrunnlag.getDatoer().getFødsel(),
-                regelGrunnlag.getDatoer().getTermin(), konfigurasjon) && periodeErFørTermin(periode, regelGrunnlag)
+                regelGrunnlag.getDatoer().getTermin()) && periodeErFørTermin(periode, regelGrunnlag)
                 && periode.isUtsettelsePga(UtsettelseÅrsak.INNLAGT_BARN);
     }
 

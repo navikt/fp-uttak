@@ -13,8 +13,6 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.regler.uttak.konfig.FeatureTogglesForTester;
-
 class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     private final FastsettePerioderRegelOrkestrering regelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
@@ -27,8 +25,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode)).kontoer(kontoer).build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(2);
         var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
@@ -48,8 +46,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(1);
         assertThat(periodeResultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(periodeResultater.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FELLESPERIODE);
@@ -63,8 +61,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(2);
         var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
@@ -92,8 +90,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
                 .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(2);
         var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
@@ -113,8 +111,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(1);
         var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
@@ -141,8 +139,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                 .kontoer(kontoer)
                 .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(1);
         var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)
@@ -168,8 +166,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
                 .oppgittPeriode(uttakPeriode2)
                 .oppgittPeriode(uttakPeriode3)).kontoer(kontoer).build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag,
-                new FeatureTogglesForTester());
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
+        );
         assertThat(periodeResultater).hasSize(3);
         var perioder = periodeResultater.stream()
                 .map(FastsettePeriodeResultat::getUttakPeriode)

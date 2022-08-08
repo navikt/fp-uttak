@@ -12,16 +12,13 @@ public class SjekkOmPeriodenStarterFørUke7 extends LeafSpecification<FastsetteP
 
     public static final String ID = "FP_VK 13.2";
 
-    private final Konfigurasjon konfigurasjon;
-
-    public SjekkOmPeriodenStarterFørUke7(Konfigurasjon konfigurasjon) {
+    public SjekkOmPeriodenStarterFørUke7() {
         super(ID);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        var ukerReservertForMor = konfigurasjon.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+        var ukerReservertForMor = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
                 grunnlag.getFamiliehendelse());
         if (grunnlag.getAktuellPeriode().getFom().isBefore(grunnlag.getFamiliehendelse().plusWeeks(ukerReservertForMor))) {
             return ja();

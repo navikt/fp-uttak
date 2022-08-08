@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -58,15 +57,10 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private static final String OVERFØRING_INNLEGGELSE = "Er det søkt om overføring som følge av innleggelse på institusjon?";
     private static final String OVERFØRING_ALENEOMSORG_ELLER_IKKE_RETT = "Er det søkt om overføring som følge av aleneomsorg eller annen forelder ikke har rett?";
 
-    private Konfigurasjon konfigurasjon;
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
-    public FedrekvoteDelregel() {
+    FedrekvoteDelregel() {
         // For dokumentasjonsgenerering
-    }
-
-    FedrekvoteDelregel(Konfigurasjon konfigurasjon) {
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -170,7 +164,7 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     public Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeStarterFørUke7EtterFamiliehendelse() {
         return rs.hvisRegel(SjekkOmPeriodenStarterFørUke7.ID, "Starter perioden før uke 7 etter termin/fødsel?")
-                .hvis(new SjekkOmPeriodenStarterFørUke7(konfigurasjon), sjekkOmFarsUttakRundtFødsel())
+                .hvis(new SjekkOmPeriodenStarterFørUke7(), sjekkOmFarsUttakRundtFødsel())
                 .ellers(delFlytForVanligUttak());
     }
 

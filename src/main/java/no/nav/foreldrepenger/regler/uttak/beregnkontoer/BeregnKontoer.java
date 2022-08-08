@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmMerEn
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmMorHarAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmToBarn;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
@@ -35,15 +34,8 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     private static final String SJEKK_OM_TO_BARN = "Sjekk om det er to barn?";
 
 
-    private Konfigurasjon konfigurasjon;
-
     public BeregnKontoer() {
         //For dokumentasjonsgenerering
-    }
-
-    public BeregnKontoer(Konfigurasjon konfigurasjon) {
-        Objects.requireNonNull(konfigurasjon);
-        this.konfigurasjon = konfigurasjon;
     }
 
     @Override
@@ -65,7 +57,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, "Sjekk om kun far har rett til foreldrepenger?")
                 .hvis(new SjekkOmBareFarHarRett(), opprettKontoer(rs, new Konfigurasjonsfaktorer.Builder().berettiget(
                         Konfigurasjonsfaktorer.Berettiget.FAR))/*opprettKontoerForBareFarHarRettTilForeldrepenger(rs)*/)
-                .ellers(new OpprettKontoer(null));
+                .ellers(new OpprettKontoer());
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkKunMorRettNode(Ruleset<BeregnKontoerGrunnlag> rs) {
@@ -159,8 +151,8 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
                                                                  Konfigurasjonsfaktorer.Builder konfigfaktorBuilder) {
         return rs.hvisRegel(SjekkOmFødsel.ID, SJEKK_OM_DET_ER_FØDSEL)
                 .hvis(new SjekkOmFødsel(),
-                        new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.erFødsel(true).build())))
-                .ellers(new OpprettKontoer(konfigurasjon, byggKonfigurasjon(konfigfaktorBuilder.erFødsel(false).build())));
+                        new OpprettKontoer(byggKonfigurasjon(konfigfaktorBuilder.erFødsel(true).build())))
+                .ellers(new OpprettKontoer(byggKonfigurasjon(konfigfaktorBuilder.erFødsel(false).build())));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekk100ProsentNode(Ruleset<BeregnKontoerGrunnlag> rs,

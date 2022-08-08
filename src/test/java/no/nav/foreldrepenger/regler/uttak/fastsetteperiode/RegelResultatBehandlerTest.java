@@ -39,8 +39,7 @@ class RegelResultatBehandlerTest {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag,
                 oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.getIdentifikator()));
-        var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag,
-                Konfigurasjon.STANDARD);
+        var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag);
 
         var regelresultat = new FastsettePerioderRegelresultat(null, UttakOutcome.ikkeOppfylt(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN).medTrekkDagerFraSaldo(true));
         var resultat = behandler.avslåAktuellPeriode(oppgittPeriode, regelresultat, Optional.of(knekkpunkt), false);
