@@ -21,7 +21,7 @@ public class SjekkOmErUtsettelseFørSøknadMottattdato extends LeafSpecification
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var periode = grunnlag.getAktuellPeriode();
-        if (periode.isUtsettelse() && mottattFørSisteDag(periode)) {
+        if (!grunnlag.isBerørtBehandling() && periode.isUtsettelse() && mottattFørSisteDag(periode)) {
             return ja();
         }
         return nei();
