@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAdopsjonsvilkåretErOppfylt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAkseptert150ProsentSamtidigUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAkseptertSamtidigUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
@@ -11,10 +11,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEnPartsPeriodeErFlerbarnsdager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEnePeriodenErFarsUttakRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
@@ -22,7 +20,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmKo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmManglendeSøktPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpphørsdatoTrefferPerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpptjeningsvilkåretErOppfylt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmParteneMerEnn100ProsentUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFedrekvote;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFellesperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
@@ -168,34 +165,16 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
                 .ellers(sjekkOmGradertEtterSøknadMottattdato());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFlerbarnsdager() {
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptertSamtidigUttak() {
         return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
-                .hvis(new SjekkOmEnPartsPeriodeErFlerbarnsdager(), sjekkOmGradertEtterSøknadMottattdato())
-                .ellers(sjekkOmFarRundtFødsel());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFarRundtFødsel() {
-        return rs.hvisRegel(SjekkOmEnePeriodenErFarsUttakRundtFødsel.ID, "Gjelder perioden fars uttak rundt fødsel?")
-                .hvis(new SjekkOmEnePeriodenErFarsUttakRundtFødsel(), sjekkOmGradertEtterSøknadMottattdato())
-                .ellers(sjekkOmMerEnn100ProsentSamletUttak());
+                .hvis(new SjekkOmAkseptertSamtidigUttak(), sjekkOmGradertEtterSøknadMottattdato())
+                .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtidigUttak() {
         return rs.hvisRegel(SjekkOmSamtidigUttak.ID, "Har en av foreldrene huket av for samtidig uttak?")
-                .hvis(new SjekkOmSamtidigUttak(), sjekkOmFlerbarnsdager())
+                .hvis(new SjekkOmSamtidigUttak(), sjekkOmAkseptertSamtidigUttak())
                 .ellers(IkkeOppfylt.opprett("UT1162", IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK, false, false));
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmMerEnn100ProsentSamletUttak() {
-        return rs.hvisRegel(SjekkOmParteneMerEnn100ProsentUttak.ID, SjekkOmParteneMerEnn100ProsentUttak.BESKRIVELSE)
-                .hvis(new SjekkOmParteneMerEnn100ProsentUttak(), sjekkOmAkseptert150ProsentUttak())
-                .ellers(sjekkOmGradertEtterSøknadMottattdato());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptert150ProsentUttak() {
-        return rs.hvisRegel(SjekkOmAkseptert150ProsentSamtidigUttak.ID, SjekkOmAkseptert150ProsentSamtidigUttak.BESKRIVELSE)
-            .hvis(new SjekkOmAkseptert150ProsentSamtidigUttak(), sjekkOmGradertEtterSøknadMottattdato())
-            .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {

@@ -683,7 +683,33 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     }
 
     @Test
-    void samtidig_uttak_til_manuell_i_berørt_hvis_samlet_over_100_prosent_uttak() {
+    void samtidig_uttak_til_manuell_i_berørt_hvis_samlet_over_100_prosent_uttak_ene_over_80_prosent() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh)
+            .annenPart(new AnnenPart.Builder()
+                .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE,
+                        new Trekkdager(5), new Utbetalingsgrad(85)))
+                    .innvilget(true)
+                    .samtidigUttak(true)
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .søknad(søknad(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1)))
+                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1), false,
+                    new SamtidigUttaksprosent(70)))
+            );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
+    }
+
+    @Test
+    void samtidig_uttak_automatisk_reduksjon_i_berørt_hvis_samlet_over_100_prosent_uttak() {
+        var forventetRedusertTil = 40;
         var fh = LocalDate.of(2022, 4, 1);
         var grunnlag = basicGrunnlagMor(fh)
                 .annenPart(new AnnenPart.Builder()
@@ -703,7 +729,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getSamtidigUttaksprosent()).isEqualTo(new SamtidigUttaksprosent(forventetRedusertTil));
+        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getUtbetalingsgrad()).isEqualTo(new Utbetalingsgrad(forventetRedusertTil));
     }
 
     @Test
