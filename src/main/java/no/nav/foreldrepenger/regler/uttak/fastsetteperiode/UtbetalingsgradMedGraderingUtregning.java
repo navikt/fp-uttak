@@ -13,12 +13,6 @@ class UtbetalingsgradMedGraderingUtregning implements UtbetalingsgradUtregning {
     private final AktivitetIdentifikator aktivitet;
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
 
-    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode, AktivitetIdentifikator aktivitet) {
-        this.uttakPeriode = uttakPeriode;
-        this.aktivitet = aktivitet;
-        this.annenpartSamtidigUttaksprosent = SamtidigUttaksprosent.ZERO;
-    }
-
     UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent annenpartSamtidigUttaksprosent ) {
         this.uttakPeriode = uttakPeriode;
         this.aktivitet = aktivitet;

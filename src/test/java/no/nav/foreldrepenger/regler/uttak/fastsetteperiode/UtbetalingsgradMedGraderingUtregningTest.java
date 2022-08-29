@@ -28,6 +28,6 @@ class UtbetalingsgradMedGraderingUtregningTest {
     }
 
     private UtbetalingsgradMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator, OppgittPeriode periode) {
-        return new UtbetalingsgradMedGraderingUtregning(periode, aktivitetIdentifikator);
+        return new UtbetalingsgradMedGraderingUtregning(periode, aktivitetIdentifikator, SamtidigUttaksprosent.ZERO);
     }
 }

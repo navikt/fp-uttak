@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
 class UtbetalingsgradUtenGraderingUtregningTest {
@@ -16,6 +17,6 @@ class UtbetalingsgradUtenGraderingUtregningTest {
     }
 
     private UtbetalingsgradUtenGraderingUtregning utregning() {
-        return new UtbetalingsgradUtenGraderingUtregning();
+        return new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO);
     }
 }

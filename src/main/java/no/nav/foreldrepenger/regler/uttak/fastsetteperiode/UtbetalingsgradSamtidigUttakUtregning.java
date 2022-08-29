@@ -14,14 +14,6 @@ class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning 
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
 
     UtbetalingsgradSamtidigUttakUtregning(SamtidigUttaksprosent samtidigUttaksprosent,
-                                          BigDecimal graderingArbeidstidsprosent) {
-        Objects.requireNonNull(samtidigUttaksprosent);
-        this.graderingArbeidstidsprosent = graderingArbeidstidsprosent;
-        this.samtidigUttaksprosent = samtidigUttaksprosent;
-        this.annenpartSamtidigUttaksprosent = SamtidigUttaksprosent.ZERO;
-    }
-
-    UtbetalingsgradSamtidigUttakUtregning(SamtidigUttaksprosent samtidigUttaksprosent,
                                           BigDecimal graderingArbeidstidsprosent,
                                           SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         Objects.requireNonNull(samtidigUttaksprosent);
