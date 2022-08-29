@@ -1,7 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.fpsak.nare.specification.NotSpecification.ikke;
+
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDokumentertHV;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDokumentertTiltakViaNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErUtsettelseFørSøknadMottattdato;
@@ -100,7 +103,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
 
         var sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID,
                 SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
-                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(),
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato().og(ikke(new SjekkOmBerørtBehandling())),
                         Manuellbehandling.opprett("UT1126", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT,
                                 Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmSøknadGjelderFødsel);
@@ -148,7 +151,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
 
         var sjekkOmUtsettelseEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID,
                 SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
-                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(),
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato().og(ikke(new SjekkOmBerørtBehandling())),
                         Manuellbehandling.opprett("UT1127", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT,
                                 Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmSøkerErIArbeidPåHeltid);
@@ -250,7 +253,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
         var sjekkOmUtsettelseFørMottattDato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID,
                 SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
-                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(),
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato().og(ikke(new SjekkOmBerørtBehandling())),
                         Manuellbehandling.opprett("UT1129", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT,
                                 Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmUtsettelseEtterUke6);
@@ -269,7 +272,7 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
                         Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
         var sjekkOmUtsettelseFørMottattDato = rs.hvisRegel(SjekkOmErUtsettelseFørSøknadMottattdato.ID,
                 SjekkOmErUtsettelseFørSøknadMottattdato.BESKRIVELSE)
-                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato(),
+                .hvis(new SjekkOmErUtsettelseFørSøknadMottattdato().og(ikke(new SjekkOmBerørtBehandling())),
                         Manuellbehandling.opprett("UT1133", IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT,
                                 Manuellbehandlingårsak.SØKNADSFRIST, true, false))
                 .ellers(sjekkOmUtsettelseEtterUke6);

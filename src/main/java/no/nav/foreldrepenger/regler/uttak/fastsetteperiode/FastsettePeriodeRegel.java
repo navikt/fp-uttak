@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.fpsak.nare.specification.NotSpecification.ikke;
+
 import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAdopsjonsvilkåretErOppfylt;
@@ -320,7 +322,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGradertEtterSøknadMottattdato() {
         if (fomGradertEtterSøknadMottattdato == null) {
             fomGradertEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErGradertFørSøknadMottattdato.ID, "Er perioden gradert etter mottattdato?")
-                    .hvis(new SjekkOmErGradertFørSøknadMottattdato(),
+                    .hvis(new SjekkOmErGradertFørSøknadMottattdato().og(ikke(new SjekkOmBerørtBehandling())),
                             Manuellbehandling.opprett("UT1165", null, Manuellbehandlingårsak.SØKNADSFRIST, true, false,
                                     Optional.of(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD)))
                     .ellers(sjekkOmPeriodeErUtsettelse());
