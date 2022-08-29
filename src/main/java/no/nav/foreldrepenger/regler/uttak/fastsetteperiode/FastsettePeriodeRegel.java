@@ -166,7 +166,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptertSamtidigUttak() {
-        return rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID, "Gjelder perioden flerbarnsdager?")
+        return rs.hvisRegel(SjekkOmAkseptertSamtidigUttak.ID, "Samtidig uttak er akseptert?")
                 .hvis(new SjekkOmAkseptertSamtidigUttak(), sjekkOmGradertEtterSøknadMottattdato())
                 .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
