@@ -19,7 +19,7 @@ public class SjekkOmErGradertFørSøknadMottattdato extends LeafSpecification<Fa
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var periode = grunnlag.getAktuellPeriode();
-        if (!grunnlag.isBerørtBehandling() && periode.erSøktGradering() && mottattFørSisteDag(periode)) {
+        if (periode.erSøktGradering() && mottattFørSisteDag(periode)) {
             return ja();
         }
         return nei();
