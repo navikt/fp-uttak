@@ -68,7 +68,7 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkEneRettNorgeAnnenForelderEØS(Ruleset<BeregnKontoerGrunnlag> rs) {
-        return rs.hvisRegel(SjekkOmBådeMorOgFarHarRett.ID, "Sjekk om ene har opptjent rett til foreldrepenger i Norge og annen i EØS?")
+        return rs.hvisRegel(SjekkOmAnnenForelderHarTilsvarendeRettEØS.ID, "Sjekk om ene har opptjent rett til foreldrepenger i Norge og annen i EØS?")
             .hvis(new SjekkOmAnnenForelderHarTilsvarendeRettEØS(), opprettKontoer(rs,
                 new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.BEGGE)))
             .ellers(sjekkKunMorRettNode(rs));
