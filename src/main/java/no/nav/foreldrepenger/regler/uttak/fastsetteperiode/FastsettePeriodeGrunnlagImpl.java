@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
@@ -31,10 +31,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
-import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
@@ -228,15 +228,8 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public Optional<AnnenpartUttakPeriode> getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(Predicate<AnnenpartUttakPeriode> filter) {
-        return getAnnenPartUttaksperioder().stream()
-            .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app) && filter.test(app))
-            .findFirst();
-    }
-
-    @Override
     public LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt() {
-        return regelGrunnlag.getAnnenPart().getSisteSøknadMottattTidspunkt();
+        return Optional.ofNullable(regelGrunnlag.getAnnenPart()).map(AnnenPart::getSisteSøknadMottattTidspunkt).orElse(null);
     }
 
     @Override
@@ -304,7 +297,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public LocalDateTime getSisteSøknadMottattTidspunkt() {
-        return regelGrunnlag.getSøknad().getMottattTidspunkt();
+        return Optional.ofNullable(regelGrunnlag.getSøknad()).map(Søknad::getMottattTidspunkt).orElse(null);
     }
 
     @Override

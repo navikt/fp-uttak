@@ -15,7 +15,7 @@ class UtbetalingsgradSamtidigUttakUtregningTest {
     @Test
     void hvis_ugradert_periode_skal_utbetalingsgrad_være_lik_samtidig_uttaksprosent() {
         var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
-        var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, null).resultat();
+        var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, null, SamtidigUttaksprosent.ZERO).resultat();
 
         assertThat(resultat.decimalValue()).isEqualTo(samtidigUttaksprosent.decimalValue());
     }
@@ -24,7 +24,7 @@ class UtbetalingsgradSamtidigUttakUtregningTest {
     void hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
         var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
         var graderingArbeidstidsprosent = BigDecimal.ONE;
-        var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, graderingArbeidstidsprosent).resultat();
+        var resultat = new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, graderingArbeidstidsprosent, SamtidigUttaksprosent.ZERO).resultat();
 
         assertThat(resultat).isEqualByComparingTo(Utbetalingsgrad.HUNDRED.subtract(graderingArbeidstidsprosent));
     }

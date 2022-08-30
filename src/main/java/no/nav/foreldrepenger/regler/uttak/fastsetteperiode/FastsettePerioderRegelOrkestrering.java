@@ -126,8 +126,7 @@ public class FastsettePerioderRegelOrkestrering {
         var evaluering = fastsettePeriodeRegel.evaluer(fastsettePeriodeGrunnlag);
         var inputJson = toJson(fastsettePeriodeGrunnlag);
         var regelJson = EvaluationSerializer.asJson(evaluering);
-        var regelResultatBehandlerResultat = behandleRegelresultat(evaluering, aktuellPeriode, regelResultatBehandler, grunnlag,
-                saldoUtregning, farRundtFødselIntervall);
+        var regelResultatBehandlerResultat = behandleRegelresultat(evaluering, fastsettePeriodeGrunnlag, regelResultatBehandler, grunnlag, saldoUtregning);
 
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson,
                 regelResultatBehandlerResultat.getEtterKnekkPeriode());
@@ -172,19 +171,23 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,
-                                                                 OppgittPeriode aktuellPeriode,
+                                                                 FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag,
                                                                  RegelResultatBehandler behandler,
-                                                                 RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning,
-                                                                 LukketPeriode farRundtFødselIntervall) {
+                                                                 RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
+        var aktuellPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
         var regelresultat = new FastsettePerioderRegelresultat(evaluering);
         var utfallType = regelresultat.getUtfallType();
 
-        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, saldoUtregning, regelresultat, farRundtFødselIntervall);
+        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, saldoUtregning, regelresultat,
+            fastsettePeriodeGrunnlag.periodeFarRundtFødsel().orElse(null));
+
+        var annenpartSamtidigUttaksprosent = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag, regelGrunnlag) ?
+            SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag) : SamtidigUttaksprosent.ZERO;
 
         return switch (utfallType) {
             case AVSLÅTT -> behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
                     overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenpartUttaksperioder(regelGrunnlag)));
-            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat);
+            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat, annenpartSamtidigUttaksprosent);
             case MANUELL_BEHANDLING -> behandler.manuellBehandling(aktuellPeriode, regelresultat);
         };
     }

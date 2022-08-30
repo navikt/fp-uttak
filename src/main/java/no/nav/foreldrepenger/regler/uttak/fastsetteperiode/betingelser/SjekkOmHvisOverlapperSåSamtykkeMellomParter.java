@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.felles.PerioderUtenHelgUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -16,6 +17,13 @@ public class SjekkOmHvisOverlapperSåSamtykkeMellomParter extends LeafSpecificat
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(app -> true).isEmpty() || grunnlag.isSamtykke() ? ja() : nei();
+        return grunnlag.isSamtykke() || ingenOverlapp(grunnlag) ? ja() : nei();
+    }
+
+    private boolean ingenOverlapp(FastsettePeriodeGrunnlag grunnlag) {
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
+        return grunnlag.getAnnenPartUttaksperioder().stream()
+            .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app))
+            .findFirst().isEmpty();
     }
 }

@@ -104,13 +104,32 @@ class RevurderingTest {
                 FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(true))
                 .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, true).build()))
+                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.HUNDRED.subtract(Utbetalingsgrad.TEN), true).build()))
                 .behandling(berørtBehandling())
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
+    }
+
+    @Test
+    void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAutomatiskReduseres() {
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+            FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var grunnlag = basicBuilder(oppgittPeriode)
+            .rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
+                FAMILIEHENDELSE_DATO.plusWeeks(12), new Utbetalingsgrad(60), true).build()))
+            .behandling(berørtBehandling().søkerErMor(true))
+            .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isTrue();
+        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+        assertThat(regelresultat.skalUtbetale()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
     }
 
     @Test
@@ -121,7 +140,7 @@ class RevurderingTest {
                 .rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
                 .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
                         FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, true).build()))
-                .behandling(berørtBehandling())
+                .behandling(berørtBehandling().søkerErMor(true))
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);

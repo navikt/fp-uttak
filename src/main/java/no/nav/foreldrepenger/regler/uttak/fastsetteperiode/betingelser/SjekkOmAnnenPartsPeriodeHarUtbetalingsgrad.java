@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.SamtidigUttakUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -17,16 +17,6 @@ public class SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad extends LeafSpecificatio
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(this::finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull)
-            .isPresent() ? ja() : nei();
-    }
-
-    private boolean finnesDetEnAktivitetMedUtbetalingsgradHøyereEnnNull(AnnenpartUttakPeriode periodeAnnenPart) {
-        for (var periodeAktivitet : periodeAnnenPart.getAktiviteter()) {
-            if (periodeAktivitet.getUtbetalingsgrad().harUtbetaling()) {
-                return true;
-            }
-        }
-        return false;
+        return SamtidigUttakUtil.annenpartHarSamtidigPeriodeMedUtbetaling(grunnlag) ? ja() : nei();
     }
 }

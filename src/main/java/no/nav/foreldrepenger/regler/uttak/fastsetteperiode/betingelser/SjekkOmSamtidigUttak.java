@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.util.List;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.SamtidigUttakUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -19,14 +17,6 @@ public class SjekkOmSamtidigUttak extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        var oppgittPeriode = grunnlag.getAktuellPeriode();
-        if (oppgittPeriode.erSøktSamtidigUttak() || harAnnenForelderHuketAvForSamtidigUttak(grunnlag)) {
-            return ja();
-        }
-        return nei();
-    }
-
-    private boolean harAnnenForelderHuketAvForSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getAnnenPartUttaksperiodeSomOverlapperAktuellPeriode(AnnenpartUttakPeriode::isSamtidigUttak).isPresent();
+        return SamtidigUttakUtil.søktSamtidigUttakForPeriode(grunnlag) ? ja() : nei();
     }
 }
