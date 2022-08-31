@@ -4,6 +4,8 @@ public final class RettOgOmsorg {
 
     private boolean farHarRett;
     private boolean morHarRett;
+    private boolean farHarRettEØS;
+    private boolean morHarRettEØS;
     private boolean samtykke;
     private boolean aleneomsorg;
     private boolean morUføretrygd;
@@ -13,11 +15,15 @@ public final class RettOgOmsorg {
     }
 
     public boolean getFarHarRett() {
-        return farHarRett;
+        return farHarRett || farHarRettEØS;
     }
 
     public boolean getMorHarRett() {
-        return morHarRett;
+        return morHarRett || morHarRettEØS;
+    }
+
+    public boolean bareFarHarRett() {
+        return getFarHarRett() && !getMorHarRett();
     }
 
     public boolean getSamtykke() {
@@ -46,6 +52,16 @@ public final class RettOgOmsorg {
 
         public Builder morHarRett(boolean morHarRett) {
             kladd.morHarRett = morHarRett;
+            return this;
+        }
+
+        public Builder farHarRettEØS(boolean farHarRettEØS) {
+            kladd.farHarRettEØS = farHarRettEØS;
+            return this;
+        }
+
+        public Builder morHarRettEØS(boolean morHarRettEØS) {
+            kladd.morHarRettEØS = morHarRettEØS;
             return this;
         }
 

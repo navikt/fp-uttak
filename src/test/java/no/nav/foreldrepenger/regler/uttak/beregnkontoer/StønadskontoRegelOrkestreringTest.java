@@ -63,7 +63,7 @@ class StønadskontoRegelOrkestreringTest {
             .antallBarn(1)
             .farRett(true)
             .morRett(false)
-            .annenpartTilsvarendeRettEØS(true)
+            .morHarRettEØS(true)
             .farAleneomsorg(false)
             .morAleneomsorg(false)
             .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
@@ -71,10 +71,11 @@ class StønadskontoRegelOrkestreringTest {
 
         var stønadskontoResultat = stønadskontoRegelOrkestrering.beregnKontoer(grunnlag);
         var stønadskontoer = stønadskontoResultat.getStønadskontoer();
-        assertThat(stønadskontoer).hasSize(3);
+        assertThat(stønadskontoer).hasSize(4);
         assertThat(stønadskontoer.get(FELLESPERIODE)).isEqualTo(80);
         assertThat(stønadskontoer.get(FEDREKVOTE)).isEqualTo(75);
         assertThat(stønadskontoer.get(MØDREKVOTE)).isEqualTo(75);
+        assertThat(stønadskontoer.get((FORELDREPENGER_FØR_FØDSEL))).isEqualTo(15);
     }
 
     @Test
@@ -84,7 +85,7 @@ class StønadskontoRegelOrkestreringTest {
             .antallBarn(1)
             .farRett(false)
             .morRett(true)
-            .annenpartTilsvarendeRettEØS(true)
+            .farHarRettEØS(true)
             .farAleneomsorg(false)
             .morAleneomsorg(false)
             .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)

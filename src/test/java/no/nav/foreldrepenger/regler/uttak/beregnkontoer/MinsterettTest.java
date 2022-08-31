@@ -155,8 +155,7 @@ class MinsterettTest {
         var grunnlag = new BeregnMinsterettGrunnlag.Builder()
             .minsterett(true)
             .mor(false)
-            .bareFarHarRett(true)
-            .annenpartTilsvarendeRettEØS(true)
+            .bareFarHarRett(false)
             .familieHendelseDato(LocalDate.now())
             .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
             .build();

@@ -184,8 +184,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public boolean isBareFarHarRettMorUføretrygd() {
-        var rett = regelGrunnlag.getRettOgOmsorg();
-        return rett.getFarHarRett() && !rett.getMorHarRett() && rett.getMorUføretrygd();
+        return isFarRett() && !isMorRett() && regelGrunnlag.getRettOgOmsorg().getMorUføretrygd();
     }
 
     @Override

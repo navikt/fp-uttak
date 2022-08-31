@@ -106,7 +106,7 @@ final class ManglendeSøktPeriodeUtil {
     }
 
     static boolean bareFarRett(RegelGrunnlag grunnlag) {
-        return grunnlag.getRettOgOmsorg().getFarHarRett() && !grunnlag.getRettOgOmsorg().getMorHarRett();
+        return grunnlag.getRettOgOmsorg().bareFarHarRett();
     }
 
     static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
