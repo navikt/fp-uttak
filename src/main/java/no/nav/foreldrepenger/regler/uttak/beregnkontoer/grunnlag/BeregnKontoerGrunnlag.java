@@ -14,7 +14,8 @@ public class BeregnKontoerGrunnlag {
     private Dekningsgrad dekningsgrad;
     private boolean farAleneomsorg;
     private boolean morAleneomsorg;
-    private boolean annenpartTilsvarendeRettEØS;
+    private boolean farHarRettEØS;
+    private boolean morHarRettEØS;
     private LocalDate fødselsdato;
     private LocalDate termindato;
     //adopsjon
@@ -29,11 +30,11 @@ public class BeregnKontoerGrunnlag {
     }
 
     public boolean isMorRett() {
-        return morRett;
+        return morRett || morHarRettEØS;
     }
 
     public boolean isFarRett() {
-        return farRett;
+        return farRett || farHarRettEØS;
     }
 
     public Dekningsgrad getDekningsgrad() {
@@ -46,10 +47,6 @@ public class BeregnKontoerGrunnlag {
 
     public boolean isMorAleneomsorg() {
         return morAleneomsorg;
-    }
-
-    public boolean isAnnenpartTilsvarendeRettEØS() {
-        return annenpartTilsvarendeRettEØS;
     }
 
     public boolean erFødsel() {
@@ -99,8 +96,13 @@ public class BeregnKontoerGrunnlag {
             return this;
         }
 
-        public Builder annenpartTilsvarendeRettEØS(boolean annenpartHarTilsvarendeRettEØS) {
-            kladd.annenpartTilsvarendeRettEØS = annenpartHarTilsvarendeRettEØS;
+        public Builder morHarRettEØS(boolean morHarRettEØS) {
+            kladd.morHarRettEØS = morHarRettEØS;
+            return this;
+        }
+
+        public Builder farHarRettEØS(boolean farHarRettEØS) {
+            kladd.farHarRettEØS = farHarRettEØS;
             return this;
         }
 

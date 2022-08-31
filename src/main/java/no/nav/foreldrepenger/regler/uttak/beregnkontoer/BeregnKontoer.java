@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmAnnenForelderHarTilsvarendeRettEØS;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBareMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.betingelser.SjekkOmBådeMorOgFarHarRett;
@@ -67,18 +66,11 @@ public class BeregnKontoer implements RuleService<BeregnKontoerGrunnlag> {
                 .ellers(sjekkKunFarRettNode(rs));
     }
 
-    private Specification<BeregnKontoerGrunnlag> sjekkEneRettNorgeAnnenForelderEØS(Ruleset<BeregnKontoerGrunnlag> rs) {
-        return rs.hvisRegel(SjekkOmAnnenForelderHarTilsvarendeRettEØS.ID, "Sjekk om ene har opptjent rett til foreldrepenger i Norge og annen i EØS?")
-            .hvis(new SjekkOmAnnenForelderHarTilsvarendeRettEØS(), opprettKontoer(rs,
-                new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.BEGGE)))
-            .ellers(sjekkKunMorRettNode(rs));
-    }
-
     private Specification<BeregnKontoerGrunnlag> sjekkBeggeRettNode(Ruleset<BeregnKontoerGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBådeMorOgFarHarRett.ID, "Sjekk om begge har opptjent rett til foreldrepenger?")
                 .hvis(new SjekkOmBådeMorOgFarHarRett(), opprettKontoer(rs,
                         new Konfigurasjonsfaktorer.Builder().berettiget(Konfigurasjonsfaktorer.Berettiget.BEGGE)))
-                .ellers(sjekkEneRettNorgeAnnenForelderEØS(rs));
+                .ellers(sjekkKunMorRettNode(rs));
     }
 
     private Specification<BeregnKontoerGrunnlag> sjekkFarAleneomsorgNode(Ruleset<BeregnKontoerGrunnlag> rs) {
