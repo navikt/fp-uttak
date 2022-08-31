@@ -14,6 +14,7 @@ public class BeregnMinsterettGrunnlag {
     private Dekningsgrad dekningsgrad;
     private LocalDate familieHendelseDato;
     private LocalDate familieHendelseDatoNesteSak;
+    private boolean annenpartTilsvarendeRettEØS;
 
     private BeregnMinsterettGrunnlag() {
     }
@@ -56,6 +57,10 @@ public class BeregnMinsterettGrunnlag {
 
     public LocalDate getFamilieHendelseDatoNesteSak() {
         return familieHendelseDatoNesteSak;
+    }
+
+    public boolean isAnnenpartTilsvarendeRettEØS() {
+        return annenpartTilsvarendeRettEØS;
     }
 
     public static class Builder {
@@ -109,6 +114,11 @@ public class BeregnMinsterettGrunnlag {
 
         public Builder familieHendelseDatoNesteSak(LocalDate familieHendelseDatoNesteSak) {
             grunnlag.familieHendelseDatoNesteSak =  familieHendelseDatoNesteSak;
+            return this;
+        }
+
+        public Builder annenpartTilsvarendeRettEØS(boolean annenpartTilsvarendeRettEØS) {
+            grunnlag.annenpartTilsvarendeRettEØS =  annenpartTilsvarendeRettEØS;
             return this;
         }
 

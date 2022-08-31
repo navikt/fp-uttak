@@ -44,7 +44,7 @@ public enum Minsterett {
             // Settes for begge parter. Brukes ifm berørt for begge og fakta uttak for far.
             retter.put(Minsterett.FAR_UTTAK_RUNDT_FØDSEL, Konfigurasjon.STANDARD.getParameter(Parametertype.FAR_DAGER_RUNDT_FØDSEL, fhDato));
         }
-        if (minsterett && bareFarHarRett && !aleneomsorg) {
+        if (minsterett && bareFarHarRett && !aleneomsorg && !grunnlag.isAnnenpartTilsvarendeRettEØS()) {
             var antallDager = Konfigurasjon.STANDARD.getParameter(Parametertype.BARE_FAR_DAGER_MINSTERETT, fhDato);
             var flerbarnDager = 0;
             if (morHarUføretrygd) {

@@ -150,4 +150,18 @@ class MinsterettTest {
         assertThat(finnMinsterett(grunnlag)).containsEntry(TETTE_FØDSLER, 0);
     }
 
+    @Test
+    void bfhr_mor_rett_i_eøs_skal_ikke_få_generell_minsterett() {
+        var grunnlag = new BeregnMinsterettGrunnlag.Builder()
+            .minsterett(true)
+            .mor(false)
+            .bareFarHarRett(true)
+            .annenpartTilsvarendeRettEØS(true)
+            .familieHendelseDato(LocalDate.now())
+            .dekningsgrad(Dekningsgrad.DEKNINGSGRAD_100)
+            .build();
+        assertThat(finnMinsterett(grunnlag)).doesNotContainKey(GENERELL_MINSTERETT);
+        assertThat(finnMinsterett(grunnlag)).containsKey(FAR_UTTAK_RUNDT_FØDSEL);
+    }
+
 }
