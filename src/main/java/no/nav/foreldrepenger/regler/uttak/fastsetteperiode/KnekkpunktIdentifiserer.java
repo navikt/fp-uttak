@@ -72,7 +72,7 @@ class KnekkpunktIdentifiserer {
             var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
             var sakUtenKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
             var erMor = grunnlag.getBehandling().isSøkerMor();
-            if (!hjemletFarUttakRundtFødsel || sakUtenKvoter || erMor) {
+            if (!hjemletFarUttakRundtFødsel || !sakUtenKvoter || erMor) {
                 knekkpunkter.add(familiehendelseDato.plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
             if (hjemletFarUttakRundtFødsel && !erMor) {

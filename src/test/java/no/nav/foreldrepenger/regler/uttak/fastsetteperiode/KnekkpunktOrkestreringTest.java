@@ -1,6 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -191,4 +195,35 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
+
+    @Test
+    void tilfelle_med_lang_overføring_sykdom() {
+        var termindato = LocalDate.of(2022, 9, 24);
+        var kontoer = new Kontoer.Builder()
+            .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(95)).konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(95))
+            .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(90)).konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
+            .farUttakRundtFødselDager(10);
+        var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, LocalDate.of(2022, 9, 26), LocalDate.of(2023, 2, 3),
+            PeriodeVurderingType.PERIODE_OK, OverføringÅrsak.SYKDOM_ELLER_SKADE, LocalDate.of(2022, 8, 22), LocalDate.of(2022, 8, 22));
+        var grunnlag = basicGrunnlag(termindato)
+            .behandling(farBehandling())
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder().termin(termindato))
+            .søknad(new Søknad.Builder().type(Søknadstype.TERMIN)
+                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, LocalDate.of(2022, 9, 12), LocalDate.of(2022, 9, 23)))
+                .oppgittPeriode(overføring)
+                .dokumentasjon(new Dokumentasjon.Builder().periodeMedSykdomEllerSkade(
+                        new PeriodeMedSykdomEllerSkade(overføring.getFom(), overføring.getTom()))
+                    .gyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()))))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
+            .kontoer(kontoer);
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(3);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
 }
