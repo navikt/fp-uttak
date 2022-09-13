@@ -10,9 +10,28 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
@@ -142,7 +161,7 @@ class FedrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -164,8 +183,7 @@ class FedrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE,
-                PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -187,7 +205,7 @@ class FedrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -209,8 +227,7 @@ class FedrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT,
-                PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -246,7 +263,7 @@ class FedrekvoteDelregelTest {
     void UT1217_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4));
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
                 søknad(oppgittPeriode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX)))
                 .kontoer(fedrekvoteKonto(1000))

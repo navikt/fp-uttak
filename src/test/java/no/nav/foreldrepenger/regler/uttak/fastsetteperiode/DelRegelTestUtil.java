@@ -47,9 +47,8 @@ final class DelRegelTestUtil {
     static OppgittPeriode overføringsperiode(Stønadskontotype stønadskontotype,
                                              LocalDate fom,
                                              LocalDate tom,
-                                             OverføringÅrsak årsak,
-                                             PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, vurderingType, årsak, null, null);
+                                             OverføringÅrsak årsak) {
+        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, årsak, null, null);
     }
 
     static OppgittPeriode gradertPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -88,6 +87,6 @@ final class DelRegelTestUtil {
     }
 
     static OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelsesÅrsak) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, utsettelsesÅrsak, null, null, null);
+        return OppgittPeriode.forUtsettelse(fom, tom, utsettelsesÅrsak, null, null, null);
     }
 }

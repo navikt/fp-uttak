@@ -204,9 +204,9 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 75)).minsterettDager(1);
         var oppgittPeriode = foreldrepenger(fødselsdato, null);
         var utsettelse1 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1),
-                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, null);
+            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, null);
         var utsettelse2 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(17).minusDays(1),
-                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FRI, fødselsdato, fødselsdato, null);
+            UtsettelseÅrsak.FRI, fødselsdato, fødselsdato, null);
 
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, utsettelse1, utsettelse2));
 
@@ -257,7 +257,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), IKKE_I_AKTIVITET_DOKUMENTERT));
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
@@ -285,7 +285,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-                PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), IKKE_I_AKTIVITET_DOKUMENTERT));
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
