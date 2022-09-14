@@ -38,7 +38,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
@@ -400,7 +399,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //Mottatt dato skal ikke være relevant for utsettelse første 6 ukene hvis det er dokumentert
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1),
-                PeriodeVurderingType.PERIODE_OK, SYKDOM_SKADE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(8), null);
+            SYKDOM_SKADE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(8), null);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
                 .søknad(fødselSøknad()
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(4).minusDays(1)))
@@ -459,8 +458,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
                         PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
-                PeriodeVurderingType.PERIODE_OK, ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100),
-                MorsAktivitet.UTDANNING);
+            ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100), MorsAktivitet.UTDANNING);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .behandling(farBehandling())
                 .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
@@ -511,8 +509,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(fom, tom, PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_DOKUMENTERT));
         //Skal gå tom for dager
-        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
-                FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
@@ -546,8 +543,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
                 new PeriodeMedAvklartMorsAktivitet(fom, tom, PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
         //Skal gå tom for dager
-        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK,
-                FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
         var grunnlag = basicGrunnlagFar(fødselsdato).datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))

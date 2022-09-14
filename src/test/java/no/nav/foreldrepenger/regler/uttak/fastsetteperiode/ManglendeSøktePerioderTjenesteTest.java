@@ -297,7 +297,7 @@ class ManglendeSøktePerioderTjenesteTest {
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, søknadsperiodeFom, familiehendelse.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(3)))
                         .oppgittPeriode(OppgittPeriode.forUtsettelse(familiehendelse.plusWeeks(6).plusDays(1), familiehendelse.plusWeeks(8),
-                                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.SYKDOM_SKADE, null, null, null)))
+                            UtsettelseÅrsak.SYKDOM_SKADE, null, null, null)))
                 .behandling(morBehandling())
                 .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(søknadsperiodeFom))

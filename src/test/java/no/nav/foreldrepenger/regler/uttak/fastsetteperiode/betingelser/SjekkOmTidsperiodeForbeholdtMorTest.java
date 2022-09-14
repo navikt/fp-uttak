@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.INNLAGT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType.IKKE_VURDERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_SØKER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,7 +94,7 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
                 .datoer(datoer)
                 .søknad(new Søknad.Builder().type(FØDSEL))
                 .build();
-        var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom, IKKE_VURDERT,
+        var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom,
                 INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT);
         return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);
     }

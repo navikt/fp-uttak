@@ -372,8 +372,8 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 false, PeriodeVurderingType.IKKE_VURDERT, fom.minusWeeks(3), fom.minusWeeks(3), utdanning);
     }
 
-    private OppgittPeriode foreldrepengerUtsettelse(LocalDate fom, LocalDate tom, MorsAktivitet utdanning) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.IKKE_VURDERT, UtsettelseÅrsak.FERIE, fom, fom, utdanning);
+    private OppgittPeriode foreldrepengerUtsettelse(LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet) {
+        return OppgittPeriode.forUtsettelse(fom, tom, UtsettelseÅrsak.FERIE, fom, fom, morsAktivitet);
     }
 
 

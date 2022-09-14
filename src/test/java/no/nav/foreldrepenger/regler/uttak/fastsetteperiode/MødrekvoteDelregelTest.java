@@ -7,9 +7,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dødsdatoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -357,7 +372,7 @@ class MødrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.INNLEGGELSE, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.INNLEGGELSE);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -379,7 +394,7 @@ class MødrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -401,7 +416,7 @@ class MødrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.ALENEOMSORG, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.ALENEOMSORG);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
@@ -417,11 +432,8 @@ class MødrekvoteDelregelTest {
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
-    private OppgittPeriode overføringsperiode(LocalDate fom,
-                                              LocalDate tom,
-                                              OverføringÅrsak årsak,
-                                              PeriodeVurderingType vurderingType) {
-        return DelRegelTestUtil.overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, årsak, vurderingType);
+    private OppgittPeriode overføringsperiode(LocalDate fom, LocalDate tom, OverføringÅrsak årsak) {
+        return DelRegelTestUtil.overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, årsak);
     }
 
     @Test
@@ -430,7 +442,7 @@ class MødrekvoteDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT, PeriodeVurderingType.PERIODE_OK);
+        var oppgittPeriode = overføringsperiode(fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));

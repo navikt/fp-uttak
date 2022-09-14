@@ -292,7 +292,7 @@ class KnekkpunktIdentifisererTest {
     void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
-                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null);
+            UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
                 .revurdering(new Revurdering.Builder().endringsdato(LocalDate.of(2018, 5, 5)))
@@ -309,7 +309,7 @@ class KnekkpunktIdentifisererTest {
     void finnerKnekkPåFørstegangssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
-                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null);
+            UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
                 .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))
@@ -324,7 +324,7 @@ class KnekkpunktIdentifisererTest {
     @Test
     void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterPåMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
-        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato, mottattdato.plusWeeks(2), PeriodeVurderingType.PERIODE_OK,
+        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato, mottattdato.plusWeeks(2),
                 UtsettelseÅrsak.ARBEID, mottattdato, mottattdato, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
@@ -341,7 +341,7 @@ class KnekkpunktIdentifisererTest {
     void finnerIkkeKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterEtterMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.plusWeeks(1), mottattdato.plusWeeks(2),
-                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null);
+            UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
                 .revurdering(new Revurdering.Builder().endringsdato(LocalDate.of(2018, 5, 5)))
@@ -359,8 +359,7 @@ class KnekkpunktIdentifisererTest {
         var tom = LocalDate.of(2019, 5, 25);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(OppgittPeriode.forUtsettelse(fødselsdato, tom, PeriodeVurderingType.IKKE_VURDERT,
-                                UtsettelseÅrsak.FERIE, null, null, null)))
+                        .oppgittPeriode(OppgittPeriode.forUtsettelse(fødselsdato, tom, UtsettelseÅrsak.FERIE, null, null, null)))
                 .datoer(datoer(fødselsdato))
                 .build();
 
@@ -494,7 +493,7 @@ class KnekkpunktIdentifisererTest {
     void ikkeKnekkPåMottattDatoForFriUtsettelse() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
-                PeriodeVurderingType.PERIODE_OK, UtsettelseÅrsak.FRI, mottattdato, mottattdato, null);
+            UtsettelseÅrsak.FRI, mottattdato, mottattdato, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
                 .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))

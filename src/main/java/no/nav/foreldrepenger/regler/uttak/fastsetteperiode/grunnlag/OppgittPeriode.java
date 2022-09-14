@@ -69,12 +69,12 @@ public final class OppgittPeriode extends LukketPeriode {
         return arbeidsprosent != null && getArbeidsprosent().compareTo(BigDecimal.ZERO) > 0;
     }
 
-    public PeriodeVurderingType getPeriodeVurderingType() {
-        return periodeVurderingType;
-    }
-
     public Optional<LocalDate> getTidligstMottattDato() {
         return Optional.ofNullable(tidligstMottattDato);
+    }
+
+    public PeriodeVurderingType getPeriodeVurderingType() {
+        return periodeVurderingType;
     }
 
     public Optional<LocalDate> getSenestMottattDato() {
@@ -180,23 +180,21 @@ public final class OppgittPeriode extends LukketPeriode {
 
     public static OppgittPeriode forUtsettelse(LocalDate fom,
                                                LocalDate tom,
-                                               PeriodeVurderingType periodeVurderingType,
                                                UtsettelseÅrsak utsettelseÅrsak,
                                                LocalDate senestMottattDato,
                                                LocalDate tidligstMottattDato,
                                                MorsAktivitet morsAktivitet) {
-        return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, periodeVurderingType, null, false, utsettelseÅrsak,
+        return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, PeriodeVurderingType.IKKE_VURDERT, null, false, utsettelseÅrsak,
                 null, senestMottattDato, tidligstMottattDato, morsAktivitet);
     }
 
     public static OppgittPeriode forOverføring(Stønadskontotype stønadskontotype,
                                                LocalDate fom,
                                                LocalDate tom,
-                                               PeriodeVurderingType periodeVurderingType,
                                                OverføringÅrsak overføringÅrsak,
                                                LocalDate senestMottattDato,
                                                LocalDate tidligstMottattDato) {
-        return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, periodeVurderingType, null,
+        return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, PeriodeVurderingType.IKKE_VURDERT, null,
                 false, null, null, senestMottattDato, tidligstMottattDato, null);
     }
 

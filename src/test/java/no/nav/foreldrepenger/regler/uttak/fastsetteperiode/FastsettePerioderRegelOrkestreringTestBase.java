@@ -185,7 +185,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, MorsAktivitet morsAktivitet) {
-        return OppgittPeriode.forUtsettelse(fom, tom, PeriodeVurderingType.PERIODE_OK, utsettelseÅrsak, null, null, morsAktivitet);
+        return OppgittPeriode.forUtsettelse(fom, tom, utsettelseÅrsak, null, null, morsAktivitet);
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {
