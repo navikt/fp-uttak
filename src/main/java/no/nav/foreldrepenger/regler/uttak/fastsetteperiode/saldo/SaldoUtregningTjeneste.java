@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUtt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
@@ -30,7 +27,9 @@ public final class SaldoUtregningTjeneste {
         var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isBerørtBehandling(), grunnlag.getUtregningsdato(),
                 grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
 
-        var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder());
+        var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder()).stream()
+            .filter(p -> !p.isInnvilgetGyldigUtsettelse())
+            .toList();
         return new SaldoUtregning(grunnlag.getStønadskonti(), søkersFastsattePerioder, annenpartsPerioder, grunnlag);
     }
 

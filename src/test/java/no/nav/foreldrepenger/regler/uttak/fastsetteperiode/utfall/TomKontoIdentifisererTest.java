@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -73,6 +72,6 @@ class TomKontoIdentifisererTest {
         var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
         var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(oppgittPeriode, List.of(ARBEIDSFORHOLD_1), saldoUtregning,
                 Stønadskontotype.MØDREKVOTE, null, null,true, InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, UtfallType.INNVILGET);
-        assertThat(tomKontoKnekkpunkt.orElseThrow().getDato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
+        assertThat(tomKontoKnekkpunkt.orElseThrow().dato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
     }
 }

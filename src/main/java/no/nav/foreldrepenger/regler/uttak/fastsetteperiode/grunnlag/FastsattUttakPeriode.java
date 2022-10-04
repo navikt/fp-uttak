@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.UTSETTELSE_GYLDIG;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
@@ -92,6 +93,10 @@ public class FastsattUttakPeriode {
         return getOppholdÅrsak() != null;
     }
 
+    public boolean isInnvilgetGyldigUtsettelse() {
+        return utsettelse && resultatÅrsak.equals(UTSETTELSE_GYLDIG);
+    }
+
     @Override
     public String toString() {
         return "FastsattUttakPeriode{" + "fom=" + fom + ", tom=" + tom + '}';
@@ -101,6 +106,7 @@ public class FastsattUttakPeriode {
         IKKE_OPPFYLT_SØKNADSFRIST,
         INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT,
         INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT,
+        UTSETTELSE_GYLDIG,
         ANNET,
     }
 

@@ -1,7 +1,10 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static java.time.LocalDate.of;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_3;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.utsettelse;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.uttak;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
@@ -25,8 +28,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
@@ -38,11 +45,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAv
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
@@ -771,6 +781,45 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+    }
+
+    @ParameterizedTest
+    @EnumSource(UtsettelseÅrsak.class)
+    void annen_parts_periode_skal_trekke_dager_selv_om_de_overlapper_med_søkers_utsettelse(UtsettelseÅrsak utsettelseÅrsak) {
+        //FAGSYSTEM-243708
+        var fødselsdato = of(2018, 1, 1);
+        var mottattDatoFar = fødselsdato.plusWeeks(5);
+        var utsettelsePeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), utsettelseÅrsak, mottattDatoFar,
+            mottattDatoFar, null);
+        var fellesperiodeFom = utsettelsePeriode.getTom().plusDays(1);
+        var fellesperiode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fellesperiodeFom, fellesperiodeFom.plusWeeks(1).minusDays(1),
+            null, false, PeriodeVurderingType.PERIODE_OK, mottattDatoFar, mottattDatoFar, MorsAktivitet.ARBEID);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+            .behandling(farBehandling())
+            .søknad(søknad(Søknadstype.FØDSEL, utsettelsePeriode, fellesperiode)
+                    .dokumentasjon(new Dokumentasjon.Builder()
+                        .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fellesperiode.getFom(), fellesperiode.getTom(), PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET)))
+            )
+            .annenPart(new AnnenPart.Builder()
+                .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
+                    .innvilget(true)
+                    .senestMottattDato(fødselsdato)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.HUNDRED))
+                    .build())
+                .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(utsettelsePeriode.getFom(), utsettelsePeriode.getTom())
+                    .innvilget(true)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, FELLESPERIODE, new Trekkdager(130), Utbetalingsgrad.HUNDRED))
+                    .senestMottattDato(fødselsdato)
+                    .build())
+            );
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {
