@@ -276,6 +276,9 @@ public class FastsettePerioderRegelOrkestrering {
         if (InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(årsak)) {
             return FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
         }
+        if (InnvilgetÅrsak.UTSETTELSE_GYLDIG.equals(årsak)) {
+            return FastsattUttakPeriode.ResultatÅrsak.UTSETTELSE_GYLDIG;
+        }
         if (IkkeOppfyltÅrsak.SØKNADSFRIST.equals(årsak)) {
             return FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
         }

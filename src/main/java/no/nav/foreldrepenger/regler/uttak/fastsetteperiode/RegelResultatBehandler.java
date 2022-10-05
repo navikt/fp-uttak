@@ -25,7 +25,7 @@ class RegelResultatBehandler {
                                                          Optional<TomKontoKnekkpunkt> knekkpunktOpt,
                                                          FastsettePerioderRegelresultat regelresultat,
                                                          SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
-        var innvilgPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::getDato)
+        var innvilgPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
             .map(k -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), k.minusDays(1)))
             .orElse(oppgittPeriode);
 
@@ -39,7 +39,7 @@ class RegelResultatBehandler {
             return RegelResultatBehandlerResultat.utenKnekk(innvilget);
         } else {
             validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
-            var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().getDato(), oppgittPeriode.getTom());
+            var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().dato(), oppgittPeriode.getTom());
             return RegelResultatBehandlerResultat.medKnekk(innvilget, etterKnekk);
         }
     }
@@ -48,7 +48,7 @@ class RegelResultatBehandler {
                                                        FastsettePerioderRegelresultat regelresultat,
                                                        Optional<TomKontoKnekkpunkt> knekkpunktOpt,
                                                        boolean overlapperInnvilgetAnnenpartsPeriode) {
-        var avslåPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::getDato)
+        var avslåPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
             .filter(d -> !overlapperInnvilgetAnnenpartsPeriode)
             .map(knekkdato -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkdato.minusDays(1)))
             .orElse(oppgittPeriode);
@@ -61,7 +61,7 @@ class RegelResultatBehandler {
 
         if (!overlapperInnvilgetAnnenpartsPeriode && knekkpunktOpt.isPresent()) {
             validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
-            var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().getDato(), oppgittPeriode.getTom());
+            var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().dato(), oppgittPeriode.getTom());
             return RegelResultatBehandlerResultat.medKnekk(avslått, etterKnekk);
         } else {
             return RegelResultatBehandlerResultat.utenKnekk(avslått);
@@ -160,8 +160,8 @@ class RegelResultatBehandler {
     }
 
     private void validerKnekkpunkt(OppgittPeriode uttakPeriode, TomKontoKnekkpunkt knekkpunkt) {
-        if (!uttakPeriode.overlapper(knekkpunkt.getDato())) {
-            throw new IllegalArgumentException("Knekkpunkt må være i periode. " + knekkpunkt.getDato() + " - " + uttakPeriode);
+        if (!uttakPeriode.overlapper(knekkpunkt.dato())) {
+            throw new IllegalArgumentException("Knekkpunkt må være i periode. " + knekkpunkt.dato() + " - " + uttakPeriode);
         }
     }
 
