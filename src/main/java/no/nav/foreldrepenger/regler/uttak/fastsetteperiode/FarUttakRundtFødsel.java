@@ -59,7 +59,7 @@ public class FarUttakRundtFødsel {
                 .map(d -> d.minus(farFørTermin))
                 .orElse(familieHendelseDato);
         // Bruker fødsel + 6uker
-        var farUttakTom = familieHendelseDato.plus(farEtterFødsel);
+        var farUttakTom = familieHendelseDato.plus(farEtterFødsel).minusDays(1);
         return Optional.of(new LukketPeriode(farUttakFom, farUttakTom));
     }
 }
