@@ -233,7 +233,7 @@ class KnekkpunktIdentifiserer {
 
     private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, boolean medTom) {
         return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag)
-                .map(p -> medTom ? Set.of(p.getFom(), p.getTom()) : Set.of(p.getFom()))
+                .map(p -> medTom ? Set.of(p.getFom(), p.getTom().plusDays(1)) : Set.of(p.getFom()))
                 .orElse(Set.of());
     }
 
