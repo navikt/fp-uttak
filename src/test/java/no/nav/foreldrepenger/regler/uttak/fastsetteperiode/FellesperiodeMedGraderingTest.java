@@ -8,9 +8,21 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
 
 class FellesperiodeMedGraderingTest {
@@ -22,7 +34,7 @@ class FellesperiodeMedGraderingTest {
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
-                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var grunnlag = basicGrunnlag().kontoer(kontoer)
@@ -40,7 +52,7 @@ class FellesperiodeMedGraderingTest {
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
         var aktuellPeriode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, graderingFom, graderingTom,
-                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                BigDecimal.valueOf(50), null, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var grunnlag = basicGrunnlag().kontoer(kontoer)

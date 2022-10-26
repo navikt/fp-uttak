@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -185,8 +184,8 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null,
-                null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null,
+                null, null);
     }
 
     @Test
@@ -388,7 +387,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(3)))
                 .oppgittPeriode(
                         OppgittPeriode.forUtsettelse(familiehendelse.plusWeeks(6).plusDays(1), familiehendelse.plusWeeks(8),
-                            UtsettelseÅrsak.ARBEID, null, null, null)))
+                            UtsettelseÅrsak.ARBEID, null, null, null, null)))
                 .behandling(morBehandling())
                 .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(søknadsperiodeFom))
@@ -778,7 +777,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
         var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22),
-                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(17), null, null);
+                null, false, fødselsdato.plusWeeks(17), null, null, null);
         var grunnlag = grunnlagMedKontoer().datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato.plusWeeks(7)))

@@ -11,9 +11,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -93,8 +108,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null)));
+                                null, false, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -115,8 +130,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null)));
+                                null, false, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -140,8 +155,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null))
+                                null, false, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null))
                 .mottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(10, 10, 10))));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -166,8 +181,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null))
+                                null, false, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null))
                         .mottattTidspunkt(fødselsdato.plusWeeks(13).atTime(LocalTime.of(12, 12, 12))));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -191,8 +206,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null))
+                                null, false, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null))
                 );
 
         var resultat = fastsettPerioder(grunnlag);
@@ -220,8 +235,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .flerbarnsdager(5*17))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                new SamtidigUttaksprosent(100), true, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null))
+                                new SamtidigUttaksprosent(100), true, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null))
                 );
 
         var resultat = fastsettPerioder(grunnlag);
@@ -249,8 +264,8 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .flerbarnsdager(5*17))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12),
-                                null, true, PeriodeVurderingType.IKKE_VURDERT, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
-                                null))
+                                null, true, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(13),
+                                null, null))
                 );
 
         var resultat = fastsettPerioder(grunnlag);
@@ -279,11 +294,11 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .farUttakRundtFødselDager(10))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, termindato.minusWeeks(1), termindato.plusWeeks(1).minusDays(1),
-                                new SamtidigUttaksprosent(100), false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                                null))
+                                new SamtidigUttaksprosent(100), false, fødselsdato, fødselsdato,
+                                null, null))
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(35), fødselsdato.plusWeeks(42).minusDays(1),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                                null))
+                                null, false, fødselsdato, fødselsdato,
+                                null, null))
                 );
 
         var resultat = fastsettPerioder(grunnlag);
@@ -312,7 +327,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .farUttakRundtFødselDager(10))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(3),
-                                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, null))
+                                null, false, fødselsdato, fødselsdato, null, null))
                 );
 
         var resultat = fastsettPerioder(grunnlag);

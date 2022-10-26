@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
@@ -58,7 +57,7 @@ class TomKontoIdentifisererTest {
         var idag = LocalDate.of(2019, 3, 14);
 
         var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, idag, idag.plusDays(søktOmDag - 1),
-                arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                arbeidsprosent, null, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(saldo));
         var grunnlag = RegelGrunnlagTestBuilder.create()

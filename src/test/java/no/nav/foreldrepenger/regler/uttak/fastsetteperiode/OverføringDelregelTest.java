@@ -2,6 +2,14 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.overføringsperiode;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.ER_ALENEOMSORG;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.ER_BARE_SØKER_RETT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.ALENEOMSORG;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.INNLEGGELSE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.SYKDOM_ELLER_SKADE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -10,13 +18,11 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -32,12 +38,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, SYKDOM_ELLER_SKADE, SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -50,12 +55,12 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom,
+            INNLEGGELSE, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -68,12 +73,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, ALENEOMSORG, ER_ALENEOMSORG);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -86,12 +90,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, ANNEN_FORELDER_IKKE_RETT, ER_BARE_SØKER_RETT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -104,12 +107,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(8);
         var tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, SYKDOM_ELLER_SKADE, SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -122,12 +124,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(8);
         var tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, INNLEGGELSE, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -140,12 +141,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(8);
         var tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, ALENEOMSORG, ER_ALENEOMSORG);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -158,12 +158,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(8);
         var tom = fødselsdato.plusWeeks(9);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.FEDREKVOTE, fom, tom, ANNEN_FORELDER_IKKE_RETT, ER_BARE_SØKER_RETT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -176,12 +175,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.SYKDOM_ELLER_SKADE);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, SYKDOM_ELLER_SKADE, SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -194,12 +192,12 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.INNLEGGELSE);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, INNLEGGELSE,
+            INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -212,12 +210,11 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ALENEOMSORG);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, ALENEOMSORG, ER_ALENEOMSORG);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -230,12 +227,12 @@ class OverføringDelregelTest {
 
         var fom = fødselsdato.plusWeeks(3);
         var tom = fødselsdato.plusWeeks(4);
-        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
+        var søknadsperiode = overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, ANNEN_FORELDER_IKKE_RETT,
+            DokumentasjonVurdering.ER_BARE_SØKER_RETT);
         var kontoer = new Kontoer.Builder()
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.MØDREKVOTE))
                 .konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FEDREKVOTE));
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
-                søknad(søknadsperiode, new GyldigGrunnPeriode(LocalDate.MIN, LocalDate.MAX))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(fødselssøknadMedEnPeriode(søknadsperiode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -244,11 +241,6 @@ class OverføringDelregelTest {
 
     private Søknad.Builder fødselssøknadMedEnPeriode(OppgittPeriode oppgittPeriode) {
         return new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
-    }
-
-    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, GyldigGrunnPeriode gyldigGrunnPeriode) {
-        return fødselssøknadMedEnPeriode(oppgittPeriode).dokumentasjon(
-                new Dokumentasjon.Builder().gyldigGrunnPeriode(gyldigGrunnPeriode));
     }
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {

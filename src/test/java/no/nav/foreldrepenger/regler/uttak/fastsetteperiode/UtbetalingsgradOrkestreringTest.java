@@ -66,7 +66,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
         var utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                UtsettelseÅrsak.FERIE);
+                UtsettelseÅrsak.FERIE, null);
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12),
                 fødselsdato.plusWeeks(14).minusDays(1));
 

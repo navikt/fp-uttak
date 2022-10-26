@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forArbeid;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forFrilans;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forSelvstendigNæringsdrivende;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -20,17 +21,13 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -95,10 +92,8 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                         new FastsattUttakPeriodeAktivitet(new Trekkdager(0), FORELDREPENGER, forSelvstendigNæringsdrivende())))
                 .periodeResultatType(INNVILGET);
         //SKal gå tom for dager på frilans før aktiviteten med sn
-        var periodeMedAvklartMorsAktivitet = aktivitetAvklart(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(100));
         var søknad = søknad(FØDSEL,
-                oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100)))
-                .dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(periodeMedAvklartMorsAktivitet));
+                oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET));
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad)
                 .kontoer(kontoer)
                 .arbeid(arbeid)
@@ -122,7 +117,6 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var tilkommetArbeidsforhold = forArbeid(new Orgnummer("000000001"), "1234");
 
         var startdatoNyttArbeidsforhold = fødselsdato.plusWeeks(12);
-        var dok = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(aktivitetAvklart(fødselsdato, fødselsdato.plusWeeks(20)));
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .arbeid(new Arbeid.Builder()
                         .arbeidsforhold(new Arbeidsforhold(arbeidsforhold))
@@ -132,8 +126,8 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .behandling(farBehandling())
                 .rettOgOmsorg(bareFarRett())
-                .søknad(new Søknad.Builder().type(FØDSEL).dokumentasjon(dok)
-                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1))));
+                .søknad(new Søknad.Builder().type(FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET)));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -262,12 +256,10 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     }
 
     @Test
-    void bfhr_eneste_periode_er_første_6_ukene_skal_gå_til_manuell() {
+    void bfhr_eneste_periode_er_første_6_ukene_skal_innvilges() {
         var fødselsdato = LocalDate.of(2021, 10, 11);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL,
-                        oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4)))
-                        .dokumentasjon(new Dokumentasjon.Builder()
-                                .gyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(4))))
+                        OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4), null, false, fødselsdato, fødselsdato, MorsAktivitet.SYK, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET))
                 )
                 .kontoer(kontoer(konto(FORELDREPENGER, 100)))
                 .rettOgOmsorg(bareFarRett())
@@ -275,22 +267,19 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
-        assertThat(perioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isNotNull();
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
     @Test
     void bfhr_msp_skal_ikke_avslås_pga_tom_på_konto_hvis_dager_igjen_på_minsteretten() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(7).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING);
+                fødselsdato.plusWeeks(7).minusDays(1), null, false, fødselsdato, fødselsdato,
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8),
-                fødselsdato.plusWeeks(9).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                null);
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp)
-                        .dokumentasjon(new Dokumentasjon.Builder()
-                                .periodeMedAvklartMorsAktivitet(aktivitetAvklart(fpFørMsp.getFom(), fpFørMsp.getTom())))
-                )
+                fødselsdato.plusWeeks(9).minusDays(1), null, false, fødselsdato, fødselsdato,
+                null, null);
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
                 .kontoer(kontoer(konto(FORELDREPENGER, 10)).minsterettDager(5))
                 .rettOgOmsorg(bareFarRett())
                 .build();
@@ -307,15 +296,12 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_avslås_pga_tom_på_konto_hvis_ikke_dager_igjen_på_fp_men_ubrukte_minsterett() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(7).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING);
+                fødselsdato.plusWeeks(7).minusDays(1), null, false, fødselsdato, fødselsdato,
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8),
-                fødselsdato.plusWeeks(9).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                null);
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp)
-                        .dokumentasjon(new Dokumentasjon.Builder()
-                                .periodeMedAvklartMorsAktivitet(aktivitetAvklart(fpFørMsp.getFom(), fpFørMsp.getTom())))
-                )
+                fødselsdato.plusWeeks(9).minusDays(1), null, false, fødselsdato, fødselsdato,
+                null, null);
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
                 .kontoer(kontoer(konto(FORELDREPENGER, 5)).minsterettDager(5))
                 .rettOgOmsorg(bareFarRett())
                 .build();
@@ -332,15 +318,12 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_avslås_pga_tom_på_konto_hvis_dager_igjen_på_minsteretten_men_brukt_alle_dager_foreldrepenger() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(10).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING);
+                fødselsdato.plusWeeks(10).minusDays(1), null, false, fødselsdato, fødselsdato,
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(11),
-                fødselsdato.plusWeeks(12).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                null);
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp)
-                        .dokumentasjon(new Dokumentasjon.Builder()
-                                .periodeMedAvklartMorsAktivitet(aktivitetAvklart(fpFørMsp.getFom(), fpFørMsp.getTom())))
-                )
+                fødselsdato.plusWeeks(12).minusDays(1), null, false, fødselsdato, fødselsdato,
+                null, null);
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
                 .kontoer(kontoer(konto(FORELDREPENGER, 20)).minsterettDager(5))
                 .rettOgOmsorg(bareFarRett())
                 .build();
@@ -357,15 +340,12 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_ikke_avslås_pga_tom_på_konto_hvis_flere_dager_igjen_på_minsteretten_enn_foreldrepenger() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(10).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING);
+                fødselsdato.plusWeeks(10).minusDays(1), null, false, fødselsdato, fødselsdato,
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(11),
-                fødselsdato.plusWeeks(12).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                null);
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp)
-                        .dokumentasjon(new Dokumentasjon.Builder()
-                                .periodeMedAvklartMorsAktivitet(aktivitetAvklart(fpFørMsp.getFom(), fpFørMsp.getTom())))
-                )
+                fødselsdato.plusWeeks(12).minusDays(1), null, false, fødselsdato, fødselsdato,
+                null, null);
+        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
                 .kontoer(kontoer(konto(FORELDREPENGER, 30)).minsterettDager(20))
                 .rettOgOmsorg(bareFarRett())
                 .build();
@@ -468,11 +448,6 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
         assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
         assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
-    }
-
-    private PeriodeMedAvklartMorsAktivitet aktivitetAvklart(LocalDate fom, LocalDate tom) {
-        return new PeriodeMedAvklartMorsAktivitet(fom, tom,
-                PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET);
     }
 
 }

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.oppholdPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.*;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,9 +12,27 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
@@ -144,8 +163,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1064_mor_før3UkerFørFamilieHendelse_gradert() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4),
-                PeriodeVurderingType.PERIODE_OK, null, false);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), null, false, null);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -160,8 +178,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1219_mor_tidligstUke7_omsorg_disponibleStønadsdager_gradert_avklart() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9),
-                PeriodeVurderingType.PERIODE_OK, null, false);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), null, false, null);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -203,8 +220,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1255_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
-                PeriodeVurderingType.PERIODE_OK, null, false);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -233,8 +249,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1256_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false,
-                PeriodeVurderingType.PERIODE_OK);
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -289,13 +304,9 @@ class FellesperiodeDelregelTest {
 
     @Test
     void far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9),
-                PeriodeVurderingType.PERIODE_OK, null, false);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var kontoer = enFellesperiodeKonto(100);
-        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
-                new PeriodeMedAvklartMorsAktivitet(søknadsperiode.getFom(), søknadsperiode.getTom(),
-                        PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
-        var søknad = søknad(søknadsperiode).dokumentasjon(dokumentasjon);
+        var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)
@@ -308,8 +319,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1270_far_etterUke7_omsorg_disponibleStønadsdager_gradering_flerbarnsdager() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9),
-                PeriodeVurderingType.PERIODE_OK, null, true);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, true, null);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -323,12 +333,9 @@ class FellesperiodeDelregelTest {
 
     @Test
     void far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false);
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var kontoer = enFellesperiodeKonto(100);
-        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
-                new PeriodeMedAvklartMorsAktivitet(søknadsperiode.getFom(), søknadsperiode.getTom(),
-                        PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET));
-        var søknad = søknad(søknadsperiode).dokumentasjon(dokumentasjon);
+        var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)
@@ -375,11 +382,11 @@ class FellesperiodeDelregelTest {
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom,
                                                  LocalDate tom,
-                                                 PeriodeVurderingType vurderingType,
                                                  SamtidigUttaksprosent samtidigUttaksprosent,
-                                                 boolean flerbarnsdager) {
+                                                 boolean flerbarnsdager,
+                                                 DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
-                Set.of(AktivitetIdentifikator.forFrilans()), vurderingType, null, null, null);
+                Set.of(AktivitetIdentifikator.forFrilans()), null, null, null, dokumentasjonVurdering);
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
@@ -409,16 +416,16 @@ class FellesperiodeDelregelTest {
                                           LocalDate tom,
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager) {
-        return oppgittPeriode(fom, tom, samtidigUttaksprosent, flerbarnsdager, PeriodeVurderingType.IKKE_VURDERT);
+        return oppgittPeriode(fom, tom, samtidigUttaksprosent, flerbarnsdager, null);
     }
 
     private OppgittPeriode oppgittPeriode(LocalDate fom,
                                           LocalDate tom,
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager,
-                                          PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null,
-                null, null);
+                                          DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, null,
+                null, null, dokumentasjonVurdering);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

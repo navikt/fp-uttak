@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforho
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -36,7 +35,7 @@ class RegelResultatBehandlerTest {
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom, null, false,
-                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                null, null, null, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
                 .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(false))

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -7,7 +8,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
@@ -60,11 +60,9 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_DOKUMENTERT))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
-                                fødselsdato.plusWeeks(12).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
+                                fødselsdato.plusWeeks(12).minusDays(1))));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -99,7 +97,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, null))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
@@ -119,7 +117,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, null))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
@@ -153,18 +151,17 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_DOKUMENTERT))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1)))
                         .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
-                                .gyldigGrunnPeriode(new GyldigGrunnPeriode(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
+                                new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
 
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
 
-        //6 første uker mødrekvote innvilges
+        //6 første uker mødrekvote avslås
         assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT); // UT1006
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG);

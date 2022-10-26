@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav;
 
-import java.util.Objects;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorArbeid.sjekk;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
@@ -26,7 +26,6 @@ public class SjekkOmMorOppgittUføre extends LeafSpecification<FastsettePeriodeG
         if (fastsettePeriodeGrunnlag.isMorOppgittUføretrygd()) {
             return ja();
         }
-        var morsAktivitetIPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode().getMorsAktivitet();
-        return Objects.equals(morsAktivitetIPeriode, MorsAktivitet.UFØRE) ? ja() : nei();
+        return sjekk(fastsettePeriodeGrunnlag, MorsAktivitet.UFØRE) ? ja() : nei();
     }
 }

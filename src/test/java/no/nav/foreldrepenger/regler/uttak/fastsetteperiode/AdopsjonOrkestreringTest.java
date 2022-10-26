@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
@@ -17,14 +16,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -88,9 +85,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .behandling(farBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(OppgittPeriode.forOverføring(MØDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
-                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.INNLEGGELSE, null, null))
-                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
+                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.INNLEGGELSE, null, null, DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT)))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -111,9 +106,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .behandling(farBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(OppgittPeriode.forOverføring(MØDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
-                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
-                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
+                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT)))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -178,9 +171,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .behandling(morBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(OppgittPeriode.forOverføring(FEDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
-                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.INNLEGGELSE, null, null))
-                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
+                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.INNLEGGELSE, null, null, DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT)))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -201,9 +192,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .behandling(morBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(OppgittPeriode.forOverføring(FEDREKVOTE, omsorgsovertakelseDato.minusWeeks(1),
-                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null))
-                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(omsorgsovertakelseDato.minusWeeks(2), omsorgsovertakelseDato.plusWeeks(1)))))
+                                omsorgsovertakelseDato.minusDays(1), OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT)))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -403,13 +392,10 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
-        var oppgittPeriode = oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1));
-        var periodeMedAvklartMorsAktivitet = new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(),
-                I_AKTIVITET);
-        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(periodeMedAvklartMorsAktivitet);
+        var oppgittPeriode = oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1), false, null,
+            DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var søknad = new Søknad.Builder().type(Søknadstype.ADOPSJON)
-                .oppgittPeriode(oppgittPeriode)
-                .dokumentasjon(dokumentasjon);
+                .oppgittPeriode(oppgittPeriode);
         var grunnlag = grunnlagAdopsjon.arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer)
                 .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
@@ -439,8 +425,8 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         //Mottatt mer enn 3 mnd etter start
                         .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(1).minusDays(1), null, false, PeriodeVurderingType.IKKE_VURDERT,
-                                omsorgsovertakelseDato.plusMonths(4), omsorgsovertakelseDato.plusMonths(4), null)))
+                                omsorgsovertakelseDato.plusWeeks(1).minusDays(1), null, false,
+                            omsorgsovertakelseDato.plusMonths(4), omsorgsovertakelseDato.plusMonths(4), null, null)))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(omsorgsovertakelseDato))
                 .build();
 

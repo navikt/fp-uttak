@@ -15,13 +15,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -219,17 +217,14 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(90)).konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
             .farUttakRundtFødselDager(10);
         var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, LocalDate.of(2022, 9, 26), LocalDate.of(2023, 2, 3),
-            OverføringÅrsak.SYKDOM_ELLER_SKADE, LocalDate.of(2022, 8, 22), LocalDate.of(2022, 8, 22));
+            OverføringÅrsak.SYKDOM_ELLER_SKADE, LocalDate.of(2022, 8, 22), LocalDate.of(2022, 8, 22), DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
         var grunnlag = basicGrunnlag(termindato)
             .behandling(farBehandling())
             .rettOgOmsorg(beggeRett())
             .datoer(new Datoer.Builder().termin(termindato))
             .søknad(new Søknad.Builder().type(Søknadstype.TERMIN)
                 .oppgittPeriode(oppgittPeriode(FEDREKVOTE, LocalDate.of(2022, 9, 12), LocalDate.of(2022, 9, 23)))
-                .oppgittPeriode(overføring)
-                .dokumentasjon(new Dokumentasjon.Builder().periodeMedSykdomEllerSkade(
-                        new PeriodeMedSykdomEllerSkade(overføring.getFom(), overføring.getTom()))
-                    .gyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()))))
+                .oppgittPeriode(overføring))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
             .kontoer(kontoer);
 

@@ -20,11 +20,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -297,7 +297,7 @@ class ManglendeSøktePerioderTjenesteTest {
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, søknadsperiodeFom, familiehendelse.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(3)))
                         .oppgittPeriode(OppgittPeriode.forUtsettelse(familiehendelse.plusWeeks(6).plusDays(1), familiehendelse.plusWeeks(8),
-                            UtsettelseÅrsak.SYKDOM_SKADE, null, null, null)))
+                            UtsettelseÅrsak.SYKDOM_SKADE, null, null, null, DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT)))
                 .behandling(morBehandling())
                 .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(søknadsperiodeFom))
@@ -471,8 +471,8 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null,
-                null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null,
+                null, null);
     }
 
     private Behandling.Builder farBehandling() {

@@ -433,7 +433,7 @@ class MødrekvoteDelregelTest {
     }
 
     private OppgittPeriode overføringsperiode(LocalDate fom, LocalDate tom, OverføringÅrsak årsak) {
-        return DelRegelTestUtil.overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, årsak);
+        return DelRegelTestUtil.overføringsperiode(Stønadskontotype.MØDREKVOTE, fom, tom, årsak, null);
     }
 
     @Test

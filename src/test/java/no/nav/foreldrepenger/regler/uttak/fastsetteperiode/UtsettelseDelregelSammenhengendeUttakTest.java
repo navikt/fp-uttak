@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.utsettelsePeriode;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_DOKUMENTERT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -14,12 +15,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -35,7 +34,7 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     void UT1101_ferie_innenfor_seks_første_uker() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
-            UtsettelseÅrsak.FERIE, fødselsdato.minusWeeks(1), null, null); // innenfor seks uker etter fødsel
+            UtsettelseÅrsak.FERIE, fødselsdato.minusWeeks(1), null, null, null); // innenfor seks uker etter fødsel
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
@@ -60,15 +59,14 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1124_fødsel_mer_enn_7_uker_før_termin() {
         var fom = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
+        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
                 new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .kontoer(kontoer)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(periode)
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))))
+                        .oppgittPeriode(periode))
                 .behandling(morBehandling())
                 .revurdering(new Revurdering.Builder().endringsdato(fom))
                 .rettOgOmsorg(beggeRett())
@@ -86,16 +84,14 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1120_fødsel_mer_enn_7_uker_før_termin_perioden_ligger_etter_termin() {
         var fom = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN);
+        var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
                 new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .kontoer(kontoer)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(periode)
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeMedBarnInnlagt(
-                                new PeriodeMedBarnInnlagt(fom.plusWeeks(10), fom.plusWeeks(10)))))
+                        .oppgittPeriode(periode))
                 .behandling(morBehandling())
                 .revurdering(new Revurdering.Builder().endringsdato(fom))
                 .rettOgOmsorg(beggeRett())
@@ -113,15 +109,14 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1120_fødsel_mindre_enn_7_uker_før_termin() {
         var fom = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN);
+        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
                 new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .kontoer(kontoer)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(periode)
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeMedBarnInnlagt(new PeriodeMedBarnInnlagt(fom, fom))))
+                        .oppgittPeriode(periode))
                 .behandling(morBehandling())
                 .revurdering(new Revurdering.Builder().endringsdato(fom))
                 .rettOgOmsorg(beggeRett())
