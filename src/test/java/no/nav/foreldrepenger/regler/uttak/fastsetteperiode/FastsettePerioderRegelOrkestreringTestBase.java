@@ -18,12 +18,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -122,7 +122,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   LocalDate tom,
                                   boolean flerbarnsdager,
                                   SamtidigUttaksprosent samtidigUttaksprosent) {
-        return oppgittPeriode(stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, PeriodeVurderingType.IKKE_VURDERT);
+        return oppgittPeriode(stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, null);
     }
 
     OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
@@ -130,9 +130,17 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   LocalDate tom,
                                   boolean flerbarnsdager,
                                   SamtidigUttaksprosent samtidigUttaksprosent,
-                                  PeriodeVurderingType vurderingType) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, vurderingType, null,
-                null, null);
+                                  DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, null,
+                null, null, dokumentasjonVurdering);
+    }
+
+    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
+                                  LocalDate fom,
+                                  LocalDate tom,
+                                  DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null,
+            null, null, dokumentasjonVurdering);
     }
 
     OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
@@ -144,8 +152,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
                                          LocalDate tom,
                                          BigDecimal arbeidsprosent,
                                          Set<AktivitetIdentifikator> gradertAktiviteter) {
-        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, arbeidsprosent, null, false, gradertAktiviteter,
-                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, arbeidsprosent, null, false, gradertAktiviteter, null, null, null, null);
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
@@ -180,12 +187,15 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
         return new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true);
     }
 
-    OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
-        return utsettelsePeriode(fom, tom, utsettelseÅrsak, null);
+    OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, DokumentasjonVurdering dokumentasjonVurdering) {
+        return utsettelsePeriode(fom, tom, utsettelseÅrsak, null, dokumentasjonVurdering);
     }
 
-    OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, MorsAktivitet morsAktivitet) {
-        return OppgittPeriode.forUtsettelse(fom, tom, utsettelseÅrsak, null, null, morsAktivitet);
+    OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom,
+                                     UtsettelseÅrsak utsettelseÅrsak,
+                                     MorsAktivitet morsAktivitet,
+                                     DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forUtsettelse(fom, tom, utsettelseÅrsak, null, null, morsAktivitet, dokumentasjonVurdering);
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {

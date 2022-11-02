@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.HV_OVELSE_DOKUMENTERT;
+
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -16,12 +18,6 @@ public class SjekkOmDokumentertHV extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        var oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (var periodeMedHv : grunnlag.getPerioderHV()) {
-            if (oppgittPeriode.erOmsluttetAv(periodeMedHv)) {
-                return ja();
-            }
-        }
-        return nei();
+        return HV_OVELSE_DOKUMENTERT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

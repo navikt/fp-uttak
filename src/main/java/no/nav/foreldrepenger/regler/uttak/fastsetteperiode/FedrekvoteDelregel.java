@@ -156,7 +156,7 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorSøktOmOverføringAvFedrekvote() {
         return rs.hvisRegel(SjekkOmSøktOmOverføringAvKvote.ID, "Har mor søkt om overføring av fedrekvoten?")
-                .hvis(new SjekkOmSøktOmOverføringAvKvote(), sjekkOmOverføringPgaInnleggelse()) // SKRIVE OM
+                .hvis(new SjekkOmSøktOmOverføringAvKvote(), sjekkOmOverføringPgaInnleggelse())
                 .ellers(Manuellbehandling.opprett("UT1032", IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT,
                         Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
     }

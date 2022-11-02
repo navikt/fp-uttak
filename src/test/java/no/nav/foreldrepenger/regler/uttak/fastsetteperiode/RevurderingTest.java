@@ -5,9 +5,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
@@ -285,12 +305,12 @@ class RevurderingTest {
     }
 
     private OppgittPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null,
-                null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null,
+                null, null);
     }
 
     private OppgittPeriode uttakPeriodeFlerbarnsdager(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, true, PeriodeVurderingType.IKKE_VURDERT, null, null,
-                null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, true, null, null,
+                null, null);
     }
 }

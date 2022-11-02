@@ -32,14 +32,6 @@ public interface FastsettePeriodeGrunnlag {
     Arbeid getArbeid();
 
     /**
-     * Finn perioder der søker har gyldig grunn for tidlig oppstart eller utsettelse.
-     *
-     * @return Array av aktuelle perioder med gyldig grunn, sortert på fom dato. Returnerer tom list om det ikke finnes en aktuell periode eller om det ikke finnes overlappende
-     * perioder med gyldig grunn.
-     */
-    List<GyldigGrunnPeriode> getAktuelleGyldigeGrunnPerioder();
-
-    /**
      * Finn søknadstype.
      *
      * @return søknadstype.
@@ -68,77 +60,13 @@ public interface FastsettePeriodeGrunnlag {
     boolean isSamtykke();
 
     /**
-     * Finn alle perioder med gyldig grunn for tidlig oppstart
-     *
-     * @return list av perioder med gyldig grunn for tidlig oppstart
-     */
-    List<GyldigGrunnPeriode> getGyldigGrunnPerioder();
-
-    /**
      * Finn alle perioder der søker ikke har omsorg for barnet/barna det søkes om
      *
      * @return list av perioder der søker ikke har omsorg for barnet/barna det søkes om
      */
     List<PeriodeUtenOmsorg> getPerioderUtenOmsorg();
 
-    /**
-     * Finn alle perioder der søker har bekreftet sykdom eller skade.
-     *
-     * @return list av perioder der søker har bekreftet sykdom eller skade.
-     */
-    List<PeriodeMedSykdomEllerSkade> getPerioderMedSykdomEllerSkade();
-
-    /**
-     * Finn alle perioder der søker har bekreftet innleggelse.
-     *
-     * @return list av perioder der søker har bekreftet innleggelse.
-     */
-    List<PeriodeMedInnleggelse> getPerioderMedInnleggelse();
-
-    /**
-     * Finn alle perioder der det er avklart mors aktivitet
-     * Mor kan enten være i aktivitet i perioden eller ikke
-     *
-     * @return list av perioder.
-     */
-    List<PeriodeMedAvklartMorsAktivitet> getPerioderMedAvklartMorsAktivitet();
-
-    /**
-     * Finn alle perioder der søkers barn er innlagt på helseinstitusjon.
-     *
-     * @return list av perioder der søkers barn er innlagt på helseinstitusjon.
-     */
-    List<PeriodeMedBarnInnlagt> getPerioderMedBarnInnlagt();
-
-    /**
-     * Finn alle perioder der søkers annen forelder er innlagt på helseinstitusjon.
-     *
-     * @return list av perioder der søkers annen forelder er innlagt på helseinstitusjon.
-     */
-    List<OppgittPeriode> getPerioderMedAnnenForelderInnlagt();
-
-    /**
-     * Finn alle perioder der søkers annen forelder har bekreftet sykdom eller skade.
-     *
-     * @return list av perioder der søkers annen forelder har bekreftet sykdom eller skade.
-     */
-    List<OppgittPeriode> getPerioderMedAnnenForelderSykdomEllerSkade();
-
-    List<PeriodeMedTiltakIRegiAvNav> getPerioderMedTiltakIRegiAvNav();
-
-    /**
-     * Finn alle perioder der søkers annen forelder har bekreftet ikke rett.
-     *
-     * @return list av perioder der søkers annen forelder har bekreftet ikke rett.
-     */
-    List<OppgittPeriode> getPerioderMedAnnenForelderIkkeRett();
-
-    /**
-     * Finn alle perioder der søkers annen forelder har bekreftet ikke omsorg.
-     *
-     * @return list av perioder der søkers annen forelder har bekreftet ikke omsorg.
-     */
-    List<OppgittPeriode> getPerioderMedAleneomsorg();
+    List<PleiepengerPeriode> getPleiepengerInnleggelse();
 
     /**
      * Har far/medmor rett til foreldrepenger.
@@ -254,8 +182,6 @@ public interface FastsettePeriodeGrunnlag {
      * Termindato
      */
     LocalDate getTermindato();
-
-    List<PeriodeMedHV> getPerioderHV();
 
     boolean isBerørtBehandling();
 

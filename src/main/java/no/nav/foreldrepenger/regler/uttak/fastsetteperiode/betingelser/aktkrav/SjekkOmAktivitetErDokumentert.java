@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet.periodeMedAktivitet;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -18,7 +18,6 @@ public class SjekkOmAktivitetErDokumentert extends LeafSpecification<FastsettePe
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        var periodeMedAktivitet = periodeMedAktivitet(fastsettePeriodeGrunnlag);
-        return periodeMedAktivitet.orElseThrow().erDokumentert() ? ja() : nei();
+        return MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET.equals(fastsettePeriodeGrunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

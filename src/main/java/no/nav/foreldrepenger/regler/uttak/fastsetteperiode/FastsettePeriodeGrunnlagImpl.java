@@ -2,30 +2,18 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedBarnInnlagt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedHV;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedTiltakIRegiAvNav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
@@ -35,7 +23,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
 public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
@@ -61,88 +48,17 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public List<GyldigGrunnPeriode> getAktuelleGyldigeGrunnPerioder() {
-        var dokumentasjon = regelGrunnlag.getSøknad().getDokumentasjon();
-        if (dokumentasjon == null) {
-            return Collections.emptyList();
-        }
-        return dokumentasjon.getGyldigGrunnPerioder()
-                .stream()
-                .filter(p -> p.overlapper(aktuellPeriode))
-                .sorted(Comparator.comparing(Periode::getFom))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Arbeid getArbeid() {
         return regelGrunnlag.getArbeid();
     }
 
     @Override
-    public List<PeriodeMedSykdomEllerSkade> getPerioderMedSykdomEllerSkade() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedSykdomEllerSkade();
-    }
-
-    @Override
-    public List<PeriodeMedInnleggelse> getPerioderMedInnleggelse() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedInnleggelse();
-    }
-
-    @Override
-    public List<PeriodeMedAvklartMorsAktivitet> getPerioderMedAvklartMorsAktivitet() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedAvklartMorsAktivitet();
-    }
-
-    @Override
-    public List<PeriodeMedBarnInnlagt> getPerioderMedBarnInnlagt() {
-        var fraDok = regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedBarnInnlagt();
-        var felles = new ArrayList<>(fraDok);
-        var fraYtelser = regelGrunnlag.getYtelser().pleiepenger()
+    public List<PleiepengerPeriode> getPleiepengerInnleggelse() {
+        return regelGrunnlag.getYtelser().pleiepenger()
                 .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
                 .orElse(List.of())
                 .stream()
-                .map(p -> new PeriodeMedBarnInnlagt(p.getFom(), p.getTom()))
                 .toList();
-        felles.addAll(fraYtelser);
-        return felles;
-    }
-
-    @Override
-    public List<OppgittPeriode> getPerioderMedAnnenForelderInnlagt() {
-        return getPerioderMedOverføringÅrsak(OverføringÅrsak.INNLEGGELSE);
-    }
-
-    @Override
-    public List<OppgittPeriode> getPerioderMedAnnenForelderSykdomEllerSkade() {
-        return getPerioderMedOverføringÅrsak(OverføringÅrsak.SYKDOM_ELLER_SKADE);
-    }
-
-    @Override
-    public List<PeriodeMedHV> getPerioderHV() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedHv();
-    }
-
-    @Override
-    public List<PeriodeMedTiltakIRegiAvNav> getPerioderMedTiltakIRegiAvNav() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getPerioderMedTiltakViaNav();
-    }
-
-    @Override
-    public List<OppgittPeriode> getPerioderMedAnnenForelderIkkeRett() {
-        return getPerioderMedOverføringÅrsak(OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT);
-    }
-
-    @Override
-    public List<OppgittPeriode> getPerioderMedAleneomsorg() {
-        return getPerioderMedOverføringÅrsak(OverføringÅrsak.ALENEOMSORG);
-    }
-
-    private List<OppgittPeriode> getPerioderMedOverføringÅrsak(OverføringÅrsak årsak) {
-        return regelGrunnlag.getSøknad()
-                .getOppgittePerioder()
-                .stream()
-                .filter(periode -> Objects.equals(periode.getOverføringÅrsak(), årsak))
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -198,11 +114,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean isSakMedRettEtterStartNesteStønadsperiode() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
-    }
-
-    @Override
-    public List<GyldigGrunnPeriode> getGyldigGrunnPerioder() {
-        return regelGrunnlag.getSøknad().getDokumentasjon().getGyldigGrunnPerioder();
     }
 
     @Override

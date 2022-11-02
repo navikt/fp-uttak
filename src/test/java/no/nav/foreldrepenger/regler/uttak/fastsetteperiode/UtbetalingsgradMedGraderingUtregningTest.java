@@ -6,8 +6,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
+
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
 class UtbetalingsgradMedGraderingUtregningTest {
 
@@ -18,7 +23,7 @@ class UtbetalingsgradMedGraderingUtregningTest {
         var arbeidstidsprosent = BigDecimal.valueOf(20);
 
         var periode = OppgittPeriode.forGradering(Stønadskontotype.FEDREKVOTE, LocalDate.now(), LocalDate.now().plusWeeks(1),
-                arbeidstidsprosent, null, false, Set.of(aktivitet1), PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                arbeidstidsprosent, null, false, Set.of(aktivitet1), null, null, null, null);
 
         var utregningForAktivitet1 = utregning(aktivitet1, periode);
         var utregningForAktivitet2 = utregning(aktivitet2, periode);

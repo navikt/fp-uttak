@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.TapendeSakOrkestreringTest.annenpartsPeriode;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.*;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forFrilans;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
@@ -23,12 +23,10 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
@@ -488,13 +486,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(75))
                 .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
                 .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(80));
-        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
-                new PeriodeMedAvklartMorsAktivitet(fødselsdato, fødselsdato.plusWeeks(30), I_AKTIVITET));
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(21).minusDays(1)))
-                .oppgittPeriode(
-                        oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(21), fødselsdato.plusWeeks(22).minusDays(1)))
-                .dokumentasjon(dokumentasjon);
+                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(21).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET))
+                .oppgittPeriode(oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(21), fødselsdato.plusWeeks(22).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET));
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .kontoer(kontoer)
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(FAR_ARBEIDSFORHOLD)))

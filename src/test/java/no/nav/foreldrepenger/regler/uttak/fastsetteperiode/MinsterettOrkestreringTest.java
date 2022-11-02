@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.IKKE_I_AKTIVITET_IKKE_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT;
@@ -22,12 +22,10 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -35,24 +33,21 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
-
     @Test
     void bfhr_mor_med_bekreftet_uføretrygd_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
+        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE, null);
         var utsettelseFra = Virkedager.justerHelgTilMandag(fødselsdato.plusMonths(6));
-        var oppgittPeriodeU1 =  foreldrepengerUtsettelse(utsettelseFra, Virkedager.plusVirkedager(utsettelseFra, 19), MorsAktivitet.UTDANNING);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
-        var dokumentasjon = new Dokumentasjon.Builder()
-                .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(oppgittPeriodeU1.getFom(), oppgittPeriodeU1.getTom(), IKKE_I_AKTIVITET_IKKE_DOKUMENTERT));
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).dokumentasjon(dokumentasjon)
+        var oppgittPeriodeU1 =  foreldrepengerUtsettelse(utsettelseFra, Virkedager.plusVirkedager(utsettelseFra, 19), MorsAktivitet.UTDANNING,
+            MORS_AKTIVITET_IKKE_DOKUMENTERT);
+        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE, null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittePerioder(List.of(oppgittPeriode, oppgittPeriodeU1, oppgittPeriode2));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
@@ -76,9 +71,9 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void bfhr_mor_med_bekreftet_uføretrygd_flerbarn_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 2, 1));
         var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285))).flerbarnsdager(85).minsterettDager(85);
-        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE);
-        var oppgittPeriode3 = foreldrepenger(fødselsdato.plusYears(2), MorsAktivitet.UFØRE);
+        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE, null);
+        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusYears(1), MorsAktivitet.UFØRE, null);
+        var oppgittPeriode3 = foreldrepenger(fødselsdato.plusYears(2), MorsAktivitet.UFØRE, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2, oppgittPeriode3));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
@@ -105,7 +100,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void bfhr_mor_med_bekreftet_uføretrygd_overskrider_minsterett() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(23).minusDays(1), MorsAktivitet.UFØRE);
+        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(23).minusDays(1), MorsAktivitet.UFØRE, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
@@ -126,19 +121,18 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void bfhr_enkel_minsterett_vs_innvilget_med_mye_godkjent_aktivitet() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(40);
-        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(45).minusDays(1), MorsAktivitet.UTDANNING);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(45), fødselsdato.plusWeeks(47).minusDays(1), null);
+        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(45).minusDays(1), MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(45), fødselsdato.plusWeeks(47).minusDays(1), null, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett().morUføretrygd(true))
-                .søknad(søknad.dokumentasjon(new Dokumentasjon.Builder()
-                        .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(45).minusDays(1), I_AKTIVITET))))
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer)
-                .build();
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer)
+            .søknad(søknad)
+            .build();
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(4);
         assertThat(fastsattePerioder.stream().anyMatch(p -> harPeriode(p.getUttakPeriode(), Perioderesultattype.INNVILGET, FORELDREPENGER_KUN_FAR_HAR_RETT, 190))).isTrue();
@@ -152,9 +146,9 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void bfhr_mor_med_bekreftet_uføretrygd_uten_aktivitetskrav_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).utenAktivitetskravDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(25), MorsAktivitet.UFØRE);
-        var oppgittPeriode3 = foreldrepenger(fødselsdato.plusWeeks(40), MorsAktivitet.UFØRE);
+        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE, null);
+        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(25), MorsAktivitet.UFØRE, null);
+        var oppgittPeriode3 = foreldrepenger(fødselsdato.plusWeeks(40), MorsAktivitet.UFØRE, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2, oppgittPeriode3));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
@@ -178,14 +172,12 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void bfhr_mor_med_bekreftet_uføretrygd_uten_aktivitetskrav_avslått_periode_med_aktivitet_skal_godkjennes() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).utenAktivitetskravDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato.minusWeeks(1), MorsAktivitet.SYK);
-        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(14), MorsAktivitet.SYK);
-        var dokSyk = new Dokumentasjon.Builder()
-                .periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(14).minusDays(1), I_AKTIVITET));
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2))
-                .dokumentasjon(dokSyk);
+        var oppgittPeriode = foreldrepenger(fødselsdato.minusWeeks(1), MorsAktivitet.SYK, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode2 = foreldrepenger(fødselsdato.plusWeeks(14), MorsAktivitet.SYK, null);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
 
-        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling()
+                .kreverSammenhengendeUttak(false))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(bareFarRett().morUføretrygd(true))
                 .søknad(søknad)
@@ -204,11 +196,12 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().kontoList(List.of(konto(FORELDREPENGER, 285)))
                 .flerbarnsdager(85).utenAktivitetskravDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE);
-        var oppgittPeriode2 = foreldrepenger(Virkedager.justerHelgTilMandag(fødselsdato.plusWeeks(49)), MorsAktivitet.UFØRE); // Strekker seg utover stønadsperioden
+        var oppgittPeriode = foreldrepenger(fødselsdato, MorsAktivitet.UFØRE, null);
+        var oppgittPeriode2 = foreldrepenger(Virkedager.justerHelgTilMandag(fødselsdato.plusWeeks(49)), MorsAktivitet.UFØRE, null); // Strekker seg utover stønadsperioden
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, oppgittPeriode2));
 
-        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling()
+                .kreverSammenhengendeUttak(false))
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(bareFarRett().morUføretrygd(true))
                 .søknad(søknad)
@@ -228,7 +221,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void bfhr_mor_med_bekreftet_uføretrygd_uten_aktivitetskrav_overskrider_minsterett() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).utenAktivitetskravDager(75);
-        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(23).minusDays(1), MorsAktivitet.UFØRE);
+        var oppgittPeriode = foreldrepenger(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(23).minusDays(1), MorsAktivitet.UFØRE, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(false))
@@ -276,13 +269,11 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40)).minsterettDager(17).flerbarnsdager(10);
         var oppgittPeriode1 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(14).minusDays(1),
-                null, false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, MorsAktivitet.ARBEID);
+                null, false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(17).minusDays(1),
                 true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2))
-                .dokumentasjon(new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(new PeriodeMedAvklartMorsAktivitet(oppgittPeriode1.getFom(),
-                        oppgittPeriode1.getTom(), I_AKTIVITET)));
+                .oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
@@ -332,8 +323,8 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode1 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                 true, null);
         var gradertPeriode = OppgittPeriode.forGradering(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10),
-                BigDecimal.TEN, null, true, Set.of(ARBEIDSFORHOLD), PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato,
-                null);
+                BigDecimal.TEN, null, true, Set.of(ARBEIDSFORHOLD), fødselsdato, fødselsdato,
+                null, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittePerioder(List.of(oppgittPeriode1, gradertPeriode));
 
@@ -357,23 +348,20 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 (dager == -1 || p.getAktiviteter().stream().map(UttakPeriodeAktivitet::getTrekkdager).mapToInt(Trekkdager::rundOpp).sum() == dager);
     }
 
-    private boolean harManuellPeriode(UttakPeriode p, Manuellbehandlingårsak årsak, int dager) {
-        return p.getPerioderesultattype().equals(Perioderesultattype.MANUELL_BEHANDLING) && p.getManuellbehandlingårsak().equals(årsak) &&
-                (dager == -1 || p.getAktiviteter().stream().map(UttakPeriodeAktivitet::getTrekkdager).mapToInt(Trekkdager::rundOpp).sum() == dager);
-    }
-
-    private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet utdanning) {
+    private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet morsAktivitet, DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null,
-                false, PeriodeVurderingType.IKKE_VURDERT, fødselsdato, fødselsdato, utdanning);
+                false, fødselsdato, fødselsdato, morsAktivitet, dokumentasjonVurdering);
     }
 
-    private OppgittPeriode foreldrepenger(LocalDate fom, LocalDate tom, MorsAktivitet utdanning) {
+    private OppgittPeriode foreldrepenger(LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet, DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fom, tom, null,
-                false, PeriodeVurderingType.IKKE_VURDERT, fom.minusWeeks(3), fom.minusWeeks(3), utdanning);
+                false, fom.minusWeeks(3), fom.minusWeeks(3), morsAktivitet, dokumentasjonVurdering);
     }
 
-    private OppgittPeriode foreldrepengerUtsettelse(LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet) {
-        return OppgittPeriode.forUtsettelse(fom, tom, UtsettelseÅrsak.FERIE, fom, fom, morsAktivitet);
+    private OppgittPeriode foreldrepengerUtsettelse(LocalDate fom, LocalDate tom,
+                                                    MorsAktivitet morsAktivitet,
+                                                    DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forUtsettelse(fom, tom, UtsettelseÅrsak.FERIE, fom, fom, morsAktivitet, dokumentasjonVurdering);
     }
 
 

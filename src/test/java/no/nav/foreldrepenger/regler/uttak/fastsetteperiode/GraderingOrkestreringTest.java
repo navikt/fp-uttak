@@ -20,9 +20,29 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 
@@ -117,7 +137,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1),
-                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .konto(konto(MØDREKVOTE, 50))
                 .konto(konto(FEDREKVOTE, 50))
@@ -254,7 +274,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         //10 virkedager
         var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(8).minusDays(1), arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1),
-                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
                 .konto(konto(MØDREKVOTE, 50))
                 .konto(konto(FEDREKVOTE, 50))
@@ -653,7 +673,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                         .oppgittPeriode(gradertoppgittPeriode(FEDREKVOTE, LocalDate.of(2019, 5, 3), LocalDate.of(2019, 7, 5),
                                 BigDecimal.valueOf(60)))
                         .oppgittPeriode(
-                                utsettelsePeriode(LocalDate.of(2019, 7, 8), LocalDate.of(2019, 7, 26), UtsettelseÅrsak.FERIE))
+                                utsettelsePeriode(LocalDate.of(2019, 7, 8), LocalDate.of(2019, 7, 26), UtsettelseÅrsak.FERIE, null))
                         .oppgittPeriode(gradertoppgittPeriode(FEDREKVOTE, LocalDate.of(2019, 7, 29), LocalDate.of(2020, 2, 13),
                                 BigDecimal.valueOf(60))))
                 .inngangsvilkår(oppfyltAlleVilkår());
@@ -676,7 +696,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         leggPåKvoter(grunnlag);
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN,
-                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, mottattDato, mottattDato, null);
+                null, false, Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(beggeRett())
                 .behandling(morBehandling())
@@ -699,7 +719,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var senestMottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var tidligstMottattDato = fødselsdato.plusWeeks(6);
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), senestMottattDato.plusWeeks(1), BigDecimal.TEN,
-                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, senestMottattDato, tidligstMottattDato, null);
+                null, false, Set.of(ARBEIDSFORHOLD_1), senestMottattDato, tidligstMottattDato, null, null);
         grunnlag.datoer(new Datoer.Builder()
                 .fødsel(fødselsdato))
                 .rettOgOmsorg(beggeRett())
@@ -720,7 +740,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 200));
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN,
-                null, false, Set.of(ARBEIDSFORHOLD_1), PeriodeVurderingType.IKKE_VURDERT, mottattDato, mottattDato, null);
+                null, false, Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(beggeRett())
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))

@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -52,7 +51,7 @@ class SjekkOmTomForAlleSineKontoerTest {
         var periodeSlutt = periodeStart.plusWeeks(6);
 
         var uttakPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt, null, false,
-                PeriodeVurderingType.IKKE_VURDERT, null, null, null);
+                null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(
                 new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(15 * 5))
                 .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(10 * 5));

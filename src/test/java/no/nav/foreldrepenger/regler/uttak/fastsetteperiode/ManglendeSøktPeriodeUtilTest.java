@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeVurderingType;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 class ManglendeSøktPeriodeUtilTest {
@@ -36,8 +35,8 @@ class ManglendeSøktPeriodeUtilTest {
     }
 
     private OppgittPeriode periode(LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, null, false, PeriodeVurderingType.IKKE_VURDERT, null, null,
-                null);
+        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, null, false, null, null,
+                null, null);
     }
 
     @Test

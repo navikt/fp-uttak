@@ -1,10 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import java.util.List;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -21,21 +19,7 @@ public class SjekkOmGyldigOverføringPgaSykdomSkade extends LeafSpecification<Fa
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (var periodeMedAnnenForelderSykdomEllerSkade : grunnlag.getPerioderMedAnnenForelderSykdomEllerSkade()) {
-            if (oppgittPeriode.erOmsluttetAv(periodeMedAnnenForelderSykdomEllerSkade) && harGyldigGrunn(oppgittPeriode,
-                    grunnlag.getGyldigGrunnPerioder())) {
-                return ja();
-            }
-        }
-        return nei();
-    }
-
-    private boolean harGyldigGrunn(OppgittPeriode oppgittPeriode, List<GyldigGrunnPeriode> gyldigGrunnPerioder) {
-        for (var gyldigGrunnPeriode : gyldigGrunnPerioder) {
-            if (oppgittPeriode.erOmsluttetAv(gyldigGrunnPeriode)) {
-                return true;
-            }
-        }
-        return false;
+        return OverføringÅrsak.SYKDOM_ELLER_SKADE.equals(oppgittPeriode.getOverføringÅrsak())
+            && DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

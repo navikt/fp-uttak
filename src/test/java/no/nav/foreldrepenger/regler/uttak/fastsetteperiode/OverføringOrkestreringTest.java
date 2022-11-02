@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.INNLEGGELSE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.SYKDOM_ELLER_SKADE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
@@ -19,12 +21,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.GyldigGrunnPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedInnleggelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedSykdomEllerSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -41,16 +39,13 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11),
-            INNLEGGELSE, fødselsdato, fødselsdato);
+            INNLEGGELSE, fødselsdato, fødselsdato, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
                 .konto(konto(MØDREKVOTE, 30))
                 .konto(konto(FELLESPERIODE, 15))
                 .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
-        var dok = new Dokumentasjon.Builder().periodeMedInnleggelse(
-                new PeriodeMedInnleggelse(overføring.getFom(), overføring.getTom()))
-                .gyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()));
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(FØDSEL, mødrekvote, fellesperiode, overføring).dokumentasjon(dok));
+                .søknad(søknad(FØDSEL, mødrekvote, fellesperiode, overføring));
         var resultat = fastsettPerioder(grunnlag);
 
         //         1. mk
@@ -74,19 +69,16 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var fedrekvote = oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(14),
-            SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato);
+            SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato, SYKDOM_ANNEN_FORELDER_DOKUMENTERT );
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
                 .konto(konto(MØDREKVOTE, 40))
                 .konto(konto(FELLESPERIODE, 15))
                 .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
-        var dok = new Dokumentasjon.Builder().periodeMedSykdomEllerSkade(
-                new PeriodeMedSykdomEllerSkade(overføring.getFom(), overføring.getTom()))
-                .gyldigGrunnPeriode(new GyldigGrunnPeriode(overføring.getFom(), overføring.getTom()));
         var annenPart = new AnnenPart.Builder()
                 .uttaksperiode(innvilget(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MØDREKVOTE))
                 .uttaksperiode(innvilget(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1), FELLESPERIODE));
         var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(FØDSEL, fedrekvote, overføring).dokumentasjon(dok))
+                .søknad(søknad(FØDSEL, fedrekvote, overføring))
                 .annenPart(annenPart);
         var resultat = fastsettPerioder(grunnlag);
 

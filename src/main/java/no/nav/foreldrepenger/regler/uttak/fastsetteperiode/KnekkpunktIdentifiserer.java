@@ -166,14 +166,7 @@ class KnekkpunktIdentifiserer {
 
     private static void knekkBasertPåDokumentasjon(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
         var dokumentasjon = grunnlag.getSøknad().getDokumentasjon();
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getGyldigGrunnPerioder());
         leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderUtenOmsorg());
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedSykdomEllerSkade());
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedInnleggelse());
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedBarnInnlagt());
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedHv());
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedTiltakViaNav());
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderMedAvklartMorsAktivitet());
     }
 
     private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag) {

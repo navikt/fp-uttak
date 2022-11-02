@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.NAV_TILTAK_DOKUMENTERT;
+
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -16,12 +18,6 @@ public class SjekkOmDokumentertTiltakViaNav extends LeafSpecification<FastsetteP
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        var oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (var periodeMedTiltakIRegiAvNav : grunnlag.getPerioderMedTiltakIRegiAvNav()) {
-            if (oppgittPeriode.erOmsluttetAv(periodeMedTiltakIRegiAvNav)) {
-                return ja();
-            }
-        }
-        return nei();
+        return NAV_TILTAK_DOKUMENTERT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

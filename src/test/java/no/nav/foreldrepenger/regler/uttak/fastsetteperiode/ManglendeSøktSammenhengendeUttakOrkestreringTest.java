@@ -1,24 +1,36 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeMedAvklartMorsAktivitet.Resultat.I_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
 class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -55,13 +67,11 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
     @Test
     void skal_avslå_og_trekke_foreldrepenger_for_far_med_enerett_hvis_dager_igjen() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
-        var oppgittPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12));
-        var dokumentasjon = new Dokumentasjon.Builder().periodeMedAvklartMorsAktivitet(
-                new PeriodeMedAvklartMorsAktivitet(oppgittPeriode.getFom(), oppgittPeriode.getTom(), I_AKTIVITET));
+        var oppgittPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato.plusWeeks(10),
+            fødselsdato.plusWeeks(12), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
         var søknad = søknad(Søknadstype.FØDSEL,
                 //manglende søkt blir opprettet før foreldrepenger-perioder
-                oppgittPeriode)
-                .dokumentasjon(dokumentasjon);
+                oppgittPeriode);
         var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
                 .søknad(søknad)
@@ -260,123 +270,9 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
-    @Test
-    void delvisUgyldigUtsattMødrekvote() {
-        var fødselsdato = LocalDate.of(2018, 1, 8);
-        var gyldigUtsettelseStart = fødselsdato.plusDays(5);
-        var gyldigUtsettelseSlutt = fødselsdato.plusDays(10);
-
-        var søknad = new Søknad.Builder()
-                .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
-                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, gyldigUtsettelseSlutt.plusDays(1), fødselsdato.plusWeeks(6).minusDays(1)))
-                .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(new GyldigGrunnPeriode(gyldigUtsettelseStart, gyldigUtsettelseSlutt)));
-        var grunnlag = basicGrunnlagMorSammenhengendeUttak(fødselsdato)
-                .datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .søknad(søknad);
-
-        var resultat = fastsettPerioder(grunnlag);
-        var uttakPerioder = resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).collect(Collectors.toList());
-
-        assertThat(uttakPerioder).hasSize(4);
-
-        // Første del av msp blir manuell behandling
-        var ugyldigUtsattPeriode = uttakPerioder.get(1);
-        assertThat(ugyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(ugyldigUtsattPeriode.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
-        assertThat(ugyldigUtsattPeriode.getFom()).isEqualTo(fødselsdato);
-        assertThat(ugyldigUtsattPeriode.getTom()).isEqualTo(fødselsdato.plusDays(4));
-        assertThat(ugyldigUtsattPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-
-        var gyldigUtsattPeriode = uttakPerioder.get(2);
-        assertThat(gyldigUtsattPeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(gyldigUtsattPeriode.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
-        assertThat(gyldigUtsattPeriode.getFom()).isEqualTo(gyldigUtsettelseStart);
-        assertThat(gyldigUtsattPeriode.getTom()).isEqualTo(gyldigUtsettelseSlutt);
-        assertThat(gyldigUtsattPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-
-        var innvilgetUttakPeriode = uttakPerioder.get(3);
-        assertThat(innvilgetUttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(innvilgetUttakPeriode.getManuellbehandlingårsak()).isNull();
-        assertThat(innvilgetUttakPeriode.getFom()).isEqualTo(gyldigUtsettelseSlutt.plusDays(1));
-        assertThat(innvilgetUttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(innvilgetUttakPeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-    }
-
    private Datoer.Builder datoer(LocalDate fødselsdato) {
        return new Datoer.Builder().fødsel(fødselsdato);
    }
-
-    @Test
-    void mødrekvoteMedUtsattOppstartUtenGyldigGrunnSkalTrekkeDagerPåSaldo() {
-        var fødselsdato = LocalDate.of(2018, 1, 8);
-        var sluttGyldigUtsattPeriode = fødselsdato.plusDays(6);
-        var startUgyldigPeriode = fødselsdato.plusDays(7);
-        var sluttUgyldigPeriode = startUgyldigPeriode.plusDays(4);
-
-        var grunnlag = basicGrunnlagMorSammenhengendeUttak(fødselsdato)
-                .datoer(datoer(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .søknad(new Søknad.Builder().oppgittPeriode(
-                        oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
-                        .oppgittPeriode(
-                                oppgittPeriode(MØDREKVOTE, sluttUgyldigPeriode.plusDays(1), sluttUgyldigPeriode.plusWeeks(10)))
-                        .dokumentasjon(new Dokumentasjon.Builder().gyldigGrunnPeriode(
-                                new GyldigGrunnPeriode(fødselsdato, sluttGyldigUtsattPeriode))));
-
-        var fastsettePeriodeGrunnlag = grunnlag.build();
-        var resultat = fastsettPerioder(fastsettePeriodeGrunnlag);
-        var uttakPerioder = resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).collect(Collectors.toList());
-        assertThat(uttakPerioder).hasSize(6);
-
-        /* FPFF blir innvilget. */
-        var foreldrepengerFørFødselPeriode = uttakPerioder.get(0);
-        assertThat(foreldrepengerFørFødselPeriode.getFom()).isEqualTo(fødselsdato.minusWeeks(3));
-        assertThat(foreldrepengerFørFødselPeriode.getTom()).isEqualTo(fødselsdato.minusDays(1));
-        assertThat(foreldrepengerFørFødselPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(foreldrepengerFørFødselPeriode.getStønadskontotype()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
-
-
-        /* Første del av opphold-perioden er gyldig utsettelse, men skal likevel behandles manuelt. */
-        var gyldigUtsettelsePeriode = uttakPerioder.get(1);
-        assertThat(gyldigUtsettelsePeriode.getTom()).isEqualTo(sluttGyldigUtsattPeriode);
-        assertThat(gyldigUtsettelsePeriode.getFom()).isEqualTo(fødselsdato);
-        assertThat(gyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(gyldigUtsettelsePeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(gyldigUtsettelsePeriode.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
-
-
-        var ugyldigUtsettelsePeriode = uttakPerioder.get(2);
-        assertThat(ugyldigUtsettelsePeriode.getFom()).isEqualTo(sluttGyldigUtsattPeriode.plusDays(1));
-        assertThat(ugyldigUtsettelsePeriode.getTom()).isEqualTo(sluttUgyldigPeriode);
-        assertThat(ugyldigUtsettelsePeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(ugyldigUtsettelsePeriode.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(ugyldigUtsettelsePeriode.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
-
-        /* Splittes ved knekkpunkt ved 6 uker pga regelflyt */
-        var uttakPeriode1 = uttakPerioder.get(3);
-        assertThat(uttakPeriode1.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(uttakPeriode1.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(uttakPeriode1.getFom()).isEqualTo(sluttUgyldigPeriode.plusDays(1));
-        assertThat(uttakPeriode1.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(uttakPeriode1.getManuellbehandlingårsak()).isNull();
-
-        var uttakPeriode2 = uttakPerioder.get(4);
-        assertThat(uttakPeriode2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(uttakPeriode2.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(uttakPeriode2.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
-        assertThat(uttakPeriode2.getTom()).isEqualTo(sluttUgyldigPeriode.plusWeeks(8).plusDays(2));
-        assertThat(uttakPeriode2.getManuellbehandlingårsak()).isNull();
-
-        //Det er tom for konto for siste del siden allerede trekk fra saldo for forrige perioder
-        // (gyldigutsett + ugyldigutsett) som gikk til manuell behandling
-        var uttakPeriode3 = uttakPerioder.get(5);
-        assertThat(uttakPeriode3.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(uttakPeriode3.getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(uttakPeriode3.getFom()).isEqualTo(sluttUgyldigPeriode.plusWeeks(8).plusDays(3));
-        assertThat(uttakPeriode3.getTom()).isEqualTo(sluttUgyldigPeriode.plusWeeks(10));
-        assertThat(uttakPeriode3.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
-    }
 
     @Test
     void foreldrepengerFørFødsel_for_kort_fpff_starter_for_sent() {

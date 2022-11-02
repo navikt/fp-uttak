@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -95,7 +96,7 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
                 .søknad(new Søknad.Builder().type(FØDSEL))
                 .build();
         var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom,
-                INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT);
+                INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT, DokumentasjonVurdering.INNLEGGELSE_SØKER_DOKUMENTERT);
         return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);
     }
 }
