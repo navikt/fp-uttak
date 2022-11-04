@@ -40,6 +40,7 @@ public class FastsettePerioderRegelOrkestrering {
         var allePerioderSomSkalFastsettes = samletUttaksperioder(grunnlag, orkestreringTillegg).stream()
                 .filter(periode -> !erHelg(periode))
                 .filter(periode -> !oppholdSomFyllesAvAnnenpart(periode, annenpartUttaksperioder(grunnlag)))
+                .filter(periode -> grunnlag.getBehandling().isKreverSammenhengendeUttak() || !periode.isOpphold())
                 .map(periode -> oppdaterMedAktiviteter(periode, grunnlag.getArbeid()))
                 .collect(Collectors.toList());
         validerOverlapp(map(allePerioderSomSkalFastsettes));

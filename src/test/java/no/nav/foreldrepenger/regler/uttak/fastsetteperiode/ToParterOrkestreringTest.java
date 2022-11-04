@@ -401,7 +401,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         annenpartPeriodeInnvilget(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MØDREKVOTE, new Trekkdager(30)))
                         .uttaksperiode(annenpartPeriodeOpphold(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
                                 OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER)))
-                .behandling(farBehandling())
+                .behandling(farBehandling().kreverSammenhengendeUttak(true))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(
                                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(23).minusDays(1))));
@@ -520,7 +520,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                                 forFrilans(), true))
                         .uttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(17),
                                 forFrilans(), true)))
-                .behandling(farBehandling())
+                .behandling(farBehandling().kreverSammenhengendeUttak(true))
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(
@@ -557,7 +557,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                         .uttaksperiode(annenpartsPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1),
                                 forFrilans(), true))
                         .uttaksperiode(annenpartPeriodeUtenTrekkdager))
-                .behandling(farBehandling())
+                .behandling(farBehandling().kreverSammenhengendeUttak(true))
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(

@@ -4,6 +4,8 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagT
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode.forOpphold;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode.forVanligPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
@@ -40,7 +42,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
@@ -122,9 +123,9 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var fødselsdato = LocalDate.of(2017, 11, 1);
         var sisteUttaksdag = fødselsdato.plusWeeks(6).minusDays(1);
         var søknadsfrist = sisteUttaksdag.plusMonths(3).with(TemporalAdjusters.lastDayOfMonth());
-        var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+        var fpff = forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                 null, false, søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1), null, null);
-        var mødrekvote = OppgittPeriode.forVanligPeriode(MØDREKVOTE, fødselsdato, sisteUttaksdag, null, false,
+        var mødrekvote = forVanligPeriode(MØDREKVOTE, fødselsdato, sisteUttaksdag, null, false,
                 søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1), null, null);
         var grunnlag = basicGrunnlagMor(fødselsdato)
                 .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
@@ -164,10 +165,10 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     void skalKnekkePeriodenVedGrenseForSøknadsfrist() {
         var fødselsdato = LocalDate.of(2017, 11, 1);
         var mottattDato = fødselsdato.plusMonths(4).plusWeeks(1);
-        var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+        var fpff = forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                 null, false, mottattDato, mottattDato, null, null);
         //Mødrekvote skal knekkes på for at første delen skal avlås pga søknadsfrist
-        var mødrekvote = OppgittPeriode.forVanligPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false,
+        var mødrekvote = forVanligPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false,
                 mottattDato, mottattDato, null, null);
         var grunnlag = basicGrunnlagMor(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
@@ -331,7 +332,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var periodeFom = fødselsdato.plusYears(1);
         var periodeTom = periodeFom.plusDays(20);
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 15));
-        var fedrekvote = OppgittPeriode.forVanligPeriode(FEDREKVOTE, periodeFom, periodeTom, null, false,
+        var fedrekvote = forVanligPeriode(FEDREKVOTE, periodeFom, periodeTom, null, false,
                 periodeTom.plusYears(2), periodeTom.plusYears(2), null, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(datoer(fødselsdato))
@@ -663,13 +664,13 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)
                 .datoer(datoer(fødselsdato))
-                .behandling(morBehandling())
+                .behandling(morBehandling().kreverSammenhengendeUttak(true))
                 .rettOgOmsorg(beggeRett())
                 .søknad(new Søknad.Builder().oppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         //Går tom for fedrekvote i oppholdsperioden
-                        .oppgittPeriode(OppgittPeriode.forOpphold(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8),
+                        .oppgittPeriode(forOpphold(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8),
                                 OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, null, null)));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -868,11 +869,11 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     @Test
     void innvilge_foreldrepenger_14_uker_før_fødsel_men_ikke_12_uker_før_termin_ved_terminsøknad() {
         var termin = LocalDate.of(2020, 6, 10);
-        var fp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, termin.minusWeeks(15), termin.minusWeeks(3).minusDays(1), null, false,
+        var fp = forVanligPeriode(FORELDREPENGER, termin.minusWeeks(15), termin.minusWeeks(3).minusDays(1), null, false,
                 null, null, null, null);
-        var fpff = OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1), null, false,
+        var fpff = forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1), null, false,
                 null, null, null, null);
-        var fp2 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, termin, termin.plusWeeks(4), null, false,
+        var fp2 = forVanligPeriode(FORELDREPENGER, termin, termin.plusWeeks(4), null, false,
                 null, null, null, null);
         var testGrunnlag = basicGrunnlag()
                 .datoer(new Datoer.Builder().termin(termin).fødsel(termin.plusWeeks(2)))
@@ -1086,11 +1087,11 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                         .farUttakRundtFødselDager(10))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, termindato.minusDays(2), fødselsdato.plusWeeks(2).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, termindato.minusDays(2), fødselsdato.plusWeeks(2).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(58).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(58).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
                 );
 
@@ -1125,11 +1126,11 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                         .farUttakRundtFødselDager(10))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(4).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(4).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(17).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(17).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(25), fødselsdato.plusWeeks(29).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(25), fødselsdato.plusWeeks(29).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
                 );
 
@@ -1164,9 +1165,9 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                         .farUttakRundtFødselDager(10))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(24).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(24).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
-                        .oppgittPeriode(OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(40), fødselsdato.plusWeeks(43).minusDays(1),
+                        .oppgittPeriode(forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(40), fødselsdato.plusWeeks(43).minusDays(1),
                                 null, false, fødselsdato, fødselsdato, null, null))
                 );
 
@@ -1183,6 +1184,23 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
         assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultat.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    void oppholdsperioder_med_fritt_uttak_skal_fjernes() {
+        var fødselsdato = LocalDate.of(2022, 11, 4);
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+            .søknad(søknad(Søknadstype.FØDSEL,
+                oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                forOpphold(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1), OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER, fødselsdato, fødselsdato),
+                oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(10).minusDays(1))
+                ));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
     }
 
 }
