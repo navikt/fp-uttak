@@ -27,7 +27,7 @@ public class OrkestreringTillegg {
 
     @Override
     public String toString() {
-        var msp = manglendeSøktPerioder.stream().map(p -> p.getFom() + " - " + p.getTom()).collect(Collectors.toList());
+        var msp = manglendeSøktPerioder.stream().map(p -> p.getFom() + " - " + p.getTom()).toList();
         return "OrkestreringTillegg{" + "manglendeSøktPerioder=" + msp + ", knekkpunkter=" + knekkpunkter + '}';
     }
 }

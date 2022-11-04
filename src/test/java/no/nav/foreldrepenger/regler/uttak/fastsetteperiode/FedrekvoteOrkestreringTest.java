@@ -68,10 +68,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var periodeResultater = fastsettPerioder(grunnlag);
 
         assertThat(periodeResultater).hasSize(1);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom))
-                .collect(toList());
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::getUttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserAvslåttPeriode(perioder.get(0), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), FEDREKVOTE,
                 IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG);

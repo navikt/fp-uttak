@@ -176,6 +176,6 @@ class RegelResultatBehandler {
         return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent);
     }
 
-    private static record PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {
+    private record PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {
     }
 }

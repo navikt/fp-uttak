@@ -25,9 +25,9 @@ final class ManglendeSøktPeriodeUtil {
     static List<OppgittPeriode> finnManglendeSøktePerioder(List<LukketPeriode> perioder, LukketPeriode periode) {
         Objects.requireNonNull(periode, "periode");
         var sortertePerioder = perioder.stream()
-                .filter(p -> !p.getTom().isBefore(periode.getFom()) && !p.getFom().isAfter(periode.getTom()))
-                .sorted(Comparator.comparing(Periode::getFom))
-                .collect(Collectors.toList());
+            .filter(p -> !p.getTom().isBefore(periode.getFom()) && !p.getFom().isAfter(periode.getTom()))
+            .sorted(Comparator.comparing(Periode::getFom))
+            .toList();
 
         List<OppgittPeriode> msp = new ArrayList<>();
         var hullFom = periode.getFom();
@@ -112,11 +112,8 @@ final class ManglendeSøktPeriodeUtil {
     static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
         List<LukketPeriode> allePerioder = new ArrayList<>();
         if (grunnlag.getAnnenPart() != null) {
-            allePerioder.addAll(grunnlag.getAnnenPart()
-                    .getUttaksperioder()
-                    .stream()
-                    .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
-                    .collect(Collectors.toList()));
+            allePerioder.addAll(
+                grunnlag.getAnnenPart().getUttaksperioder().stream().filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling()).toList());
         }
         allePerioder.addAll(grunnlag.getSøknad().getOppgittePerioder());
         return allePerioder;

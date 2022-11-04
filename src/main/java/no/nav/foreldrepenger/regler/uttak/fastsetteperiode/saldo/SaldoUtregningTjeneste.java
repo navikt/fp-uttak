@@ -47,7 +47,7 @@ public final class SaldoUtregningTjeneste {
     private static List<FastsattUttakPeriode> knekkOpphold(FastsattUttakPeriode opphold, List<LocalDate> knekkpunkter) {
 
         var etterKnekk = new ArrayList<FastsattUttakPeriode>();
-        var sortedKnekk = knekkpunkter.stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        var sortedKnekk = knekkpunkter.stream().sorted(Comparator.naturalOrder()).toList();
         var etterKnekkOpphold = opphold;
         for (var knekk : sortedKnekk) {
             var tidsperiode = new LukketPeriode(etterKnekkOpphold.getFom(), etterKnekkOpphold.getTom());

@@ -63,9 +63,7 @@ final class MspBfhrUtil {
     }
 
     private static List<OppgittPeriode> finnMellomliggende(List<LukketPeriode> perioder) {
-        var sortertePerioder = perioder.stream()
-                .sorted(Comparator.comparing(LukketPeriode::getFom))
-                .collect(Collectors.toList());
+        var sortertePerioder = perioder.stream().sorted(Comparator.comparing(LukketPeriode::getFom)).toList();
 
         List<OppgittPeriode> mellomliggendePerioder = new ArrayList<>();
         LocalDate mspFom = null;

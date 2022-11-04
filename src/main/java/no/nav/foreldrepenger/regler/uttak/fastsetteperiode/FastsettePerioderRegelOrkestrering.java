@@ -288,15 +288,13 @@ public class FastsettePerioderRegelOrkestrering {
     private List<FastsattUttakPeriode> map(List<FastsettePeriodeResultat> resultatPerioder,
                                            List<FastsattUttakPeriode> vedtaksperioder) {
         var fastsattePerioder = new ArrayList<>(vedtaksperioder);
-        var mapped = resultatPerioder.stream().map(this::map).collect(Collectors.toList());
+        var mapped = resultatPerioder.stream().map(this::map).toList();
         fastsattePerioder.addAll(mapped);
         return fastsattePerioder;
     }
 
     private List<LukketPeriode> map(List<OppgittPeriode> allePerioderSomSkalFastsettes) {
-        return allePerioderSomSkalFastsettes.stream()
-                .map(oppgittPeriode -> (LukketPeriode) oppgittPeriode)
-                .collect(Collectors.toUnmodifiableList());
+        return allePerioderSomSkalFastsettes.stream().map(oppgittPeriode -> (LukketPeriode) oppgittPeriode).toList();
     }
 
     private void validerOverlapp(List<LukketPeriode> perioder) {
@@ -325,6 +323,6 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private List<LukketPeriode> map(ArrayList<FastsettePeriodeResultat> resultatPerioder) {
-        return resultatPerioder.stream().map(p -> (LukketPeriode) p.getUttakPeriode()).collect(Collectors.toUnmodifiableList());
+        return resultatPerioder.stream().map(p -> (LukketPeriode) p.getUttakPeriode()).toList();
     }
 }

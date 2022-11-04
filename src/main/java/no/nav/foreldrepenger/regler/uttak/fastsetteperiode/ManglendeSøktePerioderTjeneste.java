@@ -102,8 +102,7 @@ final class ManglendeSøktePerioderTjeneste {
                                                                             LocalDate familieHendelse,
                                                                             Stønadskontotype stønadskontotype) {
         var sortertePerioder = perioder.stream()
-                .sorted(Comparator.comparing(LukketPeriode::getFom))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(LukketPeriode::getFom)).toList();
 
         List<OppgittPeriode> mellomliggendePerioder = new ArrayList<>();
         LocalDate mspFom = null;

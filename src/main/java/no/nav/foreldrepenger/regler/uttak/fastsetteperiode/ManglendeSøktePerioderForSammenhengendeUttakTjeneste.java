@@ -270,8 +270,7 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
 
     private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder) {
         var sortertePerioder = perioder.stream()
-                .sorted(Comparator.comparing(LukketPeriode::getFom))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(LukketPeriode::getFom)).toList();
 
         List<OppgittPeriode> mellomliggendePerioder = new ArrayList<>();
         LocalDate mspFom = null;
