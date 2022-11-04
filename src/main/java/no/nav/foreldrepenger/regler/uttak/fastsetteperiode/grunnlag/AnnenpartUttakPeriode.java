@@ -16,7 +16,6 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     private boolean samtidigUttak;
     private boolean flerbarnsdager;
     private boolean utsettelse;
-    private boolean oppholdsperiode;
     private OppholdÅrsak oppholdÅrsak;
     private boolean innvilget;
     private LocalDate senestMottattDato;
@@ -46,7 +45,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     }
 
     public boolean isOppholdsperiode() {
-        return oppholdsperiode;
+        return getOppholdÅrsak() != null;
     }
 
     public OppholdÅrsak getOppholdÅrsak() {
@@ -60,7 +59,6 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                 .samtidigUttak(this.samtidigUttak)
                 .flerbarnsdager(this.flerbarnsdager)
                 .utsettelse(this.innvilget)
-                .oppholdsperiode(this.oppholdsperiode)
                 .innvilget(this.innvilget)
                 .oppholdsårsak(this.oppholdÅrsak)
                 .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
@@ -90,13 +88,13 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             return false;
         var that = (AnnenpartUttakPeriode) o;
         return samtidigUttak == that.samtidigUttak && flerbarnsdager == that.flerbarnsdager && utsettelse == that.utsettelse
-                && oppholdsperiode == that.oppholdsperiode && innvilget == that.innvilget && Objects.equals(aktiviteter,
-                that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(senestMottattDato, that.senestMottattDato);
+                && innvilget == that.innvilget && Objects.equals(aktiviteter, that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak
+            && Objects.equals(senestMottattDato, that.senestMottattDato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdsperiode, oppholdÅrsak,
+        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdÅrsak,
                 innvilget, senestMottattDato);
     }
 
@@ -108,7 +106,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         }
 
         public static Builder opphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak) {
-            return new Builder(fom, tom).oppholdsperiode(true).oppholdsårsak(oppholdÅrsak);
+            return new Builder(fom, tom).oppholdsårsak(oppholdÅrsak);
         }
 
         public static Builder uttak(LocalDate fom, LocalDate tom) {
@@ -137,11 +135,6 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
         private Builder utsettelse(boolean utsettelse) {
             kladd.utsettelse = utsettelse;
-            return this;
-        }
-
-        private Builder oppholdsperiode(boolean oppholdsperiode) {
-            kladd.oppholdsperiode = oppholdsperiode;
             return this;
         }
 
