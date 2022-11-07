@@ -167,7 +167,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
                         .oppgittPeriode(utsettelsePeriode(utsettelseFom, utsettelseTom, ARBEID, null)))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold));
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold).arbeidsforholdFraRegister(arbeidsforhold));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);

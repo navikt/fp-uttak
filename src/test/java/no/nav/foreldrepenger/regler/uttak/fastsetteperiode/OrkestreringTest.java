@@ -848,7 +848,8 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                 .behandling(morBehandling().kreverSammenhengendeUttak(true))
                 .rettOgOmsorg(aleneomsorg())
                 //50% prosent stilling, men søker utsettelse. Går til manuell behandling
-                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold1).arbeidsforhold(arbeidsforhold2))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold1).arbeidsforhold(arbeidsforhold2)
+                    .arbeidsforholdFraRegister(arbeidsforhold1).arbeidsforholdFraRegister(arbeidsforhold2))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .oppgittPeriode(
