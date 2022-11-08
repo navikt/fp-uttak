@@ -45,7 +45,7 @@ class RegelResultatBehandlerTest {
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag,
                 oppgittPeriode.getFom());
-        oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.getIdentifikator()));
+        oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.identifikator()));
         var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag);
 
         var regelresultat = new FastsettePerioderRegelresultat(null, UttakOutcome.ikkeOppfylt(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN).medTrekkDagerFraSaldo(true));

@@ -2,50 +2,36 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class Arbeid {
 
-    private final Set<Arbeidsforhold> arbeidsforholdListe = new HashSet<>(); // Arbeidsforhold brukt i beregning, tilkommet dersom greadering eller refusjon
-    private final Set<Arbeidsforhold> arbeidsforholdFraRegister = new HashSet<>(); // Alle arbeidsforhold fra register
+    private final Set<Arbeidsforhold> arbeidsforholdListe = new HashSet<>(); // Arbeidsforhold brukt i beregning, tilkommet dersom gradering eller refusjon
+    private final Set<EndringAvStilling> endringAvStillingListe = new HashSet<>(); // Tidslinje for sum stillingsprosent fra AAregister
 
     private Arbeid() {
     }
 
     public BigDecimal getStillingsprosent(LocalDate dato) {
-        return arbeidsforholdFraRegister.stream()
-                .map(arbeidsforhold -> getStillingsprosent(dato, arbeidsforhold.getIdentifikator()))
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.valueOf(100));
-    }
-
-    public BigDecimal getStillingsprosent(LocalDate dato, AktivitetIdentifikator aktivitet) {
-        var arbeidsforhold = arbeidsforholdFraRegister.stream()
-                .filter(a -> a.getIdentifikator().equals(aktivitet))
-                .findFirst()
-                .orElseThrow();
-        return arbeidsforhold.getStillingsprosent(dato);
+        return endringAvStillingListe.stream()
+            .filter(eas -> !eas.dato().isAfter(dato))
+            .max(Comparator.comparing(EndringAvStilling::dato))
+            .map(EndringAvStilling::summertStillingsprosent)
+            .orElseGet(() -> BigDecimal.valueOf(100));
     }
 
     /**
      * ALLE aktiviteter, som regel burde aktivitene hentes fra {@link OppgittPeriode ()} mtp at alle perioder ikke har samme aktivieter
      */
     public Set<AktivitetIdentifikator> getAktiviteter() {
-        return arbeidsforholdListe.stream().map(Arbeidsforhold::getIdentifikator).collect(Collectors.toSet());
+        return arbeidsforholdListe.stream().map(Arbeidsforhold::identifikator).collect(Collectors.toSet());
     }
 
     public Set<Arbeidsforhold> getArbeidsforhold() {
         return arbeidsforholdListe;
-    }
-
-    public Set<AktivitetIdentifikator> getRegisterAktiviteter() {
-        return arbeidsforholdFraRegister.stream().map(Arbeidsforhold::getIdentifikator).collect(Collectors.toSet());
-    }
-
-    public Set<Arbeidsforhold> getArbeidsforholdFraRegister() {
-        return arbeidsforholdFraRegister;
     }
 
     public static class Builder {
@@ -57,8 +43,8 @@ public final class Arbeid {
             return this;
         }
 
-        public Builder arbeidsforholdFraRegister(Arbeidsforhold arbeidsforhold) {
-            kladd.arbeidsforholdFraRegister.add(arbeidsforhold);
+        public Builder endringAvStilling(EndringAvStilling endringAvStilling) {
+            kladd.endringAvStillingListe.add(endringAvStilling);
             return this;
         }
 

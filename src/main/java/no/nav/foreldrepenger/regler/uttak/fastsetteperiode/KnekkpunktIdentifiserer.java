@@ -127,7 +127,7 @@ class KnekkpunktIdentifiserer {
         if (arbeid.getArbeidsforhold().size() == 1) {
             return Set.of();
         }
-        return arbeid.getArbeidsforhold().stream().map(a -> a.getStartdato()).collect(Collectors.toSet());
+        return arbeid.getArbeidsforhold().stream().map(a -> a.startdato()).collect(Collectors.toSet());
     }
 
     private static boolean medlemskapOpphørsdatoFinnes(RegelGrunnlag grunnlag) {
