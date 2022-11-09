@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.INNLEGGELSE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.SYKDOM_ELLER_SKADE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
@@ -39,7 +39,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11),
-            INNLEGGELSE, fødselsdato, fødselsdato, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
+            INNLEGGELSE, fødselsdato, fødselsdato, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
                 .konto(konto(MØDREKVOTE, 30))
                 .konto(konto(FELLESPERIODE, 15))
@@ -69,7 +69,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var fedrekvote = oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1));
         var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(14),
-            SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato, SYKDOM_ANNEN_FORELDER_DOKUMENTERT );
+            SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato, SYKDOM_ANNEN_FORELDER_GODKJENT);
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
                 .konto(konto(MØDREKVOTE, 40))
                 .konto(konto(FELLESPERIODE, 15))

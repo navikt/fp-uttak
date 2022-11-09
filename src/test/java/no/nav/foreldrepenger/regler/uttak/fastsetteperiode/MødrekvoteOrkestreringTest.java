@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -60,7 +60,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_DOKUMENTERT))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1))));
 
@@ -151,7 +151,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
-                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_DOKUMENTERT))
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
                                 fødselsdato.plusWeeks(12).minusDays(1)))
                         .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(

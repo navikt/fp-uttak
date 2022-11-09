@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.HV_OVELSE_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.NAV_TILTAK_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.HV_OVELSE_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.NAV_TILTAK_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
@@ -57,7 +57,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                        INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT)));
+                        INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -80,7 +80,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                        INNLAGT_SØKER, INNLEGGELSE_SØKER_DOKUMENTERT)));
+                        INNLAGT_SØKER, INNLEGGELSE_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -103,7 +103,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                        SYKDOM_SKADE, SYKDOM_SØKER_DOKUMENTERT)));
+                        SYKDOM_SKADE, SYKDOM_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -463,7 +463,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).datoer(new Datoer.Builder().termin(termindato).fødsel(fødselsdato))
                 .søknad(fødselSøknad()
                         //Starter med pleiepenger
-                        .oppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT))
+                        .oppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), termindato)));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -487,7 +487,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                 .søknad(fødselSøknad()
                         //Starter med pleiepenger
                         .oppgittPeriode(
-                                utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT))
+                                utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), termindato)));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -687,7 +687,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                                                 Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .søknad(new Søknad.Builder().type(FØDSEL)
-                        .oppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE, HV_OVELSE_DOKUMENTERT)));
+                        .oppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE, HV_OVELSE_GODKJENT)));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -756,7 +756,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                                 .build()))
                 .søknad(new Søknad.Builder().type(FØDSEL)
-                        .oppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, NAV_TILTAK, NAV_TILTAK_DOKUMENTERT)));
+                        .oppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, NAV_TILTAK, NAV_TILTAK_GODKJENT)));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -793,7 +793,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
             ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100),
-                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .behandling(farBehandling())
                 .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
@@ -814,7 +814,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fom = fødselsdato.plusWeeks(6);
         var tom = fødselsdato.plusWeeks(9);
         //Skal gå tom for dager
-        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET);
+        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))

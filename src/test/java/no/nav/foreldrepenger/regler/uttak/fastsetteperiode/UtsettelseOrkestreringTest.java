@@ -4,11 +4,11 @@ import static java.time.LocalDate.of;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_3;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.utsettelse;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode.Builder.uttak;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -68,7 +68,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1),
-                        INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT)));
+                        INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
@@ -88,7 +88,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
-                        INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT)));
+                        INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
@@ -108,7 +108,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1),
-                        INNLAGT_SØKER, INNLEGGELSE_SØKER_DOKUMENTERT)));
+                        INNLAGT_SØKER, INNLEGGELSE_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
@@ -128,7 +128,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
-                        INNLAGT_SØKER, INNLEGGELSE_SØKER_DOKUMENTERT)));
+                        INNLAGT_SØKER, INNLEGGELSE_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
@@ -148,7 +148,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1),
-                        SYKDOM_SKADE, SYKDOM_SØKER_DOKUMENTERT)));
+                        SYKDOM_SKADE, SYKDOM_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
@@ -167,7 +167,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).søknad(fødselSøknad()
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
-                .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), SYKDOM_SKADE, SYKDOM_SØKER_DOKUMENTERT)));
+                .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), SYKDOM_SKADE, SYKDOM_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
@@ -252,7 +252,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).søknad(fødselSøknad()
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(4).minusDays(1)))
-                .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT)));
+                .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
@@ -268,7 +268,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).søknad(fødselSøknad()
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1)))
                 .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), SYKDOM_SKADE, null))
-                .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(12).minusDays(1), SYKDOM_SKADE, SYKDOM_SØKER_DOKUMENTERT)));
+                .oppgittPeriode(utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(12).minusDays(1), SYKDOM_SKADE, SYKDOM_SØKER_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
@@ -323,7 +323,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .datoer(new Datoer.Builder().termin(termindato).fødsel(fødselsdato))
                 .søknad(fødselSøknad().dokumentasjon(new Dokumentasjon.Builder())
                         //Starter med pleiepenger
-                        .oppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(4).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT))
+                        .oppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(4).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(4), termindato)));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -346,7 +346,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 .datoer(new Datoer.Builder().termin(termindato).fødsel(fødselsdato))
                 .søknad(fødselSøknad()
                         //Starter med pleiepenger
-                        .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT))
+                        .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, termindato, termindato.plusWeeks(10))));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -385,7 +385,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //Mottatt dato skal ikke være relevant for utsettelse første 6 ukene hvis det er dokumentert
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1),
-            SYKDOM_SKADE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(8), null, SYKDOM_SØKER_DOKUMENTERT);
+            SYKDOM_SKADE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(8), null, SYKDOM_SØKER_GODKJENT);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
                 .søknad(fødselSøknad()
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(4).minusDays(1)))
@@ -439,7 +439,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void utsettelse_innvilges_tilbake_i_tid_for_bare_far_har_rett_hvis_mor_er_i_aktivitet() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
-            ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100), MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+            ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100), MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .behandling(farBehandling())
                 .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
@@ -489,7 +489,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fom = fødselsdato.plusWeeks(6);
         var tom = fødselsdato.plusWeeks(9);
         //Skal gå tom for dager
-        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET);
+        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
@@ -520,7 +520,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fom = fødselsdato.plusWeeks(6);
         var tom = fødselsdato.plusWeeks(9);
         //Skal gå tom for dager
-        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato).datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(bareFarRett())
                 .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
@@ -563,7 +563,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
                 .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
                 .søknad(fødselSøknad()
-                .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT))
+                .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, termindato, termindato.plusWeeks(6))));
 
         var resultat = fastsettPerioder(grunnlag);
@@ -662,8 +662,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         utsettelsePeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), FRI, null),
                         gradertoppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(5).minusDays(1), BigDecimal.valueOf(50)),
                         utsettelsePeriode(fødselsdato.plusWeeks(5), fødselsdato.plusWeeks(6).minusDays(1), FRI, MorsAktivitet.ARBEID, null),
-                        utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), FRI, MorsAktivitet.ARBEID, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET),
-                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET)
+                        utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), FRI, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT),
+                        oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10), MORS_AKTIVITET_GODKJENT)
                 ));
 
         var perioder = fastsettPerioder(grunnlag);
@@ -758,7 +758,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             mottattDatoFar, null, null);
         var fellesperiodeFom = utsettelsePeriode.getTom().plusDays(1);
         var fellesperiode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fellesperiodeFom, fellesperiodeFom.plusWeeks(1).minusDays(1),
-            null, false, mottattDatoFar, mottattDatoFar, MorsAktivitet.ARBEID, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+            null, false, mottattDatoFar, mottattDatoFar, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
             .behandling(farBehandling())
             .søknad(søknad(Søknadstype.FØDSEL, utsettelsePeriode, fellesperiode))

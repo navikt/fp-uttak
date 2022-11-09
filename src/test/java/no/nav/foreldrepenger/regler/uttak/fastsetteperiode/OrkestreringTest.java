@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_2;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode.forOpphold;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode.forVanligPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
@@ -520,7 +520,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
                                 oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 7, 30), LocalDate.of(2018, 8, 19)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, LocalDate.of(2018, 8, 20), LocalDate.of(2018, 12, 2)))
                         .oppgittPeriode(utsettelsePeriode(LocalDate.of(2018, 12, 3), LocalDate.of(2018, 12, 31),
-                                UtsettelseÅrsak.INNLAGT_SØKER, INNLEGGELSE_SØKER_DOKUMENTERT)))
+                                UtsettelseÅrsak.INNLAGT_SØKER, INNLEGGELSE_SØKER_GODKJENT)))
                 .inngangsvilkår(oppfyltAlleVilkår())
                 .build();
 
@@ -584,8 +584,8 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var søknad = søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1)),
                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(10).minusDays(1)),
-                oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET),
-                oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(21).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET));
+                oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1), MORS_AKTIVITET_GODKJENT),
+                oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(21).minusDays(1), MORS_AKTIVITET_GODKJENT));
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)

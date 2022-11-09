@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_GODKJENT;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -24,7 +24,7 @@ public class SjekkOmBarnInnlagt extends LeafSpecification<FastsettePeriodeGrunnl
                 return ja();
             }
         }
-        if (INNLEGGELSE_BARN_DOKUMENTERT.equals(oppgittPeriode.getDokumentasjonVurdering())) {
+        if (INNLEGGELSE_BARN_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering())) {
             return ja();
         }
         return nei();

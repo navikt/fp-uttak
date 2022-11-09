@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forArbeid;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forFrilans;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator.forSelvstendigNæringsdrivende;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -93,7 +93,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                 .periodeResultatType(INNVILGET);
         //SKal gå tom for dager på frilans før aktiviteten med sn
         var søknad = søknad(FØDSEL,
-                oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET));
+                oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100), MORS_AKTIVITET_GODKJENT));
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad)
                 .kontoer(kontoer)
                 .arbeid(arbeid)
@@ -127,7 +127,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                 .behandling(farBehandling())
                 .rettOgOmsorg(bareFarRett())
                 .søknad(new Søknad.Builder().type(FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET)));
+                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1), MORS_AKTIVITET_GODKJENT)));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -259,7 +259,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_eneste_periode_er_første_6_ukene_skal_innvilges() {
         var fødselsdato = LocalDate.of(2021, 10, 11);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL,
-                        OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4), null, false, fødselsdato, fødselsdato, MorsAktivitet.SYK, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET))
+                        OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4), null, false, fødselsdato, fødselsdato, MorsAktivitet.SYK, MORS_AKTIVITET_GODKJENT))
                 )
                 .kontoer(kontoer(konto(FORELDREPENGER, 100)))
                 .rettOgOmsorg(bareFarRett())
@@ -275,7 +275,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(7).minusDays(1), null, false, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8),
                 fødselsdato.plusWeeks(9).minusDays(1), null, false, fødselsdato, fødselsdato,
                 null, null);
@@ -297,7 +297,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(7).minusDays(1), null, false, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8),
                 fødselsdato.plusWeeks(9).minusDays(1), null, false, fødselsdato, fødselsdato,
                 null, null);
@@ -319,7 +319,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(10).minusDays(1), null, false, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(11),
                 fødselsdato.plusWeeks(12).minusDays(1), null, false, fødselsdato, fødselsdato,
                 null, null);
@@ -341,7 +341,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
                 fødselsdato.plusWeeks(10).minusDays(1), null, false, fødselsdato, fødselsdato,
-                MorsAktivitet.UTDANNING, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(11),
                 fødselsdato.plusWeeks(12).minusDays(1), null, false, fødselsdato, fødselsdato,
                 null, null);

@@ -2,9 +2,9 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.TIDLIG_OPPSTART_FEDREKVOTE_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
@@ -36,7 +36,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     void fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6), TIDLIG_OPPSTART_FEDREKVOTE_DOKUMENTERT);
+        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode)).kontoer(kontoer).build();
@@ -55,7 +55,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     void fellesperiode_med_tidlig_oppstart_mor_er_i_aktivitet_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MORS_AKTIVITET_GODKJENT);
         var kontoer = enKonto(FELLESPERIODE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
             new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode)).kontoer(kontoer).build();
@@ -71,7 +71,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     void fellesperiode_med_tidlig_oppstart_og_gyldig_grunn_hele_perioden_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
-            INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
+                INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = enKonto(FELLESPERIODE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
@@ -113,7 +113,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), TIDLIG_OPPSTART_FEDREKVOTE_DOKUMENTERT);
+        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).kontoer(kontoer)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
@@ -133,7 +133,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_DOKUMENTERT);
+        var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).søknad(
                 new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
@@ -178,8 +178,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     @Test
     void fedrekvote_med_tidlig_oppstart_og_vurdert_OK_av_saksbehandler_blir_innvilget_med_knekk_som_saksbehandler_har_registrert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var uttakPeriode1 = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_DOKUMENTERT);
-        var uttakPeriode2 = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_DOKUMENTERT);
+        var uttakPeriode1 = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
+        var uttakPeriode2 = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var uttakPeriode3 = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), null);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)

@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.utsettelsePeriode;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_BARN_GODKJENT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -59,7 +59,7 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1124_fødsel_mer_enn_7_uker_før_termin() {
         var fom = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT);
+        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
@@ -84,7 +84,7 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1120_fødsel_mer_enn_7_uker_før_termin_perioden_ligger_etter_termin() {
         var fom = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT);
+        var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
@@ -109,7 +109,7 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1120_fødsel_mindre_enn_7_uker_før_termin() {
         var fom = LocalDate.of(2019, 7, 1);
-        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_DOKUMENTERT);
+        var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
         var grunnlag = new RegelGrunnlag.Builder().arbeid(

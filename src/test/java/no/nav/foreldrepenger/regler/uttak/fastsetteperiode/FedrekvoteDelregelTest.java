@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.overføringsperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -247,7 +247,7 @@ class FedrekvoteDelregelTest {
     void UT1026_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_ikkeGradert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
+        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), SYKDOM_ANNEN_FORELDER_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
                 søknad(oppgittPeriode))
                 .kontoer(fedrekvoteKonto(1000))
@@ -262,7 +262,7 @@ class FedrekvoteDelregelTest {
     void UT1217_far_førUke7_etterTermin_gyldigGrunn_omsorg_disponibleDager_gradert_avklart() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
-        var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
+        var oppgittPeriode = gradertPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), SYKDOM_ANNEN_FORELDER_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
                 søknad(oppgittPeriode))
                 .kontoer(fedrekvoteKonto(1000))

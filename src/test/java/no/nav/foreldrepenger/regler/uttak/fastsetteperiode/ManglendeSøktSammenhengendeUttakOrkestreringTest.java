@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
@@ -68,7 +68,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
     void skal_avslå_og_trekke_foreldrepenger_for_far_med_enerett_hvis_dager_igjen() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
         var oppgittPeriode = oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato.plusWeeks(10),
-            fødselsdato.plusWeeks(12), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+            fødselsdato.plusWeeks(12), MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(Søknadstype.FØDSEL,
                 //manglende søkt blir opprettet før foreldrepenger-perioder
                 oppgittPeriode);

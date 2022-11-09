@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.ARBEID;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.ARBEID_OG_UTDANNING;
@@ -166,7 +166,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     void ukjent_mors_aktivitet_skal_gå_til_manuell_hvis_dokumentert_ikke_minsterett() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = kontoerMedFellesperiode();
-        var oppgittPeriode = fellesperiode(fødselsdato, null, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET);
+        var oppgittPeriode = fellesperiode(fødselsdato, null, MORS_AKTIVITET_IKKE_GODKJENT);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
@@ -273,7 +273,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, ARBEID, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET);
+            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode);
 
@@ -298,7 +298,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, ARBEID, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET);
+            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode);
 
@@ -333,25 +333,25 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     private static Stream<Arguments> dokumentasjonOgAvslagKombinasjoner() {
-        return Stream.of(Arguments.of(ARBEID, AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+        return Stream.of(Arguments.of(ARBEID, AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(ARBEID, AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT),
 
-            Arguments.of(SYK, AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+            Arguments.of(SYK, AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(SYK, AKTIVITETSKRAVET_SYKDOM_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT),
 
-            Arguments.of(INNLAGT, AKTIVITETSKRAVET_INNLEGGELSE_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+            Arguments.of(INNLAGT, AKTIVITETSKRAVET_INNLEGGELSE_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(INNLAGT, AKTIVITETSKRAVET_INNLEGGELSE_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT),
 
-            Arguments.of(UTDANNING, AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+            Arguments.of(UTDANNING, AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(UTDANNING, AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT),
 
-            Arguments.of(KVALPROG, AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+            Arguments.of(KVALPROG, AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(KVALPROG, AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT),
 
-            Arguments.of(INTROPROG, AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+            Arguments.of(INTROPROG, AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(INTROPROG, AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT),
 
-            Arguments.of(ARBEID_OG_UTDANNING, AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_OPPFYLT, MORS_AKTIVITET_DOKUMENTERT_IKKE_AKTIVITET),
+            Arguments.of(ARBEID_OG_UTDANNING, AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_OPPFYLT, MORS_AKTIVITET_IKKE_GODKJENT),
             Arguments.of(ARBEID_OG_UTDANNING, AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_DOKUMENTERT, MORS_AKTIVITET_IKKE_DOKUMENTERT));
     }
 

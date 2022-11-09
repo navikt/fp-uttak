@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.ER_ALENEOMSORG;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.ER_ALENEOMSORG_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.ALENEOMSORG;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
@@ -20,6 +20,6 @@ public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<Fa
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak()) && ER_ALENEOMSORG.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+        return ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak()) && ER_ALENEOMSORG_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

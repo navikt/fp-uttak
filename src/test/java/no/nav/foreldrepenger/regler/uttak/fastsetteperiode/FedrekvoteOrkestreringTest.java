@@ -1,9 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
@@ -37,7 +36,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL,
-                        oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT),
+                        oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLEGGELSE_ANNEN_FORELDER_GODKJENT),
                         oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2), null)));
 
         var resultater = fastsettPerioder(grunnlag);
@@ -60,7 +59,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(100));
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), SYKDOM_ANNEN_FORELDER_DOKUMENTERT))
+                        .oppgittPeriode(oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), SYKDOM_ANNEN_FORELDER_GODKJENT))
                         .dokumentasjon(new Dokumentasjon.Builder()
                                 .periodeUtenOmsorg(new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))))
                 .kontoer(kontoer);
@@ -136,7 +135,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             .oppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
             .oppgittPeriode(oppgittPeriode(Stønadskontotype.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))
             .oppgittPeriode(overføringPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                OverføringÅrsak.SYKDOM_ELLER_SKADE, SYKDOM_ANNEN_FORELDER_DOKUMENTERT)));
+                OverføringÅrsak.SYKDOM_ELLER_SKADE, SYKDOM_ANNEN_FORELDER_GODKJENT)));
 
         var perioder = fastsettPerioder(grunnlag);
 

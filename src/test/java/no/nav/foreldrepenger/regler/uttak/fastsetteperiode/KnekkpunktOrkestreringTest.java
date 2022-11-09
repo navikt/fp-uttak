@@ -217,7 +217,7 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(90)).konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
             .farUttakRundtFødselDager(10);
         var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, LocalDate.of(2022, 9, 26), LocalDate.of(2023, 2, 3),
-            OverføringÅrsak.SYKDOM_ELLER_SKADE, LocalDate.of(2022, 8, 22), LocalDate.of(2022, 8, 22), DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
+            OverføringÅrsak.SYKDOM_ELLER_SKADE, LocalDate.of(2022, 8, 22), LocalDate.of(2022, 8, 22), DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT);
         var grunnlag = basicGrunnlag(termindato)
             .behandling(farBehandling())
             .rettOgOmsorg(beggeRett())

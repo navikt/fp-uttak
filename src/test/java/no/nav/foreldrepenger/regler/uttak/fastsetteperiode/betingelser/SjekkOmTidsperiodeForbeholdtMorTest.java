@@ -96,7 +96,7 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
                 .søknad(new Søknad.Builder().type(FØDSEL))
                 .build();
         var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom,
-                INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT, DokumentasjonVurdering.INNLEGGELSE_SØKER_DOKUMENTERT);
+                INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT, DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT);
         return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);
     }
 }

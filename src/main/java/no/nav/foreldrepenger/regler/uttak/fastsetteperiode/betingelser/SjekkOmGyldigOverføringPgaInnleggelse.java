@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_GODKJENT;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -18,6 +18,6 @@ public class SjekkOmGyldigOverføringPgaInnleggelse extends LeafSpecification<Fa
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
+        return INNLEGGELSE_ANNEN_FORELDER_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

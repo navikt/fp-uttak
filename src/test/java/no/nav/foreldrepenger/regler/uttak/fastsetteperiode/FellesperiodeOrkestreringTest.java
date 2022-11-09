@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.AVSLÅTT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -66,7 +66,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     @Test
     void fellesperiode_far_etter_uke_6_blir_innvilget_pga_oppfyller_aktivitetskravet() {
         var kontoer = fellesperiodeKonto(4 * 5);
-        var oppgittPeriode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15), MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -82,7 +82,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
     @Test
     void for_tidlig_fellesperiode_far_blir_knekt_og_må_behandles_manuelt() {
-        var periode = oppgittPeriode(FELLESPERIODE, fødselsdato.minusWeeks(5), fødselsdato.plusWeeks(1), false, null, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
+        var periode = oppgittPeriode(FELLESPERIODE, fødselsdato.minusWeeks(5), fødselsdato.plusWeeks(1), false, null, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var grunnlag = basicGrunnlagFar().søknad(søknad(Søknadstype.FØDSEL, periode));
 
         var resultater = fastsettPerioder(grunnlag);

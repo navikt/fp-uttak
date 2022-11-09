@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_GODKJENT;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -18,6 +18,6 @@ public class SjekkOmSykdomSkade extends LeafSpecification<FastsettePeriodeGrunnl
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return SYKDOM_SØKER_DOKUMENTERT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
+        return SYKDOM_SØKER_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

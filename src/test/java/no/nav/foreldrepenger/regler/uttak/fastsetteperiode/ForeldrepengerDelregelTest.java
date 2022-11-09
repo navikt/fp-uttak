@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -485,7 +485,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
-        var oppgittPeriode = oppgittPeriode(fom, tom, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode = oppgittPeriode(fom, tom, MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(oppgittPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
                 .kontoer(foreldrepengerKonto(100))
@@ -502,7 +502,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
-        var oppgittPeriode = oppgittPeriode(fom, tom, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode = oppgittPeriode(fom, tom, MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(oppgittPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
                 .kontoer(foreldrepengerKonto(100))
@@ -519,7 +519,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
-        var gradertPeriode = gradertPeriode(fom, tom, AktivitetIdentifikator.forFrilans(), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var gradertPeriode = gradertPeriode(fom, tom, AktivitetIdentifikator.forFrilans(), MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(gradertPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
                 .kontoer(foreldrepengerKonto(100))
@@ -537,7 +537,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
         var aktivitetIdentifikator = ARBEIDSFORHOLD_1;
-        var gradertPeriode = gradertPeriode(fom, tom, aktivitetIdentifikator, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var gradertPeriode = gradertPeriode(fom, tom, aktivitetIdentifikator, MORS_AKTIVITET_GODKJENT);
         var kontoer = foreldrepengerKonto(100);
         var søknad = søknad(gradertPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
@@ -556,7 +556,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(9);
-        var oppgittPeriode = oppgittPeriode(fom, tom, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var oppgittPeriode = oppgittPeriode(fom, tom, MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(oppgittPeriode);
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
                 .arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende()));
@@ -620,7 +620,7 @@ class ForeldrepengerDelregelTest {
         var tom = familiehendelseDato.plusWeeks(3);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var gradertPeriode = gradertPeriode(fom, tom, aktivitetIdentifikator, null, true,
-            MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MORS_AKTIVITET_GODKJENT);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(40, 17);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(gradertPeriode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_DOKUMENTERT_AKTIVITET;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
@@ -179,8 +179,8 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold1, LocalDate.of(2019, 5, 1)))
                 .arbeidsforhold(new Arbeidsforhold(tilkommetArbeidsforhold2, LocalDate.of(2019, 6, 10)));
         var utsettelseArbeid = utsettelsePeriode(LocalDate.of(2019, 11, 4), LocalDate.of(2019, 12, 6), UtsettelseÅrsak.ARBEID, null,
-            MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
-        var fpPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 12, 16), LocalDate.of(2020, 1, 3), MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+                MORS_AKTIVITET_GODKJENT);
+        var fpPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2019, 12, 16), LocalDate.of(2020, 1, 3), MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode);
         var grunnlag = basicGrunnlag()
                 .arbeid(arbeid)

@@ -20,6 +20,6 @@ public class SjekkOmGyldigOverføringPgaSykdomSkade extends LeafSpecification<Fa
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
         return OverføringÅrsak.SYKDOM_ELLER_SKADE.equals(oppgittPeriode.getOverføringÅrsak())
-            && DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_DOKUMENTERT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+            && DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

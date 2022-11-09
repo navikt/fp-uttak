@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.ER_BARE_SØKER_RETT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.ER_BARE_SØKER_RETT_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak.ANNEN_FORELDER_IKKE_RETT;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
@@ -20,6 +20,6 @@ public class SjekkOmGyldigOverføringPgaIkkeRett extends LeafSpecification<Fasts
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return ANNEN_FORELDER_IKKE_RETT.equals(oppgittPeriode.getOverføringÅrsak()) && ER_BARE_SØKER_RETT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+        return ANNEN_FORELDER_IKKE_RETT.equals(oppgittPeriode.getOverføringÅrsak()) && ER_BARE_SØKER_RETT_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

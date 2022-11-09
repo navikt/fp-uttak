@@ -220,7 +220,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1255_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, SYKDOM_ANNEN_FORELDER_DOKUMENTERT);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, SYKDOM_ANNEN_FORELDER_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -249,7 +249,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1256_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, INNLEGGELSE_ANNEN_FORELDER_DOKUMENTERT);
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -304,7 +304,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
@@ -333,7 +333,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_DOKUMENTERT_AKTIVITET);
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
