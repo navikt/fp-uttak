@@ -128,9 +128,9 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                 .konto(konto(MØDREKVOTE, 75))
                 .konto(konto(FEDREKVOTE, 75))
                 .konto(konto(FELLESPERIODE, 80));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD).leggTilEndringIStilling(
-                new EndringAvStilling(fødselsdato, BigDecimal.valueOf(100)));
-        var grunnlag = basicUtsettelseGrunnlag(fødselsdato).arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold).endringAvStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(100))))
                 .kontoer(kontoer)
                 .søknad(fødselSøknad().oppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -148,7 +148,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         assertThat(uttakPeriode.getFom()).isEqualTo(utsettelseFom);
         assertThat(uttakPeriode.getTom()).isEqualTo(utsettelseTom);
         assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(uttakPeriode.getTrekkdager(arbeidsforhold.getIdentifikator())).isEqualTo(Trekkdager.ZERO);
+        assertThat(uttakPeriode.getTrekkdager(arbeidsforhold.identifikator())).isEqualTo(Trekkdager.ZERO);
     }
 
     @Test
@@ -160,14 +160,13 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
                 .konto(konto(MØDREKVOTE, 75))
                 .konto(konto(FELLESPERIODE, 80))
                 .konto(konto(FEDREKVOTE, 75));
-        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD).leggTilEndringIStilling(
-                new EndringAvStilling(utsettelseFom, BigDecimal.valueOf(50)));
+        var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).kontoer(kontoer)
                 .søknad(fødselSøknad().oppgittPeriode(
                         oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, utsettelseFom.minusDays(1)))
                         .oppgittPeriode(utsettelsePeriode(utsettelseFom, utsettelseTom, ARBEID, null)))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold));
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold).endringAvStilling(new EndringAvStilling(utsettelseFom, BigDecimal.valueOf(50))));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);

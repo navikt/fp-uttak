@@ -780,7 +780,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.minusDays(1), fødselsdato.minusDays(1))
                 .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), FORELDREPENGER,
-                        arbeidsforhold1.getIdentifikator())));
+                        arbeidsforhold1.identifikator())));
         var vedtak = new Vedtak.Builder().leggTilPeriode(fastsattPeriode);
         var grunnlag = new RegelGrunnlag.Builder().arbeid(
                 new Arbeid.Builder().arbeidsforhold(arbeidsforhold1).arbeidsforhold(arbeidsforhold2))
@@ -840,20 +840,19 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     @Test
     void utsettelse_som_går_til_manuell_behandling_skal_ikke_trekke_dager_hvis_dager_igjen_på_bare_ett_av_to_arbeidsforhold_selv_om_sluttpunkt_trekker_dager() {
         var fødselsdato = LocalDate.of(2018, 6, 14);
-        var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1).leggTilEndringIStilling(
-                new EndringAvStilling(fødselsdato, BigDecimal.valueOf(50)));
-        var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2).leggTilEndringIStilling(
-                new EndringAvStilling(fødselsdato, BigDecimal.valueOf(25)));
+        var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
+        var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
         var grunnlag = basicGrunnlag(fødselsdato)
                 .behandling(morBehandling().kreverSammenhengendeUttak(true))
                 .rettOgOmsorg(aleneomsorg())
                 //50% prosent stilling, men søker utsettelse. Går til manuell behandling
-                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold1).arbeidsforhold(arbeidsforhold2))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold1).arbeidsforhold(arbeidsforhold2)
+                    .endringAvStilling(new EndringAvStilling(fødselsdato, BigDecimal.valueOf(75))))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .oppgittPeriode(
                                 gradertoppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1),
-                                        BigDecimal.valueOf(50), Set.of(arbeidsforhold1.getIdentifikator())))
+                                        BigDecimal.valueOf(50), Set.of(arbeidsforhold1.identifikator())))
                         .oppgittPeriode(
                                 utsettelsePeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(100), UtsettelseÅrsak.ARBEID, null)))
                 .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 35)));
