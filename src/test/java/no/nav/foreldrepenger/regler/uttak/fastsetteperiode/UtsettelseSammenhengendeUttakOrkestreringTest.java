@@ -788,6 +788,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
     }
 
     //FAGSYSTEM-151437
+
     @Test
     void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_manuell() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
@@ -837,6 +838,38 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(tom);
         assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    void bfhr_utsettelse_som_trenger_dok_og_aktivitetskrav_vurdering_skal_gå_til_manuell() {
+        var fødselsdato = LocalDate.of(2019, 10, 10);
+        var periode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
+            null, false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT);
+        var sykdom = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11).minusDays(1),
+            SYKDOM_SKADE, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, SYKDOM_SØKER_GODKJENT);
+
+        var innleggelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1),
+            INNLAGT_SØKER, fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, INNLEGGELSE_SØKER_GODKJENT);
+
+        var sykdomBarn = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(13).minusDays(1),
+            INNLAGT_BARN, fødselsdato, fødselsdato, MorsAktivitet.INTROPROG, INNLEGGELSE_BARN_GODKJENT);
+
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad(FØDSEL, periode, sykdom, innleggelse, sykdomBarn));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(4);
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(perioder.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(perioder.get(2).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+
+        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(perioder.get(3).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
     }
 
     private void assertDeTreFørstePeriodene(List<FastsettePeriodeResultat> resultat, LocalDate fødselsdato) {

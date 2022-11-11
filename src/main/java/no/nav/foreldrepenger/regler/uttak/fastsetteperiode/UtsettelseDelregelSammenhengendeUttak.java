@@ -189,12 +189,9 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForSøkerSykdomEllerSkade() {
-        var sjekkOmMorErIAktivitet = rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-                .hvis(new SjekkOmMorErIAktivitet(), Oppfylt.opprett("1138", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false))
-                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
-
         var sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
+                .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1138", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT,
+                    false, false))
                 .ellers(Oppfylt.opprett("UT1116", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_SYKDOM, false, false));
 
         return rs.hvisRegel(SjekkOmSykdomSkade.ID, SjekkOmSykdomSkade.BESKRIVELSE)
@@ -204,13 +201,9 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForSøkerInnlagt() {
-        var sjekkOmMorErIAktivitet = rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-                .hvis(new SjekkOmMorErIAktivitet(),
-                        Oppfylt.opprett("UT1137", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false))
-                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
-
         var sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
+                .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("UT1137", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT,
+                    false, false))
                 .ellers(Oppfylt.opprett("UT1118", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_INNLEGGELSE, false, false));
 
         return rs.hvisRegel(SjekkOmSøkerInnlagt.ID, SjekkOmSøkerInnlagt.BESKRIVELSE)
@@ -220,13 +213,9 @@ public class UtsettelseDelregelSammenhengendeUttak implements RuleService<Fastse
     }
 
     private Specification<FastsettePeriodeGrunnlag> delregelForBarnInnlagt() {
-        var sjekkOmMorErIAktivitet = rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-                .hvis(new SjekkOmMorErIAktivitet(),
-                        Oppfylt.opprett("UT1136", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false))
-                .ellers(new AvslagAktivitetskravDelregel().getSpecification());
-
         var sjekkOmBareFarHarRettNode = rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
-                .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet)
+                .hvis(new SjekkOmBareFarHarRett(), Manuellbehandling.opprett("1136", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT,
+                    false, false))
                 .ellers(Oppfylt.opprett("UT1120", InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT, false, false));
 
         var sjekkOmFørTermin = rs.hvisRegel(SjekkOmPeriodeErFørTermin.ID, SjekkOmPeriodeErFørTermin.BESKRIVELSE)

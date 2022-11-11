@@ -41,16 +41,6 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
 
     private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
 
-    protected final RegelGrunnlag.Builder grunnlagAdopsjon = RegelGrunnlagTestBuilder.create()
-            .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
-            .behandling(morBehandling())
-            .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-                    .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
-                    .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130)))
-            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-            .inngangsvilkår(oppfyltAlleVilkår());
-
-
     void verifiserPeriode(UttakPeriode periode,
                           LocalDate forventetFom,
                           LocalDate forventetTom,
