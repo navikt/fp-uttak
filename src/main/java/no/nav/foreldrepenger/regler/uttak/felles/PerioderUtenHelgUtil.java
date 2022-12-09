@@ -1,11 +1,16 @@
 package no.nav.foreldrepenger.regler.uttak.felles;
 
+import static java.time.temporal.TemporalAdjusters.next;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public final class PerioderUtenHelgUtil {
+
+    private static final Set<DayOfWeek> WEEKEND = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     private PerioderUtenHelgUtil() {
         //Privat constructor for å hindre instanser.
@@ -55,33 +60,15 @@ public final class PerioderUtenHelgUtil {
     }
 
     public static LocalDate helgBlirMandag(LocalDate dato) {
-        if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            return dato.plusDays(2);
-        }
-        if (dato.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return dato.plusDays(1);
-        }
-        return dato;
+        return WEEKEND.contains(dato.getDayOfWeek()) ? dato.with(next(DayOfWeek.MONDAY)) : dato;
     }
 
     public static LocalDate helgBlirFredag(LocalDate dato) {
-        if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            return dato.minusDays(1);
-        }
-        if (dato.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return dato.minusDays(2);
-        }
-        return dato;
+        return WEEKEND.contains(dato.getDayOfWeek()) ? dato.with(DayOfWeek.FRIDAY) : dato;
     }
 
     public static LocalDate fredagLørdagBlirSøndag(LocalDate dato) {
-        if (dato.getDayOfWeek() == DayOfWeek.FRIDAY) {
-            return dato.plusDays(2);
-        }
-        if (dato.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            return dato.plusDays(1);
-        }
-        return dato;
+        return WEEKEND.contains(dato.plusDays(1).getDayOfWeek()) ? dato.with(next(DayOfWeek.MONDAY)) : dato;
     }
 
 }
