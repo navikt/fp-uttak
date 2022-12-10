@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 final class DelRegelTestUtil {
 
@@ -39,18 +38,6 @@ final class DelRegelTestUtil {
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
                 new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
                         oppgittPeriode)));
-    }
-
-    static FastsettePerioderRegelresultat kjørRegel(OppgittPeriode oppgittPeriode,
-                                                    RegelGrunnlag grunnlag,
-                                                    List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                    LukketPeriode farRundtFødselIntervall) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
-                grunnlag, oppgittPeriode.getFom());
-        oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
-        return new FastsettePerioderRegelresultat(REGEL.evaluer(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall,
-                        SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), oppgittPeriode)));
     }
 
     static OppgittPeriode overføringsperiode(Stønadskontotype stønadskontotype,
