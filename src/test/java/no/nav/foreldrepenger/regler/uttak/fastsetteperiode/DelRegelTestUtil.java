@@ -5,7 +5,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningTjeneste;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
@@ -27,8 +35,9 @@ final class DelRegelTestUtil {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
                 grunnlag, oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
+        var farRundtFødselIntervall = FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag).orElse(null);
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, null, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
+                new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
                         oppgittPeriode)));
     }
 
