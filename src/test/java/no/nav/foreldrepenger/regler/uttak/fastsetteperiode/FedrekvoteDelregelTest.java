@@ -36,7 +36,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 class FedrekvoteDelregelTest {
 
@@ -369,8 +368,7 @@ class FedrekvoteDelregelTest {
                 .kontoer(fedrekvoteKonto(10 * 5).farUttakRundtFødselDager(10))
                 .build();
 
-        var regelresultat = kjørRegel(oppgittPeriode, grunnlag, List.of(),
-                new LukketPeriode(fødselsdato, fødselsdato.plusWeeks(6)));
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag, List.of());
 
         assertThat(regelresultat.oppfylt()).isTrue();
     }
@@ -421,8 +419,7 @@ class FedrekvoteDelregelTest {
                 .kontoer(fedrekvoteKonto(10 * 5).farUttakRundtFødselDager(10))
                 .build();
 
-        var regelresultat = kjørRegel(oppgittPeriode, grunnlag, List.of(),
-                new LukketPeriode(termindato.minusWeeks(2), termindato.plusWeeks(6)));
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag, List.of());
 
 
         assertThat(regelresultat.oppfylt()).isTrue();
