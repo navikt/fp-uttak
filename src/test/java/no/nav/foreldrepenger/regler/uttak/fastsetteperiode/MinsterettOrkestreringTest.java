@@ -2,7 +2,9 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -33,6 +37,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
@@ -341,6 +347,51 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         assertThat(fastsattePerioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+    }
+
+    @ParameterizedTest
+    @EnumSource(UtsettelseÅrsak.class)
+    void utsettelser_etter_startdato_neste_stønadsperiode_innvilges(UtsettelseÅrsak utsettelseÅrsak) {
+        var fødselsdatoFørsteSak = LocalDate.of(2023, 1, 6);
+        var startdatoNesteStønadsperiode = fødselsdatoFørsteSak.plusYears(2);
+        var grunnlag = basicGrunnlagFar(fødselsdatoFørsteSak)
+            .kontoer(defaultKontoer().etterNesteStønadsperiodeDager(10))
+            .datoer(new Datoer.Builder().fødsel(fødselsdatoFørsteSak).startdatoNesteStønadsperiode(startdatoNesteStønadsperiode))
+            .søknad(søknad(FØDSEL,
+                utsettelsePeriode(startdatoNesteStønadsperiode, startdatoNesteStønadsperiode.plusWeeks(2), utsettelseÅrsak, null),
+                //Bruker opp minsteretten
+                oppgittPeriode(FEDREKVOTE, startdatoNesteStønadsperiode.plusWeeks(4), startdatoNesteStønadsperiode.plusWeeks(6).minusDays(1)),
+                utsettelsePeriode(startdatoNesteStønadsperiode.plusWeeks(8), startdatoNesteStønadsperiode.plusWeeks(10), utsettelseÅrsak, null)
+                ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(3);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+    }
+
+    @ParameterizedTest
+    @EnumSource(UtsettelseÅrsak.class)
+    void utsettelser_etter_startdato_neste_stønadsperiode_avslås_hvis_ingen_to_tette_minsterett(UtsettelseÅrsak utsettelseÅrsak) {
+        var fødselsdatoFørsteSak = LocalDate.of(2021, 1, 6);
+        var startdatoNesteStønadsperiode = fødselsdatoFørsteSak.plusYears(2);
+        var grunnlag = basicGrunnlagFar(fødselsdatoFørsteSak)
+            .kontoer(defaultKontoer().etterNesteStønadsperiodeDager(0))
+            .datoer(new Datoer.Builder().fødsel(fødselsdatoFørsteSak).startdatoNesteStønadsperiode(startdatoNesteStønadsperiode))
+            .søknad(søknad(FØDSEL,
+                utsettelsePeriode(startdatoNesteStønadsperiode, startdatoNesteStønadsperiode.plusWeeks(2).minusDays(1), utsettelseÅrsak, null),
+                oppgittPeriode(FEDREKVOTE, startdatoNesteStønadsperiode.plusWeeks(2), startdatoNesteStønadsperiode.plusWeeks(6).minusDays(1))
+            ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
     }
 
     private boolean harPeriode(UttakPeriode p, Perioderesultattype prt, PeriodeResultatÅrsak prå, int dager) {
