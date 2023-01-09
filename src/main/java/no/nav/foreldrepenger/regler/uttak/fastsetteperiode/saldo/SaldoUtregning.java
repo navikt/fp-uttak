@@ -75,7 +75,8 @@ public class SaldoUtregning {
                    Trekkdager minsterettDager,
                    Trekkdager utenAktivitetskravDager,
                    Trekkdager flerbarnsdager,
-                   Trekkdager farUttakRundtFødselDager) {
+                   Trekkdager farUttakRundtFødselDager,
+                   Trekkdager toTetteFødsler) {
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
@@ -88,7 +89,7 @@ public class SaldoUtregning {
         this.spesialkonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
         this.spesialkonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
         this.spesialkonti.put(Spesialkontotype.FAR_RUNDT_FØDSEL, farUttakRundtFødselDager);
-        this.spesialkonti.put(Spesialkontotype.TETTE_FØDSLER, Trekkdager.ZERO);
+        this.spesialkonti.put(Spesialkontotype.TETTE_FØDSLER, toTetteFødsler);
     }
 
     SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
@@ -100,7 +101,7 @@ public class SaldoUtregning {
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
         this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
                 sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart,
-                Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
+                Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
     }
 
     /**
@@ -179,9 +180,9 @@ public class SaldoUtregning {
             return Trekkdager.ZERO;
         }
         var forbruk = forbruktAvMinsterett(aktivitet);
-        return getMaxDagerEtterNesteStønadsperiode().subtract(forbruk);
+        var saldo = getMaxDagerEtterNesteStønadsperiode().subtract(forbruk);
+        return saldo.mindreEnn0() ? Trekkdager.ZERO : saldo;
     }
-
 
     public Trekkdager restSaldoFlerbarnsdager(AktivitetIdentifikator aktivitet) {
         return saldoUtregningFlerbarnsdager.restSaldo(aktivitet);
