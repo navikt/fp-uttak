@@ -19,14 +19,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
@@ -121,8 +119,9 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor().søknad(
-                søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14))))
+        var grunnlag = basicGrunnlagMor()
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)
                 .build();
@@ -136,8 +135,9 @@ class FellesperiodeDelregelTest {
     void fellesperiode_før_fødsel_innvilges_uavhengig_av_om_søker_har_omsorg_da_det_ikke_er_mulig_å_ha_omsorg_fordi_barnet_ikke_er_født() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor().søknad(
-                søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10))))
+        var grunnlag = basicGrunnlagMor()
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)
                 .build();
@@ -236,8 +236,9 @@ class FellesperiodeDelregelTest {
     void UT1054_far_førUke7_etterFamileHendelse_utenGyldigGrunn_flerbarnsdager_ikkeOmsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
-        var grunnlag = basicGrunnlagFar().søknad(
-                søknad(søknadsperiode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
+        var grunnlag = basicGrunnlagFar()
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
                 .kontoer(kontoer)
                 .build();
@@ -387,12 +388,6 @@ class FellesperiodeDelregelTest {
                                                  DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
                 Set.of(AktivitetIdentifikator.forFrilans()), null, null, null, dokumentasjonVurdering);
-    }
-
-    private Søknad.Builder søknad(OppgittPeriode søknadsperiode, PeriodeUtenOmsorg periodeUtenOmsorg) {
-        return new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittPeriode(søknadsperiode)
-                .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg));
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {

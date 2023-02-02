@@ -16,6 +16,9 @@ public class SjekkOmOmsorgHelePerioden extends LeafSpecification<FastsettePeriod
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
+        if (grunnlag.harOmsorg() != null) {
+            return grunnlag.harOmsorg() ? ja() : nei();
+        }
         var oppgittPeriode = grunnlag.getAktuellPeriode();
         for (LukketPeriode periodeUtenOmsorg : grunnlag.getPerioderUtenOmsorg()) {
             if (periodeUtenOmsorg.overlapper(oppgittPeriode)) {

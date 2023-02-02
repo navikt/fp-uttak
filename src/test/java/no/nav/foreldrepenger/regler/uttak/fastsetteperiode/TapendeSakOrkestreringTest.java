@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -55,10 +54,9 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .uttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
                                 MOR_ARBEIDSFORHOLD, true)))
                 .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg)));
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))));
 
         var resultat = fastsettPerioder(grunnlag);
 
@@ -70,7 +68,6 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
     @Test
     void skal_ikke_sette_0_trekkdager_når_perioden_avslås_men_annen_forelder_har_avslått_samme_tidsrom() {
-        var periodeUtenOmsorg = new PeriodeUtenOmsorg(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16));
         var grunnlag = RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .annenPart(new AnnenPart.Builder().uttaksperiode(
@@ -82,10 +79,9 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .uttaksperiode(annenpartsPeriode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16),
                                 MOR_ARBEIDSFORHOLD, false)))
                 .behandling(farBehandling())
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg)));
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))));
 
         var resultat = fastsettPerioder(grunnlag);
 

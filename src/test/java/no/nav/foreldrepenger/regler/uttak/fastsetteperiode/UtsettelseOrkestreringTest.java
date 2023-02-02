@@ -41,7 +41,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUtt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
@@ -320,8 +319,9 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var termindato = LocalDate.of(2019, 9, 1);
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+                .rettOgOmsorg(beggeRett().harOmsorg(true))
                 .datoer(new Datoer.Builder().termin(termindato).fødsel(fødselsdato))
-                .søknad(fødselSøknad().dokumentasjon(new Dokumentasjon.Builder())
+                .søknad(fødselSøknad()
                         //Starter med pleiepenger
                         .oppgittPeriode(utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(4).minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(4), termindato)));

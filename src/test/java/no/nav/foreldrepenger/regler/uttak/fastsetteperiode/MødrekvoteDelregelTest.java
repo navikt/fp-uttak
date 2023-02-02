@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dødsdatoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -19,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -62,7 +60,8 @@ class MødrekvoteDelregelTest {
         var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(søknad(oppgittPeriode))
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -76,18 +75,13 @@ class MødrekvoteDelregelTest {
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(søknad(oppgittPeriode))
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-    }
-
-    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, PeriodeUtenOmsorg periodeUtenOmsorg) {
-        return new Søknad.Builder().oppgittPeriode(oppgittPeriode)
-                .type(Søknadstype.FØDSEL)
-                .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg));
     }
 
     @Test
@@ -96,7 +90,8 @@ class MødrekvoteDelregelTest {
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 1);
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.minusWeeks(10), fødselsdato.plusWeeks(15))))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(søknad(oppgittPeriode))
                 .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -260,7 +255,7 @@ class MødrekvoteDelregelTest {
                 OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
         var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FEDREKVOTE, 100))
                 .konto(konto(Stønadskontotype.MØDREKVOTE, 0));
-        var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer).søknad(søknad(oppholdsperiode)).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer).søknad(new Søknad.Builder().oppgittPeriode(oppholdsperiode).type(Søknadstype.FØDSEL)).build();
 
         var regelresultat = kjørRegel(oppholdsperiode, grunnlag);
 
