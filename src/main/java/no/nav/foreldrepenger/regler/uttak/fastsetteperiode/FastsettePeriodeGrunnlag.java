@@ -66,6 +66,8 @@ public interface FastsettePeriodeGrunnlag {
      */
     List<PeriodeUtenOmsorg> getPerioderUtenOmsorg();
 
+    Boolean harOmsorg();
+
     List<PleiepengerPeriode> getPleiepengerInnleggelse();
 
     /**

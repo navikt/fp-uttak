@@ -7,10 +7,8 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -148,14 +146,13 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     void overføring_av_mødrekvote_grunnet_sykdom_skade_men_far_har_ikke_omsorg_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(OppgittPeriode.forOverføring(Stønadskontotype.MØDREKVOTE, fødselsdato,
                                 fødselsdato.plusWeeks(10).minusDays(1),
                                 OverføringÅrsak.SYKDOM_ELLER_SKADE, null, null, SYKDOM_ANNEN_FORELDER_GODKJENT))
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, fødselsdato.plusWeeks(10),
-                                fødselsdato.plusWeeks(12).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)))));
+                                fødselsdato.plusWeeks(12).minusDays(1))));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -176,7 +173,8 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
 
         //2 neste uker fedrekvote avslått
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET); // UT1031
+        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT); // UT1086
+        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG);
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FEDREKVOTE);
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(12).minusDays(1));

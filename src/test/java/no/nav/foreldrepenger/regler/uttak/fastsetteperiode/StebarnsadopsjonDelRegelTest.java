@@ -24,11 +24,11 @@ class StebarnsadopsjonDelRegelTest {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
-        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).søknad(
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(
                 new Søknad.Builder().type(Søknadstype.ADOPSJON)
-                        .oppgittPeriode(uttakPeriode)
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100))))).build();
+                        .oppgittPeriode(uttakPeriode)).build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();

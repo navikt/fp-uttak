@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -26,7 +25,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -100,8 +98,9 @@ class FedrekvoteDelregelTest {
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         var kontoer = fedrekvoteKonto(10 * 5);
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
-                søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato, fødselsdato.plusWeeks(100)))).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .rettOgOmsorg( new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .søknad(fødselssøknadMedEnPeriode(oppgittPeriode)).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -115,8 +114,9 @@ class FedrekvoteDelregelTest {
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FEDREKVOTE, fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4), null,
                 true, null, null, null, null);
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
-                søknad(oppgittPeriode, new PeriodeUtenOmsorg(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4))))
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg( new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                .søknad(fødselssøknadMedEnPeriode(oppgittPeriode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
                 .kontoer(fedrekvoteOgFlerbarnsdagerKonto(1000, 85))
                 .build();
@@ -449,11 +449,6 @@ class FedrekvoteDelregelTest {
         return new Kontoer.Builder()
                 .konto(new Konto.Builder().type(Stønadskontotype.FEDREKVOTE).trekkdager(fedrekvoteTrekkdager))
                 .flerbarnsdager(flerbarnsdagerTrekkdager);
-    }
-
-    private Søknad.Builder søknad(OppgittPeriode oppgittPeriode, PeriodeUtenOmsorg periodeUtenOmsorg) {
-        return fødselssøknadMedEnPeriode(oppgittPeriode).dokumentasjon(
-                new Dokumentasjon.Builder().periodeUtenOmsorg(periodeUtenOmsorg));
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {

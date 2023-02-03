@@ -82,6 +82,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
+    public Boolean harOmsorg() {
+        return regelGrunnlag.getRettOgOmsorg().getHarOmsorg();
+    }
+
+    @Override
     public boolean isFarRett() {
         return regelGrunnlag.getRettOgOmsorg().getFarHarRett();
     }

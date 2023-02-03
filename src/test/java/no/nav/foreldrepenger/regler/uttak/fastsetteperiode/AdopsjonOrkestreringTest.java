@@ -15,13 +15,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
@@ -68,13 +66,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .behandling(morBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(
-                                oppgittPeriode(MØDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                oppgittPeriode(MØDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -154,13 +150,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .behandling(farBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(oppgittPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(3)))))
+                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -240,13 +234,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .behandling(morBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(oppgittPeriode(FELLESPERIODE, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -283,13 +275,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .behandling(farBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(oppgittPeriode(FELLESPERIODE, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -330,13 +320,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
         var grunnlag = grunnlagAdopsjon.kontoer(kontoer)
                 .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .behandling(morBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -379,13 +367,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer)
                 .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(bareFarRett())
+                .rettOgOmsorg(bareFarRett().harOmsorg(false))
                 .behandling(farBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato,
-                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
 
@@ -452,13 +438,11 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
 
         var grunnlag = grunnlagAdopsjon.datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-                .rettOgOmsorg(beggeRett())
+                .rettOgOmsorg(beggeRett().harOmsorg(false))
                 .behandling(farBehandling())
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(
-                                oppgittPeriode(MØDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1)))
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(100)))))
+                                oppgittPeriode(MØDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null).stebarnsadopsjon(true))
                 .build();
 
