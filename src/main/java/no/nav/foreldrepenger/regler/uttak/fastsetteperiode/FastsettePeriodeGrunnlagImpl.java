@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUtt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -82,7 +81,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public Boolean harOmsorg() {
+    public boolean harOmsorg() {
         return regelGrunnlag.getRettOgOmsorg().getHarOmsorg();
     }
 
@@ -119,15 +118,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean isSakMedRettEtterStartNesteStønadsperiode() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
-    }
-
-    @Override
-    public List<PeriodeUtenOmsorg> getPerioderUtenOmsorg() {
-        var dokumentasjon = regelGrunnlag.getSøknad().getDokumentasjon();
-        if (dokumentasjon == null) {
-            return Collections.emptyList();
-        }
-        return dokumentasjon.getPerioderUtenOmsorg();
     }
 
     @Override

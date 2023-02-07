@@ -60,13 +60,11 @@ public interface FastsettePeriodeGrunnlag {
     boolean isSamtykke();
 
     /**
-     * Finn alle perioder der søker ikke har omsorg for barnet/barna det søkes om
+     * Om bruker har omsorg for barnet
      *
-     * @return list av perioder der søker ikke har omsorg for barnet/barna det søkes om
+     * @return true dersom bruker har omsorg for barnet
      */
-    List<PeriodeUtenOmsorg> getPerioderUtenOmsorg();
-
-    Boolean harOmsorg();
+    boolean harOmsorg();
 
     List<PleiepengerPeriode> getPleiepengerInnleggelse();
 

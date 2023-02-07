@@ -23,10 +23,12 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
+import no.nav.foreldrepenger.regler.uttak.felles.UttakVersion;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
+import no.nav.fpsak.nare.evaluation.summary.NareVersion;
 
 public class FastsettePerioderRegelOrkestrering {
 
@@ -126,7 +128,7 @@ public class FastsettePerioderRegelOrkestrering {
 
         var evaluering = fastsettePeriodeRegel.evaluer(fastsettePeriodeGrunnlag);
         var inputJson = toJson(fastsettePeriodeGrunnlag);
-        var regelJson = EvaluationSerializer.asJson(evaluering);
+        var regelJson = EvaluationSerializer.asJson(evaluering, UttakVersion.UTTAK_VERSION, NareVersion.NARE_VERSION);
         var regelResultatBehandlerResultat = behandleRegelresultat(evaluering, fastsettePeriodeGrunnlag, regelResultatBehandler, grunnlag, saldoUtregning);
 
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson,

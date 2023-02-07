@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 public final class Søknad {
 
     private List<OppgittPeriode> oppgittePerioder = new ArrayList<>();
-    private Dokumentasjon dokumentasjon = new Dokumentasjon.Builder().build();
     private Søknadstype type = Søknadstype.FØDSEL;
     private LocalDateTime mottattTidspunkt;
 
@@ -18,10 +17,6 @@ public final class Søknad {
 
     public List<OppgittPeriode> getOppgittePerioder() {
         return oppgittePerioder.stream().sorted(Comparator.comparing(OppgittPeriode::getFom)).collect(Collectors.toList());
-    }
-
-    public Dokumentasjon getDokumentasjon() {
-        return dokumentasjon;
     }
 
     public Søknadstype getType() {
@@ -51,11 +46,6 @@ public final class Søknad {
 
         public Builder oppgittePerioder(List<OppgittPeriode> oppgittPerioder) {
             kladd.oppgittePerioder = oppgittPerioder;
-            return this;
-        }
-
-        public Builder dokumentasjon(Dokumentasjon.Builder dokumentasjon) {
-            kladd.dokumentasjon = dokumentasjon.build();
             return this;
         }
 

@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
@@ -16,15 +15,6 @@ public class SjekkOmOmsorgHelePerioden extends LeafSpecification<FastsettePeriod
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.harOmsorg() != null) {
-            return grunnlag.harOmsorg() ? ja() : nei();
-        }
-        var oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (LukketPeriode periodeUtenOmsorg : grunnlag.getPerioderUtenOmsorg()) {
-            if (periodeUtenOmsorg.overlapper(oppgittPeriode)) {
-                return nei();
-            }
-        }
-        return ja();
+        return grunnlag.harOmsorg() ? ja() : nei();
     }
 }
