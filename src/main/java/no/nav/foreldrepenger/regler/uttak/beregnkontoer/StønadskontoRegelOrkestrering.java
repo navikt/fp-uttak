@@ -8,9 +8,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.felles.UttakVersion;
 import no.nav.fpsak.nare.evaluation.Resultat;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
+import no.nav.fpsak.nare.evaluation.summary.NareVersion;
 
 public class StønadskontoRegelOrkestrering {
 
@@ -21,7 +23,7 @@ public class StønadskontoRegelOrkestrering {
 
         var beregnKontoer = new BeregnKontoer();
         var evaluation = beregnKontoer.evaluer(grunnlag);
-        var evaluationJson = EvaluationSerializer.asJson(evaluation);
+        var evaluationJson = EvaluationSerializer.asJson(evaluation, UttakVersion.UTTAK_VERSION, NareVersion.NARE_VERSION);
 
         var summary = new EvaluationSummary(evaluation);
         var stønadskontoer = hentStønadskontoer(summary);

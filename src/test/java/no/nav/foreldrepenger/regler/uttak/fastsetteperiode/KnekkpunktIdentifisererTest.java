@@ -17,10 +17,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Medlemskap;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.PeriodeUtenOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -84,9 +82,7 @@ class KnekkpunktIdentifisererTest {
     void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_medslutt_av_() {
         var adopsjonsdato = LocalDate.of(2018, 2, 22);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(adopsjonsdato.plusDays(100), adopsjonsdato.plusDays(300)))))
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
                 .datoer(new Datoer.Builder().omsorgsovertakelse(adopsjonsdato))
                 .build();
 
@@ -94,9 +90,6 @@ class KnekkpunktIdentifisererTest {
 
         assertThat(knekkpunkter).containsOnly(adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
                 adopsjonsdato,
-
-                adopsjonsdato.plusDays(100), //første dag uten omsorg
-                adopsjonsdato.plusDays(301), //første dag med omsorg
 
                 adopsjonsdato.plusYears(3)    //siste mulige uttak for foreldrepenger
         );
@@ -106,11 +99,7 @@ class KnekkpunktIdentifisererTest {
     void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_for_alle_perioder_som_ikke_er_sammenhengende() {
         var adopsjonsdato = LocalDate.of(2018, 2, 22);
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
-                        .dokumentasjon(new Dokumentasjon.Builder().periodeUtenOmsorg(
-                                new PeriodeUtenOmsorg(adopsjonsdato.plusDays(100), adopsjonsdato.plusDays(200)))
-                                .periodeUtenOmsorg(
-                                        new PeriodeUtenOmsorg(adopsjonsdato.plusDays(300), adopsjonsdato.plusDays(400)))))
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
                 .datoer(new Datoer.Builder().omsorgsovertakelse(adopsjonsdato))
                 .build();
 
@@ -118,11 +107,6 @@ class KnekkpunktIdentifisererTest {
 
         assertThat(knekkpunkter).containsOnly(adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
                 adopsjonsdato,
-
-                adopsjonsdato.plusDays(100), //første dag uten omsorg
-                adopsjonsdato.plusDays(201), //første dag med omsorg
-                adopsjonsdato.plusDays(300), //første dag uten omsorg
-                adopsjonsdato.plusDays(401), //første dag med omsorg
 
                 adopsjonsdato.plusYears(3)    //siste mulige uttak for foreldrepenger
         );

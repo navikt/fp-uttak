@@ -10,7 +10,7 @@ public final class RettOgOmsorg {
     private boolean aleneomsorg;
     private boolean morUføretrygd;
     private boolean morOppgittUføretrygd;
-    private Boolean harOmsorg;
+    private boolean harOmsorg = true;
 
     private RettOgOmsorg() {
     }
@@ -43,7 +43,7 @@ public final class RettOgOmsorg {
         return morOppgittUføretrygd;
     }
 
-    public Boolean getHarOmsorg() {
+    public boolean getHarOmsorg() {
         return harOmsorg;
     }
 

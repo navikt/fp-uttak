@@ -79,7 +79,6 @@ class KnekkpunktIdentifiserer {
                 knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, sakUtenKvoter));
             }
         }
-        knekkBasertPåDokumentasjon(grunnlag, knekkpunkter);
         knekkpunkter.addAll(knekkBasertPåYtelser(grunnlag));
 
         if (grunnlag.getAnnenPart() != null) {
@@ -162,11 +161,6 @@ class KnekkpunktIdentifiserer {
 
     private static void knekkBasertPåAnnenPart(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
         leggTilKnekkpunkter(knekkpunkter, grunnlag.getAnnenPart().getUttaksperioder());
-    }
-
-    private static void knekkBasertPåDokumentasjon(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
-        var dokumentasjon = grunnlag.getSøknad().getDokumentasjon();
-        leggTilKnekkpunkter(knekkpunkter, dokumentasjon.getPerioderUtenOmsorg());
     }
 
     private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag) {
