@@ -690,7 +690,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
     }
 
     @Test
-    void graderingsperiode_før_søknad_mottatt_dato_skal_gå_til_manuell() {
+    void graderingsperiode_før_søknad_mottatt_dato_skal_gå_til_manuell_hvis_sammenhengende() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);
@@ -699,7 +699,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                 null, false, Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(beggeRett())
-                .behandling(morBehandling())
+                .behandling(morBehandling().kreverSammenhengendeUttak(true))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .oppgittPeriode(gradering));
@@ -708,6 +708,27 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
         assertThat(resultat.get(1).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
                 GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
+        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+    }
+
+    @Test
+    void graderingsperiode_før_søknad_mottatt_dato_skal_godtas_manuell_hvis_fritt_uttak() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var grunnlag = RegelGrunnlagTestBuilder.create();
+        leggPåKvoter(grunnlag);
+        var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
+        var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN,
+            null, false, Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
+        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling().kreverSammenhengendeUttak(false))
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
+                .oppgittPeriode(gradering));
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).getUttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isNull();
         assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
@@ -746,7 +767,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
                         .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
                 .kontoer(kontoer)
-                .behandling(morBehandling())
+                .behandling(morBehandling().kreverSammenhengendeUttak(true))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .oppgittPeriode(gradering))
