@@ -3,20 +3,17 @@ package no.nav.foreldrepenger.regler.uttak.beregnkontoer;
 import java.util.Collections;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
-import no.nav.foreldrepenger.regler.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.regler.uttak.beregnkontoer.grunnlag.BeregnKontoerGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.felles.UttakVersion;
 import no.nav.fpsak.nare.evaluation.Resultat;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSummary;
 import no.nav.fpsak.nare.evaluation.summary.NareVersion;
+import no.nav.fpsak.nare.json.JsonOutput;
+import no.nav.fpsak.nare.json.NareJsonException;
 
 public class StønadskontoRegelOrkestrering {
-
-    private final JacksonJsonConfig jacksonJsonConfig = new JacksonJsonConfig();
 
     public StønadskontoResultat beregnKontoer(BeregnKontoerGrunnlag grunnlag) {
         var grunnlagJson = toJson(grunnlag);
@@ -59,8 +56,8 @@ public class StønadskontoRegelOrkestrering {
 
     private String toJson(BeregnKontoerGrunnlag grunnlag) {
         try {
-            return jacksonJsonConfig.toJson(grunnlag);
-        } catch (JsonProcessingException e) {
+            return JsonOutput.asJson(grunnlag);
+        } catch (NareJsonException e) {
             throw new UttakRegelFeil("Kunne ikke serialisere regelinput for beregning av stønadskontoer.", e);
         }
     }
