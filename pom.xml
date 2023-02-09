@@ -44,7 +44,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <fpsak.nare.version>2.5.2</fpsak.nare.version>
+        <fpsak.nare.version>2.5.3</fpsak.nare.version>
         <jupiter.version>5.9.2</jupiter.version>
         <assertj.version>3.24.2</assertj.version>
     </properties>
