@@ -126,32 +126,28 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
         return rs.hvisRegel(SjekkOmGyldigOverføringPgaInnleggelse.ID,
                 "Er det avklart at overføring av kvoten er gyldig grunn av innleggelse på institusjon?")
                 .hvis(new SjekkOmGyldigOverføringPgaInnleggelse(), sjekkOmDetErFødsel())
-                .ellers(Manuellbehandling.opprett("UT1033", IkkeOppfyltÅrsak.DEN_ANDRE_PART_INNLEGGELSE_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1033", IkkeOppfyltÅrsak.DEN_ANDRE_PART_INNLEGGELSE_IKKE_OPPFYLT, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaSykdomSkade() {
         return rs.hvisRegel(SjekkOmGyldigOverføringPgaSykdomSkade.ID,
                 "Er det avklart at overføring av kvoten er gyldig grunn av sykdom/skade?")
                 .hvis(new SjekkOmGyldigOverføringPgaSykdomSkade(), sjekkOmDetErFødsel())
-                .ellers(Manuellbehandling.opprett("UT1034", IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1034", IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaAleneomsorg() {
         return rs.hvisRegel(SjekkOmGyldigOverføringPgaAleneomsorg.ID,
                 "Er det avklart at overføring av kvoten er gyldig på grunn av aleneomsorg?")
                 .hvis(new SjekkOmGyldigOverføringPgaAleneomsorg(), sjekkOmDetErFødsel())
-                .ellers(Manuellbehandling.opprett("UT1296", IkkeOppfyltÅrsak.ALENEOMSORG_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1296", IkkeOppfyltÅrsak.ALENEOMSORG_IKKE_OPPFYLT, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGyldigOverføringPgaIkkeRett() {
         return rs.hvisRegel(SjekkOmGyldigOverføringPgaIkkeRett.ID,
                 "Er det avklart at overføring av kvoten er gyldig på grunn av annen forelder ikke har rett?")
                 .hvis(new SjekkOmGyldigOverføringPgaIkkeRett(), sjekkOmDetErFødsel())
-                .ellers(Manuellbehandling.opprett("UT1297", IkkeOppfyltÅrsak.DEN_ANDRE_PART_IKKE_RETT_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1297", IkkeOppfyltÅrsak.DEN_ANDRE_PART_IKKE_RETT_IKKE_OPPFYLT, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorSøktOmOverføringAvFedrekvote() {

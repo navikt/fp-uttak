@@ -88,7 +88,7 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     }
 
     @Test
-    void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
+    void overføring_av_mødrekvote_grunnet_sykdom_skade_skal_gå_til_avslag_hvis_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
@@ -103,13 +103,13 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
 
         assertThat(perioder).hasSize(3);
 
-        //6 første uker mødrekvote innvilges
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        //6 første uker mødrekvote avslås
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
     }
 
     @Test
-    void overføring_av_mødrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
+    void overføring_av_mødrekvote_ikke_dokumentert_skal_til_avslag() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
@@ -123,19 +123,19 @@ class MødrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
 
         assertThat(perioder).hasSize(3);
 
-        //6 første uker mødrekvote skal til manuell behandling
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        //6 første uker mødrekvote skal til avslag
+        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
 
-        //3 neste uker mødrekvote skal til manuell behandling
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        //3 neste uker mødrekvote skal til avslag
+        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
 
-        //2 neste uker fedrekvote skal til manuell behandling
+        //2 neste uker fedrekvote skal til innvilget
         assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FEDREKVOTE);
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));

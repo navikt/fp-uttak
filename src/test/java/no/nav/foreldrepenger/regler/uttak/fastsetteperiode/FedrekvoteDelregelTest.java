@@ -169,11 +169,10 @@ class FedrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_INNLEGGELSE_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     @Test
@@ -191,11 +190,10 @@ class FedrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     @Test
@@ -213,11 +211,10 @@ class FedrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.ALENEOMSORG_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     @Test
@@ -235,11 +232,10 @@ class FedrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_IKKE_RETT_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     @Test
