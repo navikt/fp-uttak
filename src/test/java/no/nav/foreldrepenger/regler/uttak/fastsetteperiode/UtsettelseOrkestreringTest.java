@@ -262,7 +262,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
-    void periode_med_utsettelse_sykdom_som_ikke_er_dokumentert_skal_til_manuell_behandling() {
+    void periode_med_utsettelse_sykdom_som_ikke_er_dokumentert_skal_avslås() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).søknad(fødselSøknad()
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1)))
@@ -276,7 +276,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getFom()).isEqualTo(fødselsdato.plusWeeks(2));
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getTom()).isEqualTo(fødselsdato.plusWeeks(3).minusDays(1));
-        assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
 
         var utsettelseFørsteUkeneSomErDokumentert = resultat.get(2).getUttakPeriode();
         assertThat(utsettelseFørsteUkeneSomErDokumentert.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
@@ -308,7 +308,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(utsettelse.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(utsettelse.getFom()).isEqualTo(fødselsdato.plusWeeks(4));
         assertThat(utsettelse.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(utsettelse.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(utsettelse.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(utsettelse.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(utsettelse.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(10));
     }
@@ -454,7 +454,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
-    void innvilge_eller_manuell_behandling_basert_på_pleiepenger_med_innleggelse() {
+    void innvilge_eller_avslå_basert_på_pleiepenger_med_innleggelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
                 .søknad(fødselSøknad()
@@ -479,7 +479,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(manuellPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(manuellPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(5));
         assertThat(manuellPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(manuellPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(manuellPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     @Test

@@ -73,8 +73,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSykdomSkade() {
         var erSøkerSykErDokumentert =  rs.hvisRegel(SjekkOmSykdomSkade.ID, SjekkOmSykdomSkade.BESKRIVELSE)
                 .hvis(new SjekkOmSykdomSkade(), Oppfylt.opprett("UT1353", InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_SYKDOM, false, false))
-                .ellers(Manuellbehandling.opprett("UT1354", IkkeOppfyltÅrsak.SØKERS_SYKDOM_SKADE_SEKS_UKER_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1354", IkkeOppfyltÅrsak.SØKERS_SYKDOM_SKADE_SEKS_UKER_IKKE_OPPFYLT, true, false));
         return rs.hvisRegel(SjekkOmUtsettelsePgaSykdomSkade.ID, SjekkOmUtsettelsePgaSykdomSkade.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSykdomSkade(), erSøkerSykErDokumentert)
                 .ellers(sjekkOmSøkersInnleggelse());
@@ -83,8 +82,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkersInnleggelse() {
         var erSøkerInnlagtErDokumentert =  rs.hvisRegel(SjekkOmSøkerInnlagt.ID, SjekkOmSøkerInnlagt.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerInnlagt(), Oppfylt.opprett("UT1355", InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_INNLEGGELSE, false, false))
-                .ellers(Manuellbehandling.opprett("UT1356", IkkeOppfyltÅrsak.SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1356", IkkeOppfyltÅrsak.SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT, true, false));
         return rs.hvisRegel(SjekkOmUtsettelsePgaSøkerInnleggelse.ID, SjekkOmUtsettelsePgaSøkerInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaSøkerInnleggelse(), erSøkerInnlagtErDokumentert)
                 .ellers(sjekkOmUtsettelsePgaBarnInnlagt());
@@ -93,8 +91,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUtsettelsePgaBarnInnlagt() {
         var varBarnetInnlagtSjekk = rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
                 .hvis(new SjekkOmBarnInnlagt(), Oppfylt.opprett("UT1359", InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT, false, false))
-                .ellers(Manuellbehandling.opprett("UT1358", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT,
-                        Manuellbehandlingårsak.IKKE_GYLDIG_GRUNN_FOR_UTSETTELSE, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1358", IkkeOppfyltÅrsak.BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT, true, false));
 
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
                 .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), varBarnetInnlagtSjekk)

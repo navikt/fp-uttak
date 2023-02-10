@@ -376,15 +376,14 @@ class MødrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_INNLEGGELSE_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     @Test
-    void UT1017_far_overføring_sykdom_skade_men_ikke_gyldig() {
+    void UT1017_far_overføring_sykdom_skade_men_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -398,15 +397,14 @@ class MødrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     @Test
-    void UT1294_far_overføring_aleneomsorg_men_ikke_gyldig() {
+    void UT1294_far_overføring_aleneomsorg_men_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -420,11 +418,10 @@ class MødrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.ALENEOMSORG_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     private OppgittPeriode overføringsperiode(LocalDate fom, LocalDate tom, OverføringÅrsak årsak) {
@@ -432,7 +429,7 @@ class MødrekvoteDelregelTest {
     }
 
     @Test
-    void UT1295_far_overføring_ikke_rett_men_ikke_gyldig() {
+    void UT1295_far_overføring_ikke_rett_men_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var fom = fødselsdato.plusWeeks(3);
@@ -446,11 +443,10 @@ class MødrekvoteDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_IKKE_RETT_IKKE_OPPFYLT);
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.BEGRUNNELSE_IKKE_GYLDIG);
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {

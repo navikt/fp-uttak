@@ -168,7 +168,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
-    void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_gå_til_manuell_behandling_hvis_ikke_gyldig_grunn() {
+    void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_gå_til_avslag_hvis_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagMor(fødselsdato)
                 .søknad(søknad(Søknadstype.FØDSEL,
@@ -203,8 +203,8 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
 
-        //2 neste uker fedrekvote innvilges
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        //2 neste uker fedrekvote avslås
+        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }
 
     @Test
