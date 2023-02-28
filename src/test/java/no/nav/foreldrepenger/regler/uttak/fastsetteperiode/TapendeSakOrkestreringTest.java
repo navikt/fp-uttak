@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -58,7 +57,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isZero();
@@ -83,7 +82,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
         assertThat(resultatPeriode.getUtbetalingsgrad(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(resultatPeriode.getTrekkdager(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1).decimalValue()).isNotZero();
@@ -107,7 +106,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
@@ -129,7 +128,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }
 
@@ -155,7 +154,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }
 
@@ -181,7 +180,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
@@ -206,7 +205,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }
 
@@ -235,7 +234,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
@@ -264,7 +263,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var resultat = fastsettPerioder(grunnlag);
 
-        var resultatPeriode = resultat.get(0).getUttakPeriode();
+        var resultatPeriode = resultat.get(0).uttakPeriode();
         assertThat(resultatPeriode.getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
@@ -298,7 +297,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).map(UttakPeriode::getPerioderesultattype).allMatch(INNVILGET::equals)).isTrue();
+        assertThat(resultat.stream().map(FastsettePeriodeResultat::uttakPeriode).map(UttakPeriode::getPerioderesultattype).allMatch(INNVILGET::equals)).isTrue();
     }
 
     @Test
@@ -327,7 +326,7 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.stream().map(FastsettePeriodeResultat::getUttakPeriode).map(UttakPeriode::getPerioderesultattype).allMatch(INNVILGET::equals)).isTrue();
+        assertThat(resultat.stream().map(FastsettePeriodeResultat::uttakPeriode).map(UttakPeriode::getPerioderesultattype).allMatch(INNVILGET::equals)).isTrue();
     }
 
     static AnnenpartUttakPeriode annenpartsPeriode(Stønadskontotype stønadskontotype,

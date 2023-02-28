@@ -19,13 +19,17 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.FarUttakRundtFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt.FastsettePeriodeRegel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -33,8 +37,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktePerioderForSammenhengendeUttakTjeneste;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktePerioderTjeneste;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUtil;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.evaluation.summary.NareVersion;
@@ -68,7 +73,7 @@ public class FastsettePerioderRegelOrkestrering {
                 resultatPerioder.add(resultat);
                 validerOverlapp(map(resultatPerioder));
                 if (resultat.harFørtTilKnekk()) {
-                    aktuellPeriode = resultat.getPeriodeEtterKnekk();
+                    aktuellPeriode = resultat.periodeEtterKnekk();
                 }
             } while (resultat.harFørtTilKnekk());
         }
@@ -124,7 +129,7 @@ public class FastsettePerioderRegelOrkestrering {
 
     private List<FastsettePeriodeResultat> sortByFom(List<FastsettePeriodeResultat> resultatPerioder) {
         return resultatPerioder.stream()
-                .sorted(Comparator.comparing(res -> res.getUttakPeriode().getFom()))
+                .sorted(Comparator.comparing(res -> res.uttakPeriode().getFom()))
                 .collect(Collectors.toList());
     }
 
@@ -322,7 +327,7 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private FastsattUttakPeriode map(FastsettePeriodeResultat fastsattPeriode) {
-        var periode = fastsattPeriode.getUttakPeriode();
+        var periode = fastsattPeriode.uttakPeriode();
         return map(periode);
     }
 
@@ -335,6 +340,6 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private List<LukketPeriode> map(ArrayList<FastsettePeriodeResultat> resultatPerioder) {
-        return resultatPerioder.stream().map(p -> (LukketPeriode) p.getUttakPeriode()).toList();
+        return resultatPerioder.stream().map(p -> (LukketPeriode) p.uttakPeriode()).toList();
     }
 }

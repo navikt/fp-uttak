@@ -56,7 +56,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), MØDREKVOTE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -77,7 +77,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), MØDREKVOTE, IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG);
     }
 
@@ -98,7 +98,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), MØDREKVOTE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -119,7 +119,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), MØDREKVOTE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -140,7 +140,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -161,7 +161,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG);
     }
 
@@ -182,7 +182,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -203,7 +203,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -224,7 +224,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -245,7 +245,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG);
     }
 
@@ -265,7 +265,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -286,7 +286,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG);
     }
 
@@ -308,7 +308,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FORELDREPENGER, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -331,7 +331,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FORELDREPENGER, IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG);
     }
 
@@ -353,7 +353,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato.minusWeeks(1),
                 omsorgsovertakelseDato.minusDays(1), FORELDREPENGER, IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE);
     }
 
@@ -378,7 +378,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FORELDREPENGER, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG);
     }
 
@@ -404,7 +404,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1),
+        verifiserPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1),
                 Perioderesultattype.INNVILGET, FORELDREPENGER);
     }
 
@@ -428,7 +428,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultater = fastsettPerioder(testGrunnlag);
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(1).minusDays(1), FORELDREPENGER, IkkeOppfyltÅrsak.SØKNADSFRIST);
     }
 
@@ -449,7 +449,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), MØDREKVOTE, IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG);
     }
 
@@ -469,7 +469,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserManuellBehandlingPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FEDREKVOTE, null, Manuellbehandlingårsak.STEBARNSADOPSJON);
     }
 
@@ -489,7 +489,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserManuellBehandlingPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FEDREKVOTE, null, Manuellbehandlingårsak.STEBARNSADOPSJON);
     }
 
@@ -514,7 +514,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(1);
-        verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), omsorgsovertakelseDato,
+        verifiserManuellBehandlingPeriode(resultater.get(0).uttakPeriode(), omsorgsovertakelseDato,
                 omsorgsovertakelseDato.plusWeeks(2).minusDays(1), FEDREKVOTE, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
                 Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }

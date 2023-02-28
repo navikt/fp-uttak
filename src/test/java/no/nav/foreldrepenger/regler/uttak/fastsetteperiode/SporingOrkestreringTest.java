@@ -31,8 +31,8 @@ class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
 
         assertThat(resultatListe).hasSize(3);
         for (var resultat : resultatListe) {
-            assertThat(new ObjectMapper().readValue(resultat.getInnsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
-            assertThat(new ObjectMapper().readValue(resultat.getEvalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
+            assertThat(new ObjectMapper().readValue(resultat.innsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
+            assertThat(new ObjectMapper().readValue(resultat.evalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
         }
     }
 }

@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.ARBEID;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.ARBEID_OG_UTDANNING;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.INNLAGT;
@@ -57,7 +57,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -85,8 +84,8 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
-        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
     }
 
     @Test
@@ -104,7 +103,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR);
     }
 
     @Test
@@ -122,7 +121,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
     }
 
     @Test
@@ -140,8 +139,8 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
-        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
     }
 
     @Test
@@ -159,7 +158,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR);
     }
 
     @Test
@@ -177,7 +176,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(
                 Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
     }
 
@@ -196,7 +195,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(
                 Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
     }
 
@@ -215,7 +214,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
     }
 
     @Test
@@ -238,9 +237,9 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
-        assertThat(fastsattePerioder.get(2).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
-        assertThat(fastsattePerioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+        assertThat(fastsattePerioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
     }
 
     @Test
@@ -263,8 +262,8 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT);
     }
 
@@ -288,8 +287,8 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
     }
 
@@ -313,8 +312,8 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
                 .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(fastsattePerioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
     }
 
@@ -373,7 +372,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fastsattePerioder = fastsettPerioder(grunnlag);
 
         assertThat(fastsattePerioder).hasSize(1);
-        verifiserAvslåttPeriode(fastsattePerioder.get(0).getUttakPeriode(), fødselsdato.plusWeeks(7),
+        verifiserAvslåttPeriode(fastsattePerioder.get(0).uttakPeriode(), fødselsdato.plusWeeks(7),
                 fødselsdato.plusWeeks(15).minusDays(1), FELLESPERIODE, ikkeOppfyltÅrsak);
     }
 

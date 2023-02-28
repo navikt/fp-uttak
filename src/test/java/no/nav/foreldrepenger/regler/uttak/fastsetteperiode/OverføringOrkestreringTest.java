@@ -23,12 +23,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUtt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
 class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -53,14 +52,14 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         //         3. overføring innvilget
         //         4. overføring til manuell pga tom dager
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(2).getUttakPeriode().getOverføringÅrsak()).isEqualTo(INNLEGGELSE);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(resultat.get(2).uttakPeriode().getOverføringÅrsak()).isEqualTo(INNLEGGELSE);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 InnvilgetÅrsak.OVERFØRING_ANNEN_PART_INNLAGT);
 
-        assertThat(resultat.get(3).getUttakPeriode().getOverføringÅrsak()).isEqualTo(INNLEGGELSE);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(3).uttakPeriode().getOverføringÅrsak()).isEqualTo(INNLEGGELSE);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     @Test
@@ -86,14 +85,14 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         //         2. overføring innvilget
         //         3. overføring til manuell pga tom dager
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(1).getUttakPeriode().getOverføringÅrsak()).isEqualTo(SYKDOM_ELLER_SKADE);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(resultat.get(1).uttakPeriode().getOverføringÅrsak()).isEqualTo(SYKDOM_ELLER_SKADE);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 InnvilgetÅrsak.OVERFØRING_ANNEN_PART_SYKDOM_SKADE);
 
-        assertThat(resultat.get(2).getUttakPeriode().getOverføringÅrsak()).isEqualTo(SYKDOM_ELLER_SKADE);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(resultat.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(2).uttakPeriode().getOverføringÅrsak()).isEqualTo(SYKDOM_ELLER_SKADE);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     private AnnenpartUttakPeriode innvilget(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype) {

@@ -45,12 +45,12 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
+        assertThat(aktiviteterIPeriode(resultat.get(0).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(1).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
                 arbeidsforhold3);
-        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
+        assertThat(aktiviteterIPeriode(resultat.get(2).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
                 arbeidsforhold3);
-        assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
+        assertThat(aktiviteterIPeriode(resultat.get(3).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
                 arbeidsforhold3, arbeidsforhold4);
     }
 
@@ -74,12 +74,12 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(4);
-        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
-        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
-        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
-        assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(Utbetalingsgrad.HUNDRED);
-        assertThat(resultat.get(3).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(aktiviteterIPeriode(resultat.get(0).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
+        assertThat(aktiviteterIPeriode(resultat.get(1).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
+        assertThat(aktiviteterIPeriode(resultat.get(2).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1);
+        assertThat(aktiviteterIPeriode(resultat.get(3).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(resultat.get(3).uttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(resultat.get(3).uttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -103,23 +103,23 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(6);
-        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
-        assertThat(aktiviteterIPeriode(resultat.get(3).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(0).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(1).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(2).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
+        assertThat(aktiviteterIPeriode(resultat.get(3).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2);
         //NYtt arbeidsforhold arver saldo fra arbeidsforhold 1 pga arbeidsforhold 1 har gradert i perioden før
-        assertThat(aktiviteterIPeriode(resultat.get(4).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
+        assertThat(aktiviteterIPeriode(resultat.get(4).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
                 arbeidsforhold3);
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(resultat.get(4).uttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat.get(4).uttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(4).uttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
         //Nytt arbeidsforhold går tomt for dager, arbeidsforhold holder 1 uke til pga gradering
-        assertThat(aktiviteterIPeriode(resultat.get(5).getUttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
+        assertThat(aktiviteterIPeriode(resultat.get(5).uttakPeriode())).containsExactlyInAnyOrder(arbeidsforhold1, arbeidsforhold2,
                 arbeidsforhold3);
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(resultat.get(5).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(5).uttakPeriode().getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat.get(5).uttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(5).uttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
     @Test
@@ -148,7 +148,7 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         assertThat(resultat).hasSize(5);
 
         //Arver 45 dager, har igjen 50. Nok til en uke. Siste uken skal avslås for tom for dager
-        assertThat(resultat.get(4).getUttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(4).uttakPeriode().getUtbetalingsgrad(arbeidsforhold3)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
     @Test
@@ -166,9 +166,9 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(aktiviteterIPeriode(resultat.get(0).getUttakPeriode())).containsExactly(arbeidsforhold);
-        assertThat(aktiviteterIPeriode(resultat.get(1).getUttakPeriode())).containsExactly(arbeidsforhold);
-        assertThat(aktiviteterIPeriode(resultat.get(2).getUttakPeriode())).containsExactly(arbeidsforhold);
+        assertThat(aktiviteterIPeriode(resultat.get(0).uttakPeriode())).containsExactly(arbeidsforhold);
+        assertThat(aktiviteterIPeriode(resultat.get(1).uttakPeriode())).containsExactly(arbeidsforhold);
+        assertThat(aktiviteterIPeriode(resultat.get(2).uttakPeriode())).containsExactly(arbeidsforhold);
     }
 
     @Test
@@ -191,7 +191,7 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
 
         var resultat = fastsettPerioder(grunnlag);
         //Skal legge inn aktivitet med tidligst startdato hvis alle arbeidsforhold starter etter manglende søkt
-        assertThat(resultat.get(0).getUttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getIdentifikator()).isEqualTo(
+        assertThat(resultat.get(0).uttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getIdentifikator()).isEqualTo(
                 tilkommetArbeidsforhold1);
     }
 }

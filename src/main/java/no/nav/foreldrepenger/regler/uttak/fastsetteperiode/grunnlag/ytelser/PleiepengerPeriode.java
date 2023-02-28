@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 
 public class PleiepengerPeriode extends LukketPeriode {
 

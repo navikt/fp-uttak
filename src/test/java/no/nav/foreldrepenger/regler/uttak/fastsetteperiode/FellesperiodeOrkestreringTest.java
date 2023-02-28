@@ -48,13 +48,13 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(4);
-        verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET,
+        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET,
                 FORELDREPENGER_FØR_FØDSEL);
-        verifiserPeriode(resultater.get(1).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET,
+        verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET,
                 MØDREKVOTE);
-        verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
+        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
                 INNVILGET, FELLESPERIODE);
-        verifiserManuellBehandlingPeriode(resultater.get(3).getUttakPeriode(), fødselsdato.plusWeeks(10),
+        verifiserManuellBehandlingPeriode(resultater.get(3).uttakPeriode(), fødselsdato.plusWeeks(10),
                 fødselsdato.plusWeeks(15).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
                 Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
@@ -76,7 +76,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         //Siste del av søknadsperioden blir avslått pga tom for dager
         assertThat(resultater).hasSize(2);
-        verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET,
+        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET,
                 FELLESPERIODE);
     }
 
@@ -88,12 +88,12 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(3);
-        verifiserManuellBehandlingPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(5),
+        verifiserManuellBehandlingPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(5),
                 fødselsdato.minusWeeks(3).minusDays(1), FELLESPERIODE, IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
                 Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL);
-        verifiserManuellBehandlingPeriode(resultater.get(1).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+        verifiserManuellBehandlingPeriode(resultater.get(1).uttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                 FELLESPERIODE, IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL, Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL);
-        verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(1), Perioderesultattype.INNVILGET,
+        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(1), Perioderesultattype.INNVILGET,
                 FELLESPERIODE);
     }
 
@@ -113,13 +113,13 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(4);
-        verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
+        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
                 Perioderesultattype.INNVILGET, FELLESPERIODE);
-        verifiserManuellBehandlingPeriode(resultater.get(1).getUttakPeriode(), fødselsdato.minusWeeks(3),
+        verifiserManuellBehandlingPeriode(resultater.get(1).uttakPeriode(), fødselsdato.minusWeeks(3),
                 fødselsdato.minusWeeks(1).minusDays(1), FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
-        verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.minusWeeks(1), fødselsdato.minusDays(1),
+        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.minusWeeks(1), fødselsdato.minusDays(1),
                 Perioderesultattype.INNVILGET, FORELDREPENGER_FØR_FØDSEL);
-        verifiserPeriode(resultater.get(3).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
+        verifiserPeriode(resultater.get(3).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
                 Perioderesultattype.INNVILGET, MØDREKVOTE);
     }
 
@@ -136,11 +136,11 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(3);
-        verifiserAvslåttPeriode(resultater.get(0).getUttakPeriode(), fødselsdato, fødselsdato.plusWeeks(3).minusDays(3), MØDREKVOTE,
+        verifiserAvslåttPeriode(resultater.get(0).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(3).minusDays(3), MØDREKVOTE,
                 IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        verifiserManuellBehandlingPeriode(resultater.get(1).getUttakPeriode(), fødselsdato.plusWeeks(3),
+        verifiserManuellBehandlingPeriode(resultater.get(1).uttakPeriode(), fødselsdato.plusWeeks(3),
                 fødselsdato.plusWeeks(6).minusDays(1), FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
-        verifiserPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
+        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
                 Perioderesultattype.INNVILGET, FELLESPERIODE);
     }
 
@@ -155,15 +155,15 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         var resultater = fastsettPerioder(grunnlag);
 
         assertThat(resultater).hasSize(5);
-        verifiserPeriode(resultater.get(0).getUttakPeriode(), fødselsdato.minusWeeks(13), fødselsdato.minusWeeks(12).minusDays(1),
+        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(13), fødselsdato.minusWeeks(12).minusDays(1),
                 Perioderesultattype.AVSLÅTT, Stønadskontotype.FELLESPERIODE);
-        verifiserPeriode(resultater.get(1).getUttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
+        verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
                 Perioderesultattype.INNVILGET, Stønadskontotype.FELLESPERIODE);
-        verifiserManuellBehandlingPeriode(resultater.get(2).getUttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+        verifiserManuellBehandlingPeriode(resultater.get(2).uttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
                 FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
-        verifiserManuellBehandlingPeriode(resultater.get(3).getUttakPeriode(), fødselsdato, fødselsdato, FELLESPERIODE, null,
+        verifiserManuellBehandlingPeriode(resultater.get(3).uttakPeriode(), fødselsdato, fødselsdato, FELLESPERIODE, null,
                 Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
-        verifiserAvslåttPeriode(resultater.get(4).getUttakPeriode(), fødselsdato.plusDays(1), fødselsdato.plusWeeks(6).minusDays(3),
+        verifiserAvslåttPeriode(resultater.get(4).uttakPeriode(), fødselsdato.plusDays(1), fødselsdato.plusWeeks(6).minusDays(3),
                 MØDREKVOTE, IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
     }
 
@@ -180,13 +180,13 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         var resultater = fastsettPerioder(grunnlag);
 
-        assertThat(resultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(resultater.get(0).getUttakPeriode().getFom()).isEqualTo(termin.minusWeeks(15));
-        assertThat(resultater.get(0).getUttakPeriode().getTom()).isEqualTo(termin.minusWeeks(12).minusDays(1));
-        assertThat(resultater.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(resultater.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultater.get(0).uttakPeriode().getFom()).isEqualTo(termin.minusWeeks(15));
+        assertThat(resultater.get(0).uttakPeriode().getTom()).isEqualTo(termin.minusWeeks(12).minusDays(1));
+        assertThat(resultater.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultater.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(resultater.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultater.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
     @Test
@@ -202,7 +202,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         var resultater = fastsettPerioder(grunnlag);
 
-        assertThat(resultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor() {

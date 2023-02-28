@@ -8,7 +8,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 
 public final class UttakPeriode extends LukketPeriode {
 

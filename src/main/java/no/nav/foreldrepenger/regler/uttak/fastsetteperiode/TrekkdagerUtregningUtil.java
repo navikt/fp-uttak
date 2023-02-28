@@ -3,9 +3,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
 
 public final class TrekkdagerUtregningUtil {
 
