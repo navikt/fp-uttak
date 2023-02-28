@@ -68,12 +68,12 @@ class KnekkpunktIdentifiserer {
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             // Før Prop 15L 21/22: Første 6 uker forbeholdt mor, unntatt flerbarn og aleneomsorg
             // Etter Prop 15L 21/22: Første 6 uker forbeholdt mor kun for kvoter. Far har opptil 10 dager samtidig uttak ifm fødsel
-            knekkpunkter.add(familiehendelseDato.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelseDato)));
+            knekkpunkter.add(familiehendelseDato.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelseDato)));
             var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
             var sakUtenKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
             var erMor = grunnlag.getBehandling().isSøkerMor();
             if (!hjemletFarUttakRundtFødsel || !sakUtenKvoter || erMor) {
-                knekkpunkter.add(familiehendelseDato.plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelseDato)));
+                knekkpunkter.add(familiehendelseDato.plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
             if (hjemletFarUttakRundtFødsel && !erMor) {
                 knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, sakUtenKvoter));
@@ -115,11 +115,11 @@ class KnekkpunktIdentifiserer {
     private static LocalDate finnMinimumgrenseLovligUttak(RegelGrunnlag grunnlag) {
         if (grunnlag.getSøknad().getType() == Søknadstype.TERMIN) {
             var termin = grunnlag.getDatoer().getTermin();
-            return termin.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, termin));
+            return termin.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, termin));
         }
         var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
         return familiehendelseDato.minusWeeks(
-            Konfigurasjon.STANDARD.getParameter(Parametertype.LOVLIG_UTTAK_FØR_FØDSEL_UKER, familiehendelseDato));
+            Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, familiehendelseDato));
     }
 
     private static Set<LocalDate> knekkpunkterPåArbeid(Arbeid arbeid) {

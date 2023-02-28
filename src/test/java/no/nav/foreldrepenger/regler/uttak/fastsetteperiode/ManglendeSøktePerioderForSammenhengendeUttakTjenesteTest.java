@@ -38,13 +38,10 @@ import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
 
-    private final int mødrekvoteDager = Konfigurasjon.STANDARD.getParameter(Parametertype.MØDREKVOTE_DAGER_100_PROSENT,
-            LocalDate.of(2018, 6, 1));
-    private final int fedrekvoteDager = Konfigurasjon.STANDARD.getParameter(Parametertype.FEDREKVOTE_DAGER_100_PROSENT,
-            LocalDate.of(2018, 6, 1));
-    private final int fellesperiodDedager = Konfigurasjon.STANDARD.getParameter(Parametertype.FELLESPERIODE_100_PROSENT_BEGGE_RETT_DAGER,
-            LocalDate.of(2018, 6, 1));
-    private final int førFødselDager = Konfigurasjon.STANDARD.getParameter(Parametertype.FORELDREPENGER_FØR_FØDSEL, LocalDate.of(2018, 6, 1));
+    private final int mødrekvoteDager = 75;
+    private final int fedrekvoteDager = 75;
+    private final int fellesperiodDedager = 85;
+    private final int førFødselDager = 15;
 
     @Test
     void farMedAleneomsorgSkalHaUttakFraFødsel() {

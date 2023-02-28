@@ -41,7 +41,7 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
             return nei();
         }
 
-        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, fødselsdato);
+        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
 
         //Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i perioden. Burde være veldig få saker

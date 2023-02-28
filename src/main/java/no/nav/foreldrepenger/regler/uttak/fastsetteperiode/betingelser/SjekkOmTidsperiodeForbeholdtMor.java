@@ -33,12 +33,12 @@ public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<Fastsette
     }
 
     private LocalDate fomDatoForbeholdtMor(LocalDate familiehendelse) {
-        var antallUkerFør = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse);
+        var antallUkerFør = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
         return familiehendelse.minusWeeks(antallUkerFør).minusDays(1);
     }
 
     private LocalDate tomDatoForbeholdtMor(LocalDate familiehendelse) {
-        var antallUkerEtter = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtter = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
         return familiehendelse.plusWeeks(antallUkerEtter).minusDays(1);
     }
 }
