@@ -22,7 +22,7 @@ public class SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent
 
         var familiehendelse = grunnlag.getFamiliehendelse();
 
-        var ukerFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER, familiehendelse);
+        var ukerFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
 
         var førsteLovligeDag = familiehendelse.minusWeeks(ukerFørFødsel);
         var sisteLovligeDag = familiehendelse.minusDays(1);

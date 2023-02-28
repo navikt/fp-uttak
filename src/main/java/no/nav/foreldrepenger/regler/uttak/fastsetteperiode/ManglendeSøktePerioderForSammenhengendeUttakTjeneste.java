@@ -148,7 +148,7 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
 
     private static Optional<OppgittPeriode> utledManglendeSøktForFar(LocalDate familiehendelse, List<OppgittPeriode> uttaksperioder) {
         var førstePeriode = uttaksperioder.get(0);
-        var ukerForbeholdtMor = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var ukerForbeholdtMor = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
         if (familiehendelse.plusWeeks(ukerForbeholdtMor).isBefore(førstePeriode.getFom())) {
             var nyPeriode = lagManglendeSøktPeriode(familiehendelse.plusWeeks(ukerForbeholdtMor), førstePeriode.getFom().minusDays(1),
                     Stønadskontotype.FORELDREPENGER);
@@ -237,7 +237,7 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         if (Søknadstype.ADOPSJON.equals(søknadstype)) {
             return List.of();
         }
-        var antallUkerFpffFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
+        var antallUkerFpffFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER,
                 familiehendelseDato);
         var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
 
@@ -293,7 +293,7 @@ final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
     private static List<OppgittPeriode> finnPerioderEtterFødsel(List<LukketPeriode> søktePerioder,
                                                                 LocalDate familiehendelseDato,
                                                                 Set<Stønadskontotype> gyldigeStønadskontotyper) {
-        var mødrekvoteEtterFødselUker = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER,
+        var mødrekvoteEtterFødselUker = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER,
                 familiehendelseDato);
         var betingetPeriodeEtterFødsel = new LukketPeriode(familiehendelseDato,
                 familiehendelseDato.plusWeeks(mødrekvoteEtterFødselUker).minusDays(1));

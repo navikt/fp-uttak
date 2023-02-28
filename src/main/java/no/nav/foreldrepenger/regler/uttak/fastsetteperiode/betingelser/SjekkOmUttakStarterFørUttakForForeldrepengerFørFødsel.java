@@ -20,7 +20,7 @@ public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel extends Le
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        var ukerFørFødselUttaksgrenseForeldrepenger = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_FELLESPERIODE_FØR_FØDSEL_UKER,
+        var ukerFørFødselUttaksgrenseForeldrepenger = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER,
                 grunnlag.getFamiliehendelse());
         if (startDatoUttak.isBefore(grunnlag.getFamiliehendelse().minusWeeks(ukerFørFødselUttaksgrenseForeldrepenger))) {
             return ja();

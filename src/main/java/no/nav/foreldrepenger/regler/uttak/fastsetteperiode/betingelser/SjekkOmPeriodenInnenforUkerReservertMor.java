@@ -23,7 +23,7 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
         var familiehendelse = grunnlag.getFamiliehendelse();
 
-        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_MØDREKVOTE_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
 
         var periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse,
                 familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));
