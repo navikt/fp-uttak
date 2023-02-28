@@ -1,11 +1,8 @@
-package no.nav.foreldrepenger.regler.uttak.felles;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
-import static no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon.PREMATURUKER_REGELENDRING_START_DATO;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon.PREMATURUKER_REGELENDRING_START_DATO;
 
 import java.time.LocalDate;
-
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 public final class PrematurukerUtil {
 

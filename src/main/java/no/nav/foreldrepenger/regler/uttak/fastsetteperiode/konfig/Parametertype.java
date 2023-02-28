@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.uttak.konfig;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
 public enum Parametertype {
 

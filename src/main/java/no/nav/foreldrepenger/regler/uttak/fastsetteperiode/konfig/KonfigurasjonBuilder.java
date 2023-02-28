@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.uttak.konfig;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class KonfigurasjonBuilder {
+class KonfigurasjonBuilder {
 
     private final Map<Parametertype, Collection<Parameter>> parameterMap;
 
@@ -18,7 +18,7 @@ public class KonfigurasjonBuilder {
         return new KonfigurasjonBuilder();
     }
 
-    public KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Integer verdi) {
+    KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Integer verdi) {
         var nyParameter = new Parameter(fom, tom, verdi);
         var parameterListe = parameterMap.get(parametertype);
         if (parameterListe == null) {

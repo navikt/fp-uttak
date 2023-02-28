@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.regler.uttak;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Parametertype;
 
 public class UttakParametre {
     private UttakParametre() {

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.uttak.felles;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
 import java.time.LocalDate;
 

@@ -11,9 +11,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Parametertype;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 public class FarUttakRundtFødsel {
 

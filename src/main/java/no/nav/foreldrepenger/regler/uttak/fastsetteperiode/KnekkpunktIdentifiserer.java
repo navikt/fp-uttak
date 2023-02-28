@@ -16,13 +16,13 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkonto
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Parametertype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.PrematurukerUtil;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.BevegeligeHelligdagerUtil;
-import no.nav.foreldrepenger.regler.uttak.felles.PrematurukerUtil;
-import no.nav.foreldrepenger.regler.uttak.felles.SøknadsfristUtil;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.Periode;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
 
 class KnekkpunktIdentifiserer {
 

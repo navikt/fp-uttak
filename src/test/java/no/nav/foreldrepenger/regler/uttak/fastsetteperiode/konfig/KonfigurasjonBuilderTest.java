@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.uttak.konfig;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Parametertype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;

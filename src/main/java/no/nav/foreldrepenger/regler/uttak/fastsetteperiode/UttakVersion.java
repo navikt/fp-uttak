@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.uttak.felles;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import no.nav.fpsak.nare.evaluation.summary.EvaluationVersion;
 import no.nav.fpsak.nare.evaluation.summary.NareVersion;

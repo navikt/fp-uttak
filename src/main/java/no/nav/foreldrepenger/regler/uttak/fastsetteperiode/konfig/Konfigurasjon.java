@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.regler.uttak.konfig;
+package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -11,7 +11,7 @@ public class Konfigurasjon {
 
     public static final Konfigurasjon STANDARD;
 
-    public static final LocalDate PREMATURUKER_REGELENDRING_START_DATO = LocalDate.of(2019, 7, 1);
+    static final LocalDate PREMATURUKER_REGELENDRING_START_DATO = LocalDate.of(2019, 7, 1);
 
     static {
         var d_2010_01_01 = LocalDate.of(2010, Month.JANUARY, 1);
