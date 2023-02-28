@@ -7,8 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.felles.grunnlag.LukketPeriode;
-
 public class AnnenpartUttakPeriode extends LukketPeriode {
 
     private final Set<AnnenpartUttakPeriodeAktivitet> aktiviteter = new HashSet<>();

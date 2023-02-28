@@ -1,9 +1,12 @@
 package no.nav.foreldrepenger.regler.uttak;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
-import no.nav.foreldrepenger.regler.uttak.konfig.Konfigurasjon;
-import no.nav.foreldrepenger.regler.uttak.konfig.Parametertype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.FarUttakRundtFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Parametertype;
 
 public class UttakParametre {
     private UttakParametre() {
@@ -22,6 +25,14 @@ public class UttakParametre {
 
     public static int ukerReservertMorEtterFødsel(LocalDate dato) {
         return Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, dato);
+    }
+
+    /**
+     * Grenser for fars/medmors uttak i forbindelse med fødsel.
+     */
+    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(boolean utenFarUttakRundtFødsel, boolean gjelderFødsel,
+                                                                      LocalDate familieHendelseDato, LocalDate terminDato) {
+        return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(utenFarUttakRundtFødsel, gjelderFødsel, familieHendelseDato, terminDato);
     }
 
     /**

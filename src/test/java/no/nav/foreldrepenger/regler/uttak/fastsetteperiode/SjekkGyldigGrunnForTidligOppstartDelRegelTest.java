@@ -45,7 +45,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         );
         assertThat(periodeResultater).hasSize(2);
         var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
+                .map(FastsettePeriodeResultat::uttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom)).toList();
         assertThat(perioder.stream().map(UttakPeriode::getPerioderesultattype).collect(toList())).containsExactly(INNVILGET,
                 INNVILGET);
@@ -63,8 +63,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
         );
         assertThat(periodeResultater).hasSize(1);
-        assertThat(periodeResultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(periodeResultater.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
+        assertThat(periodeResultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(periodeResultater.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
     }
 
     @Test
@@ -79,8 +79,8 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
         );
         assertThat(periodeResultater).hasSize(1);
-        assertThat(periodeResultater.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(periodeResultater.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FELLESPERIODE);
+        assertThat(periodeResultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(periodeResultater.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FELLESPERIODE);
     }
 
     @Test
@@ -95,7 +95,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         );
         assertThat(periodeResultater).hasSize(2);
         var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
+                .map(FastsettePeriodeResultat::uttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom)).toList();
 
         var ugyldigPeriode = perioder.get(0);
@@ -123,7 +123,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         );
         assertThat(periodeResultater).hasSize(2);
         var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
+                .map(FastsettePeriodeResultat::uttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, FEDREKVOTE);
@@ -142,7 +142,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         );
         assertThat(periodeResultater).hasSize(1);
         var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
+                .map(FastsettePeriodeResultat::uttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), INNVILGET, FEDREKVOTE);
@@ -168,7 +168,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         );
         assertThat(periodeResultater).hasSize(1);
         var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
+                .map(FastsettePeriodeResultat::uttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), MANUELL_BEHANDLING,
@@ -191,7 +191,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         );
         assertThat(periodeResultater).hasSize(3);
         var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::getUttakPeriode)
+                .map(FastsettePeriodeResultat::uttakPeriode)
                 .sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), INNVILGET, FEDREKVOTE);

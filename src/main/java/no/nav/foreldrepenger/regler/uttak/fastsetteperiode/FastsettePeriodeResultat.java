@@ -6,45 +6,29 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 
-public class FastsettePeriodeResultat {
-    private final UttakPeriode uttakPeriode;
-    private final String evalueringResultat;
-    private final String innsendtGrunnlag;
-    private final OppgittPeriode periodeEtterKnekk;
+public record FastsettePeriodeResultat(UttakPeriode uttakPeriode,
+                                       String evalueringResultat,
+                                       String innsendtGrunnlag,
+                                       OppgittPeriode periodeEtterKnekk,
+                                       String versjon) {
+
+    public FastsettePeriodeResultat {
+        Objects.requireNonNull(uttakPeriode);
+    }
 
     public FastsettePeriodeResultat(UttakPeriode uttakPeriode,
                                     String evalueringResultat,
                                     String innsendtGrunnlag,
                                     OppgittPeriode periodeEtterKnekk) {
-        this.periodeEtterKnekk = periodeEtterKnekk;
-        Objects.requireNonNull(uttakPeriode);
-        this.uttakPeriode = uttakPeriode;
-        this.evalueringResultat = evalueringResultat;
-        this.innsendtGrunnlag = innsendtGrunnlag;
-    }
-
-    public UttakPeriode getUttakPeriode() {
-        return uttakPeriode;
-    }
-
-    public String getEvalueringResultat() {
-        return evalueringResultat;
-    }
-
-    public String getInnsendtGrunnlag() {
-        return innsendtGrunnlag;
+        this(uttakPeriode, evalueringResultat, innsendtGrunnlag, periodeEtterKnekk, UttakVersion.UTTAK_VERSION.version());
     }
 
     public boolean isManuellBehandling() {
-        return Perioderesultattype.MANUELL_BEHANDLING.equals(getUttakPeriode().getPerioderesultattype());
+        return Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode().getPerioderesultattype());
     }
 
     boolean harFørtTilKnekk() {
         return periodeEtterKnekk != null;
-    }
-
-    OppgittPeriode getPeriodeEtterKnekk() {
-        return periodeEtterKnekk;
     }
 
     @Override

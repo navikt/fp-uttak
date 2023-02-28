@@ -37,7 +37,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -84,21 +83,21 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(5);
-        var p0 = resultat.get(0).getUttakPeriode();
+        var p0 = resultat.get(0).uttakPeriode();
         assertThat(p0.getStønadskontotype()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
         assertThat(p0.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p1a = resultat.get(1).getUttakPeriode();
+        var p1a = resultat.get(1).uttakPeriode();
         assertThat(p1a.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(p1a.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p1b = resultat.get(2).getUttakPeriode();
+        var p1b = resultat.get(2).uttakPeriode();
         assertThat(p1b.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(p1b.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p2 = resultat.get(3).getUttakPeriode();
+        var p2 = resultat.get(3).uttakPeriode();
         assertThat(p2.getStønadskontotype()).isEqualTo(FELLESPERIODE);
         assertThat(p2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(p2.getFom()).isEqualTo(fomMorsFP);
         assertThat(p2.getTom()).isEqualTo(tomMorsFP);
-        var p3 = resultat.get(4).getUttakPeriode();
+        var p3 = resultat.get(4).uttakPeriode();
         assertThat(p2.getStønadskontotype()).isEqualTo(FELLESPERIODE);
         assertThat(p3.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(p3.getFom()).isEqualTo(tomMorsFP.plusDays(1));
@@ -127,21 +126,21 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(5);
-        var p0 = resultat.get(0).getUttakPeriode();
+        var p0 = resultat.get(0).uttakPeriode();
         assertThat(p0.getStønadskontotype()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
         assertThat(p0.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p1a = resultat.get(1).getUttakPeriode();
+        var p1a = resultat.get(1).uttakPeriode();
         assertThat(p1a.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(p1a.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p1b = resultat.get(2).getUttakPeriode();
+        var p1b = resultat.get(2).uttakPeriode();
         assertThat(p1b.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(p1b.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p2 = resultat.get(3).getUttakPeriode();
+        var p2 = resultat.get(3).uttakPeriode();
         assertThat(p2.getStønadskontotype()).isEqualTo(FELLESPERIODE);
         assertThat(p2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(p2.getFom()).isEqualTo(fomMorsFP);
         assertThat(p2.getTom()).isEqualTo(tomMorsFP);
-        var p3 = resultat.get(4).getUttakPeriode();
+        var p3 = resultat.get(4).uttakPeriode();
         assertThat(p2.getStønadskontotype()).isEqualTo(FELLESPERIODE);
         assertThat(p3.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(p3.getFom()).isEqualTo(tomMorsFP.plusDays(1));
@@ -177,21 +176,21 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(5);
-        var p0 = resultat.get(0).getUttakPeriode();
+        var p0 = resultat.get(0).uttakPeriode();
         assertThat(p0.getStønadskontotype()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
         assertThat(p0.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p1a = resultat.get(1).getUttakPeriode();
+        var p1a = resultat.get(1).uttakPeriode();
         assertThat(p1a.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(p1a.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p1b = resultat.get(2).getUttakPeriode();
+        var p1b = resultat.get(2).uttakPeriode();
         assertThat(p1b.getStønadskontotype()).isEqualTo(MØDREKVOTE);
         assertThat(p1b.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        var p2 = resultat.get(3).getUttakPeriode();
+        var p2 = resultat.get(3).uttakPeriode();
         assertThat(p2.getStønadskontotype()).isEqualTo(FELLESPERIODE);
         assertThat(p2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(p2.getFom()).isEqualTo(fomMorsFP);
         assertThat(p2.getTom()).isEqualTo(tomMorsFP);
-        var p3 = resultat.get(4).getUttakPeriode();
+        var p3 = resultat.get(4).uttakPeriode();
         assertThat(p2.getStønadskontotype()).isEqualTo(FELLESPERIODE);
         assertThat(p3.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(p3.getFom()).isEqualTo(tomMorsFP.plusDays(1));
@@ -224,15 +223,15 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(8);
         //skal gå tom for dager
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(6).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(7).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(7).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(5).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(6).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(7).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(7).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     @Test
@@ -260,11 +259,11 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(5);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -288,13 +287,13 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(6);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         //Tom for dager
-        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(5).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     @Test
@@ -318,13 +317,13 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(6);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         //Tom for dager
-        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(5).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     @Test
@@ -349,10 +348,10 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -378,11 +377,11 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
         //skal gå tom for dager
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     @Test
@@ -409,9 +408,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
         //skal gå tom for dager
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
 
     @Test
@@ -441,8 +440,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
         //skal gå tom for dager
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -473,10 +472,10 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
         //skal gå tom for dager
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         //tom på dager
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
 
     @Test
@@ -506,7 +505,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
         //skal gå tom for dager
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -535,10 +534,10 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         //Skal ligge igjen opphold på slutten som ikke overlapper med annenpart, alt som overlapper skal fjernes
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
-        assertThat(resultat.get(1).getUttakPeriode().getOppholdÅrsak()).isEqualTo(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
-        assertThat(resultat.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(17).plusDays(1));
-        assertThat(resultat.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(20));
+        assertThat(resultat.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
+        assertThat(resultat.get(1).uttakPeriode().getOppholdÅrsak()).isEqualTo(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
+        assertThat(resultat.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(17).plusDays(1));
+        assertThat(resultat.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(20));
     }
 
     @Test
@@ -568,8 +567,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
-        assertThat(resultat.get(1).getUttakPeriode().getOppholdÅrsak()).isEqualTo(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
+        assertThat(resultat.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
+        assertThat(resultat.get(1).uttakPeriode().getOppholdÅrsak()).isEqualTo(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
     }
 
     @Test
@@ -600,7 +599,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(1);
-        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
+        assertThat(resultat.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FEDREKVOTE);
     }
 
     //FAGSYSTEM-85385
@@ -623,7 +622,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(1);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -647,8 +646,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(60));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(60));
     }
 
     @Test
@@ -672,8 +671,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(30));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(30));
     }
 
     @Test
@@ -697,8 +696,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
     }
 
     @Test
@@ -723,9 +722,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getSamtidigUttaksprosent()).isEqualTo(new SamtidigUttaksprosent(forventetRedusertTil));
-        assertThat(resultat.get(1).getUttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getUtbetalingsgrad()).isEqualTo(new Utbetalingsgrad(forventetRedusertTil));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getSamtidigUttaksprosent()).isEqualTo(new SamtidigUttaksprosent(forventetRedusertTil));
+        assertThat(resultat.get(1).uttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getUtbetalingsgrad()).isEqualTo(new Utbetalingsgrad(forventetRedusertTil));
     }
 
     @Test
@@ -749,8 +748,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(100));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(100));
     }
 
     @Test
@@ -774,8 +773,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(50));
     }
 
     @Test
@@ -799,8 +798,8 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(30));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(30));
     }
 
     @Test
@@ -824,7 +823,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
     }
 
     @Test
@@ -848,7 +847,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
     }
 
     @Test
@@ -906,11 +905,11 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         assertThat(resultat).hasSize(6);
         //Siste periode knekkes og siste 5 dagene går til manuell pga tom for flerbarnsdager
-        assertThat(resultat.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(5).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        assertThat(resultat.get(5).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(resultat.get(5).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(5).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(5).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
         //5 dager over flerbarns-kvoten. Dette er pga vi ikke skal dobbelt trekke flerbarnsdager i perioder der begge har oppgitt flerbarnsdager
-        assertThat(resultat.get(5).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.get(5).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
     }
 
     @Test
@@ -950,10 +949,10 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
 
         assertThat(resultat).hasSize(4);
         //Siste periode knekkes og siste 1 dagene går til manuell pga tom for flerbarnsdager
-        assertThat(resultat.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        assertThat(resultat.get(3).getUttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
-        assertThat(resultat.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(1));
+        assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(3).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+        assertThat(resultat.get(3).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(1));
     }
 
     @Test
@@ -976,7 +975,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
     }
 
     private AnnenpartUttakPeriode annenpartPeriodeOpphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak) {

@@ -35,7 +35,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
-import no.nav.foreldrepenger.regler.uttak.felles.Virkedager;
 
 class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
@@ -50,23 +49,23 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
-        assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     private Kontoer.Builder kontoer(Konto.Builder... konto) {
@@ -104,7 +103,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         //UT1291
         assertThat(perioder.get(1).isManuellBehandling()).isTrue();
     }
@@ -133,30 +132,30 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
         assertThat(perioder).hasSize(3);
 
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
-        assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
-        assertThat(perioder.get(0).getUttakPeriode().getAktiviteter()).hasSize(1);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD))
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(0).uttakPeriode().getAktiviteter()).hasSize(1);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD))
                 .isEqualTo(new Trekkdager(Virkedager.beregnAntallVirkedager(fødselsdato.plusWeeks(6), startdatoNyttArbeidsforhold.minusDays(1))));
-        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
-        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(startdatoNyttArbeidsforhold.minusDays(1));
+        assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
+        assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(startdatoNyttArbeidsforhold.minusDays(1));
 
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
-        assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
-        assertThat(perioder.get(1).getUttakPeriode().getAktiviteter()).hasSize(2);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(tilkommetArbeidsforhold)).isEqualTo(new Trekkdager(5));
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(startdatoNyttArbeidsforhold);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(1).uttakPeriode().getAktiviteter()).hasSize(2);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(tilkommetArbeidsforhold)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(startdatoNyttArbeidsforhold);
         //minus3 for vi ikke avslutter msp i helgen
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(13).minusDays(3));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(13).minusDays(3));
 
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
-        assertThat(perioder.get(2).getUttakPeriode().getAktiviteter()).hasSize(2);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(tilkommetArbeidsforhold).merEnn0()).isTrue();
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(2).uttakPeriode().getAktiviteter()).hasSize(2);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(tilkommetArbeidsforhold).merEnn0()).isTrue();
 
     }
 
@@ -175,36 +174,36 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(6);
-        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
-        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(1).minusDays(1));
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fødselsdato);
+        assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(1).minusDays(1));
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(1));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(3).minusDays(1));
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
-        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(1));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(3).minusDays(1));
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
+        assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
-        assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
+        assertThat(perioder.get(2).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(4));
-        assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(4));
+        assertThat(perioder.get(3).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(perioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
-        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
-        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(3).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(3).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
 
@@ -223,36 +222,36 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(6);
-        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fødselsdato);
-        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(1).minusDays(1));
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fødselsdato);
+        assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(1).minusDays(1));
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(1));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(3).minusDays(1));
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
-        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(1).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(1));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(3).minusDays(1));
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
+        assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
-        assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
+        assertThat(perioder.get(2).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
 
-        assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(4));
-        assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+        assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(4));
+        assertThat(perioder.get(3).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(perioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
                 InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
-        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
-        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
-        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(perioder.get(3).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(3).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -267,7 +266,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
     }
 
     @Test
@@ -287,9 +286,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
         assertThat(perioder).hasSize(3);
 
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(7));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(8).minusDays(1));
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(7));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(8).minusDays(1));
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
     }
 
     @Test
@@ -309,9 +308,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
         assertThat(perioder).hasSize(3);
 
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(7));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(8).minusDays(1));
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(7));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(8).minusDays(1));
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     @Test
@@ -331,9 +330,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
         assertThat(perioder).hasSize(3);
 
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(11).minusDays(1));
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(11).minusDays(1));
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
     @Test
@@ -353,9 +352,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
         assertThat(perioder).hasSize(3);
 
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(11).minusDays(1));
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(11).minusDays(1));
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
     }
 
     @Test
@@ -376,14 +375,14 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder).hasSize(5);
 
         //msp skal innvilges som mødrekvote
-        assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(5));
-        assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.MSP_INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(5));
+        assertThat(perioder.get(3).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.MSP_INNVILGET);
         var aktivitet = grunnlag.getArbeid().getAktiviteter().stream().findFirst().orElseThrow();
-        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
-        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(3).uttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(3).uttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -404,14 +403,14 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder).hasSize(5);
 
         //msp skal innvilges som mødrekvote
-        assertThat(perioder.get(3).getUttakPeriode().getFom()).isEqualTo(LocalDate.of(2022, 8, 1));
-        assertThat(perioder.get(3).getUttakPeriode().getTom()).isEqualTo(LocalDate.of(2022, 8, 3));
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(perioder.get(3).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(perioder.get(3).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.MSP_INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(LocalDate.of(2022, 8, 1));
+        assertThat(perioder.get(3).uttakPeriode().getTom()).isEqualTo(LocalDate.of(2022, 8, 3));
+        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.MSP_INNVILGET);
         var aktivitet = grunnlag.getArbeid().getAktiviteter().stream().findFirst().orElseThrow();
-        assertThat(perioder.get(3).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(3));
-        assertThat(perioder.get(3).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(3).uttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(3));
+        assertThat(perioder.get(3).uttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -433,21 +432,21 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
 
         assertThat(perioder).hasSize(6);
 
-        assertThat(perioder.get(2).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
-        assertThat(perioder.get(2).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(perioder.get(2).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(3));
+        assertThat(perioder.get(2).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(4).minusDays(1));
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
 
-        assertThat(perioder.get(4).getUttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(5));
-        assertThat(perioder.get(4).getUttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(perioder.get(4).getUttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
-        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
-        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(4).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(5));
+        assertThat(perioder.get(4).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(perioder.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(perioder.get(4).uttakPeriode().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(perioder.get(4).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
+        assertThat(perioder.get(4).uttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
+        assertThat(perioder.get(4).uttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
 }

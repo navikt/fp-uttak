@@ -41,19 +41,19 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
         assertThat(perioder).hasSize(4);
 
-        var up0 = perioder.get(0).getUttakPeriode();
+        var up0 = perioder.get(0).uttakPeriode();
         verifiserPeriode(up0, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET, FORELDREPENGER_FØR_FØDSEL);
         assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up1 = perioder.get(1).getUttakPeriode();
+        var up1 = perioder.get(1).uttakPeriode();
         verifiserPeriode(up1, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, MØDREKVOTE);
         assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up2 = perioder.get(2).getUttakPeriode();
+        var up2 = perioder.get(2).uttakPeriode();
         verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET, MØDREKVOTE);
         assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up3 = perioder.get(3).getUttakPeriode();
+        var up3 = perioder.get(3).uttakPeriode();
         verifiserManuellBehandlingPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1), MØDREKVOTE,
                 IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
         assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
@@ -83,25 +83,25 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
         assertThat(perioder).hasSize(5);
 
-        var up0 = perioder.get(0).getUttakPeriode();
+        var up0 = perioder.get(0).uttakPeriode();
         verifiserPeriode(up0, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET, FORELDREPENGER_FØR_FØDSEL);
         assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up1 = perioder.get(1).getUttakPeriode();
+        var up1 = perioder.get(1).uttakPeriode();
         verifiserPeriode(up1, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, MØDREKVOTE);
         assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up2 = perioder.get(2).getUttakPeriode();
+        var up2 = perioder.get(2).uttakPeriode();
         verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET, MØDREKVOTE);
         assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up3 = perioder.get(3).getUttakPeriode();
+        var up3 = perioder.get(3).uttakPeriode();
         assertThat(up3.getUtsettelseÅrsak()).isEqualTo(UtsettelseÅrsak.FERIE);
         verifiserPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), INNVILGET, null);
         assertThat(up3.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
         assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
 
-        var up4 = perioder.get(4).getUttakPeriode();
+        var up4 = perioder.get(4).uttakPeriode();
         verifiserPeriode(up4, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1), INNVILGET, FELLESPERIODE);
         assertThat(up4.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
@@ -128,15 +128,15 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
         assertThat(perioder).hasSize(3);
 
-        var up0 = perioder.get(0).getUttakPeriode();
+        var up0 = perioder.get(0).uttakPeriode();
         verifiserPeriode(up0, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), INNVILGET, FORELDREPENGER_FØR_FØDSEL);
         assertThat(up0.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up1 = perioder.get(1).getUttakPeriode();
+        var up1 = perioder.get(1).uttakPeriode();
         verifiserPeriode(up1, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, MØDREKVOTE);
         assertThat(up1.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(Utbetalingsgrad.HUNDRED);
 
-        var up2 = perioder.get(2).getUttakPeriode();
+        var up2 = perioder.get(2).uttakPeriode();
         verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), INNVILGET, FELLESPERIODE);
         assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(80));
     }
@@ -161,7 +161,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
         var perioder = fastsettPerioder(grunnlag);
 
-        var uttakPeriode = perioder.get(2).getUttakPeriode();
+        var uttakPeriode = perioder.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(82.45));
         assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(new Utbetalingsgrad(82.45));
     }

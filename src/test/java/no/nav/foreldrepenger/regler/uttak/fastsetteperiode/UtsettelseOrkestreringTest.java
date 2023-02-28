@@ -72,7 +72,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var uttakPeriode = resultat.get(2).getUttakPeriode();
+        var uttakPeriode = resultat.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -92,7 +92,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var uttakPeriode = resultat.get(2).getUttakPeriode();
+        var uttakPeriode = resultat.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
@@ -112,7 +112,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var uttakPeriode = resultat.get(2).getUttakPeriode();
+        var uttakPeriode = resultat.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_SØKER);
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -132,7 +132,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var uttakPeriode = resultat.get(2).getUttakPeriode();
+        var uttakPeriode = resultat.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_SØKER);
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
@@ -152,7 +152,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var uttakPeriode = resultat.get(2).getUttakPeriode();
+        var uttakPeriode = resultat.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -171,7 +171,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var uttakPeriode = resultat.get(2).getUttakPeriode();
+        var uttakPeriode = resultat.get(2).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
@@ -192,7 +192,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
 
-        var uttakPeriode = resultat.get(1).getUttakPeriode();
+        var uttakPeriode = resultat.get(1).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(ARBEID);
         assertThat(uttakPeriode.getFom()).isEqualTo(utsettelseFom);
         assertThat(uttakPeriode.getTom()).isEqualTo(utsettelseTom);
@@ -213,12 +213,12 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var innenfor6Uker = resultat.get(1).getUttakPeriode();
+        var innenfor6Uker = resultat.get(1).uttakPeriode();
         assertThat(innenfor6Uker.getFom()).isEqualTo(utsettelseFom);
         assertThat(innenfor6Uker.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
         assertThat(innenfor6Uker.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
 
-        var etter6Uker = resultat.get(2).getUttakPeriode();
+        var etter6Uker = resultat.get(2).uttakPeriode();
         assertThat(etter6Uker.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(etter6Uker.getTom()).isEqualTo(utsettelseTom);
         assertThat(etter6Uker.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
@@ -237,7 +237,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
 
-        var uttakPeriode = resultat.get(1).getUttakPeriode();
+        var uttakPeriode = resultat.get(1).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(FERIE);
         assertThat(uttakPeriode.getFom()).isEqualTo(utsettelseFom);
         assertThat(uttakPeriode.getTom()).isEqualTo(utsettelseTom);
@@ -256,7 +256,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(2);
 
-        var uttakPeriode = resultat.get(1).getUttakPeriode();
+        var uttakPeriode = resultat.get(1).uttakPeriode();
         assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(uttakPeriode.getStønadskontotype()).isNull();
     }
@@ -272,19 +272,19 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
-        var utsettelseFørsteUkeneSomIkkeErDokumentert = resultat.get(1).getUttakPeriode();
+        var utsettelseFørsteUkeneSomIkkeErDokumentert = resultat.get(1).uttakPeriode();
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getFom()).isEqualTo(fødselsdato.plusWeeks(2));
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getTom()).isEqualTo(fødselsdato.plusWeeks(3).minusDays(1));
         assertThat(utsettelseFørsteUkeneSomIkkeErDokumentert.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
 
-        var utsettelseFørsteUkeneSomErDokumentert = resultat.get(2).getUttakPeriode();
+        var utsettelseFørsteUkeneSomErDokumentert = resultat.get(2).uttakPeriode();
         assertThat(utsettelseFørsteUkeneSomErDokumentert.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(utsettelseFørsteUkeneSomErDokumentert.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
         assertThat(utsettelseFørsteUkeneSomErDokumentert.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
         assertThat(utsettelseFørsteUkeneSomErDokumentert.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 
-        var utsettelseEtterFørsteUkeneDokumentert = resultat.get(3).getUttakPeriode();
+        var utsettelseEtterFørsteUkeneDokumentert = resultat.get(3).uttakPeriode();
         assertThat(utsettelseEtterFørsteUkeneDokumentert.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(utsettelseEtterFørsteUkeneDokumentert.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(utsettelseEtterFørsteUkeneDokumentert.getTom()).isEqualTo(fødselsdato.plusWeeks(12).minusDays(1));
@@ -304,7 +304,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(resultat).hasSize(2);
 
 
-        var utsettelse = resultat.get(1).getUttakPeriode();
+        var utsettelse = resultat.get(1).uttakPeriode();
         assertThat(utsettelse.getUtsettelseÅrsak()).isEqualTo(SYKDOM_SKADE);
         assertThat(utsettelse.getFom()).isEqualTo(fødselsdato.plusWeeks(4));
         assertThat(utsettelse.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -329,11 +329,11 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(0).getUttakPeriode().getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(resultat.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
+        assertThat(resultat.get(0).uttakPeriode().getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultat.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
     }
 
     @Test
@@ -352,11 +352,11 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(0).getUttakPeriode().getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
-        assertThat(resultat.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(resultat.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
-        assertThat(resultat.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(resultat.get(0).getUttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
+        assertThat(resultat.get(0).uttakPeriode().getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultat.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
+        assertThat(resultat.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
     }
 
     @Test
@@ -372,11 +372,11 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(0).getUttakPeriode().getFom()).isEqualTo(innleggelse.getFom());
-        assertThat(resultat.get(0).getUttakPeriode().getManuellbehandlingårsak())
+        assertThat(resultat.get(0).uttakPeriode().getFom()).isEqualTo(innleggelse.getFom());
+        assertThat(resultat.get(0).uttakPeriode().getManuellbehandlingårsak())
                 .isEqualTo(Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE);
-        assertThat(resultat.get(1).getUttakPeriode().getFom()).isEqualTo(utenInnleggelse.getFom());
-        assertThat(resultat.get(1).getUttakPeriode().getManuellbehandlingårsak())
+        assertThat(resultat.get(1).uttakPeriode().getFom()).isEqualTo(utenInnleggelse.getFom());
+        assertThat(resultat.get(1).uttakPeriode().getManuellbehandlingårsak())
                 .isEqualTo(Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE);
     }
 
@@ -394,7 +394,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -411,7 +411,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(1);
 
-        var uttakPeriode = resultat.get(0).getUttakPeriode();
+        var uttakPeriode = resultat.get(0).uttakPeriode();
         assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(uttakPeriode.getPeriodeResultatÅrsak()).isEqualTo(OPPHOLD_UTSETTELSE);
     }
@@ -430,7 +430,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(1);
 
-        var uttakPeriode = resultat.get(0).getUttakPeriode();
+        var uttakPeriode = resultat.get(0).uttakPeriode();
         assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
@@ -449,8 +449,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
     }
 
     @Test
@@ -468,14 +468,14 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(4);
 
-        var innvilgetPeriode = resultat.get(2).getUttakPeriode();
+        var innvilgetPeriode = resultat.get(2).uttakPeriode();
         assertThat(innvilgetPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(innvilgetPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
         assertThat(innvilgetPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(5).minusDays(1));
         assertThat(innvilgetPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(innvilgetPeriode.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        var manuellPeriode = resultat.get(3).getUttakPeriode();
+        var manuellPeriode = resultat.get(3).uttakPeriode();
         assertThat(manuellPeriode.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(manuellPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(5));
         assertThat(manuellPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -499,18 +499,18 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fom);
-        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(fom.plusWeeks(2).minusDays(1));
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fom);
+        assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(fom.plusWeeks(2).minusDays(1));
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
 
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
-        assertThat(perioder.get(1).getUttakPeriode().getFom()).isEqualTo(fom.plusWeeks(2));
-        assertThat(perioder.get(1).getUttakPeriode().getTom()).isEqualTo(tom);
-        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+        assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fom.plusWeeks(2));
+        assertThat(perioder.get(1).uttakPeriode().getTom()).isEqualTo(tom);
+        assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
     }
 
     @Test
@@ -529,12 +529,12 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
-        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fom);
-        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(tom);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
+        assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fom);
+        assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(tom);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
     }
 
     @Test
@@ -550,10 +550,10 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isNull();
-        assertThat(perioder.get(0).getUttakPeriode().getFom()).isEqualTo(fom);
-        assertThat(perioder.get(0).getUttakPeriode().getTom()).isEqualTo(tom);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isNull();
+        assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fom);
+        assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(tom);
     }
 
     @Test
@@ -569,9 +569,9 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
 
-        var p1 = resultat.get(0).getUttakPeriode();
-        var p2 = resultat.get(1).getUttakPeriode();
-        var p3 = resultat.get(2).getUttakPeriode();
+        var p1 = resultat.get(0).uttakPeriode();
+        var p2 = resultat.get(1).uttakPeriode();
+        var p3 = resultat.get(2).uttakPeriode();
         assertThat(p1.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
         assertThat(p1.getFom()).isEqualTo(fødselsdato);
         assertThat(p1.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -602,8 +602,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isNotEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -623,31 +623,31 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(7);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 
-        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(4).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(4).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(4).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
         // Knekk ved fødsel + 6uker
-        assertThat(perioder.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(5).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(5).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(5).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(5).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(5).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(5).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(5).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(6).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(6).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -669,28 +669,28 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(7);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(2).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(3).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 
-        assertThat(perioder.get(4).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(4).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(4).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(4).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(4).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(4).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(4).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(4).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(5).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(5).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 
-        assertThat(perioder.get(6).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(6).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -706,18 +706,18 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -734,18 +734,18 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(3);
-        assertThat(perioder.get(0).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(0).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(0).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(0).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
-        assertThat(perioder.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(perioder.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG);
+        assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
-        assertThat(perioder.get(2).getUttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @ParameterizedTest
@@ -778,10 +778,10 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getUttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
-        assertThat(resultat.get(1).getUttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
-        assertThat(resultat.get(1).getUttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(resultat.get(1).getUttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {
