@@ -47,6 +47,12 @@
         <fpsak.nare.version>2.5.3</fpsak.nare.version>
         <jupiter.version>5.9.2</jupiter.version>
         <assertj.version>3.24.2</assertj.version>
+
+        <!-- Sonar felles -->
+        <sonar.organization>navikt</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
     </properties>
 
     <dependencies>
