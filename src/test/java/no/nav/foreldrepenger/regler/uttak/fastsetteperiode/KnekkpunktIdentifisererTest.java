@@ -96,23 +96,6 @@ class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    void skal_lage_knekkpunkt_ved_start_og_dagen_etter_periode_for_alle_perioder_som_ikke_er_sammenhengende() {
-        var adopsjonsdato = LocalDate.of(2018, 2, 22);
-        var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
-                .datoer(new Datoer.Builder().omsorgsovertakelse(adopsjonsdato))
-                .build();
-
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
-
-        assertThat(knekkpunkter).containsOnly(adopsjonsdato.minusWeeks(12), //tidligste mulige uttak?
-                adopsjonsdato,
-
-                adopsjonsdato.plusYears(3)    //siste mulige uttak for foreldrepenger
-        );
-    }
-
-    @Test
     void finnerKnekkpunktVedOverlappIUttakperioderMedAnnenPart_overlapperStart1() {
         final var uttakStartdato = LocalDate.of(2018, 6, 1);
         var fødselsdato = uttakStartdato.minusMonths(1);
@@ -266,7 +249,9 @@ class KnekkpunktIdentifisererTest {
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
-        assertThat(knekkpunkter).doesNotContain(mottattdato);
+        assertThat(knekkpunkter)
+            .isNotEmpty()
+            .doesNotContain(mottattdato);
     }
 
     @Test
@@ -331,7 +316,9 @@ class KnekkpunktIdentifisererTest {
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
-        assertThat(knekkpunkter).doesNotContain(mottattdato);
+        assertThat(knekkpunkter)
+            .isNotEmpty()
+            .doesNotContain(mottattdato);
     }
 
     @Test
@@ -396,7 +383,9 @@ class KnekkpunktIdentifisererTest {
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
-        assertThat(knekkpunkter).doesNotContain(startdato);
+        assertThat(knekkpunkter)
+            .isNotEmpty()
+            .doesNotContain(startdato);
     }
 
     @Test
@@ -415,10 +404,9 @@ class KnekkpunktIdentifisererTest {
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
-        //Første lovlige dato for første periode ligger midt i perioden. Skal derfor knekkes for å avlås
-        assertThat(knekkpunkter).contains(LocalDate.of(2020, 8, 1));
-        //Første lovlige dato for andre periode ligger før start på perioden
-        assertThat(knekkpunkter).doesNotContain(LocalDate.of(2020, 11, 1));
+        assertThat(knekkpunkter)
+            .contains(LocalDate.of(2020, 8, 1))//Første lovlige dato for første periode ligger midt i perioden. Skal derfor knekkes for å avlås
+            .doesNotContain(LocalDate.of(2020, 11, 1)); //Første lovlige dato for andre periode ligger før start på perioden
     }
 
     @Test
@@ -450,7 +438,9 @@ class KnekkpunktIdentifisererTest {
 
         var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
 
-        assertThat(knekkpunkter).doesNotContain(mottattdato);
+        assertThat(knekkpunkter)
+            .isNotEmpty()
+            .doesNotContain(mottattdato);
     }
 
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
