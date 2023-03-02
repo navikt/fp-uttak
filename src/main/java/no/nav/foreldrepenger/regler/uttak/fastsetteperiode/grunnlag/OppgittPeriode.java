@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-//TODO builder
 public final class OppgittPeriode extends LukketPeriode {
 
     private final Stønadskontotype stønadskontotype;

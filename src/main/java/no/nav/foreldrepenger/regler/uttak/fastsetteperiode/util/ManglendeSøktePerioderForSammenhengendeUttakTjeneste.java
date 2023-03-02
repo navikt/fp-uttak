@@ -41,8 +41,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         manglendePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
         manglendePerioder.addAll(manglendePerioderIUkerForbeholdtMor);
 
-        var manglendeSøktePerioder = finnManglendeMellomliggendePerioder(
-                grunnlag, manglendePerioder);
+        var manglendeSøktePerioder = finnManglendeMellomliggendePerioder(grunnlag, manglendePerioder).collect(Collectors.toList());
         manglendeSøktePerioder.addAll(manglendePerioderIUkerFarMedAleneomsorg);
         manglendeSøktePerioder.addAll(finnPerioderVedAdopsjon(grunnlag));
         manglendeSøktePerioder.addAll(manglendePerioderIUkerForbeholdtMor);
@@ -70,7 +69,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .sorted(Comparator.comparing(Periode::getFom))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static boolean contains(List<OppgittPeriode> list, LocalDate fom, LocalDate tom) {
@@ -169,7 +168,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
         var uttakPerioder = slåSammenUttakForBeggeParter(grunnlag).stream()
                 .sorted(Comparator.comparing(Periode::getFom))
-                .collect(Collectors.toList());
+                .toList();
         var mspFørFødsel = finnManglendeSøktFørFødsel(uttakPerioder, familiehendelseDato,
                 grunnlag.getSøknad().getType(), grunnlag.getGyldigeStønadskontotyper());
         var mspEtterFødsel = finnPerioderEtterFødsel(uttakPerioder, familiehendelseDato,
@@ -180,7 +179,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
                 .map(ManglendeSøktPeriodeUtil::fjernHelg)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static Optional<OppgittPeriode> fjernPerioderFørSkjæringstidspunktOpptjening(OppgittPeriode msp, RegelGrunnlag grunnlag) {
@@ -217,7 +216,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return farSøkerFødselEllerTermin(grunnlag) && bareFarRett(grunnlag);
     }
 
-    private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(RegelGrunnlag grunnlag,
+    private static Stream<OppgittPeriode> finnManglendeMellomliggendePerioder(RegelGrunnlag grunnlag,
                                                                             List<OppgittPeriode> ekskludertePerioder) {
         var allePerioder = slåSammenUttakForBeggeParter(grunnlag);
         //legge inn ikke søkte perioder til uker som er Forbeholdt til Mor etter fødsel
@@ -225,8 +224,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return finnManglendeMellomliggendePerioder(allePerioder).stream()
                 .map(ManglendeSøktPeriodeUtil::fjernHelg)
                 .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+                .map(Optional::get);
     }
 
 
@@ -239,7 +237,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         }
         var antallUkerFpffFørFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER,
                 familiehendelseDato);
-        var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
+        var sorterteSøktePerioder = søktePerioder.stream().sorted(Comparator.comparing(Periode::getFom)).toList();
 
         var førsteUttaksdagSøknad = sorterteSøktePerioder.get(0).getFom();
 
@@ -253,7 +251,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         var mspFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(sorterteSøktePerioder, betingetFpffPeriode)
                 .stream()
                 .map(msp -> lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), Stønadskontotype.FORELDREPENGER_FØR_FØDSEL))
-                .collect(Collectors.toList());
+                .toList();
         var betingetFellesperiode = new LukketPeriode(førsteUttaksdagSøknad,
                 familiehendelseDato.minusWeeks(antallUkerFpffFørFødsel).minusDays(1));
         var mspForFellesperiodeFørFødsel = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(sorterteSøktePerioder,
@@ -261,11 +259,11 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
             var type = gyldigeStønadskontotyper.contains(
                     Stønadskontotype.FELLESPERIODE) ? Stønadskontotype.FELLESPERIODE : Stønadskontotype.FORELDREPENGER;
             return lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), type);
-        }).collect(Collectors.toList());
+        }).toList();
         return Stream.of(mspForFellesperiodeFørFødsel, mspFørFødsel)
                 .flatMap(Collection::stream)
                 .filter(p -> p.virkedager() > 0)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder) {
@@ -302,6 +300,6 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(søktePerioder, betingetPeriodeEtterFødsel)
                 .stream()
                 .map(msp -> lagManglendeSøktPeriode(msp.getFom(), msp.getTom(), stønadskontotype))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

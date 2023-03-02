@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class Søknad {
 
@@ -16,7 +15,7 @@ public final class Søknad {
     }
 
     public List<OppgittPeriode> getOppgittePerioder() {
-        return oppgittePerioder.stream().sorted(Comparator.comparing(OppgittPeriode::getFom)).collect(Collectors.toList());
+        return oppgittePerioder.stream().sorted(Comparator.comparing(OppgittPeriode::getFom)).toList();
     }
 
     public Søknadstype getType() {

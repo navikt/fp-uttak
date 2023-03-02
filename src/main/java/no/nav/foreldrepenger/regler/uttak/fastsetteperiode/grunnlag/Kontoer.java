@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public final class Kontoer {
 
-    private Map<Stønadskontotype, Integer> stønadskonti = new HashMap<>();
-    private Map<Spesialkontotype, Integer> spesialkonti = new HashMap<>();
+    private Map<Stønadskontotype, Integer> stønadskonti = new EnumMap<>(Stønadskontotype.class);
+    private Map<Spesialkontotype, Integer> spesialkonti = new EnumMap<>(Spesialkontotype.class);
 
     private Kontoer() {
 

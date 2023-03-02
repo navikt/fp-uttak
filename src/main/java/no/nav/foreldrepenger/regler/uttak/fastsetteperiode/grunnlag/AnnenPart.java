@@ -32,7 +32,7 @@ public final class AnnenPart {
         var sisteInnvilgetPeriode = uttaksperioder.stream()
                 .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
                 .min((o1, o2) -> o2.getTom().compareTo(o1.getTom()));
-        return sisteInnvilgetPeriode.map(p -> p.getTom());
+        return sisteInnvilgetPeriode.map(Periode::getTom);
     }
 
     public LocalDateTime getSisteSøknadMottattTidspunkt() {

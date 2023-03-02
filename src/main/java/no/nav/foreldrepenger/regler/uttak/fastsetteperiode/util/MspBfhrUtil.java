@@ -17,6 +17,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 
 final class MspBfhrUtil {
 
+    private MspBfhrUtil() {
+    }
+
     static List<OppgittPeriode> finnManglendeSøktPeriodeBareFarHarRett(RegelGrunnlag grunnlag) {
         if (grunnlag.getSøknad().gjelderAdopsjon()) {
             return forAdopsjon(grunnlag);

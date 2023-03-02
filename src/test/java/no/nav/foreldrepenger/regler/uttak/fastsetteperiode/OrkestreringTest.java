@@ -888,7 +888,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void skal_innvilge_med_privatperson_som_arbeidsgiver() {
+    void skal_innvilge_med_privatperson_som_arbeidsgiver() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid(new AktørId("123"), "345");
         var grunnlag = basicGrunnlagMor(fødselsdato)
@@ -901,11 +901,13 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
         var resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat.stream()).allMatch(p -> p.uttakPeriode().getPerioderesultattype().equals(Perioderesultattype.INNVILGET));
+        assertThat(resultat)
+            .isNotEmpty()
+            .allMatch(p -> p.uttakPeriode().getPerioderesultattype().equals(Perioderesultattype.INNVILGET));
     }
 
     @Test
-    public void skal_delvis_innvilge_med_periode_før_etter_start_ny_stønadsperiode() {
+    void skal_delvis_innvilge_med_periode_før_etter_start_ny_stønadsperiode() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
@@ -924,7 +926,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void skal_innvilge_med_periode_før_start_ny_stønadsperiode() {
+    void skal_innvilge_med_periode_før_start_ny_stønadsperiode() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
@@ -941,7 +943,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void skal_avslå_med_periode_etter_start_ny_stønadsperiode() {
+    void skal_avslå_med_periode_etter_start_ny_stønadsperiode() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2021, 1, 1));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
@@ -958,7 +960,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void to_tette_skal_innvilge_med_periode_etter_start_ny_stønadsperiode_gjenstående_minsterett() {
+    void to_tette_skal_innvilge_med_periode_etter_start_ny_stønadsperiode_gjenstående_minsterett() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
@@ -982,7 +984,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void to_tette_skal_avslå_med_periode_etter_start_ny_stønadsperiode_oppbrukt_minsterett() {
+    void to_tette_skal_avslå_med_periode_etter_start_ny_stønadsperiode_oppbrukt_minsterett() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
@@ -1008,7 +1010,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void to_tette_bfhr_redusert_minsterett_oppbrukt_før_start_ny_sak() {
+    void to_tette_bfhr_redusert_minsterett_oppbrukt_før_start_ny_sak() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
@@ -1032,7 +1034,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    public void to_tette_bfhr_redusert_minsterett_oppbrukt_etter_start_ny_sak() {
+    void to_tette_bfhr_redusert_minsterett_oppbrukt_etter_start_ny_sak() {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))

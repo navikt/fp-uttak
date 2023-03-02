@@ -58,7 +58,7 @@ public class FastsettePerioderRegelOrkestrering {
                 .filter(periode -> !oppholdSomFyllesAvAnnenpart(periode, annenpartUttaksperioder(grunnlag)))
                 .filter(periode -> grunnlag.getBehandling().isKreverSammenhengendeUttak() || !periode.isOpphold())
                 .map(periode -> oppdaterMedAktiviteter(periode, grunnlag.getArbeid()))
-                .collect(Collectors.toList());
+                .toList();
         validerOverlapp(map(allePerioderSomSkalFastsettes));
 
         var farRundtFødselIntervall = FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag).orElse(null);
@@ -130,7 +130,7 @@ public class FastsettePerioderRegelOrkestrering {
     private List<FastsettePeriodeResultat> sortByFom(List<FastsettePeriodeResultat> resultatPerioder) {
         return resultatPerioder.stream()
                 .sorted(Comparator.comparing(res -> res.uttakPeriode().getFom()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private FastsettePeriodeResultat fastsettPeriode(FastsettePeriodeRegel fastsettePeriodeRegel, RegelGrunnlag grunnlag,
@@ -157,7 +157,7 @@ public class FastsettePerioderRegelOrkestrering {
             samlet = knekk(samlet, knekkpunkt);
         }
 
-        return samlet.stream().sorted(Comparator.comparing(Periode::getFom)).collect(Collectors.toList());
+        return samlet.stream().sorted(Comparator.comparing(Periode::getFom)).toList();
     }
 
     private List<OppgittPeriode> knekk(List<OppgittPeriode> førKnekk, LocalDate knekkpunkt) {
@@ -311,7 +311,7 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private List<LukketPeriode> map(List<OppgittPeriode> allePerioderSomSkalFastsettes) {
-        return allePerioderSomSkalFastsettes.stream().map(oppgittPeriode -> (LukketPeriode) oppgittPeriode).toList();
+        return allePerioderSomSkalFastsettes.stream().map(LukketPeriode.class::cast).toList();
     }
 
     private void validerOverlapp(List<LukketPeriode> perioder) {
@@ -336,7 +336,7 @@ public class FastsettePerioderRegelOrkestrering {
                 .stream()
                 .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), periode.getStønadskontotype(),
                         aktivitet.getIdentifikator()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<LukketPeriode> map(ArrayList<FastsettePeriodeResultat> resultatPerioder) {

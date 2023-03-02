@@ -24,8 +24,11 @@ public final class SamtidigUttakUtil {
     private static final Set<Stønadskontotype> KONTI_FOR150 = Set.of(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FEDREKVOTE, FELLESPERIODE);
     private static final Set<Stønadskontotype> KONTI_KVOTE = Set.of(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FEDREKVOTE);
 
+    private SamtidigUttakUtil() {
+    }
+
     public static boolean annenpartHarSamtidigPeriodeMedUtbetaling(FastsettePeriodeGrunnlag grunnlag) {
-        return finnOverlappendeAnnenpartPeriode(grunnlag, p -> periodeHarUtbetaling(p)).isPresent();
+        return finnOverlappendeAnnenpartPeriode(grunnlag, SamtidigUttakUtil::periodeHarUtbetaling).isPresent();
     }
 
     public static boolean erTapendePeriodeRegel(FastsettePeriodeGrunnlag grunnlag) {
@@ -38,7 +41,7 @@ public final class SamtidigUttakUtil {
 
     public static boolean søktSamtidigUttakForPeriode(FastsettePeriodeGrunnlag grunnlag) {
         return grunnlag.getAktuellPeriode().erSøktSamtidigUttak() ||
-            finnOverlappendeAnnenpartPeriode(grunnlag, p -> p.isSamtidigUttak()).isPresent();
+            finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::isSamtidigUttak).isPresent();
     }
 
     public static boolean akseptert200ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
@@ -73,7 +76,7 @@ public final class SamtidigUttakUtil {
 
     public static boolean gjelderFlerbarnsdager(FastsettePeriodeGrunnlag grunnlag) {
         return grunnlag.getAktuellPeriode().isFlerbarnsdager() ||
-            finnOverlappendeAnnenpartPeriode(grunnlag, p -> p.isFlerbarnsdager()).isPresent();
+            finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::isFlerbarnsdager).isPresent();
     }
 
     public static boolean gjelderFarRundtFødsel(FastsettePeriodeGrunnlag grunnlag) {
@@ -97,7 +100,7 @@ public final class SamtidigUttakUtil {
     }
 
     public static SamtidigUttaksprosent uttaksprosentAnnenpart(FastsettePeriodeGrunnlag grunnlag) {
-        return finnOverlappendeAnnenpartPeriode(grunnlag, p -> periodeHarUtbetaling(p))
+        return finnOverlappendeAnnenpartPeriode(grunnlag, SamtidigUttakUtil::periodeHarUtbetaling)
             .map(SamtidigUttakUtil::getSamtidigUttaksprosent).orElse(SamtidigUttaksprosent.ZERO);
     }
 
@@ -109,7 +112,7 @@ public final class SamtidigUttakUtil {
     private static boolean annenpartHarPeriodeMottattSenere(FastsettePeriodeGrunnlag grunnlag, boolean forNedjustering) {
         var overlappende = finnOverlappendeAnnenpartPeriode(grunnlag,
             aup -> ((aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling()) && (forNedjustering || !aup.isSamtidigUttak()))
-            .flatMap(aup -> aup.getSenestMottattDato());
+            .flatMap(AnnenpartUttakPeriode::getSenestMottattDato);
         var periodeMottatt = grunnlag.getAktuellPeriode().getSenestMottattDato().orElseThrow();
         if (overlappende.filter(ol -> ol.equals(periodeMottatt)).isPresent()) {
             return grunnlag.getAnnenPartSisteSøknadMottattTidspunkt().isAfter(grunnlag.getSisteSøknadMottattTidspunkt());

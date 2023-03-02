@@ -17,6 +17,9 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 
 final class ForbruksTeller {
 
+    private ForbruksTeller() {
+    }
+
     static Trekkdager forbruksTellerKontoKunForbruk(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet,
                                                     List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> tellPeriode) {
         return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode,

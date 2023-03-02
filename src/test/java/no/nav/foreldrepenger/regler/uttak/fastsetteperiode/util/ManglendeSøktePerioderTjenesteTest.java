@@ -184,7 +184,7 @@ class ManglendeSøktePerioderTjenesteTest {
                 .build();
 
         var msp = finnManglendeSøktePerioder(grunnlag);
-        assertThat(msp).hasSize(0);
+        assertThat(msp).isEmpty();
     }
 
     @Test

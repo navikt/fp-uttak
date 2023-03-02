@@ -9,7 +9,7 @@ class OrgnummerTest {
     @Test
     void to_string_maskerer() {
         var orgnr = new Orgnummer("000000000");
-        assertThat(orgnr.toString()).isEqualTo("*****0000");
+        assertThat(orgnr.toString()).hasToString("*****0000");
     }
 
 }

@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.bareFarRett;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernHelg;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernPerioderFørEndringsdatoVedRevurdering;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.slåSammenUttakForBeggeParter;
@@ -51,11 +50,11 @@ public final class ManglendeSøktePerioderTjeneste {
                 .map(p -> fjernPerioderFørEndringsdatoVedRevurdering(p, grunnlag))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(p -> fjernHelg(p))
+                .map(ManglendeSøktPeriodeUtil::fjernHelg)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .sorted(Comparator.comparing(Periode::getFom))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -96,7 +95,7 @@ public final class ManglendeSøktePerioderTjeneste {
                 .flatMap(p -> split(fomTidsperiodeForbeholdtMor, p))
                 .filter(p -> periodeLiggerITidsrommetForbeholdtMor(grunnlag, p))
                 .sorted(Comparator.comparing(OppgittPeriode::getFom))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder,

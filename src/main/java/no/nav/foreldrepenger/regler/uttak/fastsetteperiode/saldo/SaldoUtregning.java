@@ -545,7 +545,7 @@ public class SaldoUtregning {
     private List<FastsattUttakPeriode> finnAnnenpartPerioderEtterPeriode(FastsattUttakPeriode periode) {
         return annenpartsPerioder.stream()
                 .filter(p -> overlapper(periode, p) || periode.getTom().isBefore(p.getFom()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private FastsattUttakPeriode søkersSistePeriodeMedTrekkdagerSomIkkeOverlapper() {
@@ -559,7 +559,7 @@ public class SaldoUtregning {
     }
 
     private List<FastsattUttakPeriode> sortByReversedTom(List<FastsattUttakPeriode> perioder) {
-        return perioder.stream().sorted((p1, p2) -> p2.getTom().compareTo(p1.getTom())).collect(Collectors.toList());
+        return perioder.stream().sorted((p1, p2) -> p2.getTom().compareTo(p1.getTom())).toList();
     }
 
     private int minSaldo(Stønadskontotype stønadskonto) {

@@ -157,7 +157,7 @@ class KnekkpunktIdentifiserer {
                 .getOppgittePerioder()
                 .stream()
                 .filter(p -> p.isUtsettelsePga(UtsettelseÅrsak.FERIE))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static void knekkBasertPåAnnenPart(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {

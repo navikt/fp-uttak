@@ -36,7 +36,7 @@ final class SaldoUtregningUtil {
     static List<FastsattUttakPeriode> overlappendePeriode(FastsattUttakPeriode periode, List<FastsattUttakPeriode> perioder) {
         return perioder.stream()
                 .filter(p -> overlapper(periode, p))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     static boolean overlapper(FastsattUttakPeriode periode, FastsattUttakPeriode periode2) {

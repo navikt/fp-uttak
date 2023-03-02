@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
@@ -72,17 +71,17 @@ public final class SaldoUtregningTjeneste {
         if (isBerørtBehandling) {
             annenpartsPerioder = annenpartsPerioder.stream()
                     .flatMap(ap -> finnDelerAvOppholdsperiode(søktePerioder, ap))
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             annenpartsPerioder = annenpartsPerioder.stream().filter(ap -> ap.getFom().isBefore(utregningsdato)).map(ap -> {
                 if (ap.overlapper(utregningsdato)) {
                     return knekk(ap, ap.getFom(), utregningsdato.minusDays(1));
                 }
                 return ap;
-            }).collect(Collectors.toList());
+            }).toList();
         }
 
-        return annenpartsPerioder.stream().map(SaldoUtregningTjeneste::map).collect(Collectors.toList());
+        return annenpartsPerioder.stream().map(SaldoUtregningTjeneste::map).toList();
     }
 
     private static Stream<AnnenpartUttakPeriode> finnDelerAvOppholdsperiode(List<LukketPeriode> søktePerioder,
@@ -130,7 +129,7 @@ public final class SaldoUtregningTjeneste {
                 .stream()
                 .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), aktivitet.getStønadskontotype(),
                         aktivitet.getAktivitetIdentifikator()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<AnnenpartUttakPeriodeAktivitet> aktiviteterForPeriodeFørKnekkpunkt(AnnenpartUttakPeriode periode,
