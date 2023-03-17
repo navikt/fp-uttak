@@ -2,15 +2,18 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.AKTIVITET_UKJENT_UDOKUMENTERT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
@@ -30,6 +34,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokumentasjo
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -391,6 +396,47 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder).hasSize(2);
         assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
         assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE);
+    }
+
+    //FAGSYSTEM-269397
+    @Test
+    void bfhr_minsterett_gradering_flere_arbeidsforhold() {
+        var fødselsdato = LocalDate.of(2022, 9, 12);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40 * 5)).minsterettDager(8 * 5);
+        var arbeidsforhold1 = AktivitetIdentifikator.forArbeid(new Orgnummer("1"), null);
+        var arbeidsforhold2 = AktivitetIdentifikator.forArbeid(new Orgnummer("2"), null);
+        var gradering = OppgittPeriode.forGradering(FORELDREPENGER, LocalDate.of(2022, 10, 24), LocalDate.of(2023, 7, 31), BigDecimal.valueOf(44.7),
+            null, false, Set.of(arbeidsforhold1), fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
+        var foreldrepenger1 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, LocalDate.of(2023, 8, 1), LocalDate.of(2023, 9, 25), null, false,
+            fødselsdato, fødselsdato, null, null);
+        var foreldrepenger2 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, LocalDate.of(2023, 9, 26), LocalDate.of(2023, 12, 1), null,
+            false, fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_IKKE_GODKJENT);
+
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
+            .oppgittePerioder(List.of(gradering, foreldrepenger1, foreldrepenger2));
+
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1)).arbeidsforhold(new Arbeidsforhold(arbeidsforhold2));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .arbeid(arbeid)
+            .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder).hasSize(4);
+
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT);
+
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT);
+
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getTrekkdager(arbeidsforhold1)).isEqualTo(new Trekkdager(40));
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getTrekkdager(arbeidsforhold2)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(fastsattePerioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(fastsattePerioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT);
     }
 
     private boolean harPeriode(UttakPeriode p, Perioderesultattype prt, PeriodeResultatÅrsak prå, int dager) {

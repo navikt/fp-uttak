@@ -20,9 +20,12 @@ public class SjekkOmUføreUtenAktivitetskravHarDisponibleDager extends LeafSpeci
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         if (grunnlag.isSakMedDagerUtenAktivitetskrav() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().restSaldoDagerUtenAktivitetskrav(aktivitet);
-                if (saldo.merEnn0()) {
-                    return ja();
+                var saldoUtregning = grunnlag.getSaldoUtregning();
+                if (saldoUtregning.saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet).merEnn0()) {
+                    var saldo = saldoUtregning.restSaldoDagerUtenAktivitetskrav(aktivitet);
+                    if (saldo.merEnn0()) {
+                        return ja();
+                    }
                 }
             }
         }
