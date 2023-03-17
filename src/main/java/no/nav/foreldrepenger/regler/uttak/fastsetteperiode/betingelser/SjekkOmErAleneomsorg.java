@@ -9,6 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmErAleneomsorg extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 36.2.1";
+    public static final String BESKRIVELSE = "Er det aleneomsorg?";
 
     public SjekkOmErAleneomsorg() {
         super(ID);
