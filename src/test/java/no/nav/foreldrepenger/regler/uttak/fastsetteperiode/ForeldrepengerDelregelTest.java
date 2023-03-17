@@ -144,7 +144,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
-        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT,
+        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
                 GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
 
@@ -178,7 +178,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_ALENEOMSORG);
     }
 
     @Test
@@ -206,7 +206,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
     }
 
     private void assertInnvilgetMenAvslåttGradering(FastsettePerioderRegelresultat regelresultat,

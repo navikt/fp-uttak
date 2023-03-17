@@ -96,7 +96,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErDetAleneomsorgMor() {
-        return rs.hvisRegel(SjekkOmErAleneomsorg.ID, "Er det aleneomsorg?")
+        return rs.hvisRegel(SjekkOmErAleneomsorg.ID, SjekkOmErAleneomsorg.BESKRIVELSE)
                 .hvis(new SjekkOmErAleneomsorg(), sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel())
                 .ellers(sjekkErDetBareMorSomHarRett());
     }
@@ -124,30 +124,27 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPeriodenFørXUkerEtterFamiliehendelseMor() {
-        var erDetBareMorSomHarRettUtenGradering = erDetBareMorSomHarRettSjekk(
-                Oppfylt.opprett("UT1211", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true),
-                Oppfylt.opprett("UT1186", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true));
-        var erDetBareMorSomHarRettVedGradering = erDetBareMorSomHarRettSjekk(
-                Oppfylt.opprettMedAvslåttGradering("UT1212", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT,
-                        GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true),
-                Oppfylt.opprettMedAvslåttGradering("UT1187", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
-                        GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true));
+        var erDetBareMorSomHarRettUtenGradering = erDetAleneomsorgSjekk(
+            Oppfylt.opprett("UT1186", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true),
+            Oppfylt.opprett("UT1211", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true));
+        var erDetBareMorSomHarRettVedGradering = erDetAleneomsorgSjekk(
+            Oppfylt.opprettMedAvslåttGradering("UT1187", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true),
+            Oppfylt.opprettMedAvslåttGradering("UT1212", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true));
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(), erDetBareMorSomHarRettVedGradering)
                 .ellers(erDetBareMorSomHarRettUtenGradering);
     }
 
-    private Specification<FastsettePeriodeGrunnlag> erDetBareMorSomHarRettSjekk(FastsettePeriodeUtfall utfallJa,
-                                                                                FastsettePeriodeUtfall utfallNei) {
-        return rs.hvisRegel(SjekkOmBareMorHarRett.ID, "Er det bare mor som har rett?")
-                .hvis(new SjekkOmBareMorHarRett(), utfallJa)
+    private Specification<FastsettePeriodeGrunnlag> erDetAleneomsorgSjekk(FastsettePeriodeUtfall utfallJa, FastsettePeriodeUtfall utfallNei) {
+        return rs.hvisRegel(SjekkOmErAleneomsorg.ID, SjekkOmErAleneomsorg.BESKRIVELSE)
+                .hvis(new SjekkOmErAleneomsorg(), utfallJa)
                 .ellers(utfallNei);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørFamilieHendelse() {
-        var erDetBareMorSomHarRettSjekk = erDetBareMorSomHarRettSjekk(
-                Oppfylt.opprett("UT1192", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true, true),
-                Oppfylt.opprett("UT1197", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true, true));
+        var erDetBareMorSomHarRettSjekk = erDetAleneomsorgSjekk(
+            Oppfylt.opprett("UT1197", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true, true),
+            Oppfylt.opprett("UT1192", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true, true));
         return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før termin/fødsel?")
                 .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), erDetBareMorSomHarRettSjekk)
                 .ellers(sjekkErPeriodenInnenforUkerReservertMor());
@@ -172,12 +169,12 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPeriodenXUkerEtterFamilieHendelseForMor() {
-        var erDetBareMorSomHarRettSjekkIkkeGradering = erDetBareMorSomHarRettSjekk(
-                Oppfylt.opprett("UT1214", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true),
-                Oppfylt.opprett("UT1190", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true));
-        var erDetBareMorSomHarRettSjekkGradering = erDetBareMorSomHarRettSjekk(
-                Oppfylt.opprett("UT1213", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT, true),
-                Oppfylt.opprett("UT1210", InnvilgetÅrsak.GRADERING_ALENEOMSORG, true));
+        var erDetBareMorSomHarRettSjekkIkkeGradering = erDetAleneomsorgSjekk(
+            Oppfylt.opprett("UT1190", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true),
+            Oppfylt.opprett("UT1214", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true));
+        var erDetBareMorSomHarRettSjekkGradering = erDetAleneomsorgSjekk(
+            Oppfylt.opprett("UT1210", InnvilgetÅrsak.GRADERING_ALENEOMSORG, true),
+            Oppfylt.opprett("UT1213", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT, true));
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(new SjekkOmGradertPeriode(), erDetBareMorSomHarRettSjekkGradering)
                 .ellers(erDetBareMorSomHarRettSjekkIkkeGradering);
@@ -197,7 +194,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErDetAleneomsorgFar() {
-        return rs.hvisRegel(SjekkOmErAleneomsorg.ID, "Er det aleneomsorg?")
+        return rs.hvisRegel(SjekkOmErAleneomsorg.ID, SjekkOmErAleneomsorg.BESKRIVELSE)
                 .hvis(new SjekkOmErAleneomsorg(), sjekkOmFarMedAleneomsorgHarOmsorgForBarnet())
                 .ellers(sjekkErDetBareFarMedmorSomHarRett());
     }
