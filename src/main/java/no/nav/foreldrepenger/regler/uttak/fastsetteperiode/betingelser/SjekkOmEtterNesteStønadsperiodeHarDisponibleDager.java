@@ -26,9 +26,12 @@ public class SjekkOmEtterNesteStønadsperiodeHarDisponibleDager extends LeafSpec
         }
         if (grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().restSaldoEtterNesteStønadsperiode(aktivitet);
-                if (saldo.merEnn0()) {
-                    return ja();
+                var saldoUtregning = grunnlag.getSaldoUtregning();
+                if (saldoUtregning.saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet).merEnn0()) {
+                    var saldo = saldoUtregning.restSaldoEtterNesteStønadsperiode(aktivitet);
+                    if (saldo.merEnn0()) {
+                        return ja();
+                    }
                 }
             }
         }
