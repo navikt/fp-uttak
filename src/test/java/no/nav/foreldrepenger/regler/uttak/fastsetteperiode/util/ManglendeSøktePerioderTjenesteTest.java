@@ -213,7 +213,7 @@ class ManglendeSøktePerioderTjenesteTest {
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(8))))
                 .behandling(farBehandling())
-                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .rettOgOmsorg(bareFarHarRett())
                 .datoer(new Datoer.Builder().fødsel(familiehendelse))
                 .build();
 
@@ -237,7 +237,7 @@ class ManglendeSøktePerioderTjenesteTest {
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(16), familiehendelse.plusWeeks(18)))
                 )
                 .behandling(farBehandling())
-                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .rettOgOmsorg(bareFarHarRett())
                 .datoer(new Datoer.Builder().fødsel(familiehendelse))
                 .build();
 
@@ -264,7 +264,7 @@ class ManglendeSøktePerioderTjenesteTest {
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(16), familiehendelse.plusWeeks(18)))
                 )
                 .behandling(farBehandling())
-                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .rettOgOmsorg(bareFarHarRett())
                 .datoer(new Datoer.Builder().omsorgsovertakelse(familiehendelse))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(familiehendelse))
                 .build();
@@ -281,6 +281,57 @@ class ManglendeSøktePerioderTjenesteTest {
         assertThat(msp.get(2).getFom()).isEqualTo(familiehendelse.plusWeeks(15).plusDays(1));
         assertThat(msp.get(2).getTom()).isEqualTo(familiehendelse.plusWeeks(16).minusDays(1));
         assertThat(msp.get(2).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    void skalLageManglendeSøktHvisBfhrAdopsjonIkkeStarterPåOmsorgsovertakelseDato() {
+        var omsorgsovertakelse = LocalDate.of(2023, 3, 3);
+
+        var søktPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2023, 4, 4), LocalDate.of(2023, 4, 10));
+        var grunnlag = grunnlagMedKontoer()
+            .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
+                .oppgittPeriode(søktPeriode)
+            )
+            .behandling(farBehandling())
+            .rettOgOmsorg(bareFarHarRett())
+            .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelse))
+            .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
+            .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(omsorgsovertakelse);
+        assertThat(msp.get(0).getTom()).isEqualTo(søktPeriode.getFom().minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    @Test
+    void skalLageManglendeSøktHvisBfhrAdopsjonIkkeStarterPåOmsorgsovertakelseDato_endagsperiode() {
+        //FAGSYSTEM-276286
+        var omsorgsovertakelse = LocalDate.of(2023, 3, 3);
+
+        var søktPeriode = oppgittPeriode(FORELDREPENGER, LocalDate.of(2023, 4, 4), LocalDate.of(2023, 4, 4));
+        var grunnlag = grunnlagMedKontoer()
+            .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
+                .oppgittPeriode(søktPeriode)
+            )
+            .behandling(farBehandling())
+            .rettOgOmsorg(bareFarHarRett())
+            .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelse))
+            .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
+            .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.get(0).getFom()).isEqualTo(omsorgsovertakelse);
+        assertThat(msp.get(0).getTom()).isEqualTo(søktPeriode.getFom().minusDays(1));
+        assertThat(msp.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER);
+    }
+
+    private static RettOgOmsorg.Builder bareFarHarRett() {
+        return new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false);
     }
 
     @Test
@@ -317,7 +368,7 @@ class ManglendeSøktePerioderTjenesteTest {
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, søknadsperiodeFom, familiehendelse.plusWeeks(10))))
                 .behandling(farBehandling())
-                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .rettOgOmsorg(bareFarHarRett())
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(søknadsperiodeFom))
                 .datoer(new Datoer.Builder().fødsel(familiehendelse))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
@@ -336,7 +387,7 @@ class ManglendeSøktePerioderTjenesteTest {
                 .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                         .oppgittPeriode(oppgittPeriode(FORELDREPENGER, familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(8))))
                 .behandling(farBehandling())
-                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+                .rettOgOmsorg(bareFarHarRett())
                 .datoer(new Datoer.Builder().omsorgsovertakelse(familiehendelse))
                 .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
                 .build();
