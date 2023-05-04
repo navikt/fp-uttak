@@ -30,7 +30,7 @@ final class MspBfhrUtil {
     private static List<OppgittPeriode> forAdopsjon(RegelGrunnlag grunnlag) {
         var senesteLovligeStartdatoVedAdopsjon = utledSenesteLovligeStartdatoVedAdopsjon(grunnlag);
         var førsteSøkteDag = grunnlag.getSøknad().getOppgittePerioder().get(0).getFom();
-        return fraDato(grunnlag, senesteLovligeStartdatoVedAdopsjon, førsteSøkteDag);
+        return fraDato(grunnlag, senesteLovligeStartdatoVedAdopsjon, førsteSøkteDag.minusDays(1));
     }
 
     private static List<OppgittPeriode> forTerminFødsel(RegelGrunnlag grunnlag) {
