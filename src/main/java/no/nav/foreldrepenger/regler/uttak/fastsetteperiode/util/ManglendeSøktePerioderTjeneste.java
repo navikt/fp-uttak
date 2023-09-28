@@ -62,7 +62,8 @@ public final class ManglendeSøktePerioderTjeneste {
      */
     private static List<OppgittPeriode> finnManglendeSøktePerioderITidsprommetForbeholdtMor(RegelGrunnlag grunnlag) {
         // Må sjekke om annenpart. Gjelder der far først har søkt om aleneomsorg.
-        if (grunnlag.getBehandling().isSøkerFarMedMor() && grunnlag.getAnnenPart() == null) {
+        var behandling = grunnlag.getBehandling();
+        if (behandling.isSøkerFarMedMor() && grunnlag.getAnnenPart() == null) {
             return List.of();
         }
         var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
@@ -75,7 +76,7 @@ public final class ManglendeSøktePerioderTjeneste {
         var sisteFellesUttaksdato = fellesUttakBeggeParter.get(fellesUttakBeggeParter.size() - 1).getTom();
 
         var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(familiehendelse);
-        if (grunnlag.getBehandling().isSøkerMor()) {
+        if (behandling.isSøkerMor()) {
             if (førsteFellesUttaksdato.isAfter(familiehendelse)) {
                 //Feks mor søker ikke om uke 1-3, men fra uke 4 og utover. Legger til periode for at det skal opprettes msp
                 fellesUttakBeggeParter.add(new LukketPeriode(familiehendelse.minusDays(1), familiehendelse.minusDays(1)));
@@ -90,12 +91,13 @@ public final class ManglendeSøktePerioderTjeneste {
         var stønadskontotype = harForeldrepengerKonto ? Stønadskontotype.FORELDREPENGER : Stønadskontotype.MØDREKVOTE;
         var fomTidsperiodeForbeholdtMor = fomTidsperiodeForbeholdtMor(familiehendelse);
         return finnManglendeMellomliggendePerioder(fellesUttakBeggeParter, familiehendelse, stønadskontotype)
-                .stream()
-                .flatMap(p -> split(tomTidsperiodeForbeholdtMor.plusDays(1), p))
-                .flatMap(p -> split(fomTidsperiodeForbeholdtMor, p))
-                .filter(p -> periodeLiggerITidsrommetForbeholdtMor(grunnlag, p))
-                .sorted(Comparator.comparing(OppgittPeriode::getFom))
-                .toList();
+            .stream()
+            .flatMap(p -> split(tomTidsperiodeForbeholdtMor.plusDays(1), p))
+            .flatMap(p -> split(fomTidsperiodeForbeholdtMor, p))
+            .filter(p -> periodeLiggerITidsrommetForbeholdtMor(grunnlag, p))
+            .filter(p -> behandling.isSøkerMor() || !p.getFom().isBefore(familiehendelse)) //ikke opprette msp for far før fødsel
+            .sorted(Comparator.comparing(OppgittPeriode::getFom))
+            .toList();
     }
 
     private static List<OppgittPeriode> finnManglendeMellomliggendePerioder(List<LukketPeriode> perioder,
