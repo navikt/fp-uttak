@@ -36,11 +36,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 
 class ManglendeSøktePerioderTjenesteTest {
 
-    private final int mødrekvoteDager = 75;
-    private final int fedrekvoteDager = 75;
-    private final int fellesperiodDedager = 85;
-    private final int førFødselDager = 15;
-
     @Test
     void farMedAleneomsorgMedInnvilgetAnnetPartPerioder() {
         // Gjelder der far først har søkt om aleneomsorg.
@@ -494,6 +489,25 @@ class ManglendeSøktePerioderTjenesteTest {
         assertThat(mspFørFødsel.get(0).getTom()).isEqualTo(familiehendelsesDato.minusWeeks(2).minusDays(1));
     }
 
+    @Test
+    void ikke_msp_for_for_ved_tidlig_oppstart_mor_der_hun_ikke_tar_alle_ukene_fpff() {
+        //FAGSYSTEM-295613
+        var fødselsdato = LocalDate.of(2023, 9, 28);
+        var grunnlag = grunnlagMedKontoer()
+            .behandling(farBehandling())
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .søknad(new Søknad.Builder()
+                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15))))
+            .annenPart(new AnnenPart.Builder()
+                .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4)).build())
+                .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato.minusWeeks(2), fødselsdato.minusDays(1)).build())
+                .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)).build()))
+            .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+        assertThat(msp).isEmpty();
+    }
+
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
         return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag);
     }
@@ -503,10 +517,10 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private RegelGrunnlag.Builder grunnlagMedKontoer() {
-        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, førFødselDager))
-                .konto(konto(MØDREKVOTE, mødrekvoteDager))
-                .konto(konto(FELLESPERIODE, fellesperiodDedager))
-                .konto(konto(FEDREKVOTE, fedrekvoteDager));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
+                .konto(konto(MØDREKVOTE, 75))
+                .konto(konto(FELLESPERIODE, 85))
+                .konto(konto(FEDREKVOTE, 75));
         return RegelGrunnlagTestBuilder.create()
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(LocalDate.MIN))
                 .kontoer(kontoer)
