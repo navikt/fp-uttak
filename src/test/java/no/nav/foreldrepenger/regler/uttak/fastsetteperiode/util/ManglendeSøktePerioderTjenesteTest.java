@@ -70,7 +70,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    void skal_opprette_msp_før_fødsel_men_ikke_mer_enn_3_øker_før_fødsel() {
+    void skal_ikke_opprette_msp_før_fødsel() {
         var familiehendelsesDato = LocalDate.of(2019, 12, 11);
 
         var fellesperiode = oppgittPeriode(FELLESPERIODE, familiehendelsesDato.minusWeeks(10), familiehendelsesDato.minusWeeks(8));
@@ -85,9 +85,7 @@ class ManglendeSøktePerioderTjenesteTest {
 
         var manglendeSøktePerioder = finnManglendeSøktePerioder(grunnlag);
 
-        assertThat(manglendeSøktePerioder.get(0).getStønadskontotype()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
-        assertThat(manglendeSøktePerioder.get(0).getFom()).isEqualTo(familiehendelsesDato.minusWeeks(2).plusDays(1));
-        assertThat(manglendeSøktePerioder.get(0).getTom()).isEqualTo(familiehendelsesDato.minusDays(1));
+        assertThat(manglendeSøktePerioder).isEmpty();
     }
 
     @Test
@@ -463,30 +461,6 @@ class ManglendeSøktePerioderTjenesteTest {
         var msp = finnManglendeSøktePerioder(grunnlag);
 
         assertThat(msp).isEmpty();
-    }
-
-    @Test
-    void ikke_msp_før_3_uker_før_fødsel() {
-        var familiehendelsesDato = LocalDate.of(2022, 5, 25);
-        var grunnlag = grunnlagMedKontoer()
-                .søknad(new Søknad.Builder()
-                        .oppgittPeriode(oppgittPeriode(FELLESPERIODE, familiehendelsesDato.minusWeeks(5), familiehendelsesDato.minusWeeks(4)))
-                        .oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, familiehendelsesDato.minusWeeks(2), familiehendelsesDato.minusDays(1)))
-                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, familiehendelsesDato, familiehendelsesDato.plusWeeks(6).minusDays(1)))
-                )
-                .datoer(new Datoer.Builder().fødsel(familiehendelsesDato))
-                .build();
-
-        var manglendeSøktePerioder = finnManglendeSøktePerioder(grunnlag);
-
-        var mspFørFødsel = manglendeSøktePerioder.stream()
-                .filter(msp -> msp.getStønadskontotype().equals(FORELDREPENGER_FØR_FØDSEL))
-                .toList();
-        assertThat(mspFørFødsel).hasSize(1);
-
-        //bare msp fra uke 3 til uke 2 før fødsel
-        assertThat(mspFørFødsel.get(0).getFom()).isEqualTo(familiehendelsesDato.minusWeeks(3));
-        assertThat(mspFørFødsel.get(0).getTom()).isEqualTo(familiehendelsesDato.minusWeeks(2).minusDays(1));
     }
 
     @Test

@@ -145,7 +145,7 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
 
         var perioder = fastsettPerioder(grunnlag);
 
-        assertThat(perioder).hasSize(4);
+        assertThat(perioder).hasSize(3);
 
         assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
@@ -165,21 +165,13 @@ class ForeldrepengerFørFødselOrkestreringTest extends FastsettePerioderRegelOr
         assertThat(perioder.get(1).evalueringResultat()).isNotNull();
 
         assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
-        assertThat(perioder.get(2).uttakPeriode().getManuellbehandlingårsak()).isNull();
-        assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(2).plusDays(1));
-        assertThat(perioder.get(2).uttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+                IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
+        assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato);
+        assertThat(perioder.get(2).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
         assertThat(perioder.get(2).innsendtGrunnlag()).isNotNull();
         assertThat(perioder.get(2).evalueringResultat()).isNotNull();
-
-        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
-        assertThat(perioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.MOR_TAR_IKKE_UKENE_ETTER_FØDSEL);
-        assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(fødselsdato);
-        assertThat(perioder.get(3).uttakPeriode().getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(perioder.get(3).innsendtGrunnlag()).isNotNull();
-        assertThat(perioder.get(3).evalueringResultat()).isNotNull();
     }
 
     @Test
