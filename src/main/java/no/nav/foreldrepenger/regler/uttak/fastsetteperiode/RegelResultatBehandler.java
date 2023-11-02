@@ -122,14 +122,13 @@ class RegelResultatBehandler {
 
     private PeriodeAktivitetResultat finnPeriodeAktivitetResultat(OppgittPeriode oppgittPeriode,
                                                                   boolean overlapperMedInnvilgetPeriodeHosAnnenpart,
-                                                                  AktivitetIdentifikator identifikator,
+                                                                  AktivitetIdentifikator aktivitet,
                                                                   FastsettePerioderRegelresultat regelresultat,
                                                                   SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         //Må sjekke saldo her, ved flere arbeidsforhold kan det reglene ha gått til sluttpunkt som trekkes dager selv om ett av arbeidsforholdene er tom
         //På arbeidsforholdet som er tom på konto skal det settes 0 trekkdager
         var stønadskonto = konto(oppgittPeriode);
-        var nettosaldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskonto.orElse(null), identifikator, oppgittPeriode.kanTrekkeAvMinsterett());
-        var harIgjenTrekkdager = nettosaldo.merEnn0();
+        var harIgjenTrekkdager = isHarIgjenTrekkdager(oppgittPeriode, aktivitet, regelresultat, stønadskonto.orElse(null));
 
         var manuellBehandling = manuellBehandling(regelresultat);
         if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling && !harIgjenTrekkdager)) {
@@ -138,7 +137,7 @@ class RegelResultatBehandler {
 
         var utbetalingsgrad = Utbetalingsgrad.ZERO;
         if (regelresultat.skalUtbetale()) {
-            var utbetalingsgradUtregning = bestemUtbetalingsgradUtregning(oppgittPeriode, identifikator, annenpartSamtidigUttaksprosent);
+            var utbetalingsgradUtregning = bestemUtbetalingsgradUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent);
             utbetalingsgrad = utbetalingsgradUtregning.resultat();
         }
         var trekkdager = Trekkdager.ZERO;
@@ -147,12 +146,25 @@ class RegelResultatBehandler {
                 trekkdager = Trekkdager.ZERO;
             } else {
                 var graderingInnvilget =
-                        regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(identifikator);
+                        regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(aktivitet);
                 trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget,
                         oppgittPeriode.getArbeidsprosent(), regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent));
             }
         }
         return new PeriodeAktivitetResultat(utbetalingsgrad, trekkdager);
+    }
+
+    private boolean isHarIgjenTrekkdager(OppgittPeriode oppgittPeriode,
+                                         AktivitetIdentifikator aktivitet,
+                                         FastsettePerioderRegelresultat regelresultat,
+                                         Stønadskontotype stønadskonto) {
+        var nettosaldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskonto, aktivitet, oppgittPeriode.kanTrekkeAvMinsterett());
+        if (regelresultat.getAvklaringÅrsak() != null && regelresultat.getAvklaringÅrsak().trekkerMinsterett()) {
+            var minsterettSaldo = saldoUtregning.restSaldoMinsterett(aktivitet);
+            var utenAktivitetskravSaldo = saldoUtregning.restSaldoDagerUtenAktivitetskrav();
+            return nettosaldo.merEnn0() && (minsterettSaldo.merEnn0() || utenAktivitetskravSaldo.merEnn0());
+        }
+        return nettosaldo.merEnn0();
     }
 
     private boolean manuellBehandling(FastsettePerioderRegelresultat regelresultat) {

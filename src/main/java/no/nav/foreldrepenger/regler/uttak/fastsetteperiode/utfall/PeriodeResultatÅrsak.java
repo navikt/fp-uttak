@@ -6,4 +6,5 @@ public interface PeriodeResultatÅrsak {
 
     String getBeskrivelse();
 
+    boolean trekkerMinsterett();
 }
