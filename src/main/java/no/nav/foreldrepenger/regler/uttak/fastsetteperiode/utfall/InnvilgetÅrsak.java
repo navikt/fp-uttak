@@ -56,4 +56,9 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     public String getBeskrivelse() {
         return beskrivelse;
     }
+
+    @Override
+    public boolean trekkerMinsterett() {
+        return this.equals(FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV) || this.equals(GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+    }
 }

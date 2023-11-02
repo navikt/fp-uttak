@@ -107,4 +107,9 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     public String getBeskrivelse() {
         return beskrivelse;
     }
+
+    @Override
+    public boolean trekkerMinsterett() {
+        return false;
+    }
 }
