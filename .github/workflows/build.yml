@@ -16,10 +16,13 @@ on:
 
 jobs:
     build-feature:
-        name: Build    
+        name: Build
+        permissions:
+            contents: read
         uses: navikt/fp-gha-workflows/.github/workflows/build-feature.yml@main
         with:
             sonar-scan: true # default: false
+            java-version: 21
         secrets: inherit
 
     release-drafter:
