@@ -22,7 +22,6 @@ jobs:
         uses: navikt/fp-gha-workflows/.github/workflows/build-feature.yml@main
         with:
             sonar-scan: true # default: false
-            java-version: 21
         secrets: inherit
 
     release-drafter:
