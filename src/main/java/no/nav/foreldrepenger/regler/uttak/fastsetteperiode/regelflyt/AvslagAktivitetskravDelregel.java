@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.S
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorSyk;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorUtdanning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorsAktivitetErKjent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmSkalTrekkeDagerFraKonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmUttakOgUtenAktivitetskrav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -49,6 +50,7 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     public static final String ID = "AVSLAG_AKT";
 
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
@@ -115,7 +117,7 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorBekreftetUføretrygd() {
         return rs.hvisRegel(SjekkOmMorBekreftetUføre.ID, SjekkOmMorBekreftetUføre.BESKRIVELSE)
                 .hvis(new SjekkOmMorBekreftetUføre(), sjekkOmMorBekreftetUføretrygdErUttak())
-                .ellers(avslå("UT1322", FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR));
+                .ellers(avslåSjekkSkalTrekkeDager("UT1322", FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorBekreftetUføretrygdErUttak() {
@@ -133,61 +135,71 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUkjentAktivitetErFriUtsettelse() {
         // Pga praksis med tekniske perioder u/aktivitet fra søknader fram til første uttak.
         return rs.hvisRegel(SjekkOmFriUtsettelse.ID, SjekkOmFriUtsettelse.BESKRIVELSE)
-                .hvis(new SjekkOmFriUtsettelse(), avslå("UT1325", BARE_FAR_RETT_IKKE_SØKT))
+                .hvis(new SjekkOmFriUtsettelse(), avslåSjekkSkalTrekkeDager("UT1325", BARE_FAR_RETT_IKKE_SØKT))
                 .ellers(Manuellbehandling.opprett("UT1315", null,
                         Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morArbeid() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
-                .hvis(new SjekkOmAktivitetErDokumentert(), avslå("UT1300", AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT))
-                .ellers(avslå("UT1301", AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT));
+                .hvis(new SjekkOmAktivitetErDokumentert(), avslåSjekkSkalTrekkeDager("UT1300", AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1301", AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morSyk() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
-                .hvis(new SjekkOmAktivitetErDokumentert(), avslå("UT1302", AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT))
-                .ellers(avslå("UT1303", AKTIVITETSKRAVET_SYKDOM_IKKE_DOKUMENTERT));
+                .hvis(new SjekkOmAktivitetErDokumentert(), avslåSjekkSkalTrekkeDager("UT1302", AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1303", AKTIVITETSKRAVET_SYKDOM_IKKE_DOKUMENTERT));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morInnlagt() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
-                .hvis(new SjekkOmAktivitetErDokumentert(), avslå("UT1304", AKTIVITETSKRAVET_INNLEGGELSE_IKKE_OPPFYLT))
-                .ellers(avslå("UT1305", AKTIVITETSKRAVET_INNLEGGELSE_IKKE_DOKUMENTERT));
+                .hvis(new SjekkOmAktivitetErDokumentert(), avslåSjekkSkalTrekkeDager("UT1304", AKTIVITETSKRAVET_INNLEGGELSE_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1305", AKTIVITETSKRAVET_INNLEGGELSE_IKKE_DOKUMENTERT));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morUtdannning() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
-                .hvis(new SjekkOmAktivitetErDokumentert(), avslå("UT1306", AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT))
-                .ellers(avslå("UT1307", AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT));
+                .hvis(new SjekkOmAktivitetErDokumentert(), avslåSjekkSkalTrekkeDager("UT1306", AKTIVITETSKRAVET_UTDANNING_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1307", AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morKvalifiseringsprogram() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
                 .hvis(new SjekkOmAktivitetErDokumentert(),
-                        avslå("UT1308", AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT))
-                .ellers(avslå("UT1309", AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT));
+                    avslåSjekkSkalTrekkeDager("UT1308", AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1309", AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morIntroduksjonsprogram() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
                 .hvis(new SjekkOmAktivitetErDokumentert(),
-                        avslå("UT1310", AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT))
-                .ellers(avslå("UT1311", AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT));
+                    avslåSjekkSkalTrekkeDager("UT1310", AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1311", AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT));
     }
 
     private Specification<FastsettePeriodeGrunnlag> morKombinasjonArbeidUtdanning() {
         return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
                 .hvis(new SjekkOmAktivitetErDokumentert(),
-                        avslå("UT1312", AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_OPPFYLT))
-                .ellers(avslå("UT1313", AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_DOKUMENTERT));
+                    avslåSjekkSkalTrekkeDager("UT1312", AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_OPPFYLT))
+                .ellers(avslåSjekkSkalTrekkeDager("UT1313", AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_DOKUMENTERT));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> avslåSjekkSkalTrekkeDager(String sluttpunktId, IkkeOppfyltÅrsak årsak) {
+        return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
+            .hvis(new SjekkOmSkalTrekkeDagerFraKonto(),
+                IkkeOppfylt.opprett(sluttpunktId, årsak, true, false))
+            .ellers(IkkeOppfylt.opprett(sluttpunktId, årsak, false, false));
     }
 
     private FastsettePeriodeUtfall avslå(String sluttpunktId, IkkeOppfyltÅrsak årsak) {
         return IkkeOppfylt.opprett(sluttpunktId, årsak, true, false);
     }
 
-    private FastsettePeriodeUtfall utfall1314AvklarAktivitetSituasjon() {
-        return Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true);
+    private Specification<FastsettePeriodeGrunnlag>  utfall1314AvklarAktivitetSituasjon() {
+        return rs.hvisRegel(SjekkOmAktivitetErDokumentert.ID, SjekkOmAktivitetErDokumentert.BESKRIVELSE)
+            .hvis(new SjekkOmSkalTrekkeDagerFraKonto(),
+                Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, true, true))
+            .ellers(Manuellbehandling.opprett("UT1314", null, Manuellbehandlingårsak.MOR_UFØR, false, true));
     }
 }
