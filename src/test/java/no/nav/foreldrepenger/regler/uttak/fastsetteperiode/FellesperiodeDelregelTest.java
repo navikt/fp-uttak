@@ -129,6 +129,60 @@ class FellesperiodeDelregelTest {
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
+    }
+
+    @Test
+    void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg_sammenhengede_uttak() {
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var kontoer = enFellesperiodeKonto(13 * 5);
+        var grunnlag = basicGrunnlagMor()
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
+
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+    }
+
+    @Test
+    void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg() {
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var kontoer = enFellesperiodeKonto(13 * 5);
+        var grunnlag = basicGrunnlagFar()
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
+
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
+    }
+
+    @Test
+    void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg_sammenhengede_uttak() {
+        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var kontoer = enFellesperiodeKonto(13 * 5);
+        var grunnlag = basicGrunnlagFar()
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(true))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
+
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
     }
 
     @Test
