@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyldigGrunnForTidligOppstartHelePerioden;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOmsorgHelePerioden;
@@ -151,9 +152,13 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
                 .ellers(Manuellbehandling.opprett("UT1043", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
                         Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
 
+        var sjekkOmTrekkesDager = rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
+            .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), IkkeOppfylt.opprett("UT1046", IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG, true, false))
+            .ellers(IkkeOppfylt.opprett("UT1046", IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG, false, false));
+
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
                 .hvis(new SjekkOmOmsorgHelePerioden(), noenTilgjengligeDagerNode)
-                .ellers(IkkeOppfylt.opprett("UT1046", IkkeOppfyltÅrsak.MOR_HAR_IKKE_OMSORG, true, false));
+                .ellers(sjekkOmTrekkesDager);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerFørDeFørsteUkene() {
@@ -240,8 +245,12 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
                 .ellers(Manuellbehandling.opprett("UT1146", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
                         Manuellbehandlingårsak.STØNADSKONTO_TOM, true, false));
 
+        var sjekkOmTrekkesDager = rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
+            .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), IkkeOppfylt.opprett("UT1060", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false))
+            .ellers(IkkeOppfylt.opprett("UT1060", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, false, false));
+
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, SjekkOmOmsorgHelePerioden.BESKRIVELSE)
                 .hvis(new SjekkOmOmsorgHelePerioden(), noenDisponibleDagerNode)
-                .ellers(IkkeOppfylt.opprett("UT1060", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
+                .ellers(sjekkOmTrekkesDager);
     }
 }
