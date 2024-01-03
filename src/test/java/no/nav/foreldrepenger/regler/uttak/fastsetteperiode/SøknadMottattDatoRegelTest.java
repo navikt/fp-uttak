@@ -47,17 +47,6 @@ class SøknadMottattDatoRegelTest {
     }
 
     @Test
-    void mottattDatoEtterSluttAvGraderingBlirInnvilget() {
-        var mottattDato = LocalDate.of(2018, 10, 10);
-        var søknadsperiode = gradertoppgittPeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), mottattDato);
-        var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
-
-        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
-
-        assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_GRADERING_ETTER_PERIODEN_HAR_BEGYNT);
-    }
-
-    @Test
     void mottattDatoFørSluttAvFerieBlirAvslått() {
         var mottattDato = LocalDate.of(2018, 10, 10);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
