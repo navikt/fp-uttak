@@ -558,7 +558,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
     }
 
     @Test
-    void utsettelse_før_søknad_mottatt_dato_skal_gå_til_manuell() {
+    void utsettelse_før_søknad_mottatt_dato_skal_innvilges() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
         var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
             FERIE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(8), null, null);
@@ -569,9 +569,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var resultat = fastsettPerioder(grunnlag);
 
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
@@ -785,27 +783,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
 
         assertThat(perioder).hasSize(1);
         assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-    }
-
-    //FAGSYSTEM-151437
-
-    @Test
-    void utsettelse_skal_ikke_avslås_pga_periode_før_gyldig_dato_men_gå_til_manuell() {
-        var fødselsdato = LocalDate.of(2019, 10, 10);
-        var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(50),
-            ARBEID, fødselsdato.plusWeeks(100), fødselsdato.plusWeeks(100),
-                MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
-        var grunnlag = basicGrunnlagFar(fødselsdato)
-                .behandling(farBehandling())
-                .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
-                .rettOgOmsorg(bareFarRett())
-                .søknad(søknad(FØDSEL, utsettelse));
-
-        var perioder = fastsettPerioder(grunnlag);
-
-        assertThat(perioder).hasSize(1);
-        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(perioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
     }
 
     @Test

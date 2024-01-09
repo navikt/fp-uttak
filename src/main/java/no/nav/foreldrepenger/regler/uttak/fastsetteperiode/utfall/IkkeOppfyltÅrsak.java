@@ -45,9 +45,6 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     BARNETS_INNLEGGELSE_IKKE_OPPFYLT(4040, "Barnets innleggelse ikke oppfylt"),
     UTSETTELSE_FERIE_PÅ_BEVEGELIG_HELLIGDAG(4041, "Avslag utsettelse ferie på bevegelig helligdag"),
 
-    SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT(4081, "Søker har søkt om utsettelse pga ferie etter ferien er begynt"),
-    SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT(4082, "Søker har søkt om utsettelse pga arbeid etter arbeid er begynt"),
-
     SØKERS_SYKDOM_SKADE_SEKS_UKER_IKKE_OPPFYLT(4110, "Søkers sykdom/skade første 6 uker ikke oppfylt"),
     SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT(4111, "Søkers innleggelse første 6 uker ikke oppfylt"),
     BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT(4112, "Barnets innleggelse første 6 uker ikke oppfylt"),
