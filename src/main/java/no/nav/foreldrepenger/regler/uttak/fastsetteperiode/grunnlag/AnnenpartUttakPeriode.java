@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FORELDREPENGER;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -74,6 +77,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
     public Optional<LocalDate> getSenestMottattDato() {
         return Optional.ofNullable(senestMottattDato);
+    }
+
+    public boolean isFratrekkPleiepenger() {
+        var avslåttUtsettelse = isUtsettelse() && !isInnvilget();
+        var trekkerFellesEllerForeldrepenger = aktiviteter.stream()
+            .anyMatch(a -> a.getTrekkdager().merEnn0() && !a.getUtbetalingsgrad().harUtbetaling() && Set.of(FELLESPERIODE, FORELDREPENGER)
+                .contains(a.getStønadskontotype()));
+        return avslåttUtsettelse && trekkerFellesEllerForeldrepenger;
     }
 
     @Override

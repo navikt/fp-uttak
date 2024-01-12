@@ -6,6 +6,7 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
 
@@ -133,6 +134,10 @@ public final class UttakPeriode extends LukketPeriode {
 
     public MorsAktivitet getMorsAktivitet() {
         return morsAktivitet;
+    }
+
+    public boolean isFratrekkPleiepenger() {
+        return getPeriodeResultatÅrsak() == IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER;
     }
 
     @Override

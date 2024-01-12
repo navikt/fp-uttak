@@ -19,8 +19,9 @@ public class FastsattUttakPeriode {
     private LocalDate tom;
     private boolean samtidigUttak;
     private LocalDate mottattDato;
-    private FastsattUttakPeriode.ResultatÅrsak resultatÅrsak;
+    private ResultatÅrsak resultatÅrsak;
     private boolean utsettelse;
+    private boolean fratrekkPleiepenger;
 
     private FastsattUttakPeriode() {
     }
@@ -36,6 +37,7 @@ public class FastsattUttakPeriode {
         this.mottattDato = periode.mottattDato;
         this.resultatÅrsak = periode.resultatÅrsak;
         this.utsettelse = periode.utsettelse;
+        this.fratrekkPleiepenger = periode.fratrekkPleiepenger;
     }
 
     public Perioderesultattype getPerioderesultattype() {
@@ -71,14 +73,14 @@ public class FastsattUttakPeriode {
     }
 
     public static boolean trekkerMinsterett(Perioderesultattype perioderesultattype,
-                                            FastsattUttakPeriode.ResultatÅrsak resultatÅrsak,
+                                            ResultatÅrsak resultatÅrsak,
                                             boolean utsettelse) {
         return (Perioderesultattype.INNVILGET.equals(perioderesultattype) && !erPeriodeMedGodkjentAktivitet(resultatÅrsak))
                 || (Perioderesultattype.AVSLÅTT.equals(perioderesultattype) && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak))
                 || (Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
     }
 
-    private static boolean erPeriodeMedGodkjentAktivitet(FastsattUttakPeriode.ResultatÅrsak resultatÅrsak) {
+    private static boolean erPeriodeMedGodkjentAktivitet(ResultatÅrsak resultatÅrsak) {
         // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
         // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
         return INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak) ||
@@ -95,6 +97,14 @@ public class FastsattUttakPeriode {
 
     public boolean isInnvilgetGyldigUtsettelse() {
         return utsettelse && resultatÅrsak.equals(UTSETTELSE_GYLDIG);
+    }
+
+    public boolean isFratrekkPleiepenger() {
+        return fratrekkPleiepenger;
+    }
+
+    public boolean isUtsettelse() {
+        return utsettelse;
     }
 
     @Override
@@ -168,6 +178,11 @@ public class FastsattUttakPeriode {
 
         public Builder mottattDato(LocalDate mottattDato) {
             kladd.mottattDato = mottattDato;
+            return this;
+        }
+
+        public Builder fratrekkPleiepenger(boolean fratrekkPleiepenger) {
+            kladd.fratrekkPleiepenger = fratrekkPleiepenger;
             return this;
         }
 

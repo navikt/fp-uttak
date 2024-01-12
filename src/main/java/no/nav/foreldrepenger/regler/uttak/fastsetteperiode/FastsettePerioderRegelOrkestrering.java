@@ -216,7 +216,7 @@ public class FastsettePerioderRegelOrkestrering {
     private boolean overlapperMedInnvilgetAnnenpartsPeriode(OppgittPeriode aktuellPeriode,
                                                             List<AnnenpartUttakPeriode> annenPartUttaksperioder) {
         return annenPartUttaksperioder.stream()
-                .anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget());
+                .anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget() && annenpartsPeriode.harTrekkdager());
     }
 
     private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(OppgittPeriode aktuellPeriode,
@@ -274,16 +274,15 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private FastsattUttakPeriode map(UttakPeriode periode) {
-        return new FastsattUttakPeriode.Builder()
-                .tidsperiode(periode.getFom(), periode.getTom())
-                .aktiviteter(mapAktiviteter(periode))
-                .flerbarnsdager(periode.isFlerbarnsdager())
-                .resultatÅrsak(mapTilÅrsak(periode.getPeriodeResultatÅrsak()))
-                .utsettelse(periode.getUtsettelseÅrsak() != null)
-                .oppholdÅrsak(periode.getOppholdÅrsak())
-                .samtidigUttak(periode.erSamtidigUttak())
-                .periodeResultatType(periode.getPerioderesultattype())
-                .build();
+        return new FastsattUttakPeriode.Builder().tidsperiode(periode.getFom(), periode.getTom())
+            .aktiviteter(mapAktiviteter(periode))
+            .flerbarnsdager(periode.isFlerbarnsdager())
+            .resultatÅrsak(mapTilÅrsak(periode.getPeriodeResultatÅrsak()))
+            .utsettelse(periode.getUtsettelseÅrsak() != null)
+            .oppholdÅrsak(periode.getOppholdÅrsak())
+            .samtidigUttak(periode.erSamtidigUttak())
+            .periodeResultatType(periode.getPerioderesultattype())
+            .build();
     }
 
     public static FastsattUttakPeriode.ResultatÅrsak mapTilÅrsak(PeriodeResultatÅrsak årsak) {

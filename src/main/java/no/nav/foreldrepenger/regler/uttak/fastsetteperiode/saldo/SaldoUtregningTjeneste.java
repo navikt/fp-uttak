@@ -111,13 +111,15 @@ public final class SaldoUtregningTjeneste {
 
     private static FastsattUttakPeriode map(AnnenpartUttakPeriode annenpartsPeriode) {
         return new FastsattUttakPeriode.Builder().periodeResultatType(map(annenpartsPeriode.isInnvilget()))
-                .samtidigUttak(annenpartsPeriode.isSamtidigUttak())
-                .flerbarnsdager(annenpartsPeriode.isFlerbarnsdager())
-                .oppholdÅrsak(annenpartsPeriode.getOppholdÅrsak())
-                .tidsperiode(annenpartsPeriode.getFom(), annenpartsPeriode.getTom())
-                .aktiviteter(mapAktiviteter(annenpartsPeriode))
-                .mottattDato(annenpartsPeriode.getSenestMottattDato().orElse(null))
-                .build();
+            .samtidigUttak(annenpartsPeriode.isSamtidigUttak())
+            .flerbarnsdager(annenpartsPeriode.isFlerbarnsdager())
+            .oppholdÅrsak(annenpartsPeriode.getOppholdÅrsak())
+            .tidsperiode(annenpartsPeriode.getFom(), annenpartsPeriode.getTom())
+            .aktiviteter(mapAktiviteter(annenpartsPeriode))
+            .utsettelse(annenpartsPeriode.isUtsettelse())
+            .mottattDato(annenpartsPeriode.getSenestMottattDato().orElse(null))
+            .fratrekkPleiepenger(annenpartsPeriode.isFratrekkPleiepenger())
+            .build();
     }
 
     private static Perioderesultattype map(boolean innvilget) {

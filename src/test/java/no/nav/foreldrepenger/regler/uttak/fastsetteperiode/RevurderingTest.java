@@ -89,23 +89,6 @@ class RevurderingTest {
     }
 
     @Test
-    void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslåsHvisInnenforFørsteSeksUker() {
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO,
-            FAMILIEHENDELSE_DATO.plusWeeks(2), SamtidigUttaksprosent.HUNDRED, false, null, null,
-            null, null);
-        var grunnlag = basicBuilder(oppgittPeriode)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
-            .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO,
-                FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
-            .behandling(berørtBehandling().søkerErMor(false))
-            .build();
-
-        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
-
-        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE);
-    }
-
-    @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalInnvilgesForBalanserteFedreSelvOmInnenforFørsteSeksUker() {
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO,
             FAMILIEHENDELSE_DATO.plusWeeks(2), SamtidigUttaksprosent.HUNDRED, false, null, null,

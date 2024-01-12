@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErFratrekkPleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarHarDagerRundtFødsel;
@@ -142,7 +143,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetVarInnlagtPrematur() {
         return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
-                .hvis(new SjekkOmBarnInnlagt(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false))
+                .hvis(new SjekkOmBarnInnlagt(), sjekkOmAnnenPartHarFratrekkPleiepengerIPerioden())
                 .ellers(sjekkOmTidsperiodeForbeholdtMor());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartHarFratrekkPleiepengerIPerioden() {
+        return rs.hvisRegel(SjekkOmAnnenPartsPeriodeErFratrekkPleiepenger.ID, SjekkOmAnnenPartsPeriodeErFratrekkPleiepenger.BESKRIVELSE)
+            .hvis(new SjekkOmAnnenPartsPeriodeErFratrekkPleiepenger(), Oppfylt.opprett("UT1362", InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT, false, false))
+            .ellers(IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false));
     }
 }

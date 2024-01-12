@@ -375,7 +375,8 @@ public class SaldoUtregning {
             for (var overlappendePeriode : overlappendePerioder) {
                 if (periode.isOpphold() && innvilgetMedTrekkdager(overlappendePeriode)) {
                     sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periode));
-                } else if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)) {
+                } else if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)
+                    && !utsettelseOverlapperMedFratrekkPleiepenger(periode, overlappendePeriode)) {
                     sum = sum.add(frigitteDagerVanligeStønadskontoer(stønadskonto, periode, overlappendePeriode));
                 } else if (tapendePeriode(periode, overlappendePeriode) && overlappendePeriode.isOpphold()) {
                     var delFom = overlappendePeriode.getFom()
@@ -387,6 +388,10 @@ public class SaldoUtregning {
             }
         }
         return sum;
+    }
+
+    private boolean utsettelseOverlapperMedFratrekkPleiepenger(FastsattUttakPeriode periode, FastsattUttakPeriode overlappendePeriode) {
+        return periode.isUtsettelse() && overlappendePeriode.isFratrekkPleiepenger();
     }
 
     private boolean tapendePeriode(FastsattUttakPeriode periode, FastsattUttakPeriode overlappendePeriode) {

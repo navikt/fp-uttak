@@ -24,7 +24,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utset
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.SYKDOM_SKADE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -36,11 +36,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
@@ -398,7 +400,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
-    void skal_avslå_periode_hvis_overlapp_med_innvilget_utsettelse_i_tidsperiode_forbeholdt_mor_i_berørt_behandling() {
+    void skal_ikke_avslå_periode_hvis_overlapp_med_innvilget_utsettelse_i_tidsperiode_forbeholdt_mor_i_berørt_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagFar(fødselsdato)
                 .annenPart(new AnnenPart.Builder()
@@ -406,14 +408,14 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                         .uttaksperiode(utsettelse(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(6)).build()))
                 .behandling(farBehandling().berørtBehandling(true))
                 .søknad(fødselSøknad()
-                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(4).minusDays(1))));
+                        .oppgittPeriode(oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(4).minusDays(1),
+                            DokumentasjonVurdering.TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT)));
 
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(1);
 
         var uttakPeriode = resultat.get(0).uttakPeriode();
-        assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(uttakPeriode.getPeriodeResultatÅrsak()).isEqualTo(OPPHOLD_UTSETTELSE);
+        assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -563,6 +565,78 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
                 .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
                 .søknad(fødselSøknad()
+                .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
+                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, termindato, termindato.plusWeeks(6))));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+
+        var p1 = resultat.get(0).uttakPeriode();
+        var p2 = resultat.get(1).uttakPeriode();
+        var p3 = resultat.get(2).uttakPeriode();
+        assertThat(p1.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(p1.getFom()).isEqualTo(fødselsdato);
+        assertThat(p1.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(p1.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(p1.getPeriodeResultatÅrsak()).isEqualTo(FRATREKK_PLEIEPENGER);
+        assertThat(p1.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
+
+        assertThat(p2.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(p2.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
+        assertThat(p2.getTom()).isEqualTo(termindato.minusDays(1));
+        assertThat(p2.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(p2.getPeriodeResultatÅrsak()).isEqualTo(FRATREKK_PLEIEPENGER);
+        assertThat(p2.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(10));
+
+        assertThat(p3.getStønadskontotype()).isEqualTo(MØDREKVOTE);
+    }
+
+    @Test
+    void prematur_fødsel_pleiepenger_skal_gi_innvilget_utsettelse_uten_trekk_hvis_prematurdager_allerede_trekkes_av_annen_part() {
+        var fødselsdato = LocalDate.of(2024, 1, 10);
+        var termindato = fødselsdato.plusWeeks(8);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+            .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
+            .behandling(farBehandling())
+            .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.utsettelse(fødselsdato, termindato.minusDays(1))
+                .innvilget(false)
+                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE, new Trekkdager(40), Utbetalingsgrad.ZERO))
+                .build()))
+            .søknad(fødselSøknad()
+                .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
+                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, termindato, termindato.plusWeeks(6))));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+
+        var p1 = resultat.get(0).uttakPeriode();
+        var p2 = resultat.get(1).uttakPeriode();
+        assertThat(p1.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(p1.getFom()).isEqualTo(fødselsdato);
+        assertThat(p1.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(p1.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(p1.getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT);
+        assertThat(p1.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+
+        assertThat(p2.getUtsettelseÅrsak()).isEqualTo(INNLAGT_BARN);
+        assertThat(p2.getFom()).isEqualTo(fødselsdato.plusWeeks(6));
+        assertThat(p2.getTom()).isEqualTo(termindato.minusDays(1));
+        assertThat(p2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(p2.getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT);
+        assertThat(p2.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    void skal_trekke_prematurdager_selv_hvis_overlapp_med_innvilget_utsettelse_på_annen_part() {
+        var fødselsdato = LocalDate.of(2024, 1, 10);
+        var termindato = fødselsdato.plusWeeks(8);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+            .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(termindato))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.utsettelse(fødselsdato, termindato.minusDays(1))
+                .innvilget(true)
+                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), FELLESPERIODE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
+                .build()))
+            .søknad(fødselSøknad()
                 .oppgittPeriode(utsettelsePeriode(fødselsdato, termindato.minusDays(1), INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT))
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, termindato, termindato.plusWeeks(6))));
 

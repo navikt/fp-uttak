@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarHarDagerRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
@@ -41,7 +40,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktOmOverføringAvKvote;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTapendePeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTidsperiodeForbeholdtMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaBarnetsInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato;
@@ -141,23 +139,11 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBehandlingKreverSammenhengendeUttak() {
         return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
                 .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), ikkeOppfyltUT1166())
-                .ellers(sjekkOmFødselTermin());
+                .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
     }
 
     private FastsettePeriodeUtfall ikkeOppfyltUT1166() {
         return IkkeOppfylt.opprett("UT1166", IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE, false, false);
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselTermin() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
-                .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmTidsperiodeForbeholdtMor())
-                .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
-        return rs.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
-                .hvis(new SjekkOmTidsperiodeForbeholdtMor().og(ikke(new SjekkOmFarHarDagerRundtFødsel())), ikkeOppfyltUT1166())
-                .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad() {
