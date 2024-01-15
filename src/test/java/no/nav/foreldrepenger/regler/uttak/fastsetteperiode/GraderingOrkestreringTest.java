@@ -690,7 +690,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
     }
 
     @Test
-    void graderingsperiode_før_søknad_mottatt_dato_skal_gå_til_manuell_hvis_sammenhengende() {
+    void graderingsperiode_før_søknad_mottatt_dato_skal_innvilges_ved_sammenhengende() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);
@@ -705,9 +705,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                         .oppgittPeriode(gradering));
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
-        assertThat(resultat.get(1).uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
-                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
         assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
@@ -760,7 +758,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         leggPåKvoter(grunnlag);
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 200));
-        var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN,
+        var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(5), mottattDato.plusWeeks(1), BigDecimal.TEN,
                 null, false, Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .rettOgOmsorg(beggeRett())
@@ -769,13 +767,13 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                 .kontoer(kontoer)
                 .behandling(morBehandling().kreverSammenhengendeUttak(true))
                 .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(5).minusDays(1)))
                         .oppgittPeriode(gradering))
                 .inngangsvilkår(oppfyltAlleVilkår());
         var resultat = fastsettPerioder(grunnlag);
-        assertThat(resultat).hasSize(3);
+        assertThat(resultat).hasSize(4);
         assertThat(resultat.get(1).uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
-                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD);
+                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
         assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget()).isFalse();
         assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget(ARBEIDSFORHOLD_1)).isFalse();
         assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget(ARBEIDSFORHOLD_1)).isFalse();

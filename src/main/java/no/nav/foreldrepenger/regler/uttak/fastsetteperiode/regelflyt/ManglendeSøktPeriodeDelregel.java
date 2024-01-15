@@ -8,7 +8,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEr
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenInnenforUkerReservertMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenOpprettetAvFødselshendelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -72,30 +71,23 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmDagerIgjenPåAlleAktiviteter(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmDagerIgjenPåAlleAktiviteter.ID, SjekkOmDagerIgjenPåAlleAktiviteter.BESKRIVELSE)
-                .hvis(new SjekkOmDagerIgjenPåAlleAktiviteter(), sjekkOmBrukSammenhengendeUttakÅrsaker(rs))
+                .hvis(new SjekkOmDagerIgjenPåAlleAktiviteter(), sjekkOmSakGjelderBareFarRett(rs))
                 .ellers(Manuellbehandling.opprett("UT1291", null,
                         Manuellbehandlingårsak.STØNADSKONTO_TOM, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBrukSammenhengendeUttakÅrsaker(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
-                .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), sjekkOmSøkerErMor(rs))
-                .ellers(sjekkOmSakGjelderBareFarRett(rs));
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor(Ruleset<FastsettePeriodeGrunnlag> rs) {
-        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
-                .hvis(new SjekkOmSøkerErMor(),
-                        Manuellbehandling.opprett("UT1096", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.VURDER_OM_UTSETTELSE,
-                                true, false))
-                .ellers(IkkeOppfylt.opprett("UT1087", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, true, false));
+                .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(),
+                    Manuellbehandling.opprett("UT1096", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.VURDER_OM_UTSETTELSE, true, false))
+                .ellers(sjekkOmPeriodeGjelderMorsReserverteUker(rs));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSakGjelderBareFarRett(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
                 .hvis(new SjekkOmBareFarHarRett(),
                         IkkeOppfylt.opprett("UT1093", IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT, true, false))
-                .ellers(sjekkOmPeriodeGjelderMorsReserverteUker(rs));
+                .ellers(sjekkOmBrukSammenhengendeUttakÅrsaker(rs));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeGjelderMorsReserverteUker(Ruleset<FastsettePeriodeGrunnlag> rs) {

@@ -18,84 +18,83 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
 class SøknadMottattDatoRegelTest {
 
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
 
     @Test
-    void mottattDatoFørSluttAvGraderingBlirSendtManuellBehandling() {
-        var mottattDato = LocalDate.of(2018, 10, 10);
+    void mottattDatoFørSluttAvGraderingBlirInnvilget() {
+        var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertThat(regelresultat.getAvklaringÅrsak()).isNull();
-        assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.SØKNADSFRIST);
-        assertThat(regelresultat.oppfylt()).isFalse();
-        assertThat(regelresultat.skalUtbetale()).isFalse();
+        assertThat(regelresultat.oppfylt()).isTrue();
+        assertThat(regelresultat.skalUtbetale()).isTrue();
         assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
     }
 
     @Test
-    void mottattDatoFørSluttAvFerieBlirAvslått() {
-        var mottattDato = LocalDate.of(2018, 10, 10);
+    void mottattDatoFørSluttAvFerieBlirInnvilget() {
+        var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
-        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
     }
 
     @Test
     void mottattDatoEtterSluttAvFerieBlirInnvilget() {
-        var mottattDato = LocalDate.of(2018, 10, 10);
+        var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE,
                 mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_FERIE_ETTER_PERIODEN_HAR_BEGYNT);
+        assertThat(regelresultat.oppfylt()).isTrue();
+        assertThat(regelresultat.skalUtbetale()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
     }
 
     @Test
-    void mottattDatoFørSluttAvArbeidBlirAvslått() {
-        var mottattDato = LocalDate.of(2018, 10, 10);
+    void mottattDatoFørSluttAvArbeidBlirInnvilget() {
+        var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
-        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.oppfylt()).isTrue();
         assertThat(regelresultat.skalUtbetale()).isFalse();
-        assertThat(regelresultat.trekkDagerFraSaldo()).isTrue();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
     }
 
     @Test
     void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
-        var mottattDato = LocalDate.of(2018, 10, 10);
+        var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID,
                 mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertThat(regelresultat.getAvklaringÅrsak()).isNotEqualTo(IkkeOppfyltÅrsak.SØKT_UTSETTELSE_ARBEID_ETTER_PERIODEN_HAR_BEGYNT);
+        assertThat(regelresultat.oppfylt()).isTrue();
+        assertThat(regelresultat.skalUtbetale()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {
@@ -107,7 +106,7 @@ class SøknadMottattDatoRegelTest {
     }
 
     private RegelGrunnlag.Builder basicBuilder() {
-        var aktivitetIdentifikator = AktivitetIdentifikator.forSelvstendigNæringsdrivende();
+        var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), null);
         var konto = new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(50);
         var kontoer = new Kontoer.Builder().konto(konto);
         return new RegelGrunnlag.Builder().kontoer(kontoer)

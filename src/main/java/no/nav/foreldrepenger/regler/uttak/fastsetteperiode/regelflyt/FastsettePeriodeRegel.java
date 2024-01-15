@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 
 import static no.nav.fpsak.nare.specification.NotSpecification.ikke;
 
-import java.util.Optional;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAdopsjonsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAkseptertSamtidigUttak;
@@ -14,7 +12,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErGradertFørSøknadMottattdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarHarDagerRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmForeldreansvarsvilkåretErOppfylt;
@@ -47,7 +44,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttaksperiodenEtterSøkersDødsdato;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandling;
@@ -70,7 +66,6 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
-    private Specification<FastsettePeriodeGrunnlag> fomGradertEtterSøknadMottattdato;
     private Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
     private Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
     private Specification<FastsettePeriodeGrunnlag> fomSamtykke;
@@ -164,12 +159,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
         return rs.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
                 "Sammenfaller uttaksperioden med en periode hos den andre parten som har utbetaling > 0?")
                 .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmSamtidigUttak())
-                .ellers(sjekkOmGradertEtterSøknadMottattdato());
+                .ellers(sjekkOmPeriodeErUtsettelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptertSamtidigUttak() {
         return rs.hvisRegel(SjekkOmAkseptertSamtidigUttak.ID, "Samtidig uttak er akseptert?")
-                .hvis(new SjekkOmAkseptertSamtidigUttak(), sjekkOmGradertEtterSøknadMottattdato())
+                .hvis(new SjekkOmAkseptertSamtidigUttak(), sjekkOmPeriodeErUtsettelse())
                 .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
 
@@ -295,18 +290,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTapendePeriode() {
         return rs.hvisRegel(SjekkOmTapendePeriode.ID, SjekkOmTapendePeriode.BESKRIVELSE)
                 .hvis(new SjekkOmTapendePeriode(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
-                .ellers(sjekkOmGradertEtterSøknadMottattdato());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmGradertEtterSøknadMottattdato() {
-        if (fomGradertEtterSøknadMottattdato == null) {
-            fomGradertEtterSøknadMottattdato = rs.hvisRegel(SjekkOmErGradertFørSøknadMottattdato.ID, "Er perioden gradert etter mottattdato?")
-                    .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak().og(new SjekkOmErGradertFørSøknadMottattdato().og(ikke(new SjekkOmBerørtBehandling()))),
-                            Manuellbehandling.opprett("UT1165", null, Manuellbehandlingårsak.SØKNADSFRIST, true, false,
-                                    Optional.of(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_SEN_SØKNAD)))
-                    .ellers(sjekkOmPeriodeErUtsettelse());
-        }
-        return fomGradertEtterSøknadMottattdato;
+                .ellers(sjekkOmPeriodeErUtsettelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {

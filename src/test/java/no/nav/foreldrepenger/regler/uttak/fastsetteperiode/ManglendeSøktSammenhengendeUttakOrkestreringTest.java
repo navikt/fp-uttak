@@ -80,8 +80,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(2);
-        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+        assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
         assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FORELDREPENGER);
@@ -132,7 +131,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
 
         assertThat(perioder).hasSize(4);
         assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+                IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         assertThat(perioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
         assertThat(perioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).decimalValue()).isNotZero();
@@ -252,7 +251,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
 
         assertThat(perioder).hasSize(3);
         assertThat(perioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER);
+                IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
         assertThat(perioder.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(perioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
         assertThat(perioder.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FORELDREPENGER);
