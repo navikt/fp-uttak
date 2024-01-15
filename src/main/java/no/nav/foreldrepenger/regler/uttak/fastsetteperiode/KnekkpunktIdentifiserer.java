@@ -85,8 +85,6 @@ class KnekkpunktIdentifiserer {
         if (grunnlag.getAnnenPart() != null) {
             knekkBasertPåAnnenPart(grunnlag, knekkpunkter);
         }
-        leggTilKnekkpunkterPåMottattDato(knekkpunkter, grunnlag);
-
 
         return knekkpunkter.stream()
                 .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
@@ -166,33 +164,6 @@ class KnekkpunktIdentifiserer {
 
     private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag) {
         return SjekkOmPeriodenErEtterMaksgrenseForUttak.regnUtMaksgrenseForLovligeUttaksdag(grunnlag.getDatoer().getFamiliehendelse());
-    }
-
-    private static void leggTilKnekkpunkterPåMottattDato(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
-        leggTilKnekkpunkterVedGradering(knekkpunkter, grunnlag);
-        leggTilKnekkpunkterVedUtsettelse(knekkpunkter, grunnlag);
-    }
-
-    private static void leggTilKnekkpunkterVedGradering(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
-        for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
-            if (oppgittPeriode.erSøktGradering()) {
-                var mottattDato = oppgittPeriode.getTidligstMottattDato();
-                if (mottattDato.isPresent() && !oppgittPeriode.getFom().isAfter(mottattDato.get())) {
-                    knekkpunkter.add(mottattDato.get());
-                }
-            }
-        }
-    }
-
-    private static void leggTilKnekkpunkterVedUtsettelse(Set<LocalDate> knekkpunkter, RegelGrunnlag grunnlag) {
-        for (var oppgittPeriode : grunnlag.getSøknad().getOppgittePerioder()) {
-            if (oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.FERIE) || oppgittPeriode.isUtsettelsePga(UtsettelseÅrsak.ARBEID)) {
-                var mottattDato = oppgittPeriode.getTidligstMottattDato();
-                if (mottattDato.isPresent() && !oppgittPeriode.getFom().isAfter(mottattDato.get())) {
-                    knekkpunkter.add(mottattDato.get());
-                }
-            }
-        }
     }
 
     private static List<LocalDate> finnKnekkpunktPåBevegeligeHelligdagerI(LukketPeriode uttaksperiode) {

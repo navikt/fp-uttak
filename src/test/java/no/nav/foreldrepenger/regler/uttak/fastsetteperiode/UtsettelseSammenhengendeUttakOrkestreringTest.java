@@ -568,9 +568,9 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
 
         var resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(3);
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
