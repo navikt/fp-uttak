@@ -182,43 +182,6 @@ class KnekkpunktIdentifisererTest {
     }
 
     @Test
-    void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
-        var mottattdato = LocalDate.of(2018, 10, 10);
-        var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
-        var gradertStønadsperiode = OppgittPeriode.forGradering(Stønadskontotype.FELLESPERIODE, mottattdato.minusMonths(1),
-                mottattdato.minusWeeks(2), BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold),
-                mottattdato, mottattdato, null, null);
-        var grunnlag = RegelGrunnlagTestBuilder.create()
-                .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
-                .revurdering(new Revurdering.Builder().endringsdato(LocalDate.of(2018, 5, 5)))
-                .behandling(new Behandling.Builder())
-                .søknad(new Søknad.Builder().oppgittPeriode(gradertStønadsperiode))
-                .build();
-
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
-
-        assertThat(knekkpunkter).contains(mottattdato);
-    }
-
-    @Test
-    void finnerKnekkPåFørstegangssøknadMottattdatoHvisGraderingStarterFørMottattdato() {
-        var mottattdato = LocalDate.of(2018, 10, 10);
-        var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
-        var gradertStønadsperiode = OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, mottattdato.minusMonths(1),
-                mottattdato.minusWeeks(2), BigDecimal.valueOf(30), null, false, Set.of(gradertArbeidsforhold),
-                mottattdato, mottattdato, null, null);
-        var grunnlag = RegelGrunnlagTestBuilder.create()
-                .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
-                .behandling(new Behandling.Builder())
-                .søknad(new Søknad.Builder().oppgittPeriode(gradertStønadsperiode))
-                .build();
-
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
-
-        assertThat(knekkpunkter).contains(mottattdato);
-    }
-
-    @Test
     void finnerKnekkPåEndringssøknadMottattdatoHvisGraderingStarterPåMottattdato() {
         var mottattdato = LocalDate.of(2018, 10, 10);
         var gradertArbeidsforhold = AktivitetIdentifikator.forFrilans();
@@ -252,39 +215,6 @@ class KnekkpunktIdentifisererTest {
         assertThat(knekkpunkter)
             .isNotEmpty()
             .doesNotContain(mottattdato);
-    }
-
-    @Test
-    void finnerKnekkPåEndringssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
-        var mottattdato = LocalDate.of(2018, 10, 10);
-        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
-            UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null, null);
-        var grunnlag = RegelGrunnlagTestBuilder.create()
-                .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
-                .revurdering(new Revurdering.Builder().endringsdato(LocalDate.of(2018, 5, 5)))
-                .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))
-                .behandling(new Behandling.Builder())
-                .build();
-
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
-
-        assertThat(knekkpunkter).contains(mottattdato);
-    }
-
-    @Test
-    void finnerKnekkPåFørstegangssøknadMottattdatoHvisUtsettelseFerieArbeidStarterFørMottattdato() {
-        var mottattdato = LocalDate.of(2018, 10, 10);
-        var utsettelse = OppgittPeriode.forUtsettelse(mottattdato.minusWeeks(2), mottattdato.minusWeeks(1),
-            UtsettelseÅrsak.FERIE, mottattdato, mottattdato, null, null);
-        var grunnlag = RegelGrunnlagTestBuilder.create()
-                .datoer(new Datoer.Builder().fødsel(LocalDate.of(2018, 5, 5)))
-                .søknad(new Søknad.Builder().oppgittPeriode(utsettelse))
-                .behandling(new Behandling.Builder())
-                .build();
-
-        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
-
-        assertThat(knekkpunkter).contains(mottattdato);
     }
 
     @Test

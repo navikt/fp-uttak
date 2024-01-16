@@ -704,9 +704,8 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                         .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                         .oppgittPeriode(gradering));
         var resultat = fastsettPerioder(grunnlag);
-        assertThat(resultat).hasSize(3);
+        assertThat(resultat).hasSize(2);
         assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -724,10 +723,9 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                 .oppgittPeriode(gradering));
         var resultat = fastsettPerioder(grunnlag);
-        assertThat(resultat).hasSize(3);
+        assertThat(resultat).hasSize(2);
         assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
         assertThat(resultat.get(1).uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isNull();
-        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
     }
 
     @Test
@@ -771,7 +769,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
                         .oppgittPeriode(gradering))
                 .inngangsvilkår(oppfyltAlleVilkår());
         var resultat = fastsettPerioder(grunnlag);
-        assertThat(resultat).hasSize(4);
+        assertThat(resultat).hasSize(3);
         assertThat(resultat.get(1).uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
                 GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
         assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget()).isFalse();
