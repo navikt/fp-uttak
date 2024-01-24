@@ -102,7 +102,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
 
     private static List<OppgittPeriode> finnManglendeSøktePerioderTilFarMedAleneomsorg(RegelGrunnlag grunnlag) {
         if (isFarMedAleneomsorg(grunnlag)) {
-            var førstePeriode = grunnlag.getSøknad().getOppgittePerioder().get(0);
+            var førstePeriode = grunnlag.getSøknad().getOppgittePerioder().getFirst();
             if (grunnlag.getDatoer().getFamiliehendelse().isBefore(førstePeriode.getFom())) {
                 var nyPeriode = lagManglendeSøktPeriode(grunnlag.getDatoer().getFamiliehendelse(),
                         førstePeriode.getFom().minusDays(1), Stønadskontotype.FORELDREPENGER);
