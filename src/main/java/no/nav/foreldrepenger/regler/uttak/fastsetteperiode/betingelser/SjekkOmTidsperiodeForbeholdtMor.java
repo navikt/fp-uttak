@@ -34,7 +34,7 @@ public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<Fastsette
 
     private LocalDate fomDatoForbeholdtMor(LocalDate familiehendelse) {
         var antallUkerFør = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
-        return familiehendelse.minusWeeks(antallUkerFør).minusDays(1);
+        return familiehendelse.minusWeeks(antallUkerFør);
     }
 
     private LocalDate tomDatoForbeholdtMor(LocalDate familiehendelse) {
