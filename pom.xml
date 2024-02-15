@@ -45,7 +45,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <fpsak.nare.version>2.6.1</fpsak.nare.version>
-        <jupiter.version>5.10.1</jupiter.version>
+        <jupiter.version>5.10.2</jupiter.version>
         <assertj.version>3.25.3</assertj.version>
 
         <!-- Sonar felles -->
