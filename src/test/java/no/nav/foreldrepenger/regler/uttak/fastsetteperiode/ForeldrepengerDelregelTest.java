@@ -276,7 +276,7 @@ class ForeldrepengerDelregelTest {
     }
 
     @Test
-    void _fødsel_bare_mor_rett_periode_før_fødsel() {
+    void fødsel_bare_mor_rett_periode_før_fødsel() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.minusWeeks(3);
         var tom = familiehendelseDato.minusWeeks(2);
@@ -289,11 +289,11 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, "UT1192");
+        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, true);
     }
 
     @Test
-    void _fødsel_bare_mor_aleneomsorg_periode_før_fødsel() {
+    void fødsel_bare_mor_aleneomsorg_periode_før_fødsel() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.minusWeeks(3);
         var tom = familiehendelseDato.minusWeeks(2);
@@ -306,7 +306,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, "UT1197");
+        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, true);
     }
 
     private void assertManuellBehandling(FastsettePerioderRegelresultat regelresultat,
