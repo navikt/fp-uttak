@@ -289,7 +289,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, true);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, "UT1192");
     }
 
     @Test
@@ -306,7 +306,7 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, true);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, "UT1197");
     }
 
     private void assertManuellBehandling(FastsettePerioderRegelresultat regelresultat,

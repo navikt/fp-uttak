@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -115,12 +114,12 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
                 .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(),
                         IkkeOppfylt.opprett("UT1040", IkkeOppfyltÅrsak.MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL, false,
                                 false))
-                .ellers(sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel());
+                .ellers(sjekkOmPeriodenStarterFørFamilieHendelse());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel() {
-        return rs.hvisRegel(SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel.ID, "Starter perioden før 3 uker før termin/fødsel?")
-                .hvis(new SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel(), sjekkOmGraderingIPerioden())
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørFamilieHendelse() {
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), sjekkOmGraderingIPerioden())
                 .ellers(sjekkOmUttakSkjerEtterDeFørsteUkene());
     }
 

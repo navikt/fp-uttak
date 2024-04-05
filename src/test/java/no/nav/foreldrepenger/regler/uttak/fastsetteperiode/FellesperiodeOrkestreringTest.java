@@ -98,7 +98,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     }
 
     @Test
-    void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_etter_3_uker_før_fødsel_blir_innvilget_med_knekk_ved_3_uker_resten_blir_manuell_behandling() {
+    void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_etter_3_uker_før_fødsel_og_blir_innvilget() {
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(3 * 5))
                 .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(15 * 5))
                 .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(16 * 5));
@@ -115,8 +115,8 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
         assertThat(resultater).hasSize(4);
         verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
                 Perioderesultattype.INNVILGET, FELLESPERIODE);
-        verifiserManuellBehandlingPeriode(resultater.get(1).uttakPeriode(), fødselsdato.minusWeeks(3),
-                fødselsdato.minusWeeks(1).minusDays(1), FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
+        verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1).minusDays(1),
+            Perioderesultattype.INNVILGET, FELLESPERIODE);
         verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.minusWeeks(1), fødselsdato.minusDays(1),
                 Perioderesultattype.INNVILGET, FORELDREPENGER_FØR_FØDSEL);
         verifiserPeriode(resultater.get(3).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
@@ -159,8 +159,8 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
                 Perioderesultattype.AVSLÅTT, Stønadskontotype.FELLESPERIODE);
         verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3).minusDays(1),
                 Perioderesultattype.INNVILGET, Stønadskontotype.FELLESPERIODE);
-        verifiserManuellBehandlingPeriode(resultater.get(2).uttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
-                FELLESPERIODE, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
+        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.minusWeeks(3), fødselsdato.minusDays(1),
+            Perioderesultattype.INNVILGET, Stønadskontotype.FELLESPERIODE);
         verifiserManuellBehandlingPeriode(resultater.get(3).uttakPeriode(), fødselsdato, fødselsdato, FELLESPERIODE, null,
                 Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO);
         verifiserAvslåttPeriode(resultater.get(4).uttakPeriode(), fødselsdato.plusDays(1), fødselsdato.plusWeeks(6).minusDays(3),
