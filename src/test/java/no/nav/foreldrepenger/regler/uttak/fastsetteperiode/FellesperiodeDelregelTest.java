@@ -56,8 +56,8 @@ class FellesperiodeDelregelTest {
     }
 
     @Test
-    void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_7_uker_blir_avslått() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(3), null, false);
+    void fellesperiode_mor_uttak_starter_etter_fødsel_og_som_slutter_før_7_uker_blir_avslått() {
+        var søknadsperiode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -70,7 +70,7 @@ class FellesperiodeDelregelTest {
     }
 
     @Test
-    void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_fødsel_blir_avslått() {
+    void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_fødsel_blir_innvilget() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
@@ -80,7 +80,7 @@ class FellesperiodeDelregelTest {
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.oppfylt()).isTrue();
     }
 
     @Test
