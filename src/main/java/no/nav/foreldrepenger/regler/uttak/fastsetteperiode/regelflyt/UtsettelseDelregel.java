@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarHarDagerRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselErFørUke33;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFørTermin;
@@ -56,7 +57,11 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRett() {
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
                 .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet())
-                .ellers(Oppfylt.opprett("UT1351", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false));
+                .ellers(innvilgUT1351());
+    }
+
+    private static FastsettePeriodeUtfall innvilgUT1351() {
+        return Oppfylt.opprett("UT1351", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitet() {
@@ -68,7 +73,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
         return rs.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
                 .hvis(new SjekkOmTidsperiodeForbeholdtMor(), sjekkOmSykdomSkade())
-                .ellers(sjekkOmBareFarHarRett());
+                .ellers(sjekkOmAleneomsorg());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAleneomsorg() {
+        return rs.hvisRegel(SjekkOmErAleneomsorg.ID, SjekkOmErAleneomsorg.BESKRIVELSE)
+            .hvis(new SjekkOmErAleneomsorg(), innvilgUT1351())
+            .ellers(sjekkOmBareFarHarRett());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSykdomSkade() {

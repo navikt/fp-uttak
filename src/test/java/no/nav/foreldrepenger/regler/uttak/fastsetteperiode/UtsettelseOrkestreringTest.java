@@ -750,6 +750,25 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
+    @Test
+    void fri_utsettelse_etter_uke_6_far_aleneomsorg_innvilges() {
+        var fødselsdato = LocalDate.of(2024, 5, 13);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .rettOgOmsorg(aleneomsorg())
+            .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100))
+            .søknad(søknad(FØDSEL,
+                oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                utsettelsePeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1), FRI, null),
+                oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15).minusDays(1))
+            ));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(3);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
+    }
+
     @ParameterizedTest
     @EnumSource(UtsettelseÅrsak.class)
     void annen_parts_periode_skal_trekke_dager_selv_om_de_overlapper_med_søkers_utsettelse(UtsettelseÅrsak utsettelseÅrsak) {
