@@ -9,10 +9,6 @@ fp-uttak
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-uttak&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=navikt_fp-uttak)
 
 Uttaksregler for foreldrepenger.
-Inneholder tre tjenester for foreldrepenger:
-* Opprett stønadskontoer
-* Fastsett uttaksperioder
-* Søknadsfrist
 
 # Komme i gang
 
