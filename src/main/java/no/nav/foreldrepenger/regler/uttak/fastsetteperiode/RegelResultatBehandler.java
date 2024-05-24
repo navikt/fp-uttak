@@ -191,7 +191,8 @@ class RegelResultatBehandler {
             return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent(),
                 annenpartSamtidigUttaksprosent);
         }
-        return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent);
+        var annenpartStillingsprosent = oppgittPeriode.getAnnenpartStillingsprosent();
+        return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent, annenpartStillingsprosent);
     }
 
     private record PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {

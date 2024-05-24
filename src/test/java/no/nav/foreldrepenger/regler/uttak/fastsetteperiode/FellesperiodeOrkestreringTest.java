@@ -167,9 +167,10 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
             .søknad(new Søknad.Builder().type(Søknadstype.TERMIN)
                 .oppgittePerioder(List.of(
                     OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(15), termin.minusWeeks(3).minusDays(1), null, false, null, null,
-                        null, null),
+                        null, null, null),
                     OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1), null, false, null, null,
-                        null, null), OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false, null, null, null, null))));
+                        null, null, null),
+                    OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false, null, null, null, null, null))));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -189,9 +190,10 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittePerioder(List.of(
                     OppgittPeriode.forVanligPeriode(FELLESPERIODE, termin.minusWeeks(12), termin.minusWeeks(3).minusDays(1), null, false, null, null,
-                        null, null),
+                        null, null, null),
                     OppgittPeriode.forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, termin.minusWeeks(3), termin.minusDays(1), null, false, null, null,
-                        null, null), OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false, null, null, null, null))));
+                        null, null, null),
+                    OppgittPeriode.forVanligPeriode(MØDREKVOTE, termin, termin.plusWeeks(4), null, false, null, null, null, null, null))));
 
         var resultater = fastsettPerioder(grunnlag);
 

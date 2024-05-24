@@ -132,7 +132,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var arbeidstidsprosent = BigDecimal.TEN;
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
-            arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null);
+            arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
             .konto(konto(MØDREKVOTE, 50))
             .konto(konto(FEDREKVOTE, 50))
@@ -258,7 +258,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         //10 virkedager
         var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
-            arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null);
+            arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null, null);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
             .konto(konto(MØDREKVOTE, 50))
             .konto(konto(FEDREKVOTE, 50))
@@ -657,7 +657,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         leggPåKvoter(grunnlag);
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN, null, false,
-            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
+            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
             .behandling(morBehandling().kreverSammenhengendeUttak(true))
@@ -676,7 +676,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         leggPåKvoter(grunnlag);
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), mottattDato.plusWeeks(1), BigDecimal.TEN, null, false,
-            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
+            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
             .behandling(morBehandling().kreverSammenhengendeUttak(false))
@@ -697,7 +697,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var senestMottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var tidligstMottattDato = fødselsdato.plusWeeks(6);
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(6), senestMottattDato.plusWeeks(1), BigDecimal.TEN, null, false,
-            Set.of(ARBEIDSFORHOLD_1), senestMottattDato, tidligstMottattDato, null, null);
+            Set.of(ARBEIDSFORHOLD_1), senestMottattDato, tidligstMottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
             .behandling(morBehandling())
@@ -717,7 +717,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 200));
         var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(5), mottattDato.plusWeeks(1), BigDecimal.TEN, null, false,
-            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null);
+            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))

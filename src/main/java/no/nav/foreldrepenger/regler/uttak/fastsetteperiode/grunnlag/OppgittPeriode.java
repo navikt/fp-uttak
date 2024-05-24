@@ -20,6 +20,7 @@ public final class OppgittPeriode extends LukketPeriode {
     private final LocalDate senestMottattDato;
     private final LocalDate tidligstMottattDato;
     private final MorsAktivitet morsAktivitet;
+    private final BigDecimal annenpartStillingsprosent;
     private final DokumentasjonVurdering dokumentasjonVurdering;
     private Set<AktivitetIdentifikator> aktiviteter = Set.of();
 
@@ -37,6 +38,7 @@ public final class OppgittPeriode extends LukketPeriode {
                            LocalDate senestMottattDato,
                            LocalDate tidligstMottattDato,
                            MorsAktivitet morsAktivitet,
+                           BigDecimal annenpartStillingsprosent,
                            DokumentasjonVurdering dokumentasjonVurdering) {
         super(fom, tom);
         this.arbeidsprosent = arbeidsprosent;
@@ -51,13 +53,14 @@ public final class OppgittPeriode extends LukketPeriode {
         this.senestMottattDato = senestMottattDato;
         this.tidligstMottattDato = tidligstMottattDato;
         this.morsAktivitet = morsAktivitet;
+        this.annenpartStillingsprosent = annenpartStillingsprosent;
         this.dokumentasjonVurdering = dokumentasjonVurdering;
     }
 
     public OppgittPeriode kopiMedNyPeriode(LocalDate nyFom, LocalDate nyTom) {
         var kopi = new OppgittPeriode(stønadskontotype, nyFom, nyTom, manglendeSøktPeriode, arbeidsprosent, gradertAktiviteter, overføringÅrsak,
             samtidigUttaksprosent, flerbarnsdager, utsettelseÅrsak, oppholdÅrsak, senestMottattDato, tidligstMottattDato, morsAktivitet,
-            dokumentasjonVurdering);
+            annenpartStillingsprosent, dokumentasjonVurdering);
         kopi.aktiviteter = aktiviteter;
         return kopi;
     }
@@ -171,7 +174,7 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
-        return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null, null, null);
+        return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null, null, null, null);
     }
 
     public static OppgittPeriode forUtsettelse(LocalDate fom,
@@ -182,7 +185,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                                MorsAktivitet morsAktivitet,
                                                DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, null, false, utsettelseÅrsak, null, senestMottattDato,
-            tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+            tidligstMottattDato, morsAktivitet, null, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forOverføring(Stønadskontotype stønadskontotype,
@@ -193,7 +196,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                                LocalDate tidligstMottattDato,
                                                DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, null, false, null, null, senestMottattDato,
-            tidligstMottattDato, null, dokumentasjonVurdering);
+            tidligstMottattDato, null, null, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forOpphold(LocalDate fom,
@@ -202,7 +205,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                             LocalDate senestMottattDato,
                                             LocalDate tidligstMottattDato) {
         return new OppgittPeriode(OppholdÅrsak.map(oppholdÅrsak), fom, tom, false, null, Set.of(), null, null, false, null, oppholdÅrsak,
-            senestMottattDato, tidligstMottattDato, null, null);
+            senestMottattDato, tidligstMottattDato, null, null, null);
     }
 
     public static OppgittPeriode forGradering(Stønadskontotype stønadskontotype,
@@ -215,9 +218,10 @@ public final class OppgittPeriode extends LukketPeriode {
                                               LocalDate senestMottattDato,
                                               LocalDate tidligstMottattDato,
                                               MorsAktivitet morsAktivitet,
+                                              BigDecimal annenpartStillingsprosent,
                                               DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, arbeidsprosent, gradertAktiviteter, null, samtidigUttaksprosent, flerbarnsdager,
-            null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+            null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, annenpartStillingsprosent, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forVanligPeriode(Stønadskontotype stønadskontotype,
@@ -228,9 +232,10 @@ public final class OppgittPeriode extends LukketPeriode {
                                                   LocalDate senestMottattDato,
                                                   LocalDate tidligstMottattDato,
                                                   MorsAktivitet morsAktivitet,
+                                                  BigDecimal annenpartStillingsprosent,
                                                   DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), null, samtidigUttaksprosent, flerbarnsdager, null, null,
-            senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+            senestMottattDato, tidligstMottattDato, morsAktivitet, annenpartStillingsprosent, dokumentasjonVurdering);
     }
 
     @Override
@@ -262,5 +267,9 @@ public final class OppgittPeriode extends LukketPeriode {
             + manglendeSøktPeriode + ", flerbarnsdager=" + flerbarnsdager + ", samtidigUttak=" + samtidigUttaksprosent + ", utsettelseÅrsak="
             + utsettelseÅrsak + ", oppholdÅrsak=" + oppholdÅrsak + ", senestMottattDato=" + senestMottattDato + ", tidligstMottattDato="
             + tidligstMottattDato + ", aktiviteter=" + aktiviteter + ", dokumentasjonVurdering=" + dokumentasjonVurdering + '}';
+    }
+
+    public BigDecimal getAnnenpartStillingsprosent() {
+        return annenpartStillingsprosent;
     }
 }

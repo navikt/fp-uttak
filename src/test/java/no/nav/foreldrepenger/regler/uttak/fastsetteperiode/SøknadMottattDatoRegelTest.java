@@ -118,6 +118,6 @@ class SøknadMottattDatoRegelTest {
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {
         return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, BigDecimal.TEN, null, false,
-            Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), mottattDato, mottattDato, null, null);
+            Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), mottattDato, mottattDato, null, null, null);
     }
 }

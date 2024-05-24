@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
@@ -12,11 +14,13 @@ class UtbetalingsgradUtenGraderingUtregningTest {
 
     @Test
     void utbetaling_skal_være_100_prosent() {
-        var utregning = utregning();
+        var utregning = new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO, null);
         assertThat(utregning.resultat()).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
-    private UtbetalingsgradUtenGraderingUtregning utregning() {
-        return new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO);
+    @Test
+    void utbetaling_skal_være_justert_til_annenparts_stillingsprosent() {
+        var utregning = new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO, BigDecimal.valueOf(10));
+        assertThat(utregning.resultat()).isEqualTo(Utbetalingsgrad.TEN);
     }
 }

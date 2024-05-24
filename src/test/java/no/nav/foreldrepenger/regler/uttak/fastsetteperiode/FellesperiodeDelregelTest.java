@@ -436,7 +436,7 @@ class FellesperiodeDelregelTest {
                                                  boolean flerbarnsdager,
                                                  DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
-            Set.of(AktivitetIdentifikator.forFrilans()), null, null, null, dokumentasjonVurdering);
+            Set.of(AktivitetIdentifikator.forFrilans()), null, null, null, null, dokumentasjonVurdering);
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {
@@ -465,7 +465,7 @@ class FellesperiodeDelregelTest {
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager,
                                           DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, null, null, null,
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, null, null, null, null,
             dokumentasjonVurdering);
     }
 

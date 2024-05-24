@@ -88,7 +88,7 @@ class RevurderingTest {
     @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslåsHvisInnenforFørsteSeksUker() {
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(2),
-            SamtidigUttaksprosent.HUNDRED, false, null, null, null, null);
+            SamtidigUttaksprosent.HUNDRED, false, null, null, null, null, null);
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
             .annenPart(
                 annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
@@ -103,7 +103,7 @@ class RevurderingTest {
     @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalInnvilgesForBalanserteFedreSelvOmInnenforFørsteSeksUker() {
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(2),
-            SamtidigUttaksprosent.HUNDRED, false, null, null, null, null);
+            SamtidigUttaksprosent.HUNDRED, false, null, null, null, null, null);
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
             .annenPart(
                 annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
@@ -316,10 +316,10 @@ class RevurderingTest {
     }
 
     private OppgittPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null, null);
     }
 
     private OppgittPeriode uttakPeriodeFlerbarnsdager(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, true, null, null, null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, true, null, null, null, null, null);
     }
 }

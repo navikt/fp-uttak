@@ -23,7 +23,7 @@ class UtbetalingsgradMedGraderingUtregningTest {
         var arbeidstidsprosent = BigDecimal.valueOf(20);
 
         var periode = OppgittPeriode.forGradering(Stønadskontotype.FEDREKVOTE, LocalDate.now(), LocalDate.now().plusWeeks(1), arbeidstidsprosent,
-            null, false, Set.of(aktivitet1), null, null, null, null);
+            null, false, Set.of(aktivitet1), null, null, null, null, null);
 
         var utregningForAktivitet1 = utregning(aktivitet1, periode);
         var utregningForAktivitet2 = utregning(aktivitet2, periode);

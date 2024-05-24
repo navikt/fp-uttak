@@ -415,7 +415,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
                 //Mottatt mer enn 3 mnd etter start
                 .oppgittPeriode(
                     OppgittPeriode.forVanligPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(1).minusDays(1), null,
-                        false, omsorgsovertakelseDato.plusMonths(4), omsorgsovertakelseDato.plusMonths(4), null, null)))
+                        false, omsorgsovertakelseDato.plusMonths(4), omsorgsovertakelseDato.plusMonths(4), null, null, null)))
             .adopsjon(new Adopsjon.Builder().ankomstNorge(omsorgsovertakelseDato))
             .build();
 

@@ -50,7 +50,7 @@ class SjekkOmTomForAlleSineKontoerTest {
         var periodeSlutt = periodeStart.plusWeeks(6);
 
         var uttakPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt, null, false, null, null, null,
-            null);
+            null, null);
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(15 * 5))
             .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(10 * 5));
         var grunnlag = RegelGrunnlagTestBuilder.create()

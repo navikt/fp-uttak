@@ -772,7 +772,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
     void bfhr_utsettelse_som_trenger_dok_og_aktivitetskrav_vurdering_skal_gå_til_manuell() {
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var periode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), null, false,
-            fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT);
+            fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null, MORS_AKTIVITET_GODKJENT);
         var sykdom = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11).minusDays(1), SYKDOM_SKADE, fødselsdato,
             fødselsdato, MorsAktivitet.ARBEID, SYKDOM_SØKER_GODKJENT);
 

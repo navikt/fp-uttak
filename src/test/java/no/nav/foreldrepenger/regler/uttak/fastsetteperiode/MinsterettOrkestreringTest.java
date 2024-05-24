@@ -307,7 +307,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40)).minsterettDager(17).flerbarnsdager(10);
         var oppgittPeriode1 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(14).minusDays(1), null,
-            false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT);
+            false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null, MORS_AKTIVITET_GODKJENT);
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(17).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
@@ -347,7 +347,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 40)).minsterettDager(25).flerbarnsdager(20);
         var oppgittPeriode1 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), true, null);
         var gradertPeriode = OppgittPeriode.forGradering(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10), BigDecimal.TEN, null,
-            true, Set.of(ARBEIDSFORHOLD), fødselsdato, fødselsdato, null, null);
+            true, Set.of(ARBEIDSFORHOLD), fødselsdato, fødselsdato, null, null, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, gradertPeriode));
 
         var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
@@ -410,11 +410,11 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var arbeidsforhold1 = AktivitetIdentifikator.forArbeid(new Orgnummer("1"), null);
         var arbeidsforhold2 = AktivitetIdentifikator.forArbeid(new Orgnummer("2"), null);
         var gradering = OppgittPeriode.forGradering(FORELDREPENGER, LocalDate.of(2022, 10, 24), LocalDate.of(2023, 7, 31), BigDecimal.valueOf(44.7),
-            null, false, Set.of(arbeidsforhold1), fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
+            null, false, Set.of(arbeidsforhold1), fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, null, MORS_AKTIVITET_GODKJENT);
         var foreldrepenger1 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, LocalDate.of(2023, 8, 1), LocalDate.of(2023, 9, 25), null, false,
-            fødselsdato, fødselsdato, null, null);
+            fødselsdato, fødselsdato, null, null, null);
         var foreldrepenger2 = OppgittPeriode.forVanligPeriode(FORELDREPENGER, LocalDate.of(2023, 9, 26), LocalDate.of(2023, 12, 1), null, false,
-            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_IKKE_GODKJENT);
+            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, null, MORS_AKTIVITET_IKKE_GODKJENT);
 
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering, foreldrepenger1, foreldrepenger2));
 
@@ -446,7 +446,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var arbeidsforhold1 = AktivitetIdentifikator.forArbeid(new Orgnummer("1"), null);
         var arbeidsforhold2 = AktivitetIdentifikator.forArbeid(new Orgnummer("2"), null);
         var gradering = OppgittPeriode.forGradering(FORELDREPENGER, fødselsdato, LocalDate.of(2024, 1, 22), BigDecimal.valueOf(50), null, false,
-            Set.of(arbeidsforhold1), fødselsdato, fødselsdato, null, null);
+            Set.of(arbeidsforhold1), fødselsdato, fødselsdato, null, null, null);
 
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering));
 
@@ -479,11 +479,11 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
     private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet morsAktivitet, DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null, false,
-            fødselsdato, fødselsdato, morsAktivitet, dokumentasjonVurdering);
+            fødselsdato, fødselsdato, morsAktivitet, null, dokumentasjonVurdering);
     }
 
     private OppgittPeriode foreldrepenger(LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet, DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fom, tom, null, false, fom.minusWeeks(3), fom.minusWeeks(3), morsAktivitet,
+        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fom, tom, null, false, fom.minusWeeks(3), fom.minusWeeks(3), morsAktivitet, null,
             dokumentasjonVurdering);
     }
 
