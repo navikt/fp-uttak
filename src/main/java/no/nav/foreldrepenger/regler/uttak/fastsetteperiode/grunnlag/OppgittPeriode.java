@@ -20,7 +20,7 @@ public final class OppgittPeriode extends LukketPeriode {
     private final LocalDate senestMottattDato;
     private final LocalDate tidligstMottattDato;
     private final MorsAktivitet morsAktivitet;
-    private final BigDecimal annenpartStillingsprosent;
+    private final AnnenpartStillingsprosent annenpartStillingsprosent;
     private final DokumentasjonVurdering dokumentasjonVurdering;
     private Set<AktivitetIdentifikator> aktiviteter = Set.of();
 
@@ -38,7 +38,7 @@ public final class OppgittPeriode extends LukketPeriode {
                            LocalDate senestMottattDato,
                            LocalDate tidligstMottattDato,
                            MorsAktivitet morsAktivitet,
-                           BigDecimal annenpartStillingsprosent,
+                           AnnenpartStillingsprosent annenpartStillingsprosent,
                            DokumentasjonVurdering dokumentasjonVurdering) {
         super(fom, tom);
         this.arbeidsprosent = arbeidsprosent;
@@ -218,7 +218,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                               LocalDate senestMottattDato,
                                               LocalDate tidligstMottattDato,
                                               MorsAktivitet morsAktivitet,
-                                              BigDecimal annenpartStillingsprosent,
+                                              AnnenpartStillingsprosent annenpartStillingsprosent,
                                               DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, arbeidsprosent, gradertAktiviteter, null, samtidigUttaksprosent, flerbarnsdager,
             null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, annenpartStillingsprosent, dokumentasjonVurdering);
@@ -232,7 +232,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                                   LocalDate senestMottattDato,
                                                   LocalDate tidligstMottattDato,
                                                   MorsAktivitet morsAktivitet,
-                                                  BigDecimal annenpartStillingsprosent,
+                                                  AnnenpartStillingsprosent annenpartStillingsprosent,
                                                   DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), null, samtidigUttaksprosent, flerbarnsdager, null, null,
             senestMottattDato, tidligstMottattDato, morsAktivitet, annenpartStillingsprosent, dokumentasjonVurdering);
@@ -269,7 +269,7 @@ public final class OppgittPeriode extends LukketPeriode {
             + tidligstMottattDato + ", aktiviteter=" + aktiviteter + ", dokumentasjonVurdering=" + dokumentasjonVurdering + '}';
     }
 
-    public BigDecimal getAnnenpartStillingsprosent() {
+    public AnnenpartStillingsprosent getAnnenpartStillingsprosent() {
         return annenpartStillingsprosent;
     }
 }

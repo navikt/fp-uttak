@@ -746,7 +746,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             mottattDatoFar, mottattDatoFar, null, null);
         var fellesperiodeFom = utsettelsePeriode.getTom().plusDays(1);
         var fellesperiode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fellesperiodeFom, fellesperiodeFom.plusWeeks(1).minusDays(1), null, false,
-            mottattDatoFar, mottattDatoFar, MorsAktivitet.ARBEID, BigDecimal.valueOf(100), MORS_AKTIVITET_GODKJENT);
+            mottattDatoFar, mottattDatoFar, MorsAktivitet.ARBEID, null, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).behandling(farBehandling())
             .søknad(søknad(Søknadstype.FØDSEL, utsettelsePeriode, fellesperiode))
             .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
