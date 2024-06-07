@@ -2,26 +2,25 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.util.Objects;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartStillingsprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsStillingsprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
 class UtbetalingsgradUtenGraderingUtregning implements UtbetalingsgradUtregning {
 
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
-    private final AnnenpartStillingsprosent annenpartStillingsprosent;
+    private final MorsStillingsprosent morsStillingsprosent;
 
-    public UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent annenpartSamtidigUttaksprosent,
-                                                 AnnenpartStillingsprosent annenpartStillingsprosent) {
+    public UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent annenpartSamtidigUttaksprosent, MorsStillingsprosent morsStillingsprosent) {
         Objects.requireNonNull(annenpartSamtidigUttaksprosent);
         this.annenpartSamtidigUttaksprosent = annenpartSamtidigUttaksprosent;
-        this.annenpartStillingsprosent = annenpartStillingsprosent;
+        this.morsStillingsprosent = morsStillingsprosent;
     }
 
     @Override
     public Utbetalingsgrad resultat() {
-        if (annenpartStillingsprosent != null) {
-            return new Utbetalingsgrad(annenpartStillingsprosent.decimalValue());
+        if (morsStillingsprosent != null) {
+            return new Utbetalingsgrad(morsStillingsprosent.decimalValue());
         }
         return Utbetalingsgrad.HUNDRED.subtract(annenpartSamtidigUttaksprosent.decimalValue());
     }

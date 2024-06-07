@@ -4,19 +4,19 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-public class AnnenpartStillingsprosent implements Comparable<AnnenpartStillingsprosent> {
+public class MorsStillingsprosent implements Comparable<MorsStillingsprosent> {
 
-    public static final AnnenpartStillingsprosent ZERO = new AnnenpartStillingsprosent(0);
-    public static final AnnenpartStillingsprosent TEN = new AnnenpartStillingsprosent(10);
+    public static final MorsStillingsprosent ZERO = new MorsStillingsprosent(0);
+    public static final MorsStillingsprosent TEN = new MorsStillingsprosent(10);
 
 
     private final BigDecimal verdi;
 
-    public AnnenpartStillingsprosent(BigDecimal verdi) {
+    public MorsStillingsprosent(BigDecimal verdi) {
         this.verdi = scale(verdi);
     }
 
-    public AnnenpartStillingsprosent(int verdi) {
+    public MorsStillingsprosent(int verdi) {
         this(BigDecimal.valueOf(verdi));
     }
 
@@ -41,7 +41,7 @@ public class AnnenpartStillingsprosent implements Comparable<AnnenpartStillingsp
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        var that = (AnnenpartStillingsprosent) o;
+        var that = (MorsStillingsprosent) o;
         return Objects.equals(decimalValue(), that.decimalValue());
     }
 
@@ -51,7 +51,7 @@ public class AnnenpartStillingsprosent implements Comparable<AnnenpartStillingsp
     }
 
     @Override
-    public int compareTo(AnnenpartStillingsprosent annenpartStillingsprosent) {
-        return decimalValue().compareTo(annenpartStillingsprosent.decimalValue());
+    public int compareTo(MorsStillingsprosent morsStillingsprosent) {
+        return decimalValue().compareTo(morsStillingsprosent.decimalValue());
     }
 }

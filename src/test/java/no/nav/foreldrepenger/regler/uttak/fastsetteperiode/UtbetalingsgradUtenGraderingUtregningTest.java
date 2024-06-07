@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsStillingsprosent;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartStillingsprosent;
@@ -19,7 +21,7 @@ class UtbetalingsgradUtenGraderingUtregningTest {
 
     @Test
     void utbetaling_skal_være_justert_til_annenparts_stillingsprosent() {
-        var utregning = new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO, AnnenpartStillingsprosent.TEN);
+        var utregning = new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO, MorsStillingsprosent.TEN);
         assertThat(utregning.resultat()).isEqualTo(Utbetalingsgrad.TEN);
     }
 }
