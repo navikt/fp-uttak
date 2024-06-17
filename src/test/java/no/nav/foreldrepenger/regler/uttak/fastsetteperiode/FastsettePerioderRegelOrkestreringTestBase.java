@@ -67,18 +67,18 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
 
     RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .behandling(morBehandling())
-                .kontoer(defaultKontoer())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .inngangsvilkår(oppfyltAlleVilkår());
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .behandling(morBehandling())
+            .kontoer(defaultKontoer())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .inngangsvilkår(oppfyltAlleVilkår());
     }
 
     Kontoer.Builder defaultKontoer() {
         return new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
-                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
+            .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
+            .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
+            .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
     }
 
     void verifiserManuellBehandlingPeriode(UttakPeriode periode,
@@ -121,16 +121,12 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
                                   boolean flerbarnsdager,
                                   SamtidigUttaksprosent samtidigUttaksprosent,
                                   DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, null,
-                null, null, dokumentasjonVurdering);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, null, null, null,
+            dokumentasjonVurdering);
     }
 
-    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
-                                  LocalDate fom,
-                                  LocalDate tom,
-                                  DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null,
-            null, null, dokumentasjonVurdering);
+    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, dokumentasjonVurdering);
     }
 
     OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
@@ -181,7 +177,8 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
         return utsettelsePeriode(fom, tom, utsettelseÅrsak, null, dokumentasjonVurdering);
     }
 
-    OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom,
+    OppgittPeriode utsettelsePeriode(LocalDate fom,
+                                     LocalDate tom,
                                      UtsettelseÅrsak utsettelseÅrsak,
                                      MorsAktivitet morsAktivitet,
                                      DokumentasjonVurdering dokumentasjonVurdering) {
@@ -189,10 +186,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {
-        return new Inngangsvilkår.Builder().adopsjonOppfylt(true)
-                .foreldreansvarnOppfylt(true)
-                .fødselOppfylt(true)
-                .opptjeningOppfylt(true);
+        return new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true);
     }
 
     RettOgOmsorg.Builder aleneomsorg() {

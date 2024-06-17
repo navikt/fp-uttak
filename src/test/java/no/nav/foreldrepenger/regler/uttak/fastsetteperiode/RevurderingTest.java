@@ -40,12 +40,11 @@ class RevurderingTest {
 
     @Test
     void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilAvslagPgaSamtykke() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(false))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false).build()))
-                .build();
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
+                Utbetalingsgrad.TEN, false).build()))
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -58,14 +57,13 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalInnvilges() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
-        var grunnlag = basicBuilder(oppgittPeriode)
-                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
-                .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12)).innvilget(true).build()))
-                .behandling(berørtBehandling().søkerErMor(true))
-                .build();
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+            .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12))
+                .innvilget(true)
+                .build()))
+            .behandling(berørtBehandling().søkerErMor(true))
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -74,14 +72,13 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslåsHvisBehandlingKreverSammenhengendeUttak() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
-        var grunnlag = basicBuilder(oppgittPeriode)
-                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
-                .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12)).innvilget(true).build()))
-                .behandling(berørtBehandling().søkerErMor(true).kreverSammenhengendeUttak(true))
-                .build();
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+            .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12))
+                .innvilget(true)
+                .build()))
+            .behandling(berørtBehandling().søkerErMor(true).kreverSammenhengendeUttak(true))
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -90,13 +87,11 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalAvslåsHvisInnenforFørsteSeksUker() {
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO,
-            FAMILIEHENDELSE_DATO.plusWeeks(2), SamtidigUttaksprosent.HUNDRED, false, null, null,
-            null, null);
-        var grunnlag = basicBuilder(oppgittPeriode)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
-            .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO,
-                FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(2),
+            SamtidigUttaksprosent.HUNDRED, false, null, null, null, null);
+        var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+            .annenPart(
+                annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
             .behandling(berørtBehandling().søkerErMor(false))
             .build();
 
@@ -107,16 +102,13 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarInnvilgetUtsettelseSkalInnvilgesForBalanserteFedreSelvOmInnenforFørsteSeksUker() {
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO,
-            FAMILIEHENDELSE_DATO.plusWeeks(2), SamtidigUttaksprosent.HUNDRED, false, null, null,
-            null, null);
-        var grunnlag = basicBuilder(oppgittPeriode)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
-            .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO,
-                FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FEDREKVOTE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(2),
+            SamtidigUttaksprosent.HUNDRED, false, null, null, null, null);
+        var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+            .annenPart(
+                annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
             .behandling(berørtBehandling().søkerErMor(false))
-            .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.FEDREKVOTE).trekkdager(50))
-                .farUttakRundtFødselDager(10))
+            .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.FEDREKVOTE).trekkdager(50)).farUttakRundtFødselDager(10))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -126,13 +118,12 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslås() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(true))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false).build()))
-                .behandling(berørtBehandling())
-                .build();
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
+                Utbetalingsgrad.TEN, false).build()))
+            .behandling(berørtBehandling())
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -141,13 +132,12 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0MenIkkeSamtidigUttakSkalAvslåsOgKnekkes() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(true))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, false).build()))
-                .behandling(berørtBehandling())
-                .build();
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
+                Utbetalingsgrad.TEN, false).build()))
+            .behandling(berørtBehandling())
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -156,13 +146,12 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalManueltVurderes() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(true))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.HUNDRED.subtract(Utbetalingsgrad.TEN), true).build()))
-                .behandling(berørtBehandling())
-                .build();
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
+                Utbetalingsgrad.HUNDRED.subtract(Utbetalingsgrad.TEN), true).build()))
+            .behandling(berørtBehandling())
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -171,12 +160,10 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakSkalAutomatiskReduseres() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-            FAMILIEHENDELSE_DATO.plusWeeks(12));
-        var grunnlag = basicBuilder(oppgittPeriode)
-            .rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
-            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12), new Utbetalingsgrad(60), true).build()))
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
+                new Utbetalingsgrad(60), true).build()))
             .behandling(berørtBehandling().søkerErMor(true))
             .build();
 
@@ -191,13 +178,12 @@ class RevurderingTest {
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakFlerbarnsdagerSkalFlyteVidere() {
         var oppgittPeriode = uttakPeriodeFlerbarnsdager(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
-        var grunnlag = basicBuilder(oppgittPeriode, true, true)
-                .rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                        FAMILIEHENDELSE_DATO.plusWeeks(12), Utbetalingsgrad.TEN, true).build()))
-                .behandling(berørtBehandling().søkerErMor(true))
-                .build();
+            FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var grunnlag = basicBuilder(oppgittPeriode, true, true).rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
+            .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
+                Utbetalingsgrad.TEN, true).build()))
+            .behandling(berørtBehandling().søkerErMor(true))
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -209,14 +195,12 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakFlerbarnsdagerSkalFlyteVidereMKAP() {
-        var oppgittPeriode = uttakPeriodeFlerbarnsdager(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO,
-                FAMILIEHENDELSE_DATO.plusWeeks(10));
-        var grunnlag = basicBuilder(oppgittPeriode, false,true)
-                .rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.MØDREKVOTE, FAMILIEHENDELSE_DATO,
-                        FAMILIEHENDELSE_DATO.plusWeeks(10), Utbetalingsgrad.TEN, true).build()))
-                .behandling(berørtBehandling().søkerErMor(false))
-                .build();
+        var oppgittPeriode = uttakPeriodeFlerbarnsdager(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(10));
+        var grunnlag = basicBuilder(oppgittPeriode, false, true).rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
+            .annenPart(annenPart(
+                lagPeriode(Stønadskontotype.MØDREKVOTE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(10), Utbetalingsgrad.TEN, true).build()))
+            .behandling(berørtBehandling().søkerErMor(false))
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -229,14 +213,13 @@ class RevurderingTest {
 
     @Test
     void berørtBehandlingHvorDenAndrePartenHarUtbetalingOver0OgSamtidigUttakFlerbarnsdagerSkalFlyteVidereMK() {
-        var oppgittPeriode = uttakPeriode(Stønadskontotype.MØDREKVOTE, FAMILIEHENDELSE_DATO,
-                FAMILIEHENDELSE_DATO.plusWeeks(6).minusDays(1));
-        var grunnlag = basicBuilder(oppgittPeriode, true,true)
-                .rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
-                .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO,
-                        FAMILIEHENDELSE_DATO.plusWeeks(10).minusDays(1), Utbetalingsgrad.TEN, true).flerbarnsdager(true).build()))
-                .behandling(berørtBehandling().søkerErMor(true))
-                .build();
+        var oppgittPeriode = uttakPeriode(Stønadskontotype.MØDREKVOTE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(6).minusDays(1));
+        var grunnlag = basicBuilder(oppgittPeriode, true, true).rettOgOmsorg(samtykke(true).morHarRett(true).farHarRett(true))
+            .annenPart(annenPart(
+                lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(10).minusDays(1), Utbetalingsgrad.TEN,
+                    true).flerbarnsdager(true).build()))
+            .behandling(berørtBehandling().søkerErMor(true))
+            .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
@@ -248,11 +231,9 @@ class RevurderingTest {
 
     @Test
     void revurdering_søknad_der_opphørsdato_ligger_i_perioden() {
-        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
 
-        var grunnlag = basicBuilder(uttaksperiode).medlemskap(
-                new Medlemskap.Builder().opphørsdato(uttaksperiode.getFom().plusWeeks(1))).build();
+        var grunnlag = basicBuilder(uttaksperiode).medlemskap(new Medlemskap.Builder().opphørsdato(uttaksperiode.getFom().plusWeeks(1))).build();
 
         var regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
@@ -264,11 +245,9 @@ class RevurderingTest {
 
     @Test
     void revurdering_søknad_der_opphørsdato_ligger_før_perioden() {
-        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
 
-        var grunnlag = basicBuilder(uttaksperiode).medlemskap(
-                new Medlemskap.Builder().opphørsdato(uttaksperiode.getFom().minusWeeks(1))).build();
+        var grunnlag = basicBuilder(uttaksperiode).medlemskap(new Medlemskap.Builder().opphørsdato(uttaksperiode.getFom().minusWeeks(1))).build();
 
         var regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
@@ -280,13 +259,12 @@ class RevurderingTest {
 
     @Test
     void revurdering_søknad_der_opphørsdato_ligger_etter_perioden() {
-        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10),
-                FAMILIEHENDELSE_DATO.plusWeeks(12));
+        var uttaksperiode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
 
         var grunnlag = basicBuilder(uttaksperiode).revurdering(new Revurdering.Builder())
-                .rettOgOmsorg(samtykke(true))
-                .medlemskap(new Medlemskap.Builder().opphørsdato(uttaksperiode.getTom().plusWeeks(1)))
-                .build();
+            .rettOgOmsorg(samtykke(true))
+            .medlemskap(new Medlemskap.Builder().opphørsdato(uttaksperiode.getTom().plusWeeks(1)))
+            .build();
 
         var regelresultat = kjørRegel(uttaksperiode, grunnlag);
 
@@ -306,16 +284,15 @@ class RevurderingTest {
     }
 
     private AnnenpartUttakPeriode.Builder lagPeriode(Stønadskontotype stønadskontotype,
-                                             LocalDate fom,
-                                             LocalDate tom,
-                                             Utbetalingsgrad utbetalingsgrad,
-                                             boolean samtidigUttak) {
+                                                     LocalDate fom,
+                                                     LocalDate tom,
+                                                     Utbetalingsgrad utbetalingsgrad,
+                                                     boolean samtidigUttak) {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
-                .samtidigUttak(samtidigUttak)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forArbeid(new Orgnummer("000000003"), null),
-                                stønadskontotype, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), utbetalingsgrad))
-                ;
+            .samtidigUttak(samtidigUttak)
+            .uttakPeriodeAktivitet(
+                new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forArbeid(new Orgnummer("000000003"), null), stønadskontotype,
+                    new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)), utbetalingsgrad));
     }
 
     private RegelGrunnlag.Builder basicBuilder(OppgittPeriode oppgittPeriode) {
@@ -324,29 +301,25 @@ class RevurderingTest {
 
     private RegelGrunnlag.Builder basicBuilder(OppgittPeriode oppgittPeriode, boolean erMor, boolean flerbarnskonto) {
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(13 * 5));
+            .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(13 * 5));
         if (flerbarnskonto) {
-            kontoer.flerbarnsdager(5*13);
+            kontoer.flerbarnsdager(5 * 13);
         }
         return RegelGrunnlagTestBuilder.create()
-                .behandling(new Behandling.Builder().søkerErMor(erMor))
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
-                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
-                        .foreldreansvarnOppfylt(true)
-                        .fødselOppfylt(true)
-                        .opptjeningOppfylt(true));
+            .behandling(new Behandling.Builder().søkerErMor(erMor))
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
+            .inngangsvilkår(
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
     }
 
     private OppgittPeriode uttakPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null,
-                null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null);
     }
 
     private OppgittPeriode uttakPeriodeFlerbarnsdager(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, true, null, null,
-                null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, true, null, null, null, null);
     }
 }

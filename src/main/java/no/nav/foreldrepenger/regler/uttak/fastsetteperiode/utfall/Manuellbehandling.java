@@ -23,10 +23,10 @@ public class Manuellbehandling {
                                                  boolean utbetal,
                                                  Optional<GraderingIkkeInnvilgetÅrsak> graderingIkkeInnvilgetÅrsak) {
         var builder = FastsettePeriodeUtfall.builder()
-                .manuellBehandling(periodeResultatÅrsak, manuellbehandlingårsak)
-                .utbetal(utbetal)
-                .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
-                .medId(id);
+            .manuellBehandling(periodeResultatÅrsak, manuellbehandlingårsak)
+            .utbetal(utbetal)
+            .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
+            .medId(id);
         graderingIkkeInnvilgetÅrsak.ifPresent(builder::medAvslåttGradering);
         return builder.create();
     }

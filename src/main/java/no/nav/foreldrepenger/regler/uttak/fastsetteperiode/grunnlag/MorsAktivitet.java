@@ -10,5 +10,4 @@ public enum MorsAktivitet {
     INTROPROG,
     ARBEID_OG_UTDANNING,
     UFØRE,
-    ;
 }

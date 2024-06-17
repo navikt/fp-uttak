@@ -18,7 +18,8 @@ public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse extends LeafSpecifica
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        var overlappErUtsettelse = grunnlag.getAnnenPartUttaksperioder().stream()
+        var overlappErUtsettelse = grunnlag.getAnnenPartUttaksperioder()
+            .stream()
             .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app))
             .anyMatch(app -> app.isUtsettelse() && app.isInnvilget());
         return overlappErUtsettelse ? ja() : nei();

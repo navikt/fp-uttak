@@ -11,9 +11,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.Set;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.*;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
@@ -24,11 +37,10 @@ class StebarnsadopsjonDelRegelTest {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
-        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
-                .søknad(
-                new Søknad.Builder().type(Søknadstype.ADOPSJON)
-                        .oppgittPeriode(uttakPeriode)).build();
+        var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).rettOgOmsorg(
+                new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON).oppgittPeriode(uttakPeriode))
+            .build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
         assertThat(regelresultat.oppfylt()).isFalse();
@@ -50,7 +62,7 @@ class StebarnsadopsjonDelRegelTest {
 
         var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode)
 
-                .build();
+            .build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -65,7 +77,7 @@ class StebarnsadopsjonDelRegelTest {
     void UT1242_stebarnsadopsjon_far_omsorg_disponible_dager_gradering_og_avklart_periode() {
         var omsorgsovertakelseDato = LocalDate.of(2019, 1, 8);
         var uttakPeriode = gradertPeriode(Stønadskontotype.FEDREKVOTE, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2),
-                Set.of(ARBEIDSFORHOLD_1));
+            Set.of(ARBEIDSFORHOLD_1));
 
         var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).build();
 
@@ -84,10 +96,10 @@ class StebarnsadopsjonDelRegelTest {
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2));
 
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(0))
-                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
+            .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(0))
+            .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
         var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).arbeid(
-                new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).kontoer(kontoer).build();
+            new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -104,10 +116,10 @@ class StebarnsadopsjonDelRegelTest {
         var uttakPeriode = oppgittPeriode(omsorgsovertakelseDato.minusDays(3), omsorgsovertakelseDato.plusWeeks(2));
 
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(0))
-                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
+            .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(0))
+            .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
         var grunnlag = grunnlagFar(omsorgsovertakelseDato, uttakPeriode).arbeid(
-                new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).kontoer(kontoer).build();
+            new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))).kontoer(kontoer).build();
 
         var regelresultat = kjørRegel(uttakPeriode, grunnlag);
 
@@ -119,19 +131,17 @@ class StebarnsadopsjonDelRegelTest {
 
     private RegelGrunnlag.Builder grunnlagFar(LocalDate familiehendelseDato, OppgittPeriode oppgittPeriode) {
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
-                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
+            .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
+            .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
         return RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON).oppgittPeriode(oppgittPeriode))
-                .datoer(new Datoer.Builder().omsorgsovertakelse(familiehendelseDato))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .behandling(new Behandling.Builder().søkerErMor(false))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).samtykke(true))
-                .adopsjon(new Adopsjon.Builder().ankomstNorge(null).stebarnsadopsjon(true))
-                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
-                        .foreldreansvarnOppfylt(true)
-                        .fødselOppfylt(true)
-                        .opptjeningOppfylt(true));
+            .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON).oppgittPeriode(oppgittPeriode))
+            .datoer(new Datoer.Builder().omsorgsovertakelse(familiehendelseDato))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .behandling(new Behandling.Builder().søkerErMor(false))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).samtykke(true))
+            .adopsjon(new Adopsjon.Builder().ankomstNorge(null).stebarnsadopsjon(true))
+            .inngangsvilkår(
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
     }
 }

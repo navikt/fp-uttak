@@ -40,8 +40,8 @@ public final class SamtidigUttakUtil {
     }
 
     public static boolean søktSamtidigUttakForPeriode(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getAktuellPeriode().erSøktSamtidigUttak() ||
-            finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::isSamtidigUttak).isPresent();
+        return grunnlag.getAktuellPeriode().erSøktSamtidigUttak() || finnOverlappendeAnnenpartPeriode(grunnlag,
+            AnnenpartUttakPeriode::isSamtidigUttak).isPresent();
     }
 
     public static boolean akseptert200ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
@@ -69,14 +69,14 @@ public final class SamtidigUttakUtil {
     public static boolean kanReduseresTil100ProsentForRegel(FastsettePeriodeGrunnlag grunnlag) {
         // Sjekker om annenparts utbetalingsgrad <=80 slik at gjenværende utbetaling etter reduksjon er >= 20% (i første omgang)
         // Dessuten avventer vi tilfelle av gradering og flere aktiviteter - reduser dersom 1 aktivitet eller ikke gradering
-        return !er150ProsentKonfigurasjon(grunnlag) &&
-            uttaksprosentSomGir100ProsentSamtidigUttak(grunnlag).compareTo(SamtidigUttaksprosent.TWENTY) >= 0 &&
-            !(grunnlag.getAktuellPeriode().getAktiviteter().size() > 1 && grunnlag.getAktuellPeriode().erSøktGradering());
+        return !er150ProsentKonfigurasjon(grunnlag)
+            && uttaksprosentSomGir100ProsentSamtidigUttak(grunnlag).compareTo(SamtidigUttaksprosent.TWENTY) >= 0 && !(
+            grunnlag.getAktuellPeriode().getAktiviteter().size() > 1 && grunnlag.getAktuellPeriode().erSøktGradering());
     }
 
     public static boolean gjelderFlerbarnsdager(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.getAktuellPeriode().isFlerbarnsdager() ||
-            finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::isFlerbarnsdager).isPresent();
+        return grunnlag.getAktuellPeriode().isFlerbarnsdager() || finnOverlappendeAnnenpartPeriode(grunnlag,
+            AnnenpartUttakPeriode::isFlerbarnsdager).isPresent();
     }
 
     public static boolean gjelderFarRundtFødsel(FastsettePeriodeGrunnlag grunnlag) {
@@ -84,15 +84,15 @@ public final class SamtidigUttakUtil {
         if (farRundtFødselIntervall == null) {
             return false;
         }
-        return grunnlag.getAktuellPeriode().erOmsluttetAv(farRundtFødselIntervall) ||
-            finnOverlappendeAnnenpartPeriode(grunnlag, app -> app.erOmsluttetAv(farRundtFødselIntervall)).isPresent();
+        return grunnlag.getAktuellPeriode().erOmsluttetAv(farRundtFødselIntervall) || finnOverlappendeAnnenpartPeriode(grunnlag,
+            app -> app.erOmsluttetAv(farRundtFødselIntervall)).isPresent();
     }
 
     public static boolean kanRedusereUtbetalingsgradForTapende(FastsettePeriodeGrunnlag periodeGrunnlag, RegelGrunnlag regelGrunnlag) {
         // Er det ikkejusterbar periode, samtidig uttak under 100% eller 150/200% tilfelle?
         var kanReduseres = regelGrunnlag.getBehandling().isBerørtBehandling() || erTapendePeriodeUtregning(periodeGrunnlag);
-        if (!kanReduseres || !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag) || !merEnn100ProsentSamtidigUttak(periodeGrunnlag) ||
-            akseptert200ProsentSamtidigUttak(periodeGrunnlag) || akseptert150ProsentSamtidigUttak(periodeGrunnlag)) {
+        if (!kanReduseres || !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag) || !merEnn100ProsentSamtidigUttak(periodeGrunnlag)
+            || akseptert200ProsentSamtidigUttak(periodeGrunnlag) || akseptert150ProsentSamtidigUttak(periodeGrunnlag)) {
             return false;
         }
         // Sjekker om annenparts utbetalingsgrad <=80 slik at gjenværende utbetaling etter reduksjon er >= 20% (i første omgang)
@@ -100,8 +100,8 @@ public final class SamtidigUttakUtil {
     }
 
     public static SamtidigUttaksprosent uttaksprosentAnnenpart(FastsettePeriodeGrunnlag grunnlag) {
-        return finnOverlappendeAnnenpartPeriode(grunnlag, SamtidigUttakUtil::periodeHarUtbetaling)
-            .map(SamtidigUttakUtil::getSamtidigUttaksprosent).orElse(SamtidigUttaksprosent.ZERO);
+        return finnOverlappendeAnnenpartPeriode(grunnlag, SamtidigUttakUtil::periodeHarUtbetaling).map(SamtidigUttakUtil::getSamtidigUttaksprosent)
+            .orElse(SamtidigUttaksprosent.ZERO);
     }
 
     private static SamtidigUttaksprosent uttaksprosentSomGir100ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
@@ -111,8 +111,8 @@ public final class SamtidigUttakUtil {
 
     private static boolean annenpartHarPeriodeMottattSenere(FastsettePeriodeGrunnlag grunnlag, boolean forNedjustering) {
         var overlappende = finnOverlappendeAnnenpartPeriode(grunnlag,
-            aup -> ((aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling()) && (forNedjustering || !aup.isSamtidigUttak()))
-            .flatMap(AnnenpartUttakPeriode::getSenestMottattDato);
+            aup -> ((aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling()) && (forNedjustering || !aup.isSamtidigUttak())).flatMap(
+            AnnenpartUttakPeriode::getSenestMottattDato);
         var periodeMottatt = grunnlag.getAktuellPeriode().getSenestMottattDato().orElseThrow();
         if (overlappende.filter(ol -> ol.equals(periodeMottatt)).isPresent()) {
             return grunnlag.getAnnenPartSisteSøknadMottattTidspunkt().isAfter(grunnlag.getSisteSøknadMottattTidspunkt());
@@ -123,16 +123,18 @@ public final class SamtidigUttakUtil {
     private static boolean er150ProsentKonfigurasjon(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         Set<Stønadskontotype> annenpartsOverlappKonto = getAnnenpartStønadskontotyper(grunnlag);
-        if (!annenpartsOverlappKonto.isEmpty() && aktuellPeriode.getStønadskontotype() != null && KONTI_FOR150.contains(aktuellPeriode.getStønadskontotype())) {
-            return (KONTI_KVOTE.contains(aktuellPeriode.getStønadskontotype()) && annenpartsOverlappKonto.contains(Stønadskontotype.FELLESPERIODE)) ||
-                (FELLESPERIODE.equals(aktuellPeriode.getStønadskontotype()) && annenpartsOverlappKonto.stream().anyMatch(KONTI_KVOTE::contains));
+        if (!annenpartsOverlappKonto.isEmpty() && aktuellPeriode.getStønadskontotype() != null && KONTI_FOR150.contains(
+            aktuellPeriode.getStønadskontotype())) {
+            return (KONTI_KVOTE.contains(aktuellPeriode.getStønadskontotype()) && annenpartsOverlappKonto.contains(Stønadskontotype.FELLESPERIODE))
+                || (FELLESPERIODE.equals(aktuellPeriode.getStønadskontotype()) && annenpartsOverlappKonto.stream().anyMatch(KONTI_KVOTE::contains));
         }
         return false;
     }
 
     private static Set<Stønadskontotype> getAnnenpartStønadskontotyper(FastsettePeriodeGrunnlag grunnlag) {
-        return finnOverlappendeAnnenpartPeriode(grunnlag, app -> true)
-            .map(AnnenpartUttakPeriode::getAktiviteter).orElse(Set.of()).stream()
+        return finnOverlappendeAnnenpartPeriode(grunnlag, app -> true).map(AnnenpartUttakPeriode::getAktiviteter)
+            .orElse(Set.of())
+            .stream()
             .map(AnnenpartUttakPeriodeAktivitet::getStønadskontotype)
             .filter(Objects::nonNull)
             .filter(KONTI_FOR150::contains)
@@ -142,7 +144,8 @@ public final class SamtidigUttakUtil {
     private static Optional<AnnenpartUttakPeriode> finnOverlappendeAnnenpartPeriode(FastsettePeriodeGrunnlag grunnlag,
                                                                                     Predicate<AnnenpartUttakPeriode> filter) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        return grunnlag.getAnnenPartUttaksperioder().stream()
+        return grunnlag.getAnnenPartUttaksperioder()
+            .stream()
             .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app) && filter.test(app))
             .findFirst();
     }
@@ -159,7 +162,8 @@ public final class SamtidigUttakUtil {
         if (ap.isUtsettelse() && ap.isInnvilget()) {
             return SamtidigUttaksprosent.HUNDRED;
         }
-        return ap.getAktiviteter().stream()
+        return ap.getAktiviteter()
+            .stream()
             .filter(a -> a.getUtbetalingsgrad().harUtbetaling())
             .min(Comparator.comparing(AnnenpartUttakPeriodeAktivitet::getUtbetalingsgrad))
             .map(a -> new SamtidigUttaksprosent(a.getUtbetalingsgrad().decimalValue()))

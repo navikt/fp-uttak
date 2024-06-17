@@ -37,14 +37,13 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1));
-        var overføring = OppgittPeriode.forOverføring(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11),
-            INNLEGGELSE, fødselsdato, fødselsdato, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
+        var overføring = OppgittPeriode.forOverføring(FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(11), INNLEGGELSE, fødselsdato,
+            fødselsdato, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
-                .konto(konto(MØDREKVOTE, 30))
-                .konto(konto(FELLESPERIODE, 15))
-                .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
-        var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(FØDSEL, mødrekvote, fellesperiode, overføring));
+            .konto(konto(MØDREKVOTE, 30))
+            .konto(konto(FELLESPERIODE, 15))
+            .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
+        var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer).søknad(søknad(FØDSEL, mødrekvote, fellesperiode, overføring));
         var resultat = fastsettPerioder(grunnlag);
 
         //         1. mk
@@ -54,8 +53,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         assertThat(resultat).hasSize(4);
         assertThat(resultat.get(2).uttakPeriode().getOverføringÅrsak()).isEqualTo(INNLEGGELSE);
         assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(resultat.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                InnvilgetÅrsak.OVERFØRING_ANNEN_PART_INNLAGT);
+        assertThat(resultat.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.OVERFØRING_ANNEN_PART_INNLAGT);
 
         assertThat(resultat.get(3).uttakPeriode().getOverføringÅrsak()).isEqualTo(INNLEGGELSE);
         assertThat(resultat.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
@@ -67,18 +65,15 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         //Fedrekvote og fellesperiode brukes opp før øverføring av mødrekvote
         var fødselsdato = LocalDate.of(2020, 1, 21);
         var fedrekvote = oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(9), fødselsdato.plusWeeks(11).minusDays(1));
-        var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(14),
-            SYKDOM_ELLER_SKADE, fødselsdato, fødselsdato, SYKDOM_ANNEN_FORELDER_GODKJENT);
+        var overføring = OppgittPeriode.forOverføring(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(14), SYKDOM_ELLER_SKADE,
+            fødselsdato, fødselsdato, SYKDOM_ANNEN_FORELDER_GODKJENT);
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10))
-                .konto(konto(MØDREKVOTE, 40))
-                .konto(konto(FELLESPERIODE, 15))
-                .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
-        var annenPart = new AnnenPart.Builder()
-                .uttaksperiode(innvilget(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MØDREKVOTE))
-                .uttaksperiode(innvilget(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1), FELLESPERIODE));
-        var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer)
-                .søknad(søknad(FØDSEL, fedrekvote, overføring))
-                .annenPart(annenPart);
+            .konto(konto(MØDREKVOTE, 40))
+            .konto(konto(FELLESPERIODE, 15))
+            .konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
+        var annenPart = new AnnenPart.Builder().uttaksperiode(innvilget(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MØDREKVOTE))
+            .uttaksperiode(innvilget(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(9).minusDays(1), FELLESPERIODE));
+        var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer).søknad(søknad(FØDSEL, fedrekvote, overføring)).annenPart(annenPart);
         var resultat = fastsettPerioder(grunnlag);
 
         //         1. fk
@@ -87,8 +82,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
         assertThat(resultat).hasSize(3);
         assertThat(resultat.get(1).uttakPeriode().getOverføringÅrsak()).isEqualTo(SYKDOM_ELLER_SKADE);
         assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
-        assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                InnvilgetÅrsak.OVERFØRING_ANNEN_PART_SYKDOM_SKADE);
+        assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.OVERFØRING_ANNEN_PART_SYKDOM_SKADE);
 
         assertThat(resultat.get(2).uttakPeriode().getOverføringÅrsak()).isEqualTo(SYKDOM_ELLER_SKADE);
         assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
@@ -97,7 +91,7 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
 
     private AnnenpartUttakPeriode innvilget(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype) {
         var aktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), stønadskontotype,
-                new Trekkdager(Virkedager.beregnAntallVirkedager(new Periode(fom, tom))), Utbetalingsgrad.FULL);
+            new Trekkdager(Virkedager.beregnAntallVirkedager(new Periode(fom, tom))), Utbetalingsgrad.FULL);
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom).innvilget(true).uttakPeriodeAktivitet(aktivitet).build();
     }
 }

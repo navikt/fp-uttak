@@ -10,5 +10,4 @@ public class UttakVersion {
 
     public static final EvaluationVersion UTTAK_VERSION = NareVersion.readVersionPropertyFor("fp-uttak", "nare/fp-uttak-version.properties");
 
-
 }

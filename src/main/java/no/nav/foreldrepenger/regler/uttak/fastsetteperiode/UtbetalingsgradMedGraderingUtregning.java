@@ -13,7 +13,9 @@ class UtbetalingsgradMedGraderingUtregning implements UtbetalingsgradUtregning {
     private final AktivitetIdentifikator aktivitet;
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
 
-    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent annenpartSamtidigUttaksprosent ) {
+    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode,
+                                         AktivitetIdentifikator aktivitet,
+                                         SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         this.uttakPeriode = uttakPeriode;
         this.aktivitet = aktivitet;
         this.annenpartSamtidigUttaksprosent = annenpartSamtidigUttaksprosent;
@@ -22,9 +24,9 @@ class UtbetalingsgradMedGraderingUtregning implements UtbetalingsgradUtregning {
     @Override
     public Utbetalingsgrad resultat() {
         // Samtidiguttaksprosent med mindre gradering på noen aktiviteter i perioden
-        var lokalSamtidigUttaksprosent = uttakPeriode.erSøktGradering(aktivitet) ?
-            Optional.ofNullable(uttakPeriode.getArbeidsprosent()).map(SamtidigUttaksprosent.HUNDRED::subtract)
-                .orElseThrow(() -> new IllegalArgumentException("arbeidstidsprosent kan ikke være null")) : SamtidigUttaksprosent.HUNDRED;
+        var lokalSamtidigUttaksprosent = uttakPeriode.erSøktGradering(aktivitet) ? Optional.ofNullable(uttakPeriode.getArbeidsprosent())
+            .map(SamtidigUttaksprosent.HUNDRED::subtract)
+            .orElseThrow(() -> new IllegalArgumentException("arbeidstidsprosent kan ikke være null")) : SamtidigUttaksprosent.HUNDRED;
         var maksSamtidigUttakUtFraAnnenpart = SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
         // Reduser utbetaling dersom annenpart > 0 og det ligger an til mer enn 100 prosent
         if (lokalSamtidigUttaksprosent.subtract(maksSamtidigUttakUtFraAnnenpart).merEnn0()) {

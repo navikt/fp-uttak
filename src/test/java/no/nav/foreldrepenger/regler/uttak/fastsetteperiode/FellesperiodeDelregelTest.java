@@ -3,7 +3,9 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.kjørRegel;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.DelRegelTestUtil.oppholdPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.*;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.INNLEGGELSE_ANNEN_FORELDER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,9 +47,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -60,9 +62,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -74,9 +76,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -88,9 +90,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -102,9 +104,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(10), fødselsdato.minusWeeks(5), null, false);
         var kontoer = enFellesperiodeKonto(10 * 5);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -119,12 +121,11 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor()
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
-                .søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -136,8 +137,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg_sammenhengede_uttak() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor()
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -154,8 +154,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagFar()
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -171,8 +170,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg_sammenhengede_uttak() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagFar()
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(true))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -189,12 +187,11 @@ class FellesperiodeDelregelTest {
     void fellesperiode_før_fødsel_innvilges_uavhengig_av_om_søker_har_omsorg_da_det_ikke_er_mulig_å_ha_omsorg_fordi_barnet_ikke_er_født() {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor()
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
-                .søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -206,9 +203,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -220,14 +217,14 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), null, false, null);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilgetAvslåttGradering(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER,
-                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+            GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
     }
 
     @Test
@@ -235,9 +232,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), null, false, null);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -249,9 +246,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -263,9 +260,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -277,9 +274,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, SYKDOM_ANNEN_FORELDER_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -290,12 +287,11 @@ class FellesperiodeDelregelTest {
     void UT1054_far_førUke7_etterFamileHendelse_utenGyldigGrunn_flerbarnsdager_ikkeOmsorg() {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
-        var grunnlag = basicGrunnlagFar()
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
-                .søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -307,9 +303,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -321,12 +317,12 @@ class FellesperiodeDelregelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var søknadsperiode = oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
-                OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
+            OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -341,12 +337,12 @@ class FellesperiodeDelregelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
 
         var søknadsperiode = oppholdPeriode(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(15).plusWeeks(15),
-                OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
+            OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 0)).konto(konto(MØDREKVOTE, 100));
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -363,9 +359,9 @@ class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -377,9 +373,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, true, null);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -392,9 +388,9 @@ class FellesperiodeDelregelTest {
         var kontoer = enFellesperiodeKonto(100);
         var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -406,9 +402,9 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -422,12 +418,11 @@ class FellesperiodeDelregelTest {
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 10 * 5));
 
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1), null, false);
-        var grunnlag = basicGrunnlagFar().rettOgOmsorg(
-                new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).samtykke(true))
-                .søknad(søknad(søknadsperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                .kontoer(kontoer)
-                .build();
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).samtykke(true))
+            .søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
@@ -441,7 +436,7 @@ class FellesperiodeDelregelTest {
                                                  boolean flerbarnsdager,
                                                  DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forGradering(FELLESPERIODE, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
-                Set.of(AktivitetIdentifikator.forFrilans()), null, null, null, dokumentasjonVurdering);
+            Set.of(AktivitetIdentifikator.forFrilans()), null, null, null, dokumentasjonVurdering);
     }
 
     private Søknad.Builder søknad(OppgittPeriode søknadsperiode) {
@@ -454,17 +449,14 @@ class FellesperiodeDelregelTest {
 
     private Kontoer.Builder fellesperiodeOgFlerbarnsdagerKonto(int fellesperiodeTrekkdager, int flerbarnsdagerTrekkdager) {
         return new Kontoer.Builder().konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(fellesperiodeTrekkdager))
-                .flerbarnsdager(flerbarnsdagerTrekkdager);
+            .flerbarnsdager(flerbarnsdagerTrekkdager);
     }
 
     private Konto.Builder konto(Stønadskontotype type, int trekkdager) {
         return new Konto.Builder().type(type).trekkdager(trekkdager);
     }
 
-    private OppgittPeriode oppgittPeriode(LocalDate fom,
-                                          LocalDate tom,
-                                          SamtidigUttaksprosent samtidigUttaksprosent,
-                                          boolean flerbarnsdager) {
+    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, SamtidigUttaksprosent samtidigUttaksprosent, boolean flerbarnsdager) {
         return oppgittPeriode(fom, tom, samtidigUttaksprosent, flerbarnsdager, null);
     }
 
@@ -473,8 +465,8 @@ class FellesperiodeDelregelTest {
                                           SamtidigUttaksprosent samtidigUttaksprosent,
                                           boolean flerbarnsdager,
                                           DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, null,
-                null, null, dokumentasjonVurdering);
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fom, tom, samtidigUttaksprosent, flerbarnsdager, null, null, null,
+            dokumentasjonVurdering);
     }
 
     private void assertInnvilget(FastsettePerioderRegelresultat regelresultat, InnvilgetÅrsak innvilgetÅrsak) {
@@ -502,10 +494,7 @@ class FellesperiodeDelregelTest {
         assertThat(regelresultat.getManuellbehandlingårsak()).isEqualTo(manuellBehandlingÅrsak);
     }
 
-    private void assertAvslått(FastsettePerioderRegelresultat regelresultat,
-                               IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
-                               boolean trekkdager,
-                               boolean utbetal) {
+    private void assertAvslått(FastsettePerioderRegelresultat regelresultat, IkkeOppfyltÅrsak ikkeOppfyltÅrsak, boolean trekkdager, boolean utbetal) {
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isEqualTo(trekkdager);
         assertThat(regelresultat.skalUtbetale()).isEqualTo(utbetal);
@@ -519,11 +508,9 @@ class FellesperiodeDelregelTest {
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
-                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
-                        .foreldreansvarnOppfylt(true)
-                        .fødselOppfylt(true)
-                        .opptjeningOppfylt(true));
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
+            .inngangsvilkår(
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
     }
 }

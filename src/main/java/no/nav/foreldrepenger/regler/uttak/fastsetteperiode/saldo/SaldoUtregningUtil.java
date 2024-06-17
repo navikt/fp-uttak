@@ -21,22 +21,20 @@ final class SaldoUtregningUtil {
 
     static boolean aktivitetIPeriode(FastsattUttakPeriode periode, AktivitetIdentifikator aktivitet) {
         return periode.getAktiviteter()
-                .stream()
-                .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
-                .anyMatch(aktivitetIdentifikator -> aktivitetIdentifikator.equals(aktivitet));
+            .stream()
+            .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
+            .anyMatch(aktivitetIdentifikator -> aktivitetIdentifikator.equals(aktivitet));
     }
 
     static Set<AktivitetIdentifikator> aktiviteterIPerioder(List<FastsattUttakPeriode> perioder) {
         return perioder.stream()
-                .flatMap(p -> p.getAktiviteter().stream())
-                .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
-                .collect(Collectors.toSet());
+            .flatMap(p -> p.getAktiviteter().stream())
+            .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
+            .collect(Collectors.toSet());
     }
 
     static List<FastsattUttakPeriode> overlappendePeriode(FastsattUttakPeriode periode, List<FastsattUttakPeriode> perioder) {
-        return perioder.stream()
-                .filter(p -> overlapper(periode, p))
-                .toList();
+        return perioder.stream().filter(p -> overlapper(periode, p)).toList();
     }
 
     static boolean overlapper(FastsattUttakPeriode periode, FastsattUttakPeriode periode2) {
@@ -45,22 +43,23 @@ final class SaldoUtregningUtil {
 
     static boolean innvilgetMedTrekkdager(FastsattUttakPeriode periode) {
         return !periode.getPerioderesultattype().equals(Perioderesultattype.AVSLÅTT) || periode.getAktiviteter()
-                .stream()
-                .anyMatch(aktivitet -> aktivitet.getTrekkdager().merEnn0());
+            .stream()
+            .anyMatch(aktivitet -> aktivitet.getTrekkdager().merEnn0());
     }
 
     static Trekkdager trekkDagerFraDelAvPeriode(LocalDate delFom,
-                                         LocalDate delTom,
-                                         LocalDate periodeFom,
-                                         LocalDate periodeTom,
-                                         Trekkdager periodeTrekkdager) {
+                                                LocalDate delTom,
+                                                LocalDate periodeFom,
+                                                LocalDate periodeTom,
+                                                Trekkdager periodeTrekkdager) {
         var virkedagerInnenfor = Virkedager.beregnAntallVirkedager(delFom, delTom);
         var virkedagerHele = Virkedager.beregnAntallVirkedager(periodeFom, periodeTom);
         if (virkedagerHele == 0) {
             return Trekkdager.ZERO;
         }
-        var utregning = periodeTrekkdager.decimalValue().multiply(BigDecimal.valueOf(virkedagerInnenfor))
-                .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
+        var utregning = periodeTrekkdager.decimalValue()
+            .multiply(BigDecimal.valueOf(virkedagerInnenfor))
+            .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
         return new Trekkdager(utregning);
     }
 

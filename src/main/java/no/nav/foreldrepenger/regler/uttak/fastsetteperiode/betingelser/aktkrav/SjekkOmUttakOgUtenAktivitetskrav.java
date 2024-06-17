@@ -17,6 +17,7 @@ public class SjekkOmUttakOgUtenAktivitetskrav extends LeafSpecification<Fastsett
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
         var erUttak = !(fastsettePeriodeGrunnlag.getAktuellPeriode().isUtsettelse() || fastsettePeriodeGrunnlag.getAktuellPeriode().isOpphold());
-        return erUttak && (fastsettePeriodeGrunnlag.isSakMedDagerUtenAktivitetskrav() || fastsettePeriodeGrunnlag.isSakMedMinsterett()) ? ja() : nei();
+        return
+            erUttak && (fastsettePeriodeGrunnlag.isSakMedDagerUtenAktivitetskrav() || fastsettePeriodeGrunnlag.isSakMedMinsterett()) ? ja() : nei();
     }
 }

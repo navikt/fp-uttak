@@ -17,7 +17,7 @@ public class SjekkOmOppholdKvoteAnnenForelder extends LeafSpecification<Fastsett
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
         var erOppholdKvote = oppgittPeriode.isOppholdPga(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER) || oppgittPeriode.isOppholdPga(
-                OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER) || oppgittPeriode.isOppholdPga(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER);
+            OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER) || oppgittPeriode.isOppholdPga(OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER);
         return erOppholdKvote ? ja() : nei();
     }
 }

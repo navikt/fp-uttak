@@ -59,8 +59,7 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoEtterSluttAvFerieBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE,
-                mottattDato);
+        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -86,8 +85,7 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID,
-                mottattDato);
+        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -110,19 +108,16 @@ class SøknadMottattDatoRegelTest {
         var konto = new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(50);
         var kontoer = new Kontoer.Builder().konto(konto);
         return new RegelGrunnlag.Builder().kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-                .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
-                .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
-                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
-                        .foreldreansvarnOppfylt(true)
-                        .fødselOppfylt(true)
-                        .opptjeningOppfylt(true));
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+            .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+            .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+            .inngangsvilkår(
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
     }
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {
         return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, BigDecimal.TEN, null, false,
-                Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), mottattDato, mottattDato,
-                null, null);
+            Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), mottattDato, mottattDato, null, null);
     }
 }

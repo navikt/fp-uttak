@@ -59,8 +59,7 @@ final class ManglendeSøktPeriodeUtil {
      * @return periode uten helg i begynnelsen og slutten. Optional.empty() dersom perioden bare besto av helgedager.
      */
     static Optional<OppgittPeriode> fjernHelg(OppgittPeriode msp) {
-        Predicate<LocalDate> sjekkOmHelg = dato -> dato.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dato.getDayOfWeek()
-                .equals(DayOfWeek.SUNDAY);
+        Predicate<LocalDate> sjekkOmHelg = dato -> dato.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dato.getDayOfWeek().equals(DayOfWeek.SUNDAY);
 
         var fom = msp.getFom();
         var tom = msp.getTom();

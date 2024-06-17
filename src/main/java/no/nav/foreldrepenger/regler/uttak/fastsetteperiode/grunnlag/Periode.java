@@ -48,10 +48,12 @@ public class Periode {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         var periode = (Periode) o;
         return Objects.equals(fom, periode.fom) && Objects.equals(tom, periode.tom);
     }

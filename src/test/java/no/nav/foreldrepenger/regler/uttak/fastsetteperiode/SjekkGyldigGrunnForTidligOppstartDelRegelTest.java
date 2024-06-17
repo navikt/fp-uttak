@@ -38,30 +38,28 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).søknad(
-                new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode)).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(2);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::uttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom)).toList();
-        assertThat(perioder.stream().map(UttakPeriode::getPerioderesultattype).collect(toList())).containsExactly(INNVILGET,
-                INNVILGET);
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::uttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
+        assertThat(perioder.stream().map(UttakPeriode::getPerioderesultattype).collect(toList())).containsExactly(INNVILGET, INNVILGET);
         assertThat(perioder.stream().map(UttakPeriode::getStønadskontotype).collect(toList())).containsExactly(FEDREKVOTE, FEDREKVOTE);
     }
 
     @Test
     void fellesperiode_med_tidlig_oppstart_mor_er_i_aktivitet_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), MORS_AKTIVITET_GODKJENT);
+        var oppgittPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
+            MORS_AKTIVITET_GODKJENT);
         var kontoer = enKonto(FELLESPERIODE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).søknad(
-            new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode)).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(1);
         assertThat(periodeResultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
         assertThat(periodeResultater.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
@@ -71,13 +69,13 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
     void fellesperiode_med_tidlig_oppstart_og_gyldig_grunn_hele_perioden_blir_innvilget() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = DelRegelTestUtil.oppgittPeriode(FELLESPERIODE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1),
-                INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
+            INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = enKonto(FELLESPERIODE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).søknad(
-                new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(1);
         assertThat(periodeResultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(periodeResultater.get(0).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FELLESPERIODE);
@@ -88,15 +86,13 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(10), null);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).søknad(
-                new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(2);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::uttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom)).toList();
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::uttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
 
         var ugyldigPeriode = perioder.get(0);
         assertThat(ugyldigPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
@@ -116,15 +112,12 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(10), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlag(fødselsdato).kontoer(kontoer)
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
-                .build();
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(2);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::uttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom)).toList();
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::uttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(6).minusDays(1), INNVILGET, FEDREKVOTE);
         verifiserPeriode(perioder.get(1), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), INNVILGET, FEDREKVOTE);
@@ -135,15 +128,13 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).søknad(
-                new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode)).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(1);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::uttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom)).toList();
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::uttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), INNVILGET, FEDREKVOTE);
     }
@@ -157,22 +148,15 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var uttakPeriode = oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), null);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato)
-                .søknad(new Søknad.Builder()
-                        .type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(uttakPeriode))
-                .kontoer(kontoer)
-                .build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(1);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::uttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom)).toList();
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::uttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
 
-        verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), MANUELL_BEHANDLING,
-                FEDREKVOTE);
+        verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
     }
 
     @Test
@@ -182,22 +166,18 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
         var uttakPeriode2 = oppgittPeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1), TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT);
         var uttakPeriode3 = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), null);
         var kontoer = enKonto(FEDREKVOTE, 10 * 5);
-        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittPeriode(uttakPeriode1)
-                .oppgittPeriode(uttakPeriode2)
-                .oppgittPeriode(uttakPeriode3)).kontoer(kontoer).build();
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(
+                new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode1).oppgittPeriode(uttakPeriode2).oppgittPeriode(uttakPeriode3))
+            .kontoer(kontoer)
+            .build();
 
-        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag
-        );
+        var periodeResultater = regelOrkestrering.fastsettePerioder(grunnlag);
         assertThat(periodeResultater).hasSize(3);
-        var perioder = periodeResultater.stream()
-                .map(FastsettePeriodeResultat::uttakPeriode)
-                .sorted(comparing(UttakPeriode::getFom)).toList();
+        var perioder = periodeResultater.stream().map(FastsettePeriodeResultat::uttakPeriode).sorted(comparing(UttakPeriode::getFom)).toList();
 
         verifiserPeriode(perioder.get(0), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), INNVILGET, FEDREKVOTE);
         verifiserPeriode(perioder.get(1), fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(4).minusDays(1), INNVILGET, FEDREKVOTE);
-        verifiserPeriode(perioder.get(2), fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), MANUELL_BEHANDLING,
-                FEDREKVOTE);
+        verifiserPeriode(perioder.get(2), fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(6).minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
     }
 
 
@@ -214,13 +194,11 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
 
     private RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
         return RegelGrunnlagTestBuilder.create()
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
-                .behandling(new Behandling.Builder().søkerErMor(false))
-                .inngangsvilkår(new Inngangsvilkår.Builder().adopsjonOppfylt(true)
-                        .foreldreansvarnOppfylt(true)
-                        .fødselOppfylt(true)
-                        .opptjeningOppfylt(true));
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
+            .behandling(new Behandling.Builder().søkerErMor(false))
+            .inngangsvilkår(
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
     }
 
     private Kontoer.Builder enKonto(Stønadskontotype stønadskontotype, int trekkdager) {

@@ -54,18 +54,17 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpart = LocalDate.of(2019, 12, 2);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.FULL))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.FULL))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
         var aktuellPeriode = oppgittPeriode(FELLESPERIODE, fomAnnenpart.plusWeeks(5), tomAnnenpart);
         var grunnlag = new RegelGrunnlag.Builder().annenPart(new AnnenPart.Builder().uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder())
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder())
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var saldoUtregningGrunnlag = lagGrunnlag(aktuellPeriode, grunnlag);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
@@ -74,31 +73,29 @@ class SaldoUtregningTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null,
-                null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null);
     }
 
     @Test
     void skal_ikke_ta_med_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_berørt_behandling() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
-        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
-                FEDREKVOTE_ANNEN_FORELDER).innvilget(true).build();
-        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1),
-                        fomAnnenpartOpphold.minusWeeks(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
-                .build();
+        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
+            .innvilget(true)
+            .build();
+        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(FEDREKVOTE, fomAnnenpartOpphold, tomAnnenpartOpphold);
         var grunnlag = new RegelGrunnlag.Builder().annenPart(
-                        new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+                new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var saldoUtregningGrunnlag = lagGrunnlag(aktuellPeriode, grunnlag);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
@@ -110,23 +107,22 @@ class SaldoUtregningTjenesteTest {
     void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_berørt_behandling_tidlig_overlapp() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
-        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
-                FEDREKVOTE_ANNEN_FORELDER).innvilget(true).build();
-        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1),
-                        fomAnnenpartOpphold.minusWeeks(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
-                .build();
+        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
+            .innvilget(true)
+            .build();
+        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(FEDREKVOTE, fomAnnenpartOpphold, tomAnnenpartOpphold.minusWeeks(5));
         var grunnlag = new RegelGrunnlag.Builder().annenPart(
-                        new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+                new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var saldoUtregningGrunnlag = lagGrunnlag(aktuellPeriode, grunnlag);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
@@ -138,23 +134,22 @@ class SaldoUtregningTjenesteTest {
     void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_berørt_behandling_sen_overlapp() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
-        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
-                FEDREKVOTE_ANNEN_FORELDER).innvilget(true).build();
-        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1),
-                        fomAnnenpartOpphold.minusWeeks(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
-                .build();
+        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
+            .innvilget(true)
+            .build();
+        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(FEDREKVOTE, fomAnnenpartOpphold.plusWeeks(5), tomAnnenpartOpphold);
         var grunnlag = new RegelGrunnlag.Builder().annenPart(
-                        new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+                new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var saldoUtregningGrunnlag = lagGrunnlag(aktuellPeriode, grunnlag);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
@@ -166,23 +161,22 @@ class SaldoUtregningTjenesteTest {
     void skal_ta_med_deler_av_opphold_på_annenpart_hvis_overlapp_med_søkers_periode_og_berørt_behandling_midt_overlapp() {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
-        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold,
-                FEDREKVOTE_ANNEN_FORELDER).innvilget(true).build();
-        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1),
-                        fomAnnenpartOpphold.minusWeeks(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
-                .build();
+        var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
+            .innvilget(true)
+            .build();
+        var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
         var aktuellPeriode = oppgittPeriode(FEDREKVOTE, fomAnnenpartOpphold.plusWeeks(2), tomAnnenpartOpphold.minusWeeks(3));
         var grunnlag = new RegelGrunnlag.Builder().annenPart(
-                        new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+                new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var saldoUtregningGrunnlag = lagGrunnlag(aktuellPeriode, grunnlag);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
@@ -192,12 +186,11 @@ class SaldoUtregningTjenesteTest {
 
     private SaldoUtregningGrunnlag lagGrunnlag(OppgittPeriode aktuellPeriode, RegelGrunnlag grunnlag) {
         if (grunnlag.getBehandling().isBerørtBehandling()) {
-            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(List.of(),
-                    grunnlag.getAnnenPart().getUttaksperioder(), grunnlag, aktuellPeriode.getFom(),
-                    new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder()));
+            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(List.of(), grunnlag.getAnnenPart().getUttaksperioder(), grunnlag,
+                aktuellPeriode.getFom(), new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder()));
         }
-        return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), grunnlag.getAnnenPart().getUttaksperioder(),
-                grunnlag, aktuellPeriode.getFom());
+        return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), grunnlag.getAnnenPart().getUttaksperioder(), grunnlag,
+            aktuellPeriode.getFom());
     }
 
     @Test
@@ -205,18 +198,17 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpart = LocalDate.of(2019, 12, 3);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
         var aktuellPeriode = oppgittPeriode(FELLESPERIODE, fomAnnenpart.plusDays(1), tomAnnenpart.plusWeeks(10));
         var grunnlag = new RegelGrunnlag.Builder().annenPart(new AnnenPart.Builder().uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder())
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder())
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var resultat = SaldoUtregningTjeneste.lagUtregning(lagGrunnlag(aktuellPeriode, grunnlag));
 
@@ -228,18 +220,17 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpart = LocalDate.of(2019, 12, 3);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(70), Utbetalingsgrad.HUNDRED))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(70), Utbetalingsgrad.HUNDRED))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
         var aktuellPeriode = oppgittPeriode(FELLESPERIODE, fomAnnenpart.plusWeeks(5).minusDays(1), tomAnnenpart);
         var grunnlag = new RegelGrunnlag.Builder().annenPart(new AnnenPart.Builder().uttaksperiode(annenpartUttaksperiode))
-                .kontoer(kontoer)
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-                .behandling(new Behandling.Builder().berørtBehandling(true))
-                .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
-                .build();
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder().berørtBehandling(true))
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
 
         var resultat = SaldoUtregningTjeneste.lagUtregning(lagGrunnlag(aktuellPeriode, grunnlag));
 
@@ -254,16 +245,16 @@ class SaldoUtregningTjenesteTest {
         var identifikator = annenAktivitet();
         var identifikatorNyttArbeidsforhold = forFrilans();
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(utregningsdato.minusWeeks(1), utregningsdato.minusDays(1))
-                .periodeResultatType(INNVILGET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2.5), FELLESPERIODE, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(2.5), FELLESPERIODE, identifikator)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)).arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(),
-                grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator))
+                .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(), grunnlag, utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(97.5));
@@ -278,22 +269,22 @@ class SaldoUtregningTjenesteTest {
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var identifikatorNyttArbeidsforhold = forArbeid(new Orgnummer("123"), "789");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 19))
-                .periodeResultatType(INNVILGET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator)))
+            .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 11), LocalDate.of(2019, 12, 17))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), MØDREKVOTE, new Trekkdager(100),
-                                Utbetalingsgrad.HUNDRED))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(
+                new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), MØDREKVOTE, new Trekkdager(100), Utbetalingsgrad.HUNDRED))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)).arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
-                List.of(annenpartsPeriode), grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator))
+                .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(annenpartsPeriode), grunnlag,
+            utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(MØDREKVOTE, identifikator)).isEqualTo(Trekkdager.ZERO);
@@ -303,113 +294,104 @@ class SaldoUtregningTjenesteTest {
     @Test
     void saldoutregning_flerbarnsdager() {
         var fødselsdato = LocalDate.of(2022, 3, 28);
-        var kontoer = new Kontoer.Builder()
-                .konto(konto(MØDREKVOTE, 5*15))
-                .konto(konto(FELLESPERIODE, (16+17)*5))
-                .flerbarnsdager(17*5);
+        var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 5 * 15)).konto(konto(FELLESPERIODE, (16 + 17) * 5)).flerbarnsdager(17 * 5);
 
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var identifikatorNyttArbeidsforhold = forArbeid(new Orgnummer("123"), "789");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato, fødselsdato.plusDays(5))
-                .periodeResultatType(INNVILGET)
-                .flerbarnsdager(true)
-                .samtidigUttak(true)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .flerbarnsdager(true)
+            .samtidigUttak(true)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
+            .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusDays(5))
-                .innvilget(true)
-                .flerbarnsdager(false)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), MØDREKVOTE, new Trekkdager(5),
-                                Utbetalingsgrad.HUNDRED))
-                .build();
+            .innvilget(true)
+            .flerbarnsdager(false)
+            .uttakPeriodeAktivitet(
+                new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), MØDREKVOTE, new Trekkdager(5), Utbetalingsgrad.HUNDRED))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)).arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
-                List.of(annenpartsPeriode), grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator))
+                .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(annenpartsPeriode), grunnlag,
+            utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.saldoITrekkdager(MØDREKVOTE, identifikator)).isEqualTo(new Trekkdager(14*5));
-        assertThat(resultat.saldoITrekkdager(MØDREKVOTE, forSelvstendigNæringsdrivende())).isEqualTo(new Trekkdager(14*5));
-        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(32*5));
-        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(32*5));
+        assertThat(resultat.saldoITrekkdager(MØDREKVOTE, identifikator)).isEqualTo(new Trekkdager(14 * 5));
+        assertThat(resultat.saldoITrekkdager(MØDREKVOTE, forSelvstendigNæringsdrivende())).isEqualTo(new Trekkdager(14 * 5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16 * 5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16 * 5));
+        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(32 * 5));
+        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(32 * 5));
     }
 
     @Test
     void saldoutregning_flerbarnsdager_begge_fellesperiode() {
-        var kontoer = new Kontoer.Builder()
-                .konto(konto(MØDREKVOTE, 5*15))
-                .konto(konto(FELLESPERIODE, (16+17)*5))
-                .flerbarnsdager(17*5);
+        var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 5 * 15)).konto(konto(FELLESPERIODE, (16 + 17) * 5)).flerbarnsdager(17 * 5);
 
         var fødselsdato = LocalDate.of(2022, 3, 28);
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var identifikatorNyttArbeidsforhold = forArbeid(new Orgnummer("123"), "789");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
-                .periodeResultatType(INNVILGET)
-                .flerbarnsdager(true)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .flerbarnsdager(true)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
+            .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
-                .innvilget(true)
-                .flerbarnsdager(true)
-                .samtidigUttak(true)
-                .uttakPeriodeAktiviteter(List.of(
-                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
-                .build();
+            .innvilget(true)
+            .flerbarnsdager(true)
+            .samtidigUttak(true)
+            .uttakPeriodeAktiviteter(List.of(
+                new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)).arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode),
-                List.of(annenpartsPeriode), grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator))
+                .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode), List.of(annenpartsPeriode), grunnlag,
+            utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(31*5));
-        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(31*5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16 * 5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16 * 5));
+        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(31 * 5));
+        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(31 * 5));
     }
 
     @Test
     void saldoutregning_flerbarnsdager_begge_fellesperiode_berørt() {
-        var kontoer = new Kontoer.Builder()
-                .konto(konto(MØDREKVOTE, 5*15))
-                .konto(konto(FELLESPERIODE, (16+17)*5))
-                .flerbarnsdager(17*5);
+        var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 5 * 15)).konto(konto(FELLESPERIODE, (16 + 17) * 5)).flerbarnsdager(17 * 5);
 
         var fødselsdato = LocalDate.of(2022, 3, 28);
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var identifikatorNyttArbeidsforhold = forArbeid(new Orgnummer("123"), "789");
-        var fastsattPeriode = new FastsattUttakPeriode.Builder()
-                .tidsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
-                .periodeResultatType(INNVILGET)
-                .flerbarnsdager(true)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
-                .build();
+        var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
+            .periodeResultatType(INNVILGET)
+            .flerbarnsdager(true)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
+            .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
-                .innvilget(true)
-                .flerbarnsdager(true)
-                .samtidigUttak(true)
-                .uttakPeriodeAktiviteter(List.of(
-                        new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode),
-                true, List.of(annenpartsPeriode), kontoer.build(), null, null, false);
+            .innvilget(true)
+            .flerbarnsdager(true)
+            .samtidigUttak(true)
+            .uttakPeriodeAktiviteter(List.of(
+                new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode), true, List.of(annenpartsPeriode),
+            kontoer.build(), null, null, false);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16*5));
-        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(31*5));
-        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(31*5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16 * 5));
+        assertThat(resultat.restSaldoFlerbarnsdager(identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(16 * 5));
+        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(31 * 5));
+        assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikatorNyttArbeidsforhold)).isEqualTo(new Trekkdager(31 * 5));
     }
 
     @Test
@@ -419,59 +401,61 @@ class SaldoUtregningTjenesteTest {
         var foreldrepengerTD = new Trekkdager(200);
         var mspTD = new Trekkdager(50);
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5*40)).minsterettDager(40);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5 * 40)).minsterettDager(40);
 
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var avslåttPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(16).minusDays(1))
-                .periodeResultatType(AVSLÅTT)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(mspTD, FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(AVSLÅTT)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(mspTD, FORELDREPENGER, identifikator)))
+            .build();
         var innvilgetPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(19).minusDays(1))
-                .periodeResultatType(INNVILGET)
-                .resultatÅrsak(ANNET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(innvilgetMinsterettTD, FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .resultatÅrsak(ANNET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(innvilgetMinsterettTD, FORELDREPENGER, identifikator)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode),
-                List.of(), grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode), List.of(), grunnlag,
+            utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD));
+        assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(
+            foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD));
         assertThat(resultat.restSaldoMinsterett(identifikator)).isEqualTo(minsterettTD.subtract(innvilgetMinsterettTD));
-        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, false))
-                .isEqualTo(foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD).subtract(minsterettTD).add(innvilgetMinsterettTD));
-        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, true)).isEqualTo(foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD));
+        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, false)).isEqualTo(
+            foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD).subtract(minsterettTD).add(innvilgetMinsterettTD));
+        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, true)).isEqualTo(
+            foreldrepengerTD.subtract(mspTD).subtract(innvilgetMinsterettTD));
     }
 
     @Test
     void bfhr_enkel_minsterett_vs_innvilget_mye_godkjent_aktivitet() {
         var minsterettTD = new Trekkdager(40);
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5*40)).minsterettDager(40);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5 * 40)).minsterettDager(40);
 
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var avslåttPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1))
-                .periodeResultatType(AVSLÅTT)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(AVSLÅTT)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FORELDREPENGER, identifikator)))
+            .build();
         var innvilgetPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(45).minusDays(1))
-                .periodeResultatType(INNVILGET)
-                .resultatÅrsak(INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(39*5), FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .resultatÅrsak(INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(39 * 5), FORELDREPENGER, identifikator)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode),
-                List.of(), grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode), List.of(), grunnlag,
+            utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(Trekkdager.ZERO);
@@ -484,35 +468,35 @@ class SaldoUtregningTjenesteTest {
     void bfhr_enkel_minsterett_vs_innvilget_med_godkjent_aktivitet_og_minsterett() {
 
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5*40)).minsterettDager(40);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5 * 40)).minsterettDager(40);
 
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var avslåttPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1))
-                .periodeResultatType(AVSLÅTT)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(AVSLÅTT)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FORELDREPENGER, identifikator)))
+            .build();
         var innvilgetPeriode1 = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(11).minusDays(1))
-                .periodeResultatType(INNVILGET)
-                .resultatÅrsak(ANNET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4*5), FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .resultatÅrsak(ANNET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(4 * 5), FORELDREPENGER, identifikator)))
+            .build();
         var innvilgetPeriode2 = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(45).minusDays(1))
-                .periodeResultatType(INNVILGET)
-                .resultatÅrsak(INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(35*5), FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .resultatÅrsak(INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(35 * 5), FORELDREPENGER, identifikator)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
-                .kontoer(kontoer)
-                .build();
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
+            .kontoer(kontoer)
+            .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(avslåttPeriode, innvilgetPeriode1, innvilgetPeriode2),
-                List.of(), grunnlag, utregningsdato);
+            List.of(), grunnlag, utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(Trekkdager.ZERO);
-        assertThat(resultat.restSaldoMinsterett(identifikator)).isEqualTo(new Trekkdager(40-20 ));
+        assertThat(resultat.restSaldoMinsterett(identifikator)).isEqualTo(new Trekkdager(40 - 20));
         assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, false)).isEqualTo(new Trekkdager(20 - 40));
         assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, true)).isEqualTo(Trekkdager.ZERO);
     }
@@ -521,28 +505,28 @@ class SaldoUtregningTjenesteTest {
     void bfhr_enkel_minsterett_vs_innvilget_med_mer_uttak_enn_minsterett() {
 
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 1, 1));
-        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5*40)).minsterettDager(40);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 5 * 40)).minsterettDager(40);
 
         var utregningsdato = LocalDate.MAX;
         var identifikator = forArbeid(new Orgnummer("123"), "456");
         var innvilgetPeriode = new FastsattUttakPeriode.Builder().tidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(16).minusDays(1))
-                .periodeResultatType(INNVILGET)
-                .resultatÅrsak(ANNET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10*5), FORELDREPENGER, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .resultatÅrsak(ANNET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(10 * 5), FORELDREPENGER, identifikator)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
-                .kontoer(kontoer)
-                .build();
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(innvilgetPeriode),
-                List.of(), grunnlag, utregningsdato);
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator)))
+            .kontoer(kontoer)
+            .build();
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(innvilgetPeriode), List.of(), grunnlag,
+            utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
-        assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(new Trekkdager(200-50 ));
-        assertThat(resultat.restSaldoMinsterett(identifikator)).isEqualTo(new Trekkdager(40-50 ));
-        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, false)).isEqualTo(new Trekkdager(200-50 ));
-        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, true)).isEqualTo(new Trekkdager(200-50 ));
+        assertThat(resultat.saldoITrekkdager(FORELDREPENGER, identifikator)).isEqualTo(new Trekkdager(200 - 50));
+        assertThat(resultat.restSaldoMinsterett(identifikator)).isEqualTo(new Trekkdager(40 - 50));
+        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, false)).isEqualTo(new Trekkdager(200 - 50));
+        assertThat(resultat.nettoSaldoJustertForMinsterett(FORELDREPENGER, identifikator, true)).isEqualTo(new Trekkdager(200 - 50));
     }
 
     @Test
@@ -554,30 +538,30 @@ class SaldoUtregningTjenesteTest {
         var identifikatorNyttArbeidsforhold1 = forArbeid(new Orgnummer("123"), "789");
         var identifikatorNyttArbeidsforhold2 = forArbeid(new Orgnummer("345"), null);
         var fastsattPeriode1 = new FastsattUttakPeriode.Builder().tidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 18))
-                .periodeResultatType(INNVILGET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator)))
+            .build();
         var fastsattPeriode2 = new FastsattUttakPeriode.Builder().tidsperiode(LocalDate.of(2019, 12, 19), LocalDate.of(2019, 12, 19))
-                .periodeResultatType(INNVILGET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikatorNyttArbeidsforhold1)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator),
+                new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikatorNyttArbeidsforhold1)))
+            .build();
         var fastsattPeriode3 = new FastsattUttakPeriode.Builder().tidsperiode(LocalDate.of(2019, 12, 20), LocalDate.of(2019, 12, 20))
-                .periodeResultatType(INNVILGET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikatorNyttArbeidsforhold1),
-                        new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikatorNyttArbeidsforhold2)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator),
+                new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikatorNyttArbeidsforhold1),
+                new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikatorNyttArbeidsforhold2)))
+            .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator))
-                        .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold1))
-                        .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold2)))
-                .kontoer(kontoer)
-                .build();
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(identifikator))
+                .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold1))
+                .arbeidsforhold(new Arbeidsforhold(identifikatorNyttArbeidsforhold2)))
+            .kontoer(kontoer)
+            .build();
 
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(
-                List.of(fastsattPeriode1, fastsattPeriode2, fastsattPeriode3), List.of(), grunnlag, utregningsdato);
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(fastsattPeriode1, fastsattPeriode2, fastsattPeriode3),
+            List.of(), grunnlag, utregningsdato);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, identifikator)).isEqualTo(new Trekkdager(5));
@@ -591,27 +575,27 @@ class SaldoUtregningTjenesteTest {
 
         var søkersArbeidsforhold = forArbeid(new Orgnummer("123"), "456");
         var fastsattPeriode = new FastsattUttakPeriode.Builder().tidsperiode(LocalDate.of(2019, 12, 18), LocalDate.of(2019, 12, 18))
-                .periodeResultatType(INNVILGET)
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, søkersArbeidsforhold)))
-                .build();
+            .periodeResultatType(INNVILGET)
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, søkersArbeidsforhold)))
+            .build();
         var annenpartsArbeidsforhold1 = forArbeid(new Orgnummer("123"), "789");
         var annenpartsArbeidsforhold2 = forSelvstendigNæringsdrivende();
         var annenpartPeriode1 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 17), LocalDate.of(2019, 12, 17))
-                .flerbarnsdager(true)
-                .innvilget(true)
-                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, FELLESPERIODE, new Trekkdager(1),
-                        Utbetalingsgrad.HUNDRED))
-                .build();
+            .flerbarnsdager(true)
+            .innvilget(true)
+            .uttakPeriodeAktivitet(
+                new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.HUNDRED))
+            .build();
         var annenpartPeriode2 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 19), LocalDate.of(2019, 12, 19))
-                .flerbarnsdager(false)
-                .innvilget(true)
-                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, FELLESPERIODE, new Trekkdager(1),
-                        Utbetalingsgrad.HUNDRED))
-                .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold2, FELLESPERIODE, new Trekkdager(1),
-                        Utbetalingsgrad.HUNDRED))
-                .build();
+            .flerbarnsdager(false)
+            .innvilget(true)
+            .uttakPeriodeAktivitet(
+                new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.HUNDRED))
+            .uttakPeriodeAktivitet(
+                new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold2, FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.HUNDRED))
+            .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode), false,
-                List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build(), null, null, false);
+            List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build(), null, null, false);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, søkersArbeidsforhold)).isEqualTo(new Trekkdager(97));
@@ -622,36 +606,31 @@ class SaldoUtregningTjenesteTest {
     @Test
     void oppholdsperiode_hos_søker_som_ikke_er_knekt() {
         var opphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
-                .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
-                .tidsperiode(LocalDate.of(2021, 11, 1), LocalDate.of(2021, 11, 28))
-                .build();
+            .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
+            .tidsperiode(LocalDate.of(2021, 11, 1), LocalDate.of(2021, 11, 28))
+            .build();
         var uttakEtterOpphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
-                .tidsperiode(opphold.getTom().plusDays(1), opphold.getTom().plusDays(1))
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
-                .build();
+            .tidsperiode(opphold.getTom().plusDays(1), opphold.getTom().plusDays(1))
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
+            .build();
         var annenpartUttaksperiode1 = AnnenpartUttakPeriode.Builder.uttak(opphold.getFom(), opphold.getFom().plusWeeks(1).minusDays(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
+            .build();
         var annenpartUttaksperiode2 = AnnenpartUttakPeriode.Builder.uttak(annenpartUttaksperiode1.getTom().plusDays(1),
-                        opphold.getTom().minusWeeks(1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
-                .build();
-        var annenpartUttaksperiode3 = AnnenpartUttakPeriode.Builder.uttak(annenpartUttaksperiode2.getTom().plusDays(1),
-                        opphold.getTom())
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
-                .build();
+                opphold.getTom().minusWeeks(1))
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
+            .build();
+        var annenpartUttaksperiode3 = AnnenpartUttakPeriode.Builder.uttak(annenpartUttaksperiode2.getTom().plusDays(1), opphold.getTom())
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
-                List.of(annenpartUttaksperiode1, annenpartUttaksperiode2, annenpartUttaksperiode3), kontoer.build(),
-                LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON),
-                LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
+            List.of(annenpartUttaksperiode1, annenpartUttaksperiode2, annenpartUttaksperiode3), kontoer.build(),
+            LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 25 - 25 - 25 - 1
@@ -661,24 +640,22 @@ class SaldoUtregningTjenesteTest {
     @Test
     void oppholdsperiode_hos_søker_der_annenpart_ikke_har_fylt_hele_perioden() {
         var opphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
-                .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
-                .tidsperiode(LocalDate.of(2022, 1, 31), LocalDate.of(2022, 2, 4))
-                .build();
+            .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
+            .tidsperiode(LocalDate.of(2022, 1, 31), LocalDate.of(2022, 2, 4))
+            .build();
         var uttakEtterOpphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
-                .tidsperiode(LocalDate.of(2022, 2, 7), LocalDate.of(2022, 2, 7))
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
-                .build();
+            .tidsperiode(LocalDate.of(2022, 2, 7), LocalDate.of(2022, 2, 7))
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
+            .build();
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(opphold.getFom(), LocalDate.of(2022, 2, 2))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(3), Utbetalingsgrad.FULL))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(3), Utbetalingsgrad.FULL))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
 
-        var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
-                List.of(annenpartUttaksperiode), kontoer.build(),
-                LocalDateTime.of(annenpartUttaksperiode.getFom(), LocalTime.NOON),
-                LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
+        var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false, List.of(annenpartUttaksperiode),
+            kontoer.build(), LocalDateTime.of(annenpartUttaksperiode.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON),
+            true);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 3 - 2 - 1
@@ -688,29 +665,26 @@ class SaldoUtregningTjenesteTest {
     @Test
     void oppholdsperiode_hos_søker_der_annenpart_har_hull_i_oppholdsperioden() {
         var opphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
-                .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
-                .tidsperiode(LocalDate.of(2022, 1, 31), LocalDate.of(2022, 2, 4))
-                .build();
+            .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
+            .tidsperiode(LocalDate.of(2022, 1, 31), LocalDate.of(2022, 2, 4))
+            .build();
         var uttakEtterOpphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
-                .tidsperiode(LocalDate.of(2022, 2, 7), LocalDate.of(2022, 2, 7))
-                .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
-                .build();
+            .tidsperiode(LocalDate.of(2022, 2, 7), LocalDate.of(2022, 2, 7))
+            .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
+            .build();
         var annenpartUttaksperiode1 = AnnenpartUttakPeriode.Builder.uttak(opphold.getFom(), LocalDate.of(2022, 2, 1))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(2), Utbetalingsgrad.FULL))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(2), Utbetalingsgrad.FULL))
+            .build();
         var annenpartUttaksperiode2 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 2, 4), LocalDate.of(2022, 2, 4))
-                .innvilget(true)
-                .uttakPeriodeAktivitet(
-                        new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
-                .build();
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
+            .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
-                List.of(annenpartUttaksperiode1, annenpartUttaksperiode2), kontoer.build(),
-                LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON),
-                LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
+            List.of(annenpartUttaksperiode1, annenpartUttaksperiode2), kontoer.build(),
+            LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 2 - 2 - 1 - 1
@@ -719,8 +693,7 @@ class SaldoUtregningTjenesteTest {
 
     @Test
     void oppholdsperioder_skal_ikke_telle_dager_ved_fritt_uttak() {
-        var opphold = new FastsattUttakPeriode.Builder()
-            .periodeResultatType(INNVILGET)
+        var opphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
             .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
             .tidsperiode(LocalDate.of(2022, 11, 4), LocalDate.of(2022, 11, 4))
             .build();
@@ -736,8 +709,7 @@ class SaldoUtregningTjenesteTest {
 
         var annenpartUttak = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 11, 9), LocalDate.of(2022, 11, 9))
             .innvilget(true)
-            .uttakPeriodeAktivitet(
-                new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
             .build();
 
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100)).build();
@@ -751,8 +723,7 @@ class SaldoUtregningTjenesteTest {
 
     @Test
     void oppholdsperioder_skal_telle_dager_ved_sammehengende_uttak() {
-        var opphold = new FastsattUttakPeriode.Builder()
-            .periodeResultatType(INNVILGET)
+        var opphold = new FastsattUttakPeriode.Builder().periodeResultatType(INNVILGET)
             .oppholdÅrsak(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER)
             .tidsperiode(LocalDate.of(2022, 11, 4), LocalDate.of(2022, 11, 4))
             .build();
@@ -768,8 +739,7 @@ class SaldoUtregningTjenesteTest {
 
         var annenpartUttak = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 11, 9), LocalDate.of(2022, 11, 9))
             .innvilget(true)
-            .uttakPeriodeAktivitet(
-                new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
             .build();
 
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100)).build();

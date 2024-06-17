@@ -21,7 +21,9 @@ public record Arbeidsforhold(AktivitetIdentifikator identifikator, LocalDate sta
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         return o instanceof Arbeidsforhold that && Objects.equals(identifikator, that.identifikator);
     }
 

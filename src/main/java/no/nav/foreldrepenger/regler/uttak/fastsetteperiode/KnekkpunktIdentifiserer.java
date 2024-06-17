@@ -53,9 +53,9 @@ class KnekkpunktIdentifiserer {
 
         if (barnsDødsdatoFinnes(grunnlag)) {
             knekkpunkter.add(grunnlag.getDatoer()
-                    .getDødsdatoer()
-                    .getBarnsDødsdato()
-                    .plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
+                .getDødsdatoer()
+                .getBarnsDødsdato()
+                .plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, familiehendelseDato)));
         }
 
         if (medlemskapOpphørsdatoFinnes(grunnlag)) {
@@ -69,12 +69,15 @@ class KnekkpunktIdentifiserer {
         if (grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             // Før Prop 15L 21/22: Første 6 uker forbeholdt mor, unntatt flerbarn og aleneomsorg
             // Etter Prop 15L 21/22: Første 6 uker forbeholdt mor kun for kvoter. Far har opptil 10 dager samtidig uttak ifm fødsel
-            knekkpunkter.add(familiehendelseDato.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelseDato)));
-            var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL) && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
+            knekkpunkter.add(
+                familiehendelseDato.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelseDato)));
+            var hjemletFarUttakRundtFødsel = grunnlag.getKontoer().harSpesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL)
+                && grunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL) > 0;
             var sakUtenKvoter = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
             var erMor = grunnlag.getBehandling().isSøkerMor();
             if (!hjemletFarUttakRundtFødsel || !sakUtenKvoter || erMor) {
-                knekkpunkter.add(familiehendelseDato.plusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelseDato)));
+                knekkpunkter.add(familiehendelseDato.plusWeeks(
+                    Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelseDato)));
             }
             if (hjemletFarUttakRundtFødsel && !erMor) {
                 knekkpunkter.addAll(finnKnekkpunkterFarsPeriodeRundtFødsel(grunnlag, sakUtenKvoter));
@@ -87,28 +90,27 @@ class KnekkpunktIdentifiserer {
         }
 
         return knekkpunkter.stream()
-                .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
-                .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
-                .collect(Collectors.toSet());
+            .filter(k -> !k.isBefore(minimumsgrenseForLovligUttak))
+            .filter(k -> !k.isAfter(maksimumsgrenseForLovligeUttak))
+            .collect(Collectors.toSet());
     }
 
     private static Set<LocalDate> knekkBasertPåYtelser(RegelGrunnlag grunnlag) {
         var ytelser = grunnlag.getYtelser();
         var pleiepenger = ytelser.pleiepenger();
-        return pleiepenger.map(p -> p.perioder().stream()
-                .flatMap(per -> Stream.of(per.getFom(), per.getTom().plusDays(1)))
-                .collect(Collectors.toSet()))
-                .orElseGet(Set::of);
+        return pleiepenger.map(
+                p -> p.perioder().stream().flatMap(per -> Stream.of(per.getFom(), per.getTom().plusDays(1))).collect(Collectors.toSet()))
+            .orElseGet(Set::of);
     }
 
     private static Set<LocalDate> knekkPunkterBaserPåFørsteLovligeUttaksdag(RegelGrunnlag grunnlag) {
         return grunnlag.getSøknad()
-                .getOppgittePerioder()
-                .stream()
-                .filter(p -> p.getTidligstMottattDato().isPresent())
-                .filter(p -> p.overlapper(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getTidligstMottattDato().get())))
-                .map(p -> SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getTidligstMottattDato().get()))
-                .collect(Collectors.toSet());
+            .getOppgittePerioder()
+            .stream()
+            .filter(p -> p.getTidligstMottattDato().isPresent())
+            .filter(p -> p.overlapper(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getTidligstMottattDato().get())))
+            .map(p -> SøknadsfristUtil.finnFørsteLoveligeUttaksdag(p.getTidligstMottattDato().get()))
+            .collect(Collectors.toSet());
     }
 
     private static LocalDate finnMinimumgrenseLovligUttak(RegelGrunnlag grunnlag) {
@@ -117,8 +119,7 @@ class KnekkpunktIdentifiserer {
             return termin.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, termin));
         }
         var familiehendelseDato = grunnlag.getDatoer().getFamiliehendelse();
-        return familiehendelseDato.minusWeeks(
-            Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, familiehendelseDato));
+        return familiehendelseDato.minusWeeks(Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, familiehendelseDato));
     }
 
     private static Set<LocalDate> knekkpunkterPåArbeid(Arbeid arbeid) {
@@ -145,17 +146,13 @@ class KnekkpunktIdentifiserer {
                                                                  LocalDate maksimumsgrenseForLovligeUttak,
                                                                  Set<LocalDate> knekkpunkter) {
         var bevegeligeHelligdager = finnKnekkpunktPåBevegeligeHelligdagerI(
-                new LukketPeriode(minimumsgrenseForLovligUttak, maksimumsgrenseForLovligeUttak));
+            new LukketPeriode(minimumsgrenseForLovligUttak, maksimumsgrenseForLovligeUttak));
         var perioderMedFerie = perioderMedFerie(grunnlag);
         knekkpunkter.addAll(knekkpunkterForUtsettelsePgaFerie(bevegeligeHelligdager, perioderMedFerie));
     }
 
     private static List<OppgittPeriode> perioderMedFerie(RegelGrunnlag grunnlag) {
-        return grunnlag.getSøknad()
-                .getOppgittePerioder()
-                .stream()
-                .filter(p -> p.isUtsettelsePga(UtsettelseÅrsak.FERIE))
-                .toList();
+        return grunnlag.getSøknad().getOppgittePerioder().stream().filter(p -> p.isUtsettelsePga(UtsettelseÅrsak.FERIE)).toList();
     }
 
     private static void knekkBasertPåAnnenPart(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
@@ -176,8 +173,7 @@ class KnekkpunktIdentifiserer {
         return knekkpunkt;
     }
 
-    private static List<LocalDate> knekkpunkterForUtsettelsePgaFerie(List<LocalDate> bevegeligeHelligdager,
-                                                                     List<OppgittPeriode> utsettelsePerioder) {
+    private static List<LocalDate> knekkpunkterForUtsettelsePgaFerie(List<LocalDate> bevegeligeHelligdager, List<OppgittPeriode> utsettelsePerioder) {
         List<LocalDate> knekkpunkter = new ArrayList<>();
         for (Periode periode : utsettelsePerioder) {
             for (var helligdag : bevegeligeHelligdager) {
@@ -192,8 +188,8 @@ class KnekkpunktIdentifiserer {
 
     private static Set<LocalDate> finnKnekkpunkterFarsPeriodeRundtFødsel(RegelGrunnlag grunnlag, boolean medTom) {
         return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag)
-                .map(p -> medTom ? Set.of(p.getFom(), p.getTom().plusDays(1)) : Set.of(p.getFom()))
-                .orElse(Set.of());
+            .map(p -> medTom ? Set.of(p.getFom(), p.getTom().plusDays(1)) : Set.of(p.getFom()))
+            .orElse(Set.of());
     }
 
     private static void leggTilKnekkpunkter(Set<LocalDate> knekkpunkter, List<? extends Periode> perioder) {

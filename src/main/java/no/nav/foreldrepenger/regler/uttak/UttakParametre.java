@@ -30,8 +30,10 @@ public class UttakParametre {
     /**
      * Grenser for fars/medmors uttak i forbindelse med fødsel.
      */
-    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(boolean utenFarUttakRundtFødsel, boolean gjelderFødsel,
-                                                                      LocalDate familieHendelseDato, LocalDate terminDato) {
+    public static Optional<LukketPeriode> utledFarsPeriodeRundtFødsel(boolean utenFarUttakRundtFødsel,
+                                                                      boolean gjelderFødsel,
+                                                                      LocalDate familieHendelseDato,
+                                                                      LocalDate terminDato) {
         return FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(utenFarUttakRundtFødsel, gjelderFødsel, familieHendelseDato, terminDato);
     }
 
