@@ -269,7 +269,8 @@ public final class OppgittPeriode extends LukketPeriode {
             + tidligstMottattDato + ", aktiviteter=" + aktiviteter + ", dokumentasjonVurdering=" + dokumentasjonVurdering + '}';
     }
 
-    public MorsStillingsprosent getAnnenpartStillingsprosent() {
+    public MorsStillingsprosent getMorsStillingsprosent() {
         return morsStillingsprosent;
     }
+
 }
