@@ -46,8 +46,8 @@ public class UttakPeriodeAktivitet {
             return false;
         }
         var that = (UttakPeriodeAktivitet) o;
-        return søktGradering == that.søktGradering && Objects.equals(identifikator, that.identifikator) && Objects.equals(
-                utbetalingsgrad, that.utbetalingsgrad) && Objects.equals(trekkdager, that.trekkdager);
+        return søktGradering == that.søktGradering && Objects.equals(identifikator, that.identifikator) && Objects.equals(utbetalingsgrad,
+            that.utbetalingsgrad) && Objects.equals(trekkdager, that.trekkdager);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UttakPeriodeAktivitet {
 
     @Override
     public String toString() {
-        return "UttakPeriodeAktivitet{" + "identifikator=" + identifikator + ", utbetalingsgrad=" + utbetalingsgrad + ", trekkdager="
-                + trekkdager + ", gradering=" + søktGradering + '}';
+        return "UttakPeriodeAktivitet{" + "identifikator=" + identifikator + ", utbetalingsgrad=" + utbetalingsgrad + ", trekkdager=" + trekkdager
+            + ", gradering=" + søktGradering + '}';
     }
 }

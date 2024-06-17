@@ -14,12 +14,7 @@ public class IkkeOppfylt {
      * @return periode utfall.
      */
     public static FastsettePeriodeUtfall opprett(String id, IkkeOppfyltÅrsak årsak, boolean trekkDagerFraSaldo, boolean utbetal) {
-        return FastsettePeriodeUtfall.builder()
-                .ikkeOppfylt(årsak)
-                .utbetal(utbetal)
-                .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
-                .medId(id)
-                .create();
+        return FastsettePeriodeUtfall.builder().ikkeOppfylt(årsak).utbetal(utbetal).medTrekkDagerFraSaldo(trekkDagerFraSaldo).medId(id).create();
     }
 
 }

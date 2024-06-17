@@ -35,16 +35,16 @@ final class ValgAvStønadskontoTjeneste {
         return velg(periode, regelGrunnlag, saldoUtregning);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
+    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(OppgittPeriode periode,
+                                                                            RegelGrunnlag regelGrunnlag,
+                                                                            SaldoUtregning saldoUtregning) {
         if (periodeErPleiepenger(periode, regelGrunnlag)) {
             return stønadskontoVedPleiepenger(regelGrunnlag);
         }
         return velg(periode, regelGrunnlag, saldoUtregning);
     }
 
-    private static Optional<Stønadskontotype> velg(OppgittPeriode periode,
-                                                   RegelGrunnlag regelGrunnlag,
-                                                   SaldoUtregning saldoUtregning) {
+    private static Optional<Stønadskontotype> velg(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
         for (var stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
             if (!erTomForKonto(periode, stønadskontotype, saldoUtregning)) {
                 return Optional.of(stønadskontotype);
@@ -54,9 +54,8 @@ final class ValgAvStønadskontoTjeneste {
     }
 
     private static boolean periodeErPleiepenger(OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
-        return PrematurukerUtil.oppfyllerKravTilPrematuruker(regelGrunnlag.getDatoer().getFødsel(),
-                regelGrunnlag.getDatoer().getTermin()) && periodeErFørTermin(periode, regelGrunnlag)
-                && periode.isUtsettelsePga(UtsettelseÅrsak.INNLAGT_BARN);
+        return PrematurukerUtil.oppfyllerKravTilPrematuruker(regelGrunnlag.getDatoer().getFødsel(), regelGrunnlag.getDatoer().getTermin())
+            && periodeErFørTermin(periode, regelGrunnlag) && periode.isUtsettelsePga(UtsettelseÅrsak.INNLAGT_BARN);
     }
 
     private static boolean periodeErFørTermin(OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
@@ -72,18 +71,16 @@ final class ValgAvStønadskontoTjeneste {
             return Optional.of(Stønadskontotype.FORELDREPENGER);
         }
         throw new IllegalStateException(
-                "Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: " + regelGrunnlag.getGyldigeStønadskontotyper());
+            "Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: " + regelGrunnlag.getGyldigeStønadskontotyper());
     }
 
     private static List<Stønadskontotype> hentSøkerSineKontoer(RegelGrunnlag regelGrunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         var gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
         if (regelGrunnlag.getBehandling().isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
-            søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE,
-                    Stønadskontotype.FORELDREPENGER);
+            søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
         } else if (gyldige.contains(Stønadskontotype.FEDREKVOTE)) {
-            søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE,
-                    Stønadskontotype.FORELDREPENGER);
+            søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
         } else {
             søkerSineKonto = List.of(Stønadskontotype.FORELDREPENGER);
         }

@@ -8,8 +8,8 @@ import java.util.Set;
 
 public final class Kontoer {
 
-    private Map<Stønadskontotype, Integer> stønadskonti = new EnumMap<>(Stønadskontotype.class);
-    private Map<Spesialkontotype, Integer> spesialkonti = new EnumMap<>(Spesialkontotype.class);
+    private final Map<Stønadskontotype, Integer> stønadskonti = new EnumMap<>(Stønadskontotype.class);
+    private final Map<Spesialkontotype, Integer> spesialkonti = new EnumMap<>(Spesialkontotype.class);
 
     private Kontoer() {
 

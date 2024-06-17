@@ -54,14 +54,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
                                                   LocalDate tom,
                                                   List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
         return Builder.uttak(fom, tom)
-                .samtidigUttak(this.samtidigUttak)
-                .flerbarnsdager(this.flerbarnsdager)
-                .utsettelse(this.innvilget)
-                .innvilget(this.innvilget)
-                .oppholdsårsak(this.oppholdÅrsak)
-                .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
-                .senestMottattDato(this.senestMottattDato)
-                .build();
+            .samtidigUttak(this.samtidigUttak)
+            .flerbarnsdager(this.flerbarnsdager)
+            .utsettelse(this.innvilget)
+            .innvilget(this.innvilget)
+            .oppholdsårsak(this.oppholdÅrsak)
+            .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
+            .senestMottattDato(this.senestMottattDato)
+            .build();
     }
 
     public boolean harTrekkdager() {
@@ -78,22 +78,24 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        if (!super.equals(o))
+        }
+        if (!super.equals(o)) {
             return false;
+        }
         var that = (AnnenpartUttakPeriode) o;
         return samtidigUttak == that.samtidigUttak && flerbarnsdager == that.flerbarnsdager && utsettelse == that.utsettelse
-                && innvilget == that.innvilget && Objects.equals(aktiviteter, that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak
-            && Objects.equals(senestMottattDato, that.senestMottattDato);
+            && innvilget == that.innvilget && Objects.equals(aktiviteter, that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(
+            senestMottattDato, that.senestMottattDato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdÅrsak,
-                innvilget, senestMottattDato);
+        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdÅrsak, innvilget, senestMottattDato);
     }
 
     public static class Builder {

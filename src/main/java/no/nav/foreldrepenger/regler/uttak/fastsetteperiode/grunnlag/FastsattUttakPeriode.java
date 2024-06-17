@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.UTSETTELSE_GYLDIG;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.UTSETTELSE_GYLDIG;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -73,16 +73,16 @@ public class FastsattUttakPeriode {
     public static boolean trekkerMinsterett(Perioderesultattype perioderesultattype,
                                             FastsattUttakPeriode.ResultatÅrsak resultatÅrsak,
                                             boolean utsettelse) {
-        return (Perioderesultattype.INNVILGET.equals(perioderesultattype) && !erPeriodeMedGodkjentAktivitet(resultatÅrsak))
-                || (Perioderesultattype.AVSLÅTT.equals(perioderesultattype) && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak))
-                || (Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
+        return (Perioderesultattype.INNVILGET.equals(perioderesultattype) && !erPeriodeMedGodkjentAktivitet(resultatÅrsak)) || (
+            Perioderesultattype.AVSLÅTT.equals(perioderesultattype) && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak)) || (
+            Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
     }
 
     private static boolean erPeriodeMedGodkjentAktivitet(FastsattUttakPeriode.ResultatÅrsak resultatÅrsak) {
         // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
         // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
-        return INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak) ||
-                INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak);
+        return INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak) || INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(
+            resultatÅrsak);
     }
 
     public Optional<LocalDate> getMottattDato() {

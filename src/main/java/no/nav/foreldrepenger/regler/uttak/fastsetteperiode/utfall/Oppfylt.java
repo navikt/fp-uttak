@@ -28,12 +28,7 @@ public class Oppfylt {
      * @return periode utfall.
      */
     public static FastsettePeriodeUtfall opprett(String id, InnvilgetÅrsak innvilgetÅrsak, boolean trekkDager, boolean utbetal) {
-        return FastsettePeriodeUtfall.builder()
-                .oppfylt(innvilgetÅrsak)
-                .utbetal(utbetal)
-                .medTrekkDagerFraSaldo(trekkDager)
-                .medId(id)
-                .create();
+        return FastsettePeriodeUtfall.builder().oppfylt(innvilgetÅrsak).utbetal(utbetal).medTrekkDagerFraSaldo(trekkDager).medId(id).create();
     }
 
     public static FastsettePeriodeUtfall opprettMedAvslåttGradering(String id,
@@ -41,12 +36,12 @@ public class Oppfylt {
                                                                     GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak,
                                                                     boolean utbetal) {
         return FastsettePeriodeUtfall.builder()
-                .oppfylt(innvilgetÅrsak)
-                .utbetal(utbetal)
-                .medTrekkDagerFraSaldo(true)
-                .medAvslåttGradering(graderingAvslagÅrsak)
-                .medId(id)
-                .create();
+            .oppfylt(innvilgetÅrsak)
+            .utbetal(utbetal)
+            .medTrekkDagerFraSaldo(true)
+            .medAvslåttGradering(graderingAvslagÅrsak)
+            .medId(id)
+            .create();
     }
 
     /**
@@ -56,12 +51,7 @@ public class Oppfylt {
      * @return periode utfall.
      */
     public static FastsettePeriodeUtfall opprettForOppholds(String id, boolean trekkDagerFraSaldo, boolean utbetal) {
-        return FastsettePeriodeUtfall.builder()
-                .oppfylt(null)
-                .utbetal(utbetal)
-                .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
-                .medId(id)
-                .create();
+        return FastsettePeriodeUtfall.builder().oppfylt(null).utbetal(utbetal).medTrekkDagerFraSaldo(trekkDagerFraSaldo).medId(id).create();
     }
 
 }

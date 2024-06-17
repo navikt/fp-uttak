@@ -33,19 +33,18 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     @Test
     void UT1101_ferie_innenfor_seks_første_uker() {
         var fødselsdato = LocalDate.of(2019, 7, 1);
-        var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5),
-            UtsettelseÅrsak.FERIE, fødselsdato.minusWeeks(1), null, null, null); // innenfor seks uker etter fødsel
+        var periode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), UtsettelseÅrsak.FERIE,
+            fødselsdato.minusWeeks(1), null, null, null); // innenfor seks uker etter fødsel
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
-        var grunnlag = new RegelGrunnlag.Builder().arbeid(
-                new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-                .kontoer(kontoer)
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(periode))
-                .behandling(morBehandling())
-                .rettOgOmsorg(beggeRett())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(fødselsdato))
-                .inngangsvilkår(oppfylt())
-                .build();
+        var grunnlag = new RegelGrunnlag.Builder().arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+            .kontoer(kontoer)
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(periode))
+            .behandling(morBehandling())
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder().fødsel(fødselsdato).termin(fødselsdato))
+            .inngangsvilkår(oppfylt())
+            .build();
 
         var resultat = kjørRegel(periode, grunnlag);
 
@@ -62,19 +61,17 @@ class UtsettelseDelregelSammenhengendeUttakTest {
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
-        var grunnlag = new RegelGrunnlag.Builder().arbeid(
-                new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-                .kontoer(kontoer)
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(periode))
-                .behandling(morBehandling())
-                .revurdering(new Revurdering.Builder().endringsdato(fom))
-                .rettOgOmsorg(beggeRett())
-                .datoer(new Datoer.Builder()
-                        //Nok til å få prematuruker
-                        .fødsel(fom).termin(fom.plusWeeks(8)))
-                .inngangsvilkår(oppfylt())
-                .build();
+        var grunnlag = new RegelGrunnlag.Builder().arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+            .kontoer(kontoer)
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(periode))
+            .behandling(morBehandling())
+            .revurdering(new Revurdering.Builder().endringsdato(fom))
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder()
+                //Nok til å få prematuruker
+                .fødsel(fom).termin(fom.plusWeeks(8)))
+            .inngangsvilkår(oppfylt())
+            .build();
 
         var resultat = kjørRegel(periode, grunnlag);
 
@@ -87,19 +84,17 @@ class UtsettelseDelregelSammenhengendeUttakTest {
         var periode = utsettelsePeriode(fom.plusWeeks(10), fom.plusWeeks(10), UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
-        var grunnlag = new RegelGrunnlag.Builder().arbeid(
-                new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-                .kontoer(kontoer)
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(periode))
-                .behandling(morBehandling())
-                .revurdering(new Revurdering.Builder().endringsdato(fom))
-                .rettOgOmsorg(beggeRett())
-                .datoer(new Datoer.Builder()
-                        //Nok til å få prematuruker
-                        .fødsel(fom).termin(fom.plusWeeks(8)))
-                .inngangsvilkår(oppfylt())
-                .build();
+        var grunnlag = new RegelGrunnlag.Builder().arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+            .kontoer(kontoer)
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(periode))
+            .behandling(morBehandling())
+            .revurdering(new Revurdering.Builder().endringsdato(fom))
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder()
+                //Nok til å få prematuruker
+                .fødsel(fom).termin(fom.plusWeeks(8)))
+            .inngangsvilkår(oppfylt())
+            .build();
 
         var resultat = kjørRegel(periode, grunnlag);
 
@@ -112,19 +107,17 @@ class UtsettelseDelregelSammenhengendeUttakTest {
         var periode = utsettelsePeriode(fom, fom, UtsettelseÅrsak.INNLAGT_BARN, INNLEGGELSE_BARN_GODKJENT);
         var aktivitetIdentifikator = AktivitetIdentifikator.forFrilans();
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(100).type(Stønadskontotype.MØDREKVOTE));
-        var grunnlag = new RegelGrunnlag.Builder().arbeid(
-                new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-                .kontoer(kontoer)
-                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
-                        .oppgittPeriode(periode))
-                .behandling(morBehandling())
-                .revurdering(new Revurdering.Builder().endringsdato(fom))
-                .rettOgOmsorg(beggeRett())
-                .datoer(new Datoer.Builder()
-                        //Nok til å få prematuruker
-                        .fødsel(fom).termin(fom))
-                .inngangsvilkår(oppfylt())
-                .build();
+        var grunnlag = new RegelGrunnlag.Builder().arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+            .kontoer(kontoer)
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(periode))
+            .behandling(morBehandling())
+            .revurdering(new Revurdering.Builder().endringsdato(fom))
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder()
+                //Nok til å få prematuruker
+                .fødsel(fom).termin(fom))
+            .inngangsvilkår(oppfylt())
+            .build();
 
         var resultat = kjørRegel(periode, grunnlag);
 
@@ -140,9 +133,6 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     }
 
     private Inngangsvilkår.Builder oppfylt() {
-        return new Inngangsvilkår.Builder().fødselOppfylt(true)
-                .adopsjonOppfylt(true)
-                .foreldreansvarnOppfylt(true)
-                .opptjeningOppfylt(true);
+        return new Inngangsvilkår.Builder().fødselOppfylt(true).adopsjonOppfylt(true).foreldreansvarnOppfylt(true).opptjeningOppfylt(true);
     }
 }

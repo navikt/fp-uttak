@@ -6,5 +6,5 @@ public enum Spesialkontotype {
     BARE_FAR_MINSTERETT,
     FAR_RUNDT_FØDSEL,
     TETTE_FØDSLER,
-    UTEN_AKTIVITETSKRAV;
+    UTEN_AKTIVITETSKRAV
 }

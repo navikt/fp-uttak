@@ -16,14 +16,15 @@ class FastsettePerioderRegelresultat {
 
     FastsettePerioderRegelresultat(Evaluation evaluation) {
         this.evaluationSummary = new EvaluationSummary(evaluation);
-        this.utfall = evaluationSummary.allOutcomes().stream()
+        this.utfall = evaluationSummary.allOutcomes()
+            .stream()
             .filter(UttakOutcome.class::isInstance)
             .map(UttakOutcome.class::cast)
-            .findFirst().orElseThrow();
+            .findFirst()
+            .orElseThrow();
     }
 
-    public FastsettePerioderRegelresultat(Evaluation evaluation,
-                                          UttakOutcome utfall) {
+    public FastsettePerioderRegelresultat(Evaluation evaluation, UttakOutcome utfall) {
         this.evaluationSummary = new EvaluationSummary(evaluation);
         this.utfall = utfall;
     }
@@ -57,10 +58,12 @@ class FastsettePerioderRegelresultat {
     }
 
     public String sluttpunktId() {
-        return evaluationSummary.leafEvaluations().stream()
+        return evaluationSummary.leafEvaluations()
+            .stream()
             .filter(e -> e.ruleIdentification() != null)
             .findFirst()
-            .map(Evaluation::ruleIdentification).orElse(null);
+            .map(Evaluation::ruleIdentification)
+            .orElse(null);
     }
 
 }

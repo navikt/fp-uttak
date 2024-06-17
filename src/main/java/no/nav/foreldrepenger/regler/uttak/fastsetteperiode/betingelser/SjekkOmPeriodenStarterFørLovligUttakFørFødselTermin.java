@@ -40,6 +40,6 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends Leaf
             throw new IllegalArgumentException("Forventer Søknadstype termin eller fødsel, fikk " + søknadType);
         }
         return søknadType == TERMIN ? grunnlag.getTermindato() // søknadsfrist regnes fra termindato ved terminsøknad
-                : grunnlag.getFødselsdato();
+            : grunnlag.getFødselsdato();
     }
 }

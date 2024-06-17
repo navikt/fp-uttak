@@ -55,9 +55,9 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public OppgittPeriode kopiMedNyPeriode(LocalDate nyFom, LocalDate nyTom) {
-        var kopi = new OppgittPeriode(stønadskontotype, nyFom, nyTom, manglendeSøktPeriode, arbeidsprosent, gradertAktiviteter,
-                overføringÅrsak, samtidigUttaksprosent, flerbarnsdager, utsettelseÅrsak, oppholdÅrsak, senestMottattDato,
-            tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+        var kopi = new OppgittPeriode(stønadskontotype, nyFom, nyTom, manglendeSøktPeriode, arbeidsprosent, gradertAktiviteter, overføringÅrsak,
+            samtidigUttaksprosent, flerbarnsdager, utsettelseÅrsak, oppholdÅrsak, senestMottattDato, tidligstMottattDato, morsAktivitet,
+            dokumentasjonVurdering);
         kopi.aktiviteter = aktiviteter;
         return kopi;
     }
@@ -171,8 +171,7 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
-        return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, null, false, null,
-                null, null, null, null, null);
+        return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null, null, null);
     }
 
     public static OppgittPeriode forUtsettelse(LocalDate fom,
@@ -182,8 +181,8 @@ public final class OppgittPeriode extends LukketPeriode {
                                                LocalDate tidligstMottattDato,
                                                MorsAktivitet morsAktivitet,
                                                DokumentasjonVurdering dokumentasjonVurdering) {
-        return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, null, false, utsettelseÅrsak,
-                null, senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+        return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, null, false, utsettelseÅrsak, null, senestMottattDato,
+            tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forOverføring(Stønadskontotype stønadskontotype,
@@ -193,13 +192,17 @@ public final class OppgittPeriode extends LukketPeriode {
                                                LocalDate senestMottattDato,
                                                LocalDate tidligstMottattDato,
                                                DokumentasjonVurdering dokumentasjonVurdering) {
-        return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, null,
-                false, null, null, senestMottattDato, tidligstMottattDato, null, dokumentasjonVurdering);
+        return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, null, false, null, null, senestMottattDato,
+            tidligstMottattDato, null, dokumentasjonVurdering);
     }
 
-    public static OppgittPeriode forOpphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak, LocalDate senestMottattDato,
+    public static OppgittPeriode forOpphold(LocalDate fom,
+                                            LocalDate tom,
+                                            OppholdÅrsak oppholdÅrsak,
+                                            LocalDate senestMottattDato,
                                             LocalDate tidligstMottattDato) {
-        return new OppgittPeriode(OppholdÅrsak.map(oppholdÅrsak), fom, tom, false, null, Set.of(), null, null, false, null, oppholdÅrsak, senestMottattDato, tidligstMottattDato, null, null);
+        return new OppgittPeriode(OppholdÅrsak.map(oppholdÅrsak), fom, tom, false, null, Set.of(), null, null, false, null, oppholdÅrsak,
+            senestMottattDato, tidligstMottattDato, null, null);
     }
 
     public static OppgittPeriode forGradering(Stønadskontotype stønadskontotype,
@@ -208,56 +211,56 @@ public final class OppgittPeriode extends LukketPeriode {
                                               BigDecimal arbeidsprosent,
                                               SamtidigUttaksprosent samtidigUttaksprosent,
                                               boolean flerbarnsdager,
-                                              Set<AktivitetIdentifikator> gradertAktiviteter, LocalDate senestMottattDato,
+                                              Set<AktivitetIdentifikator> gradertAktiviteter,
+                                              LocalDate senestMottattDato,
                                               LocalDate tidligstMottattDato,
                                               MorsAktivitet morsAktivitet,
                                               DokumentasjonVurdering dokumentasjonVurdering) {
-        return new OppgittPeriode(stønadskontotype, fom, tom, false, arbeidsprosent, gradertAktiviteter, null, samtidigUttaksprosent, flerbarnsdager, null, null, senestMottattDato, tidligstMottattDato, morsAktivitet,
-            dokumentasjonVurdering);
+        return new OppgittPeriode(stønadskontotype, fom, tom, false, arbeidsprosent, gradertAktiviteter, null, samtidigUttaksprosent, flerbarnsdager,
+            null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forVanligPeriode(Stønadskontotype stønadskontotype,
                                                   LocalDate fom,
                                                   LocalDate tom,
                                                   SamtidigUttaksprosent samtidigUttaksprosent,
-                                                  boolean flerbarnsdager, LocalDate senestMottattDato,
+                                                  boolean flerbarnsdager,
+                                                  LocalDate senestMottattDato,
                                                   LocalDate tidligstMottattDato,
                                                   MorsAktivitet morsAktivitet,
                                                   DokumentasjonVurdering dokumentasjonVurdering) {
-        return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), null, samtidigUttaksprosent,
-                flerbarnsdager, null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+        return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), null, samtidigUttaksprosent, flerbarnsdager, null, null,
+            senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         var that = (OppgittPeriode) o;
-        return flerbarnsdager == that.flerbarnsdager && manglendeSøktPeriode == that.manglendeSøktPeriode
-                && stønadskontotype == that.stønadskontotype && Objects.equals(arbeidsprosent, that.arbeidsprosent)
-                && overføringÅrsak == that.overføringÅrsak && Objects.equals(
-                samtidigUttaksprosent, that.samtidigUttaksprosent) && utsettelseÅrsak == that.utsettelseÅrsak
-                && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(senestMottattDato, that.senestMottattDato)
-                && Objects.equals(tidligstMottattDato, that.tidligstMottattDato)
-                && morsAktivitet == that.morsAktivitet
-                && dokumentasjonVurdering == that.dokumentasjonVurdering;
+        return flerbarnsdager == that.flerbarnsdager && manglendeSøktPeriode == that.manglendeSøktPeriode && stønadskontotype == that.stønadskontotype
+            && Objects.equals(arbeidsprosent, that.arbeidsprosent) && overføringÅrsak == that.overføringÅrsak && Objects.equals(samtidigUttaksprosent,
+            that.samtidigUttaksprosent) && utsettelseÅrsak == that.utsettelseÅrsak && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(
+            senestMottattDato, that.senestMottattDato) && Objects.equals(tidligstMottattDato, that.tidligstMottattDato)
+            && morsAktivitet == that.morsAktivitet && dokumentasjonVurdering == that.dokumentasjonVurdering;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stønadskontotype, arbeidsprosent, overføringÅrsak, flerbarnsdager,
-                samtidigUttaksprosent, utsettelseÅrsak, oppholdÅrsak, manglendeSøktPeriode, senestMottattDato, tidligstMottattDato,
-                morsAktivitet, dokumentasjonVurdering);
+        return Objects.hash(stønadskontotype, arbeidsprosent, overføringÅrsak, flerbarnsdager, samtidigUttaksprosent, utsettelseÅrsak, oppholdÅrsak,
+            manglendeSøktPeriode, senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
     }
 
     @Override
     public String toString() {
-        return "OppgittPeriode{" + "stønadskontotype=" + stønadskontotype + ", fom=" + getFom() + ", tom=" + getTom() + ", arbeidsprosent=" + arbeidsprosent
-            + ", gradertAktiviteter=" + gradertAktiviteter + ", overføringÅrsak=" + overføringÅrsak
-            + ", manglendeSøktPeriode=" + manglendeSøktPeriode + ", flerbarnsdager=" + flerbarnsdager + ", samtidigUttak=" + samtidigUttaksprosent
-            + ", utsettelseÅrsak=" + utsettelseÅrsak + ", oppholdÅrsak=" + oppholdÅrsak + ", senestMottattDato=" + senestMottattDato + ", tidligstMottattDato="
+        return "OppgittPeriode{" + "stønadskontotype=" + stønadskontotype + ", fom=" + getFom() + ", tom=" + getTom() + ", arbeidsprosent="
+            + arbeidsprosent + ", gradertAktiviteter=" + gradertAktiviteter + ", overføringÅrsak=" + overføringÅrsak + ", manglendeSøktPeriode="
+            + manglendeSøktPeriode + ", flerbarnsdager=" + flerbarnsdager + ", samtidigUttak=" + samtidigUttaksprosent + ", utsettelseÅrsak="
+            + utsettelseÅrsak + ", oppholdÅrsak=" + oppholdÅrsak + ", senestMottattDato=" + senestMottattDato + ", tidligstMottattDato="
             + tidligstMottattDato + ", aktiviteter=" + aktiviteter + ", dokumentasjonVurdering=" + dokumentasjonVurdering + '}';
     }
 }

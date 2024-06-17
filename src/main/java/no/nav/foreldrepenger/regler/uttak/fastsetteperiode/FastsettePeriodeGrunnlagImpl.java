@@ -33,8 +33,10 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final LukketPeriode farRundtFødselIntervall;
 
-    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag, LukketPeriode farRundtFødselIntervall,
-                                        SaldoUtregning saldoUtregning, OppgittPeriode aktuellPeriode) {
+    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag,
+                                        LukketPeriode farRundtFødselIntervall,
+                                        SaldoUtregning saldoUtregning,
+                                        OppgittPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;
         this.saldoUtregning = saldoUtregning;
         this.aktuellPeriode = aktuellPeriode;
@@ -53,11 +55,12 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<PleiepengerPeriode> getPleiepengerInnleggelse() {
-        return regelGrunnlag.getYtelser().pleiepenger()
-                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
-                .orElse(List.of())
-                .stream()
-                .toList();
+        return regelGrunnlag.getYtelser()
+            .pleiepenger()
+            .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
+            .orElse(List.of())
+            .stream()
+            .toList();
     }
 
     @Override
@@ -107,17 +110,20 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public boolean isSakMedMinsterett() {
-        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.BARE_FAR_MINSTERETT) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT) > 0;
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.BARE_FAR_MINSTERETT)
+            && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT) > 0;
     }
 
     @Override
     public boolean isSakMedDagerUtenAktivitetskrav() {
-        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV) > 0;
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV)
+            && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV) > 0;
     }
 
     @Override
     public boolean isSakMedRettEtterStartNesteStønadsperiode() {
-        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER) && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
+        return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER)
+            && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
     }
 
     @Override
@@ -147,9 +153,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public LocalDate getDødsdatoForSøker() {
-        return regelGrunnlag.getDatoer().getDødsdatoer() == null ? null : regelGrunnlag.getDatoer()
-                .getDødsdatoer()
-                .getSøkersDødsdato();
+        return regelGrunnlag.getDatoer().getDødsdatoer() == null ? null : regelGrunnlag.getDatoer().getDødsdatoer().getSøkersDødsdato();
     }
 
     @Override

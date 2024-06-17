@@ -20,6 +20,7 @@ public class SjekkOmGyldigOverføringPgaIkkeRett extends LeafSpecification<Fasts
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return ANNEN_FORELDER_IKKE_RETT.equals(oppgittPeriode.getOverføringÅrsak()) && ER_BARE_SØKER_RETT_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+        return ANNEN_FORELDER_IKKE_RETT.equals(oppgittPeriode.getOverføringÅrsak()) && ER_BARE_SØKER_RETT_GODKJENT.equals(
+            oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

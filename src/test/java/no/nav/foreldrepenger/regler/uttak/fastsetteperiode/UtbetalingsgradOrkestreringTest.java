@@ -55,7 +55,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
         var up3 = perioder.get(3).uttakPeriode();
         verifiserManuellBehandlingPeriode(up3, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1), MØDREKVOTE,
-                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
+            IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.STØNADSKONTO_TOM);
         assertThat(up3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
 
     }
@@ -65,15 +65,13 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1));
-        var utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                UtsettelseÅrsak.FERIE, null);
-        var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12),
-                fødselsdato.plusWeeks(14).minusDays(1));
+        var utsettelseFellesperiode = utsettelsePeriode(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1), UtsettelseÅrsak.FERIE,
+            null);
+        var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1));
 
         //Krever sammenhengende pga søkt om ferie som innvilges, dette er gamle regler
-        var grunnlag = basicGrunnlag(fødselsdato)
-                .behandling(morBehandling().kreverSammenhengendeUttak(true))
-                .søknad(new Søknad.Builder().oppgittPeriode(fpff)
+        var grunnlag = basicGrunnlag(fødselsdato).behandling(morBehandling().kreverSammenhengendeUttak(true))
+            .søknad(new Søknad.Builder().oppgittPeriode(fpff)
                 .oppgittPeriode(mødrekvote)
                 .oppgittPeriode(utsettelseFellesperiode)
                 .oppgittPeriode(fellesperiode)
@@ -114,15 +112,14 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
         leggPåKvoter(grunnlag);
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        var gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(8).minusDays(1), BigDecimal.valueOf(20), aktiviteter);
+        var gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            BigDecimal.valueOf(20), aktiviteter);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(morBehandling())
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote, gradertFellesperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
-                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling())
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote, gradertFellesperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -149,15 +146,14 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
         leggPåKvoter(grunnlag);
         var fpff = oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1));
         var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
-        var gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(8).minusDays(1), new BigDecimal("17.55"), aktivititeter);
+        var gradertFellesperiode = gradertoppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            new BigDecimal("17.55"), aktivititeter);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .behandling(morBehandling())
-                .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote, gradertFellesperiode))
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1))
-                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
-                .inngangsvilkår(oppfyltAlleVilkår());
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling())
+            .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote, gradertFellesperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
+            .inngangsvilkår(oppfyltAlleVilkår());
 
         var perioder = fastsettPerioder(grunnlag);
 
@@ -168,9 +164,9 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
 
     private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
-                .konto(konto(MØDREKVOTE, 50))
-                .konto(konto(FEDREKVOTE, 50))
-                .konto(konto(FELLESPERIODE, 130));
+            .konto(konto(MØDREKVOTE, 50))
+            .konto(konto(FEDREKVOTE, 50))
+            .konto(konto(FELLESPERIODE, 130));
         return builder.kontoer(kontoer);
     }
 }

@@ -33,13 +33,13 @@ final class DelRegelTestUtil {
     static FastsettePerioderRegelresultat kjørRegel(OppgittPeriode oppgittPeriode,
                                                     RegelGrunnlag grunnlag,
                                                     List<FastsattUttakPeriode> søkersFastsattePerioder) {
-        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(),
-                grunnlag, oppgittPeriode.getFom());
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, List.of(), grunnlag,
+            oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
         var farRundtFødselIntervall = FarUttakRundtFødsel.utledFarsPeriodeRundtFødsel(grunnlag).orElse(null);
         return new FastsettePerioderRegelresultat(REGEL.evaluer(
-                new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
-                        oppgittPeriode)));
+            new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
+                oppgittPeriode)));
     }
 
     static OppgittPeriode overføringsperiode(Stønadskontotype stønadskontotype,
@@ -66,8 +66,8 @@ final class DelRegelTestUtil {
                                          LocalDate tom,
                                          Set<AktivitetIdentifikator> gradertAktiviteter,
                                          DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, BigDecimal.TEN, null, false, gradertAktiviteter,
-                null, null, null, dokumentasjonVurdering);
+        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, BigDecimal.TEN, null, false, gradertAktiviteter, null, null, null,
+            dokumentasjonVurdering);
     }
 
     static OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
@@ -85,7 +85,10 @@ final class DelRegelTestUtil {
         return OppgittPeriode.forOpphold(fom, tom, årsak, null, null);
     }
 
-    static OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelsesÅrsak, DokumentasjonVurdering dokumentasjonVurdering) {
+    static OppgittPeriode utsettelsePeriode(LocalDate fom,
+                                            LocalDate tom,
+                                            UtsettelseÅrsak utsettelsesÅrsak,
+                                            DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forUtsettelse(fom, tom, utsettelsesÅrsak, null, null, null, dokumentasjonVurdering);
     }
 }

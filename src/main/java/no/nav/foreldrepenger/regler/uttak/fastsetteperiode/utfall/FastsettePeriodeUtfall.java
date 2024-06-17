@@ -87,13 +87,15 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
 
         public Builder medTrekkDagerFraSaldo(boolean trekkDagerFraSaldo) {
             this.uttakOutcome = uttakOutcome.medTrekkDagerFraSaldo(trekkDagerFraSaldo);
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(TREKK_DAGER_FRA_SALDO, trekkDagerFraSaldo));
+            this.utfallSpesifiserere.add(
+                (singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(TREKK_DAGER_FRA_SALDO, trekkDagerFraSaldo));
             return this;
         }
 
         public Builder medAvslåttGradering(GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak) {
             this.uttakOutcome = uttakOutcome.medGraderingIkkeInnvilgetÅrsak(graderingAvslagÅrsak);
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
+            this.utfallSpesifiserere.add(
+                (singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
             return this;
         }
 

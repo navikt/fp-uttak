@@ -47,18 +47,15 @@ public class SaldoUtregning {
     private final SaldoUtregningFlerbarnsdager saldoUtregningFlerbarnsdager;
 
     SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer, // NOSONAR
-                   List<FastsattUttakPeriode> søkersPerioder,
-                   List<FastsattUttakPeriode> annenpartsPerioder,
-                   SaldoUtregningGrunnlag grunnlag) {
+                   List<FastsattUttakPeriode> søkersPerioder, List<FastsattUttakPeriode> annenpartsPerioder, SaldoUtregningGrunnlag grunnlag) {
         this.søkersPerioder = søkersPerioder;
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.søkersAktiviteter = grunnlag.getAktiviteter();
         this.sisteSøknadMottattTidspunktSøker = grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null);
         this.sisteSøknadMottattTidspunktAnnenpart = grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null);
         this.berørtBehandling = grunnlag.isBerørtBehandling();
-        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
-                søkersAktiviteter, grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN),
-                grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT));
+        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder, søkersAktiviteter,
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN), grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT));
         this.stønadskonti.putAll(stønadskontoer);
         Arrays.stream(Spesialkontotype.values()).forEach(k -> this.spesialkonti.put(k, grunnlag.getSpesialkontoTrekkdager(k)));
     }
@@ -82,8 +79,8 @@ public class SaldoUtregning {
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.berørtBehandling = berørtBehandling;
-        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder,
-                søkersAktiviteter, flerbarnsdager, minsterettDager);
+        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder, søkersAktiviteter,
+            flerbarnsdager, minsterettDager);
         this.stønadskonti.putAll(stønadskontoer);
         this.spesialkonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
         this.spesialkonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
@@ -98,9 +95,8 @@ public class SaldoUtregning {
                    Set<AktivitetIdentifikator> søkersAktiviteter,
                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
-        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter,
-                sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart,
-                Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
+        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter, sisteSøknadMottattTidspunktSøker,
+            sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
     }
 
     /**
@@ -130,9 +126,7 @@ public class SaldoUtregning {
         var forbruktAnnenpart = minForbruktAvPerioder(stønadskonto, annenpartsPerioder);
         //frigitte dager er dager fra annenpart som blir ledig når søker tar uttak i samme periode
         var frigitteDager = frigitteDager(stønadskonto);
-        return getMaxDagerITrekkdager(stønadskonto).subtract(forbruktSøker)
-                .subtract(forbruktAnnenpart)
-                .add(frigitteDager);
+        return getMaxDagerITrekkdager(stønadskonto).subtract(forbruktSøker).subtract(forbruktAnnenpart).add(frigitteDager);
     }
 
     /*
@@ -153,10 +147,7 @@ public class SaldoUtregning {
     }
 
     public Trekkdager restSaldoMinsterett() {
-        return aktiviteterForSøker().stream()
-                .map(this::restSaldoMinsterett)
-                .max(Trekkdager::compareTo)
-                .orElse(Trekkdager.ZERO);
+        return aktiviteterForSøker().stream().map(this::restSaldoMinsterett).max(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
     public Trekkdager restSaldoMinsterett(AktivitetIdentifikator aktivitet) {
@@ -168,10 +159,7 @@ public class SaldoUtregning {
     }
 
     public Trekkdager restSaldoEtterNesteStønadsperiode() {
-        return aktiviteterForSøker().stream()
-                .map(this::restSaldoEtterNesteStønadsperiode)
-                .max(Trekkdager::compareTo)
-                .orElse(Trekkdager.ZERO);
+        return aktiviteterForSøker().stream().map(this::restSaldoEtterNesteStønadsperiode).max(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
     public Trekkdager restSaldoEtterNesteStønadsperiode(AktivitetIdentifikator aktivitet) {
@@ -188,10 +176,7 @@ public class SaldoUtregning {
     }
 
     public Trekkdager restSaldoDagerUtenAktivitetskrav() {
-        return aktiviteterForSøker().stream()
-                .map(this::restSaldoDagerUtenAktivitetskrav)
-                .max(Trekkdager::compareTo)
-                .orElse(Trekkdager.ZERO);
+        return aktiviteterForSøker().stream().map(this::restSaldoDagerUtenAktivitetskrav).max(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
     public Trekkdager restSaldoDagerUtenAktivitetskrav(AktivitetIdentifikator aktivitet) {
@@ -203,9 +188,7 @@ public class SaldoUtregning {
     }
 
     private Trekkdager forbruktAvMinsterett(AktivitetIdentifikator aktivitet) {
-        return stønadskontoer().stream()
-                .map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder))
-                .reduce(Trekkdager.ZERO, Trekkdager::add);
+        return stønadskontoer().stream().map(k -> forbruktSøkersMinsterett(k, aktivitet, søkersPerioder)).reduce(Trekkdager.ZERO, Trekkdager::add);
     }
 
     public Trekkdager getFarUttakRundtFødselDager() {
@@ -217,9 +200,9 @@ public class SaldoUtregning {
             return Trekkdager.ZERO;
         }
         return aktiviteterForSøker().stream()
-                .map(a -> restSaldoFarUttakRundtFødsel(a, farUttakRundtFødselPeriode))
-                .max(Trekkdager::compareTo)
-                .orElse(Trekkdager.ZERO);
+            .map(a -> restSaldoFarUttakRundtFødsel(a, farUttakRundtFødselPeriode))
+            .max(Trekkdager::compareTo)
+            .orElse(Trekkdager.ZERO);
     }
 
     public Trekkdager restSaldoFarUttakRundtFødsel(AktivitetIdentifikator aktivitet, LukketPeriode farUttakRundtFødselPeriode) {
@@ -232,9 +215,9 @@ public class SaldoUtregning {
 
     private Trekkdager forbruktAvFarRundtFødsel(AktivitetIdentifikator aktivitet, LukketPeriode rundtFødselIntervall) {
         return stønadskontoer().stream()
-                .filter(FarUttakRundtFødsel::erKontoRelevant)
-                .map(k -> ForbruksTeller.forbruksTellerKontoKunForbruk(k, aktivitet, søkersPerioder, p -> erRundtFødsel(p, rundtFødselIntervall)))
-                .reduce(Trekkdager.ZERO, Trekkdager::add);
+            .filter(FarUttakRundtFødsel::erKontoRelevant)
+            .map(k -> ForbruksTeller.forbruksTellerKontoKunForbruk(k, aktivitet, søkersPerioder, p -> erRundtFødsel(p, rundtFødselIntervall)))
+            .reduce(Trekkdager.ZERO, Trekkdager::add);
     }
 
     private boolean erRundtFødsel(FastsattUttakPeriode periode, LukketPeriode farUttakRundtFødselPeriode) {
@@ -249,10 +232,7 @@ public class SaldoUtregning {
      * @return antall gjenstående dager for angitt stønadskonto.
      */
     public Trekkdager saldoITrekkdager(Stønadskontotype stønadskonto) {
-        return aktiviteterForSøker().stream()
-                .map(a -> saldoITrekkdager(stønadskonto, a))
-                .max(Trekkdager::compareTo)
-                .orElse(Trekkdager.ZERO);
+        return aktiviteterForSøker().stream().map(a -> saldoITrekkdager(stønadskonto, a)).max(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
     /**
@@ -262,20 +242,17 @@ public class SaldoUtregning {
      * @return antall gjenstående dager for angitt stønadskonto.
      */
     public int saldo(Stønadskontotype stønadskonto) {
-        return aktiviteterForSøker().stream()
-                .map(a -> saldo(stønadskonto, a))
-                .max(Comparator.naturalOrder())
-                .orElse(0);
+        return aktiviteterForSøker().stream().map(a -> saldo(stønadskonto, a)).max(Comparator.naturalOrder()).orElse(0);
     }
 
     /**
      * Aktivitet med stønadskonto. Hvis flere aktiviteter har stønadskonto velges den med minst trekkdager
      */
-    private Optional<FastsattUttakPeriodeAktivitet> aktivitetMedStønadskonto(Stønadskontotype stønadskonto,
-                                                                             FastsattUttakPeriode periode) {
-        return periode.getAktiviteter().stream()
-                .filter(a -> Objects.equals(a.getStønadskontotype(), stønadskonto))
-                .min(Comparator.comparing(FastsattUttakPeriodeAktivitet::getTrekkdager));
+    private Optional<FastsattUttakPeriodeAktivitet> aktivitetMedStønadskonto(Stønadskontotype stønadskonto, FastsattUttakPeriode periode) {
+        return periode.getAktiviteter()
+            .stream()
+            .filter(a -> Objects.equals(a.getStønadskontotype(), stønadskonto))
+            .min(Comparator.comparing(FastsattUttakPeriodeAktivitet::getTrekkdager));
     }
 
 
@@ -305,8 +282,7 @@ public class SaldoUtregning {
         var initSaldo = getMaxDagerITrekkdager(stønadskontoType);
         var forbruktAnnenpart = minForbruktAvPerioder(stønadskontoType, andreparten);
         var startSaldo = initSaldo.subtract(forbruktAnnenpart);
-        return aktiviteterEneparten.stream()
-                .anyMatch(a -> startSaldo.subtract(forbruktSøker(stønadskontoType, a, eneparten)).mindreEnn0());
+        return aktiviteterEneparten.stream().anyMatch(a -> startSaldo.subtract(forbruktSøker(stønadskontoType, a, eneparten)).mindreEnn0());
     }
 
     public boolean nokDagerÅFrigiPåAnnenpart(Stønadskontotype stønadskontoType) {
@@ -324,9 +300,7 @@ public class SaldoUtregning {
     }
 
     public boolean søktSamtidigUttak(Stønadskontotype stønadskontoType) {
-        return søkersPerioder.stream()
-                .filter(p -> søktSamtidigUttak(stønadskontoType, p))
-                .anyMatch(FastsattUttakPeriode::isSamtidigUttak);
+        return søkersPerioder.stream().filter(p -> søktSamtidigUttak(stønadskontoType, p)).anyMatch(FastsattUttakPeriode::isSamtidigUttak);
     }
 
     public boolean negativSaldoPåNoenKonto() {
@@ -334,14 +308,16 @@ public class SaldoUtregning {
     }
 
     public boolean negativSaldoPåNoenKontoKonservativ() {
-        return stønadskonti.keySet().stream()
-                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto, søkersPerioder, søkersAktiviteter, annenpartsPerioder));
+        return stønadskonti.keySet()
+            .stream()
+            .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto, søkersPerioder, søkersAktiviteter, annenpartsPerioder));
     }
 
     public boolean negativSaldoPåNoenKontoByttParterKonservativ() {
         var aktiviteter = aktiviteterForAnnenpart();
-        return stønadskonti.keySet().stream()
-                .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto, annenpartsPerioder, aktiviteter, søkersPerioder));
+        return stønadskonti.keySet()
+            .stream()
+            .anyMatch(stønadskonto -> sjekkNegativSaldoKonservativ(stønadskonto, annenpartsPerioder, aktiviteter, søkersPerioder));
     }
 
     public int getMaxDager(Stønadskontotype stønadskontotype) {
@@ -378,10 +354,8 @@ public class SaldoUtregning {
                 } else if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)) {
                     sum = sum.add(frigitteDagerVanligeStønadskontoer(stønadskonto, periode, overlappendePeriode));
                 } else if (tapendePeriode(periode, overlappendePeriode) && overlappendePeriode.isOpphold()) {
-                    var delFom = overlappendePeriode.getFom()
-                            .isBefore(periode.getFom()) ? periode.getFom() : overlappendePeriode.getFom();
-                    var delTom = overlappendePeriode.getTom()
-                            .isBefore(periode.getTom()) ? overlappendePeriode.getTom() : periode.getTom();
+                    var delFom = overlappendePeriode.getFom().isBefore(periode.getFom()) ? periode.getFom() : overlappendePeriode.getFom();
+                    var delTom = overlappendePeriode.getTom().isBefore(periode.getTom()) ? overlappendePeriode.getTom() : periode.getTom();
                     sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, overlappendePeriode.getOppholdÅrsak(), delFom, delTom));
                 }
             }
@@ -405,8 +379,8 @@ public class SaldoUtregning {
     }
 
     private Trekkdager frigitteDagerVanligeStønadskontoer(Stønadskontotype stønadskonto,
-                                                   FastsattUttakPeriode periode,
-                                                   FastsattUttakPeriode overlappende) {
+                                                          FastsattUttakPeriode periode,
+                                                          FastsattUttakPeriode overlappende) {
         if (overlappende.isSamtidigUttak()) {
             return Trekkdager.ZERO;
         }
@@ -415,17 +389,16 @@ public class SaldoUtregning {
         var delTom = periode.getTom().isBefore(overlappende.getTom()) ? periode.getTom() : overlappende.getTom();
         if (overlappende.isOpphold()) {
             frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
-                    trekkdagerForOppholdsperiode(stønadskonto, overlappende));
+                trekkdagerForOppholdsperiode(stønadskonto, overlappende));
         } else if (!periode.isSamtidigUttak()) {
             var annenPartAktivitetMedKonto = aktivitetMedStønadskonto(stønadskonto, overlappende);
             if (annenPartAktivitetMedKonto.isPresent()) {
                 frigitte = trekkDagerFraDelAvPeriode(delFom, delTom, overlappende.getFom(), overlappende.getTom(),
-                        annenPartAktivitetMedKonto.get().getTrekkdager());
+                    annenPartAktivitetMedKonto.get().getTrekkdager());
             }
         }
         return frigitte;
     }
-
 
 
     private Trekkdager minForbruktAvPerioder(Stønadskontotype stønadskonto, List<FastsattUttakPeriode> perioder) {
@@ -448,34 +421,28 @@ public class SaldoUtregning {
         return forbrukte.values().stream().min(Trekkdager::compareTo).orElse(Trekkdager.ZERO);
     }
 
-    private Trekkdager forbruktSøker(Stønadskontotype stønadskonto,
-                                     AktivitetIdentifikator aktivitet,
-                                     List<FastsattUttakPeriode> søkersPerioder) {
-        return ForbruksTeller.forbruksTellerKontoMedUnntak(stønadskonto, aktivitet, søkersPerioder,
-                p -> !p.isOpphold(), this::trekkdagerForOppholdsperiode);
+    private Trekkdager forbruktSøker(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, List<FastsattUttakPeriode> søkersPerioder) {
+        return ForbruksTeller.forbruksTellerKontoMedUnntak(stønadskonto, aktivitet, søkersPerioder, p -> !p.isOpphold(),
+            this::trekkdagerForOppholdsperiode);
     }
 
     private Trekkdager forbruktSøkersMinsterett(Stønadskontotype stønadskonto,
                                                 AktivitetIdentifikator aktivitet,
                                                 List<FastsattUttakPeriode> søkersPerioder) {
-        return ForbruksTeller.forbruksTellerKontoKunForbruk(stønadskonto, aktivitet, søkersPerioder,
-                FastsattUttakPeriode::isForbrukMinsterett);
+        return ForbruksTeller.forbruksTellerKontoKunForbruk(stønadskonto, aktivitet, søkersPerioder, FastsattUttakPeriode::isForbrukMinsterett);
     }
 
 
-    private Trekkdager trekkdagerForUttaksperiode(Stønadskontotype stønadskonto,
-                                                  AktivitetIdentifikator aktivitet,
-                                                  FastsattUttakPeriode periode) {
-        return periode.getAktiviteter().stream()
-                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && Objects.equals(a.getStønadskontotype(), stønadskonto))
-                .findFirst()
-                .map(FastsattUttakPeriodeAktivitet::getTrekkdager).orElse(Trekkdager.ZERO);
+    private Trekkdager trekkdagerForUttaksperiode(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
+        return periode.getAktiviteter()
+            .stream()
+            .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && Objects.equals(a.getStønadskontotype(), stønadskonto))
+            .findFirst()
+            .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+            .orElse(Trekkdager.ZERO);
     }
 
-    private Trekkdager trekkdagerForOppholdsperiode(Stønadskontotype stønadskonto,
-                                                    OppholdÅrsak årsak,
-                                                    LocalDate delFom,
-                                                    LocalDate delTom) {
+    private Trekkdager trekkdagerForOppholdsperiode(Stønadskontotype stønadskonto, OppholdÅrsak årsak, LocalDate delFom, LocalDate delTom) {
         var stønadskontoFraOpphold = OppholdÅrsak.map(årsak);
         if (Objects.equals(stønadskontoFraOpphold, stønadskonto)) {
             return new Trekkdager(Virkedager.beregnAntallVirkedager(delFom, delTom));
@@ -492,10 +459,10 @@ public class SaldoUtregning {
     }
 
     public Set<AktivitetIdentifikator> aktiviteterForAnnenpart() {
-        return  annenpartsPerioder.stream()
-                .flatMap(p -> p.getAktiviteter().stream())
-                .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
-                .collect(Collectors.toSet());
+        return annenpartsPerioder.stream()
+            .flatMap(p -> p.getAktiviteter().stream())
+            .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
+            .collect(Collectors.toSet());
     }
 
     private boolean søktSamtidigUttak(Stønadskontotype stønadskontoType, FastsattUttakPeriode periode) {
@@ -507,8 +474,8 @@ public class SaldoUtregning {
         var annenpartPerioderEtterSøkersSistePeriodeMedTrekkdager = finnAnnenpartPerioderEtterPeriode(søkersSistePeriodeMedTrekkdager);
 
         return annenpartPerioderEtterSøkersSistePeriodeMedTrekkdager.stream()
-                .map(p -> antallDagerFrigitt(stønadskontoType, søkersSistePeriodeMedTrekkdager, p))
-                .reduce(Trekkdager.ZERO, Trekkdager::add);
+            .map(p -> antallDagerFrigitt(stønadskontoType, søkersSistePeriodeMedTrekkdager, p))
+            .reduce(Trekkdager.ZERO, Trekkdager::add);
     }
 
     private Trekkdager antallDagerFrigitt(Stønadskontotype stønadskontoType,
@@ -524,28 +491,26 @@ public class SaldoUtregning {
     private Trekkdager forbruktFraDelAvAnnenpartsPeriode(Stønadskontotype stønadskontoType,
                                                          FastsattUttakPeriode søkersSistePeriodeMedTrekkdager,
                                                          FastsattUttakPeriode annenpartPeriode) {
-        return aktivitetMedStønadskonto(stønadskontoType, annenpartPeriode)
-                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
-                .map(a -> trekkDagerFraDelAvPeriode(søkersSistePeriodeMedTrekkdager.getFom(), annenpartPeriode.getTom(),
-                        annenpartPeriode.getFom(), annenpartPeriode.getTom(), a))
-                .orElse(Trekkdager.ZERO);
+        return aktivitetMedStønadskonto(stønadskontoType, annenpartPeriode).map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+            .map(a -> trekkDagerFraDelAvPeriode(søkersSistePeriodeMedTrekkdager.getFom(), annenpartPeriode.getTom(), annenpartPeriode.getFom(),
+                annenpartPeriode.getTom(), a))
+            .orElse(Trekkdager.ZERO);
     }
 
     private Trekkdager minForbrukteDager(FastsattUttakPeriode periode, Stønadskontotype stønadskontoType) {
         if (periode.isOpphold()) {
             return trekkdagerForOppholdsperiode(stønadskontoType, periode);
         }
-        return periode.getAktiviteter().stream()
-                .filter(a -> Objects.equals(stønadskontoType, a.getStønadskontotype()))
-                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
-                .min(Trekkdager::compareTo)
-                .orElse(Trekkdager.ZERO);
+        return periode.getAktiviteter()
+            .stream()
+            .filter(a -> Objects.equals(stønadskontoType, a.getStønadskontotype()))
+            .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+            .min(Trekkdager::compareTo)
+            .orElse(Trekkdager.ZERO);
     }
 
     private List<FastsattUttakPeriode> finnAnnenpartPerioderEtterPeriode(FastsattUttakPeriode periode) {
-        return annenpartsPerioder.stream()
-                .filter(p -> overlapper(periode, p) || periode.getTom().isBefore(p.getFom()))
-                .toList();
+        return annenpartsPerioder.stream().filter(p -> overlapper(periode, p) || periode.getTom().isBefore(p.getFom())).toList();
     }
 
     private FastsattUttakPeriode søkersSistePeriodeMedTrekkdagerSomIkkeOverlapper() {
@@ -563,10 +528,7 @@ public class SaldoUtregning {
     }
 
     private int minSaldo(Stønadskontotype stønadskonto) {
-        return aktiviteterForSøker().stream()
-                .map(a -> saldo(stønadskonto, a))
-                .min(Comparator.naturalOrder())
-                .orElse(0);
+        return aktiviteterForSøker().stream().map(a -> saldo(stønadskonto, a)).min(Comparator.naturalOrder()).orElse(0);
     }
 
     private List<FastsattUttakPeriode> fjernOppholdsperioderEtterSisteUttaksdato(List<FastsattUttakPeriode> perioderSøker,
@@ -577,7 +539,7 @@ public class SaldoUtregning {
             return perioderAnnenpart;
         }
         var sisteUttaksdatoFelles = sisteUttaksdatoSøker.get()
-                .isAfter(sisteUttaksdatoAnnenpart.get()) ? sisteUttaksdatoSøker.get() : sisteUttaksdatoAnnenpart.get();
+            .isAfter(sisteUttaksdatoAnnenpart.get()) ? sisteUttaksdatoSøker.get() : sisteUttaksdatoAnnenpart.get();
 
         var resultat = new ArrayList<FastsattUttakPeriode>();
         for (var periode : perioderAnnenpart) {
@@ -601,8 +563,8 @@ public class SaldoUtregning {
 
     private Optional<LocalDate> sisteUttaksdato(List<FastsattUttakPeriode> perioder) {
         return perioder.stream()
-                .filter(periode -> !periode.isOpphold())
-                .max(comparing(FastsattUttakPeriode::getTom))
-                .map(FastsattUttakPeriode::getTom);
+            .filter(periode -> !periode.isOpphold())
+            .max(comparing(FastsattUttakPeriode::getTom))
+            .map(FastsattUttakPeriode::getTom);
     }
 }

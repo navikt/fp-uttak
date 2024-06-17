@@ -18,7 +18,8 @@ public class SjekkOmMinsterettHarDisponibleDager extends LeafSpecification<Fasts
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSakMedMinsterett() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett() && !grunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode()) {
+        if (grunnlag.isSakMedMinsterett() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()
+            && !grunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldoUtregning = grunnlag.getSaldoUtregning();
                 if (saldoUtregning.saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet).merEnn0()) {

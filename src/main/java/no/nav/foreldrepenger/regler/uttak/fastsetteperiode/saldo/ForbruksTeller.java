@@ -20,17 +20,21 @@ final class ForbruksTeller {
     private ForbruksTeller() {
     }
 
-    static Trekkdager forbruksTellerKontoKunForbruk(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet,
-                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> tellPeriode) {
-        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode,
-                (s,p) -> Trekkdager.ZERO, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
+    static Trekkdager forbruksTellerKontoKunForbruk(Stønadskontotype stønadskonto,
+                                                    AktivitetIdentifikator aktivitet,
+                                                    List<FastsattUttakPeriode> søkersPerioder,
+                                                    Predicate<FastsattUttakPeriode> tellPeriode) {
+        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode, (s, p) -> Trekkdager.ZERO,
+            (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
     }
 
-    static Trekkdager forbruksTellerKontoMedUnntak(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet,
-                                                    List<FastsattUttakPeriode> søkersPerioder, Predicate<FastsattUttakPeriode> tellPeriode,
+    static Trekkdager forbruksTellerKontoMedUnntak(Stønadskontotype stønadskonto,
+                                                   AktivitetIdentifikator aktivitet,
+                                                   List<FastsattUttakPeriode> søkersPerioder,
+                                                   Predicate<FastsattUttakPeriode> tellPeriode,
                                                    BiFunction<Stønadskontotype, FastsattUttakPeriode, Trekkdager> unntaksTeller) {
-        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode,
-                unntaksTeller, (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
+        return forbruksTeller(stønadskonto, aktivitet, søkersPerioder, tellPeriode, unntaksTeller,
+            (p, a) -> Objects.equals(stønadskonto, a.getStønadskontotype()));
     }
 
 
@@ -46,10 +50,11 @@ final class ForbruksTeller {
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
             var minForbrukteDagerEksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode).stream()
-                    .filter(a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode) < startindex) // Tell aktiviteter begynner tidligere
-                    .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, tellPeriode, unntaksTeller, aktivitetsfilter))
-                    .min(Trekkdager::compareTo)
-                    .orElse(Trekkdager.ZERO);
+                .filter(
+                    a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode) < startindex) // Tell aktiviteter begynner tidligere
+                .map(a -> forbruksTeller(stønadskonto, a, perioderTomPeriode, tellPeriode, unntaksTeller, aktivitetsfilter))
+                .min(Trekkdager::compareTo)
+                .orElse(Trekkdager.ZERO);
             sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
         }
 
@@ -87,11 +92,12 @@ final class ForbruksTeller {
     private static Trekkdager trekkdagerForUttaksperiode(AktivitetIdentifikator aktivitet,
                                                          FastsattUttakPeriode periode,
                                                          BiPredicate<FastsattUttakPeriode, FastsattUttakPeriodeAktivitet> aktivitetsvelger) {
-        return periode.getAktiviteter().stream()
-                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet))
-                .filter(a -> aktivitetsvelger.test(periode,a))
-                .findFirst()
-                .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
-                .orElse(Trekkdager.ZERO);
+        return periode.getAktiviteter()
+            .stream()
+            .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet))
+            .filter(a -> aktivitetsvelger.test(periode, a))
+            .findFirst()
+            .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
+            .orElse(Trekkdager.ZERO);
     }
 }

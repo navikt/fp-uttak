@@ -91,12 +91,9 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
 
     private FastsettePeriodeGrunnlagImpl grunnlag(LocalDate familiehendelse, LocalDate periodeFom, LocalDate periodeTom) {
         var datoer = new Datoer.Builder().fødsel(familiehendelse);
-        var regelGrunnlag = new RegelGrunnlag.Builder()
-                .datoer(datoer)
-                .søknad(new Søknad.Builder().type(FØDSEL))
-                .build();
-        var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom,
-                INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT, DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT);
+        var regelGrunnlag = new RegelGrunnlag.Builder().datoer(datoer).søknad(new Søknad.Builder().type(FØDSEL)).build();
+        var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom, INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT,
+            DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT);
         return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);
     }
 }

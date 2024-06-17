@@ -64,16 +64,16 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     @ParameterizedTest(name = "Ved mors aktivitet {0} og dokumentasjonvurdering er {1}, forventes resultat {2}")
     @MethodSource("dokumentasjonOgAvslagKombinasjoner")
     void test_kombinasjoner_av_MorsAktivitet_PeriodeMedAvklartMorsAktivitetResultat_og_IkkeOppfyltÅrsak_sammenheng(MorsAktivitet morsAktivitet,
-                                                                                                        IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
-                                                                                                        DokumentasjonVurdering dokumentasjonVurdering) {
+                                                                                                                   IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
+                                                                                                                   DokumentasjonVurdering dokumentasjonVurdering) {
         testAvslag(morsAktivitet, ikkeOppfyltÅrsak, dokumentasjonVurdering, true);
     }
 
     @ParameterizedTest(name = "Ved mors aktivitet {0} og dokumentasjonvurdering er {1}, forventes resultat {2}")
     @MethodSource("dokumentasjonOgAvslagKombinasjoner")
     void test_kombinasjoner_av_MorsAktivitet_PeriodeMedAvklartMorsAktivitetResultat_og_IkkeOppfyltÅrsak_fri(MorsAktivitet morsAktivitet,
-                                                                                                        IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
-                                                                                                        DokumentasjonVurdering dokumentasjonVurdering) {
+                                                                                                            IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
+                                                                                                            DokumentasjonVurdering dokumentasjonVurdering) {
         testAvslag(morsAktivitet, ikkeOppfyltÅrsak, dokumentasjonVurdering, false);
     }
 
@@ -85,14 +85,15 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett().morUføretrygd(true))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+            InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
@@ -105,12 +106,12 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett().morUføretrygd(false))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett().morUføretrygd(false))
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
@@ -124,12 +125,12 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett().morUføretrygd(false))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett().morUføretrygd(false))
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.MOR_UFØR);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isFalse();
@@ -143,14 +144,15 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett().morUføretrygd(true))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
-        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
+            InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
@@ -163,12 +165,12 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett().morUføretrygd(false))
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett().morUføretrygd(false))
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
@@ -182,15 +184,15 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(
-                Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+            Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
 
@@ -202,15 +204,15 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(
-                Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+            Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
 
@@ -222,12 +224,12 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
@@ -238,23 +240,24 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2022, 9, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 75)).minsterettDager(1);
         var oppgittPeriode = foreldrepenger(fødselsdato, null);
-        var utsettelse1 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1),
-            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, null, null);
-        var utsettelse2 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(17).minusDays(1),
-            UtsettelseÅrsak.FRI, fødselsdato, fødselsdato, null, null);
+        var utsettelse1 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1), UtsettelseÅrsak.ARBEID,
+            fødselsdato, fødselsdato, null, null);
+        var utsettelse2 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(17).minusDays(1), UtsettelseÅrsak.FRI,
+            fødselsdato, fødselsdato, null, null);
 
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, utsettelse1, utsettelse2));
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
-        assertThat(fastsattePerioder.get(2).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(
+            Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
         assertThat(fastsattePerioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
         assertThat(fastsattePerioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
         assertThat(fastsattePerioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
@@ -265,25 +268,22 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     void kun_far_har_rett() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6),
-                fødselsdato.plusWeeks(10), null, false, fødselsdato, fødselsdato,
-                UTDANNING, MORS_AKTIVITET_IKKE_DOKUMENTERT);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittPeriode(oppgittPeriode);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), null, false,
+            fødselsdato, fødselsdato, UTDANNING, MORS_AKTIVITET_IKKE_DOKUMENTERT);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
-                .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
 
@@ -291,25 +291,22 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     void far_søker_utsettelse_sammenhengende_uttak() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
-        var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittPeriode(oppgittPeriode);
+        var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), UtsettelseÅrsak.ARBEID, fødselsdato,
+            fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        var grunnlag = new RegelGrunnlag.Builder()
-                .behandling(farBehandling().kreverSammenhengendeUttak(true))
-                .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(true))
+            .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
 
@@ -317,25 +314,22 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     void far_søker_utsettelse() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
-        var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10),
-            UtsettelseÅrsak.ARBEID, fødselsdato, fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
-        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL)
-                .oppgittPeriode(oppgittPeriode);
+        var oppgittPeriode = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), UtsettelseÅrsak.ARBEID, fødselsdato,
+            fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        var grunnlag = new RegelGrunnlag.Builder()
-                .behandling(farBehandling())
-                .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(bareFarRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+            .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(1);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(
-                AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
+        assertThat(fastsattePerioder.get(0).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
     }
 
@@ -344,13 +338,13 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
     }
 
     private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet morsAktivitet) {
-        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1), null,
-                false, fødselsdato, fødselsdato, morsAktivitet, null);
+        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1), null, false,
+            fødselsdato, fødselsdato, morsAktivitet, null);
     }
 
     private OppgittPeriode fellesperiode(LocalDate fødselsdato, MorsAktivitet morsAktivitet, DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null,
-                false, fødselsdato, fødselsdato, morsAktivitet, dokumentasjonVurdering);
+        return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null, false,
+            fødselsdato, fødselsdato, morsAktivitet, dokumentasjonVurdering);
     }
 
     private static Stream<Arguments> dokumentasjonOgAvslagKombinasjoner() {
@@ -386,17 +380,17 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(sammenhengendeUttak))
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett())
-                .søknad(søknad)
-                .inngangsvilkår(oppfyltAlleVilkår())
-                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-                .kontoer(kontoer);
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
 
         assertThat(fastsattePerioder).hasSize(1);
-        verifiserAvslåttPeriode(fastsattePerioder.get(0).uttakPeriode(), fødselsdato.plusWeeks(7),
-                fødselsdato.plusWeeks(15).minusDays(1), FELLESPERIODE, ikkeOppfyltÅrsak);
+        verifiserAvslåttPeriode(fastsattePerioder.get(0).uttakPeriode(), fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1),
+            FELLESPERIODE, ikkeOppfyltÅrsak);
         assertThat(fastsattePerioder.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isEqualTo(sammenhengendeUttak);
     }
 

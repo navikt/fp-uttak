@@ -40,23 +40,20 @@ final class MspBfhrUtil {
         return fraDato(grunnlag, bareFarSomHarRettMåHaStartdato, tomTidsperiodeForbeholdtMor);
     }
 
-    private static List<OppgittPeriode> fraDato(RegelGrunnlag grunnlag,
-                                                LocalDate påkrevdOppstartsdato,
-                                                LocalDate ikkeLagHullFørDato) {
+    private static List<OppgittPeriode> fraDato(RegelGrunnlag grunnlag, LocalDate påkrevdOppstartsdato, LocalDate ikkeLagHullFørDato) {
         List<OppgittPeriode> msp = new ArrayList<>();
         var søktePerioderSomSkalLageHull = grunnlag.getSøknad()
-                .getOppgittePerioder()
-                .stream()
-                .filter(p -> p.getTom().isAfter(ikkeLagHullFørDato))
-                .map(p -> new LukketPeriode(p.getFom(), p.getTom()))
-                .toList();
+            .getOppgittePerioder()
+            .stream()
+            .filter(p -> p.getTom().isAfter(ikkeLagHullFørDato))
+            .map(p -> new LukketPeriode(p.getFom(), p.getTom()))
+            .toList();
         if (søktePerioderSomSkalLageHull.isEmpty()) {
             return List.of();
         }
         var førstePeriodeFom = søktePerioderSomSkalLageHull.get(0).getFom();
         if (førstePeriodeFom.isAfter(påkrevdOppstartsdato)) {
-            var mspFraPåkrevdOppstart = lagManglendeSøktPeriode(påkrevdOppstartsdato, førstePeriodeFom.minusDays(1),
-                    Stønadskontotype.FORELDREPENGER);
+            var mspFraPåkrevdOppstart = lagManglendeSøktPeriode(påkrevdOppstartsdato, førstePeriodeFom.minusDays(1), Stønadskontotype.FORELDREPENGER);
             msp.add(mspFraPåkrevdOppstart);
         }
         var manglendeMellomliggendePerioder = finnMellomliggende(søktePerioderSomSkalLageHull);

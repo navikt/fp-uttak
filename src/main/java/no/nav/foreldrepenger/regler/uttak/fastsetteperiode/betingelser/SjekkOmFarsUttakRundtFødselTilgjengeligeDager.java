@@ -17,7 +17,8 @@ public class SjekkOmFarsUttakRundtFødselTilgjengeligeDager extends LeafSpecific
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSøkerMor() || grunnlag.getSaldoUtregning().getFarUttakRundtFødselDager().equals(Trekkdager.ZERO) || grunnlag.periodeFarRundtFødsel().isEmpty()) {
+        if (grunnlag.isSøkerMor() || grunnlag.getSaldoUtregning().getFarUttakRundtFødselDager().equals(Trekkdager.ZERO)
+            || grunnlag.periodeFarRundtFødsel().isEmpty()) {
             return nei();
         }
         var periodeForUttakRundtFødsel = grunnlag.periodeFarRundtFødsel().orElseThrow();
