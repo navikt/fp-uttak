@@ -6,7 +6,7 @@ import no.nav.fpsak.nare.evaluation.RuleReasonRef;
 
 public class UttakOutcome implements RuleReasonRef {
 
-    private UtfallType utfallType;
+    private final UtfallType utfallType;
     private PeriodeResultatÅrsak periodeÅrsak;
     private GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak;
     private Manuellbehandlingårsak manuellbehandlingårsak;

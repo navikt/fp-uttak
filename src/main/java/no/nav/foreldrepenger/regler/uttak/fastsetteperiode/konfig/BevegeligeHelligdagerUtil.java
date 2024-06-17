@@ -67,10 +67,7 @@ public class BevegeligeHelligdagerUtil {
 
 
     private static List<LocalDate> fjernHelg(List<LocalDate> bevegeligeHelligdager) {
-        return bevegeligeHelligdager.stream()
-            .filter(hd -> !WEEKEND.contains(hd.getDayOfWeek()))
-            .sorted()
-            .toList();
+        return bevegeligeHelligdager.stream().filter(hd -> !WEEKEND.contains(hd.getDayOfWeek())).sorted().toList();
     }
 
     private static LocalDate utledPåskedag(int år) {
