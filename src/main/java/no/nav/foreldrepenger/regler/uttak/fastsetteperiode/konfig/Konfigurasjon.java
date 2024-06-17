@@ -29,7 +29,8 @@ public class Konfigurasjon {
 
             // Grenser
             .leggTilParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, d_2010_01_01, null, 3)
-            .leggTilParameter(Parametertype.TETTE_SAKER_MELLOMROM_UKER, d_2017_01_01, null, 48)  // TODO: endre til aug 2022 el 48 uker tidligere etter overgang
+            .leggTilParameter(Parametertype.TETTE_SAKER_MELLOMROM_UKER, d_2017_01_01, null,
+                48)  // TODO: endre til aug 2022 el 48 uker tidligere etter overgang
             .leggTilParameter(Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, d_2019_07_01, null, 52)
             .build();
     }
@@ -42,19 +43,20 @@ public class Konfigurasjon {
 
     public Optional<Integer> getParameterHvisAktivVed(Parametertype parametertype, final LocalDate dato) {
         return Optional.ofNullable(this.parameterMap.get(parametertype))
-                .flatMap(param -> param.stream().filter(p -> p.overlapper(dato)).findFirst().map(Parameter::getVerdi));
+            .flatMap(param -> param.stream().filter(p -> p.overlapper(dato)).findFirst().map(Parameter::getVerdi));
     }
 
     public Integer getParameter(Parametertype parametertype, final LocalDate dato) {
         return getParameterVerdier(parametertype).stream()
-            .filter(p -> p.overlapper(dato)).findFirst()
+            .filter(p -> p.overlapper(dato))
+            .findFirst()
             .map(Parameter::getVerdi)
             .orElseThrow(() -> new IllegalArgumentException("Ingen parameter funnet for " + parametertype.name() + " på dato " + dato));
     }
 
     public Collection<Parameter> getParameterVerdier(Parametertype parametertype) {
         return Optional.ofNullable(this.parameterMap.get(parametertype))
-                .orElseThrow(() -> new IllegalArgumentException("Konfigurasjon-feil/Utvikler-feil: mangler parameter av type " + parametertype));
+            .orElseThrow(() -> new IllegalArgumentException("Konfigurasjon-feil/Utvikler-feil: mangler parameter av type " + parametertype));
     }
 
 }

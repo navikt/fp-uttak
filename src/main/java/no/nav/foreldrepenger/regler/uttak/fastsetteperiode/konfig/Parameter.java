@@ -20,13 +20,15 @@ class Parameter extends Periode {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof Parameter))
+        }
+        if (!(o instanceof Parameter parameter)) {
             return false;
-        if (!super.equals(o))
+        }
+        if (!super.equals(o)) {
             return false;
-        Parameter parameter = (Parameter) o;
+        }
         return Objects.equals(verdi, parameter.verdi);
     }
 
