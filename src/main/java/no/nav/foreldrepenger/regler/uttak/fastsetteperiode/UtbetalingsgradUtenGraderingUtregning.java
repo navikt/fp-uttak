@@ -20,6 +20,7 @@ class UtbetalingsgradUtenGraderingUtregning implements UtbetalingsgradUtregning 
     @Override
     public Utbetalingsgrad resultat() {
         if (morsStillingsprosent != null) {
+            // TODO: Annenparts samtidig uttaksprosent sammen med mor i arbeid
             return new Utbetalingsgrad(morsStillingsprosent.decimalValue());
         }
         return Utbetalingsgrad.HUNDRED.subtract(annenpartSamtidigUttaksprosent.decimalValue());

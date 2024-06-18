@@ -25,6 +25,7 @@ class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning 
 
     @Override
     public Utbetalingsgrad resultat() {
+        // TODO SAMTIDIG UTTAK MED MOR ARBEID PEW PEW
         // Samtidiguttaksprosent med mindre gradering på noen aktiviteter i perioden
         var lokalSamtidigUttaksprosent = Optional.ofNullable(graderingArbeidstidsprosent)
             .map(SamtidigUttaksprosent.HUNDRED::subtract)

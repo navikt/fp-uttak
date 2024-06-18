@@ -184,7 +184,7 @@ class RegelResultatBehandler {
                                                                     AktivitetIdentifikator aktivitet,
                                                                     SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         if (oppgittPeriode.erSøktGradering(aktivitet)) {
-            return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent);
+            return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, annenpartSamtidigUttaksprosent);
         }
         var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent);
         if (samtidigUttaksprosent != null) {

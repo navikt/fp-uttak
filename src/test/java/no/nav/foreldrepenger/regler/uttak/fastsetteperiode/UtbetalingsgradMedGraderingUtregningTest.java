@@ -25,14 +25,14 @@ class UtbetalingsgradMedGraderingUtregningTest {
         var periode = OppgittPeriode.forGradering(Stønadskontotype.FEDREKVOTE, LocalDate.now(), LocalDate.now().plusWeeks(1), arbeidstidsprosent,
             null, false, Set.of(aktivitet1), null, null, null, null, null);
 
-        var utregningForAktivitet1 = utregning(aktivitet1, periode);
-        var utregningForAktivitet2 = utregning(aktivitet2, periode);
+        var utregningForAktivitet1 = utregning(periode);
+        var utregningForAktivitet2 = utregning(periode);
 
         assertThat(utregningForAktivitet1.resultat()).isEqualTo(Utbetalingsgrad.FULL.subtract(arbeidstidsprosent));
         assertThat(utregningForAktivitet2.resultat()).isEqualTo(Utbetalingsgrad.FULL);
     }
 
-    private UtbetalingsgradMedGraderingUtregning utregning(AktivitetIdentifikator aktivitetIdentifikator, OppgittPeriode periode) {
-        return new UtbetalingsgradMedGraderingUtregning(periode, aktivitetIdentifikator, SamtidigUttaksprosent.ZERO);
+    private UtbetalingsgradMedGraderingUtregning utregning(OppgittPeriode periode) {
+        return new UtbetalingsgradMedGraderingUtregning(periode, SamtidigUttaksprosent.ZERO);
     }
 }

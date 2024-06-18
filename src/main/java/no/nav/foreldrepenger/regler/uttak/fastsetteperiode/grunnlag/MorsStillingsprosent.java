@@ -6,14 +6,14 @@ import java.util.Objects;
 
 public class MorsStillingsprosent implements Comparable<MorsStillingsprosent> {
 
-    public static final MorsStillingsprosent ZERO = new MorsStillingsprosent(0);
-    public static final MorsStillingsprosent TEN = new MorsStillingsprosent(10);
-
-
     private final BigDecimal verdi;
 
     public MorsStillingsprosent(BigDecimal verdi) {
+        Objects.requireNonNull(verdi, "Morsstillingssprosent må ha verdi hvis satt!");
         this.verdi = scale(verdi);
+        if (this.verdi.compareTo(BigDecimal.valueOf(75)) >= 0 || this.verdi.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Mors stillingsprosent har en ugyldig verdi: " + this.verdi);
+        }
     }
 
     public MorsStillingsprosent(int verdi) {
@@ -25,7 +25,7 @@ public class MorsStillingsprosent implements Comparable<MorsStillingsprosent> {
     }
 
     private BigDecimal scale(BigDecimal verdi) {
-        return verdi.setScale(2, RoundingMode.DOWN);
+        return verdi.setScale(2, RoundingMode.UP);
     }
 
     @Override

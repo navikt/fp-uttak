@@ -19,7 +19,7 @@ class UtbetalingsgradUtenGraderingUtregningTest {
 
     @Test
     void utbetaling_skal_være_justert_til_annenparts_stillingsprosent() {
-        var utregning = new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO, MorsStillingsprosent.TEN);
+        var utregning = new UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent.ZERO, new MorsStillingsprosent(10));
         assertThat(utregning.resultat()).isEqualTo(Utbetalingsgrad.TEN);
     }
 }

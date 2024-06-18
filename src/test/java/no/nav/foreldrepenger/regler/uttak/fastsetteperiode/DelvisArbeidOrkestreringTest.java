@@ -32,7 +32,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
     class BareFarHarRett {
         @Test
         void far_fullt_uttak_mor_over_75_prosent_i_arbeid() {
-            var oppgittPeriode = lagOppgittPeriode(new MorsStillingsprosent(100));
+            var oppgittPeriode = lagOppgittPeriode(null);
 
             var fastsattePerioder = fastsettPerioder(lagGrunnlag(oppgittPeriode));
 
@@ -43,14 +43,14 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
         }
 
         @Test
-        void far_fullt_uttak_mor_75_prosent_i_arbeid() {
-            var oppgittPeriode = lagOppgittPeriode(new MorsStillingsprosent(75));
+        void far_fullt_uttak_mor_akkurat_ikke_75_prosent_i_arbeid() {
+            var oppgittPeriode = lagOppgittPeriode(new MorsStillingsprosent(BigDecimal.valueOf(74.99)));
 
             var fastsattePerioder = fastsettPerioder(lagGrunnlag(oppgittPeriode));
 
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(100));
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(74.99));
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
         }
 
@@ -67,8 +67,8 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
         }
 
         @Test
-        void far_graderer_20_prosent_mor_er_over_75_prosent_i_arbeid() {
-            var oppgittPeriode = lagOppgittPeriode(new MorsStillingsprosent(100), 20);
+        void far_søker_80_prosent_uttak_mor_er_over_75_prosent_i_arbeid() {
+            var oppgittPeriode = lagOppgittPeriode(null, 20);
 
             var fastsattePerioder = fastsettPerioder(lagGrunnlag(oppgittPeriode));
 
@@ -79,7 +79,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
         }
 
         @Test
-        void far_graderer_40_prosent_mor_arbeider_40_prosent() {
+        void far_søker_60_prosent_uttak_mor_arbeider_40_prosent() {
             var oppgittPeriode = lagOppgittPeriode(new MorsStillingsprosent(40), 40);
 
             var fastsattePerioder = fastsettPerioder(lagGrunnlag(oppgittPeriode));
@@ -91,7 +91,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
         }
 
         @Test
-        void far_graderer_60_prosent_mor_arbeider_40_prosent() {
+        void far_søker_40_prosent_uttak_mor_arbeider_40_prosent() {
             var oppgittPeriode = lagOppgittPeriode(new MorsStillingsprosent(40), 60);
 
             var fastsattePerioder = fastsettPerioder(lagGrunnlag(oppgittPeriode));
@@ -118,21 +118,19 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
     @Nested
     class BeggeHarRett {
         @Test
-        void far_graderer_80_prosent_mor_arbeider_40_prosent_fellesperiode() {
-            var farsArbeidsprosent = 80;
-            var morsStillingsprosent = new MorsStillingsprosent(40);
+        void far_søker_20_prosent_uttak_mor_arbeider_40_prosent() {
             var oppgittPeriode = OppgittPeriode.forGradering(
                 FELLESPERIODE,
                 FØDSELSDATO.plusWeeks(6), // 30 dager
                 FØDSELSDATO.plusWeeks(12).minusDays(1),
-                BigDecimal.valueOf(farsArbeidsprosent),
+                BigDecimal.valueOf(80),
                 null,
                 false,
                 Set.of(ARBEIDSFORHOLD),
                 FØDSELSDATO,
                 FØDSELSDATO,
                 ARBEID,
-                morsStillingsprosent,
+                new MorsStillingsprosent(40),
                 DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
 
             var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
