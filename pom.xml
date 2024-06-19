@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>no.nav.foreldrepenger</groupId>
@@ -10,13 +9,6 @@
     <name>FPSAK Uttaksregler ::</name>
     <description>Uttaksregler for foreldrepenger.</description>
     <url>https://github.com/navikt/fp-uttak</url>
-
-    <scm>
-        <developerConnection>scm:git:git@github.com:navikt/fp-uttak.git</developerConnection>
-        <connection>scm:git:git@github.com:navikt/fp-uttak.git</connection>
-        <url>https://github.com/navikt/fp-uttak</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <organization>
         <name>no.nav</name>
@@ -32,11 +24,24 @@
 
     <developers>
         <developer>
-            <organization>NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration
-            </organization>
+            <organization>NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration</organization>
             <organizationUrl>https://www.nav.no</organizationUrl>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:navikt/fp-uttak.git</connection>
+        <developerConnection>scm:git:git@github.com:navikt/fp-uttak.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/navikt/fp-uttak</url>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>Github navikt Maven Packages</name>
+            <url>https://maven.pkg.github.com/navikt/fp-uttak/</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <java.version>21</java.version>
@@ -47,6 +52,7 @@
         <fpsak.nare.version>2.6.1</fpsak.nare.version>
         <jupiter.version>5.10.2</jupiter.version>
         <assertj.version>3.26.0</assertj.version>
+        <spotless.version>2.43.0</spotless.version>
 
         <!-- Sonar felles -->
         <sonar.organization>navikt</sonar.organization>
@@ -82,6 +88,12 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -114,17 +126,17 @@
                 <executions>
                     <execution>
                         <id>flatten</id>
-                        <phase>process-resources</phase>
                         <goals>
                             <goal>flatten</goal>
                         </goals>
+                        <phase>process-resources</phase>
                     </execution>
                     <execution>
                         <id>flatten.clean</id>
-                        <phase>clean</phase>
                         <goals>
                             <goal>clean</goal>
                         </goals>
+                        <phase>clean</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -168,27 +180,63 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>report-aggregate</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <cleanthat/>
+                        <googleJavaFormat>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+                        <importOrder/>
+                    </java>
+
+                    <pom>
+                        <sortPom>
+                            <expandEmptyElements>false</expandEmptyElements>
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                        </sortPom>
+                    </pom>
+                    <json>
+                        <includes>
+                            <include>src/**/*.json</include>
+                        </includes>
+                        <simple/>
+                        <jackson/>
+                    </json>
+
+                    <markdown>
+                        <includes>
+                            <include>**/*.md</include>
+                        </includes>
+                        <flexmark/>
+                    </markdown>
+                    <yaml>
+                        <includes>
+                            <include>src/**/*.yaml</include>
+                            <include>src/**/*.yml</include>
+                        </includes>
+                        <jackson/>
+                        <prettier/>
+                    </yaml>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>Github navikt Maven Packages</name>
-            <url>https://maven.pkg.github.com/navikt/fp-uttak/</url>
-        </repository>
-    </distributionManagement>
-
 </project>
