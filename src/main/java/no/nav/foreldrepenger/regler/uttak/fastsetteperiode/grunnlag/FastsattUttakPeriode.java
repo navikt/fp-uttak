@@ -22,8 +22,7 @@ public class FastsattUttakPeriode {
     private FastsattUttakPeriode.ResultatÅrsak resultatÅrsak;
     private boolean utsettelse;
 
-    private FastsattUttakPeriode() {
-    }
+    private FastsattUttakPeriode() {}
 
     private FastsattUttakPeriode(FastsattUttakPeriode periode) {
         this.perioderesultattype = periode.perioderesultattype;
@@ -70,19 +69,25 @@ public class FastsattUttakPeriode {
         return trekkerMinsterett(perioderesultattype, resultatÅrsak, utsettelse);
     }
 
-    public static boolean trekkerMinsterett(Perioderesultattype perioderesultattype,
-                                            FastsattUttakPeriode.ResultatÅrsak resultatÅrsak,
-                                            boolean utsettelse) {
-        return (Perioderesultattype.INNVILGET.equals(perioderesultattype) && !erPeriodeMedGodkjentAktivitet(resultatÅrsak)) || (
-            Perioderesultattype.AVSLÅTT.equals(perioderesultattype) && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak)) || (
-            Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
+    public static boolean trekkerMinsterett(
+            Perioderesultattype perioderesultattype,
+            FastsattUttakPeriode.ResultatÅrsak resultatÅrsak,
+            boolean utsettelse) {
+        return (Perioderesultattype.INNVILGET.equals(perioderesultattype)
+                        && !erPeriodeMedGodkjentAktivitet(resultatÅrsak))
+                || (Perioderesultattype.AVSLÅTT.equals(perioderesultattype)
+                        && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak))
+                || (Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype)
+                        && !utsettelse);
     }
 
-    private static boolean erPeriodeMedGodkjentAktivitet(FastsattUttakPeriode.ResultatÅrsak resultatÅrsak) {
-        // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til fratrekk på rett etter tredje ledd
+    private static boolean erPeriodeMedGodkjentAktivitet(
+            FastsattUttakPeriode.ResultatÅrsak resultatÅrsak) {
+        // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til
+        // fratrekk på rett etter tredje ledd
         // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
-        return INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak) || INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(
-            resultatÅrsak);
+        return INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak)
+                || INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT.equals(resultatÅrsak);
     }
 
     public Optional<LocalDate> getMottattDato() {
@@ -154,7 +159,8 @@ public class FastsattUttakPeriode {
 
         public Builder tidsperiode(LocalDate fom, LocalDate tom) {
             if (tom.isBefore(fom)) {
-                throw new IllegalArgumentException("Tom(" + tom + ") kan ikke ligge før fom(" + fom + ")");
+                throw new IllegalArgumentException(
+                        "Tom(" + tom + ") kan ikke ligge før fom(" + fom + ")");
             }
             kladd.fom = fom;
             kladd.tom = tom;

@@ -13,8 +13,10 @@ public enum Manuellbehandlingårsak {
     IKKE_HELTIDSARBEID(5025, "Utsettelse ugyldig da søker ikke er i heltidsarbeid"),
     DØDSFALL(5026, "Vurder uttak med hensyn på dødsfall"),
     MOR_UFØR(5027, "Mor er ufør"),
-    OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE(5028, "Innvilget pleiepenger med innleggelse, vurder riktig ytelse"),
-    OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE(5029, "Innvilget pleiepenger uten innleggelse, vurder riktig ytelse"),
+    OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE(
+            5028, "Innvilget pleiepenger med innleggelse, vurder riktig ytelse"),
+    OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE(
+            5029, "Innvilget pleiepenger uten innleggelse, vurder riktig ytelse"),
     FAR_SØKER_FØR_FØDSEL(5030, "Far/medmor periode før fødsel/omsorg"),
     VURDER_OM_UTSETTELSE(5031, "Vurder om det skal være utsettelse i perioden"),
     ;

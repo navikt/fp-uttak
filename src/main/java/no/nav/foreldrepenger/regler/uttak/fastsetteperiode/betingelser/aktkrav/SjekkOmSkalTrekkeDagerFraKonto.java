@@ -17,7 +17,8 @@ public class SjekkOmSkalTrekkeDagerFraKonto extends LeafSpecification<FastsetteP
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
         var sammenhengendeUttak = fastsettePeriodeGrunnlag.kreverBehandlingSammenhengendeUttak();
-        var bareFarRett = fastsettePeriodeGrunnlag.isFarRett() && !fastsettePeriodeGrunnlag.isMorRett();
+        var bareFarRett =
+                fastsettePeriodeGrunnlag.isFarRett() && !fastsettePeriodeGrunnlag.isMorRett();
         return sammenhengendeUttak || bareFarRett ? ja() : nei();
     }
 }

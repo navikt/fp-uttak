@@ -2,12 +2,9 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Virkedager;
 
-/**
- * En periode som har definert både start- og slutt-tidpunkt
- */
+/** En periode som har definert både start- og slutt-tidpunkt */
 public class LukketPeriode extends Periode {
 
     public LukketPeriode(LocalDate fom, LocalDate tom) {

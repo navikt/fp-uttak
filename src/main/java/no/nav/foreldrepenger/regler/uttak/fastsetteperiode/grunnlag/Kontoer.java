@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +7,12 @@ import java.util.Set;
 
 public final class Kontoer {
 
-    private final Map<Stønadskontotype, Integer> stønadskonti = new EnumMap<>(Stønadskontotype.class);
-    private final Map<Spesialkontotype, Integer> spesialkonti = new EnumMap<>(Spesialkontotype.class);
+    private final Map<Stønadskontotype, Integer> stønadskonti =
+            new EnumMap<>(Stønadskontotype.class);
+    private final Map<Spesialkontotype, Integer> spesialkonti =
+            new EnumMap<>(Spesialkontotype.class);
 
-    private Kontoer() {
-
-    }
+    private Kontoer() {}
 
     public Set<Stønadskontotype> getStønadskontotyper() {
         return stønadskonti.keySet();
@@ -58,7 +57,9 @@ public final class Kontoer {
         }
 
         public Builder kontoList(List<Konto.Builder> kontoList) {
-            kontoList.stream().map(Konto.Builder::build).forEach(k -> kladd.stønadskonti.put(k.getType(), k.getTrekkdager()));
+            kontoList.stream()
+                    .map(Konto.Builder::build)
+                    .forEach(k -> kladd.stønadskonti.put(k.getType(), k.getTrekkdager()));
             return this;
         }
 
@@ -96,7 +97,8 @@ public final class Kontoer {
 
         public Kontoer build() {
             if (this.minsterettDager > 0 && this.utenAktivitetskravDager > 0) {
-                throw new IllegalArgumentException("Utviklerfeil: Sak med både minsterett og dager uten aktivitetskrav");
+                throw new IllegalArgumentException(
+                        "Utviklerfeil: Sak med både minsterett og dager uten aktivitetskrav");
             }
             return kladd;
         }

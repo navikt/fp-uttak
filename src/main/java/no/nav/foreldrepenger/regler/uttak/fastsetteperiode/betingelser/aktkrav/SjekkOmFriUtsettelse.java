@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav;
 
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
@@ -19,6 +18,10 @@ public class SjekkOmFriUtsettelse extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        return Objects.equals(UtsettelseÅrsak.FRI, fastsettePeriodeGrunnlag.getAktuellPeriode().getUtsettelseÅrsak()) ? ja() : nei();
+        return Objects.equals(
+                        UtsettelseÅrsak.FRI,
+                        fastsettePeriodeGrunnlag.getAktuellPeriode().getUtsettelseÅrsak())
+                ? ja()
+                : nei();
     }
 }

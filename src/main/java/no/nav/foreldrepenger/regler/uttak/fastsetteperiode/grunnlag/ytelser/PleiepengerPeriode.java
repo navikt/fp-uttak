@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 
 public class PleiepengerPeriode extends LukketPeriode {
@@ -20,7 +19,12 @@ public class PleiepengerPeriode extends LukketPeriode {
 
     @Override
     public String toString() {
-        return "PleiepengerPeriode{" + "periode=" + super.toString() + ", barnInnlagt=" + barnInnlagt + '}';
+        return "PleiepengerPeriode{"
+                + "periode="
+                + super.toString()
+                + ", barnInnlagt="
+                + barnInnlagt
+                + '}';
     }
 
     @Override

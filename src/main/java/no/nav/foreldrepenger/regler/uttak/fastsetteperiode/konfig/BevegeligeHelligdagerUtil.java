@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 
 public class BevegeligeHelligdagerUtil {
@@ -13,7 +12,7 @@ public class BevegeligeHelligdagerUtil {
     private static final Set<DayOfWeek> WEEKEND = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     private BevegeligeHelligdagerUtil() {
-        //Privat constructor for å hindre instanser.
+        // Privat constructor for å hindre instanser.
     }
 
     public static List<LocalDate> finnBevegeligeHelligdagerUtenHelg(LukketPeriode uttaksperiode) {
@@ -65,9 +64,11 @@ public class BevegeligeHelligdagerUtil {
         return fjernHelg(bevegeligeHelligdager);
     }
 
-
     private static List<LocalDate> fjernHelg(List<LocalDate> bevegeligeHelligdager) {
-        return bevegeligeHelligdager.stream().filter(hd -> !WEEKEND.contains(hd.getDayOfWeek())).sorted().toList();
+        return bevegeligeHelligdager.stream()
+                .filter(hd -> !WEEKEND.contains(hd.getDayOfWeek()))
+                .sorted()
+                .toList();
     }
 
     private static LocalDate utledPåskedag(int år) {
@@ -89,7 +90,8 @@ public class BevegeligeHelligdagerUtil {
         return LocalDate.of(år, n, p + 1);
     }
 
-    private static List<Integer> utledÅreneDetSkalFinnesHelligdagerFor(LukketPeriode uttaksperiode) {
+    private static List<Integer> utledÅreneDetSkalFinnesHelligdagerFor(
+            LukketPeriode uttaksperiode) {
         List<Integer> årene = new ArrayList<>();
         for (var i = uttaksperiode.getFom().getYear(); i <= uttaksperiode.getTom().getYear(); i++) {
             årene.add(i);

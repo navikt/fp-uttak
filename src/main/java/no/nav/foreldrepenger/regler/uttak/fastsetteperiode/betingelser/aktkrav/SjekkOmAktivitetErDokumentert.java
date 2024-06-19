@@ -18,6 +18,9 @@ public class SjekkOmAktivitetErDokumentert extends LeafSpecification<FastsettePe
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        return MORS_AKTIVITET_IKKE_GODKJENT.equals(fastsettePeriodeGrunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
+        return MORS_AKTIVITET_IKKE_GODKJENT.equals(
+                        fastsettePeriodeGrunnlag.getAktuellPeriode().getDokumentasjonVurdering())
+                ? ja()
+                : nei();
     }
 }

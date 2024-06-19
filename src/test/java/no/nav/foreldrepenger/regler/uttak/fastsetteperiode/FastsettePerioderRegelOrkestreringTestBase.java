@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -39,24 +38,27 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 abstract class FastsettePerioderRegelOrkestreringTestBase {
     static final AktivitetIdentifikator ARBEIDSFORHOLD = ARBEIDSFORHOLD_1;
 
-    private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering = new FastsettePerioderRegelOrkestrering();
+    private final FastsettePerioderRegelOrkestrering fastsettePerioderRegelOrkestrering =
+            new FastsettePerioderRegelOrkestrering();
 
-    void verifiserPeriode(UttakPeriode periode,
-                          LocalDate forventetFom,
-                          LocalDate forventetTom,
-                          Perioderesultattype forventetResultat,
-                          Stønadskontotype stønadskontotype) {
+    void verifiserPeriode(
+            UttakPeriode periode,
+            LocalDate forventetFom,
+            LocalDate forventetTom,
+            Perioderesultattype forventetResultat,
+            Stønadskontotype stønadskontotype) {
         assertThat(periode.getFom()).isEqualTo(forventetFom);
         assertThat(periode.getTom()).isEqualTo(forventetTom);
         assertThat(periode.getPerioderesultattype()).isEqualTo(forventetResultat);
         assertThat(periode.getStønadskontotype()).isEqualTo(stønadskontotype);
     }
 
-    void verifiserAvslåttPeriode(UttakPeriode periode,
-                                 LocalDate forventetFom,
-                                 LocalDate forventetTom,
-                                 Stønadskontotype stønadskontotype,
-                                 IkkeOppfyltÅrsak ikkeOppfyltÅrsak) {
+    void verifiserAvslåttPeriode(
+            UttakPeriode periode,
+            LocalDate forventetFom,
+            LocalDate forventetTom,
+            Stønadskontotype stønadskontotype,
+            IkkeOppfyltÅrsak ikkeOppfyltÅrsak) {
         assertThat(periode.getFom()).isEqualTo(forventetFom);
         assertThat(periode.getTom()).isEqualTo(forventetTom);
         assertThat(periode.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
@@ -64,32 +66,34 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
         assertThat(periode.getPeriodeResultatÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
     }
 
-
     RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-            .behandling(morBehandling())
-            .kontoer(defaultKontoer())
-            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
-            .inngangsvilkår(oppfyltAlleVilkår());
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .behandling(morBehandling())
+                .kontoer(defaultKontoer())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .inngangsvilkår(oppfyltAlleVilkår());
     }
 
     Kontoer.Builder defaultKontoer() {
-        return new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
-            .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
-            .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
-            .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
+        return new Kontoer.Builder()
+                .konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(50))
+                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(50))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(130));
     }
 
-    void verifiserManuellBehandlingPeriode(UttakPeriode periode,
-                                           LocalDate forventetFom,
-                                           LocalDate forventetTom,
-                                           Stønadskontotype stønadskontotype,
-                                           IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
-                                           Manuellbehandlingårsak manuellbehandlingårsak) {
+    void verifiserManuellBehandlingPeriode(
+            UttakPeriode periode,
+            LocalDate forventetFom,
+            LocalDate forventetTom,
+            Stønadskontotype stønadskontotype,
+            IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
+            Manuellbehandlingårsak manuellbehandlingårsak) {
         assertThat(periode.getFom()).isEqualTo(forventetFom);
         assertThat(periode.getTom()).isEqualTo(forventetTom);
-        assertThat(periode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(periode.getPerioderesultattype())
+                .isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(periode.getStønadskontotype()).isEqualTo(stønadskontotype);
         assertThat(periode.getManuellbehandlingårsak()).isEqualTo(manuellbehandlingårsak);
         assertThat(periode.getPeriodeResultatÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
@@ -107,38 +111,71 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
         return oppgittPeriode(stønadskontotype, fom, tom, false, null);
     }
 
-    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
-                                  LocalDate fom,
-                                  LocalDate tom,
-                                  boolean flerbarnsdager,
-                                  SamtidigUttaksprosent samtidigUttaksprosent) {
-        return oppgittPeriode(stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, null);
+    OppgittPeriode oppgittPeriode(
+            Stønadskontotype stønadskontotype,
+            LocalDate fom,
+            LocalDate tom,
+            boolean flerbarnsdager,
+            SamtidigUttaksprosent samtidigUttaksprosent) {
+        return oppgittPeriode(
+                stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, null);
     }
 
-    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype,
-                                  LocalDate fom,
-                                  LocalDate tom,
-                                  boolean flerbarnsdager,
-                                  SamtidigUttaksprosent samtidigUttaksprosent,
-                                  DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, samtidigUttaksprosent, flerbarnsdager, null, null, null,
-            dokumentasjonVurdering);
+    OppgittPeriode oppgittPeriode(
+            Stønadskontotype stønadskontotype,
+            LocalDate fom,
+            LocalDate tom,
+            boolean flerbarnsdager,
+            SamtidigUttaksprosent samtidigUttaksprosent,
+            DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forVanligPeriode(
+                stønadskontotype,
+                fom,
+                tom,
+                samtidigUttaksprosent,
+                flerbarnsdager,
+                null,
+                null,
+                null,
+                dokumentasjonVurdering);
     }
 
-    OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, dokumentasjonVurdering);
+    OppgittPeriode oppgittPeriode(
+            Stønadskontotype stønadskontotype,
+            LocalDate fom,
+            LocalDate tom,
+            DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forVanligPeriode(
+                stønadskontotype, fom, tom, null, false, null, null, null, dokumentasjonVurdering);
     }
 
-    OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
-        return gradertoppgittPeriode(stønadskontotype, fom, tom, arbeidsprosent, Set.of(ARBEIDSFORHOLD_1));
+    OppgittPeriode gradertoppgittPeriode(
+            Stønadskontotype stønadskontotype,
+            LocalDate fom,
+            LocalDate tom,
+            BigDecimal arbeidsprosent) {
+        return gradertoppgittPeriode(
+                stønadskontotype, fom, tom, arbeidsprosent, Set.of(ARBEIDSFORHOLD_1));
     }
 
-    OppgittPeriode gradertoppgittPeriode(Stønadskontotype stønadskontotype,
-                                         LocalDate fom,
-                                         LocalDate tom,
-                                         BigDecimal arbeidsprosent,
-                                         Set<AktivitetIdentifikator> gradertAktiviteter) {
-        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, arbeidsprosent, null, false, gradertAktiviteter, null, null, null, null);
+    OppgittPeriode gradertoppgittPeriode(
+            Stønadskontotype stønadskontotype,
+            LocalDate fom,
+            LocalDate tom,
+            BigDecimal arbeidsprosent,
+            Set<AktivitetIdentifikator> gradertAktiviteter) {
+        return OppgittPeriode.forGradering(
+                stønadskontotype,
+                fom,
+                tom,
+                arbeidsprosent,
+                null,
+                false,
+                gradertAktiviteter,
+                null,
+                null,
+                null,
+                null);
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
@@ -158,7 +195,9 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
-        return basicGrunnlag().datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
+        return basicGrunnlag()
+                .datoer(new Datoer.Builder().fødsel(fødselsdato))
+                .rettOgOmsorg(beggeRett());
     }
 
     Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {
@@ -173,20 +212,30 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
         return new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true);
     }
 
-    OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, DokumentasjonVurdering dokumentasjonVurdering) {
+    OppgittPeriode utsettelsePeriode(
+            LocalDate fom,
+            LocalDate tom,
+            UtsettelseÅrsak utsettelseÅrsak,
+            DokumentasjonVurdering dokumentasjonVurdering) {
         return utsettelsePeriode(fom, tom, utsettelseÅrsak, null, dokumentasjonVurdering);
     }
 
-    OppgittPeriode utsettelsePeriode(LocalDate fom,
-                                     LocalDate tom,
-                                     UtsettelseÅrsak utsettelseÅrsak,
-                                     MorsAktivitet morsAktivitet,
-                                     DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forUtsettelse(fom, tom, utsettelseÅrsak, null, null, morsAktivitet, dokumentasjonVurdering);
+    OppgittPeriode utsettelsePeriode(
+            LocalDate fom,
+            LocalDate tom,
+            UtsettelseÅrsak utsettelseÅrsak,
+            MorsAktivitet morsAktivitet,
+            DokumentasjonVurdering dokumentasjonVurdering) {
+        return OppgittPeriode.forUtsettelse(
+                fom, tom, utsettelseÅrsak, null, null, morsAktivitet, dokumentasjonVurdering);
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {
-        return new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true);
+        return new Inngangsvilkår.Builder()
+                .adopsjonOppfylt(true)
+                .foreldreansvarnOppfylt(true)
+                .fødselOppfylt(true)
+                .opptjeningOppfylt(true);
     }
 
     RettOgOmsorg.Builder aleneomsorg() {
@@ -202,6 +251,8 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Set<AktivitetIdentifikator> aktiviteterIPeriode(UttakPeriode uttakPeriode) {
-        return uttakPeriode.getAktiviteter().stream().map(a -> a.getIdentifikator()).collect(Collectors.toSet());
+        return uttakPeriode.getAktiviteter().stream()
+                .map(a -> a.getIdentifikator())
+                .collect(Collectors.toSet());
     }
 }

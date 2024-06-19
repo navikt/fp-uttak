@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
@@ -20,7 +19,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
 /**
- * Interface for fastsette periode grunnlaget. Det er kun dette interfacet som skal brukes i selve regelen.
+ * Interface for fastsette periode grunnlaget. Det er kun dette interfacet som skal brukes i selve
+ * regelen.
  */
 @RuleDocumentationGrunnlag
 public interface FastsettePeriodeGrunnlag {
@@ -45,7 +45,8 @@ public interface FastsettePeriodeGrunnlag {
     Søknadstype getSøknadstype();
 
     /**
-     * Finner dato for familiehendelsen som søknaden gjelder. Kan være dato for termin, fødsel eller omsorgsovertakelse.
+     * Finner dato for familiehendelsen som søknaden gjelder. Kan være dato for termin, fødsel eller
+     * omsorgsovertakelse.
      *
      * @return dato for familiehendelse.
      */
@@ -86,7 +87,6 @@ public interface FastsettePeriodeGrunnlag {
      *
      * @return true dersom rett.
      */
-
     boolean isMorRett();
 
     /**
@@ -104,16 +104,15 @@ public interface FastsettePeriodeGrunnlag {
     boolean isBareFarHarRettMorUføretrygd();
 
     /**
-     * Har saken perioder uten aktivitetskrav iht 14-14 tredje ledd
-     * Slike saker skal ikke ha minsterett.
+     * Har saken perioder uten aktivitetskrav iht 14-14 tredje ledd Slike saker skal ikke ha
+     * minsterett.
      *
      * @return true dersom saken tilsier dager uten aktivitetskrav.
      */
     boolean isSakMedDagerUtenAktivitetskrav();
 
     /**
-     * Har saken en minsterett for uttak.
-     * Slike saker skal ikke ha dager uten aktivitetskrav.
+     * Har saken en minsterett for uttak. Slike saker skal ikke ha dager uten aktivitetskrav.
      *
      * @return true dersom saken tilsier en minsterett for uttak.
      */
@@ -139,54 +138,34 @@ public interface FastsettePeriodeGrunnlag {
 
     boolean harAleneomsorg();
 
-    /**
-     * Om det finnes en opphørsdato der søker ikke lengre oppfyller medlemskapsvilkåret
-     */
+    /** Om det finnes en opphørsdato der søker ikke lengre oppfyller medlemskapsvilkåret */
     LocalDate getOpphørsdatoForMedlemskap();
 
-    /**
-     * Om det finnes en dødsdato for søker
-     */
+    /** Om det finnes en dødsdato for søker */
     LocalDate getDødsdatoForSøker();
 
-    /**
-     * Om det finnes en dødsdato for barn
-     */
+    /** Om det finnes en dødsdato for barn */
     LocalDate getDødsdatoForBarn();
 
-    /**
-     * Om alle barn er døde eller ikke
-     */
+    /** Om alle barn er døde eller ikke */
     boolean erAlleBarnDøde();
 
-    /**
-     * Aktuell periode begyunner på eller etter startdato neste stønadsperiode
-     */
+    /** Aktuell periode begyunner på eller etter startdato neste stønadsperiode */
     boolean erAktuellPeriodeEtterStartNesteStønadsperiode();
 
-    /**
-     * Inngangsvilkår
-     */
+    /** Inngangsvilkår */
     Inngangsvilkår getInngangsvilkår();
 
-    /**
-     * Adopsjon
-     */
+    /** Adopsjon */
     Adopsjon getAdopsjon();
 
-    /**
-     * Søkers stønadskontotyper
-     */
+    /** Søkers stønadskontotyper */
     Set<Stønadskontotype> getGyldigeStønadskontotyper();
 
-    /**
-     * Fødselsdato
-     */
+    /** Fødselsdato */
     LocalDate getFødselsdato();
 
-    /**
-     * Termindato
-     */
+    /** Termindato */
     LocalDate getTermindato();
 
     boolean isBerørtBehandling();

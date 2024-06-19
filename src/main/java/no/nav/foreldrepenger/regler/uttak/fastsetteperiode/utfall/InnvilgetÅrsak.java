@@ -14,8 +14,10 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     GRADERING_ALENEOMSORG(2032, "Gradering ved aleneomsorg"),
     GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT(2033, "Gradering foreldrepenger, kun far har rett"),
     GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT(2034, "Gradering foreldrepenger, kun mor har rett"),
-    GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(2035, "Gradering foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
-    FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(2036, "Innvilget foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
+    GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(
+            2035, "Gradering foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
+    FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(
+            2036, "Innvilget foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
     MSP_INNVILGET(2039, "Innvilger msp første 6 ukene"),
 
     // Overføring årsaker
@@ -24,17 +26,18 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     OVERFØRING_ANNEN_PART_INNLAGT(2022, "Overføring - annen part innlagt"),
     OVERFØRING_ALENEOMSORG(2023, "Overføring - aleneomsorg"),
 
-    //Utsettelse årsaker
+    // Utsettelse årsaker
     UTSETTELSE_GYLDIG_PGA_FERIE(2010, "Utsettelse pga ferie"),
     UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID(2011, "Utsettelse pga 100% arbeid"),
     UTSETTELSE_GYLDIG_PGA_INNLEGGELSE(2012, "Utsettelse pga innleggelse"),
     UTSETTELSE_GYLDIG_PGA_BARN_INNLAGT(2013, "Utsettelse pga innleggelse barn"),
     UTSETTELSE_GYLDIG_PGA_SYKDOM(2014, "Utsettelse pga sykdom"),
 
-
     UTSETTELSE_GYLDIG(2024, "Gyldig utsettelse"),
-    UTSETTELSE_GYLDIG_SEKS_UKER_INNLEGGELSE(2025, "Gyldig utsettelse første 6 uker pga. innleggelse"),
-    UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT(2026, "Gyldig utsettelse første 6 uker pga. barn innlagt"),
+    UTSETTELSE_GYLDIG_SEKS_UKER_INNLEGGELSE(
+            2025, "Gyldig utsettelse første 6 uker pga. innleggelse"),
+    UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT(
+            2026, "Gyldig utsettelse første 6 uker pga. barn innlagt"),
     UTSETTELSE_GYLDIG_SEKS_UKER_FRI_SYKDOM(2027, "Gyldig utsettelse første 6 uker pga. sykdom"),
     UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT(2028, "Gyldig utsettelse aktivitetskrav oppfylt "),
     ;
@@ -59,7 +62,7 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
 
     @Override
     public boolean trekkerMinsterett() {
-        return this.equals(FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV) || this.equals(
-            GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        return this.equals(FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV)
+                || this.equals(GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
     }
 }

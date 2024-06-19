@@ -8,8 +8,7 @@ public final class Dødsdatoer {
     private LocalDate barnsDødsdato;
     private boolean alleBarnDøde;
 
-    private Dødsdatoer() {
-    }
+    private Dødsdatoer() {}
 
     public LocalDate getSøkersDødsdato() {
         return søkersDødsdato;
@@ -45,5 +44,4 @@ public final class Dødsdatoer {
             return kladd;
         }
     }
-
 }

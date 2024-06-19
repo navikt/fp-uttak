@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Støn
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.PerioderUtenHelgUtil.helgBlirFredag;
 
 import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
@@ -14,10 +13,12 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodenOpprettetAvFødselshendelse.ID)
-public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodenOpprettetAvFødselshendelse
+        extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.4";
-    public static final String BESKRIVELSE = "Er perioden opprettet pga justering ved fødselshendelse?";
+    public static final String BESKRIVELSE =
+            "Er perioden opprettet pga justering ved fødselshendelse?";
 
     public SjekkOmPeriodenOpprettetAvFødselshendelse() {
         super(ID);
@@ -35,17 +36,22 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
             return nei();
         }
 
-        //Ved fødsel etter termin vil det ligge en periode fellesperiode som første periode i uttaket. Sjekker dette for
-        //å ikke innvilge msp hvis det ikke har vært noe justering. Best effort
+        // Ved fødsel etter termin vil det ligge en periode fellesperiode som første periode i
+        // uttaket. Sjekker dette for
+        // å ikke innvilge msp hvis det ikke har vært noe justering. Best effort
         if (!forbruktFellesperiode(grunnlag)) {
             return nei();
         }
 
-        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
+        var antallUkerEtterFødsel =
+                Konfigurasjon.STANDARD.getParameter(
+                        Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
 
-        //Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i perioden. Burde være veldig få saker
-        if (erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(fødselsdato, antallUkerEtterFødsel, aktuellPeriode)) {
+        // Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i
+        // perioden. Burde være veldig få saker
+        if (erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(
+                fødselsdato, antallUkerEtterFødsel, aktuellPeriode)) {
             return ja();
         }
         return nei();
@@ -56,9 +62,10 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
         return saldoUtregning.getMaxDager(FELLESPERIODE) > saldoUtregning.saldo(FELLESPERIODE);
     }
 
-    private static boolean erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(LocalDate fødselsdato,
-                                                                        Integer antallUkerEtterFødsel,
-                                                                        OppgittPeriode aktuellPeriode) {
-        return aktuellPeriode.getTom().isEqual(helgBlirFredag(fødselsdato.plusWeeks(antallUkerEtterFødsel).minusDays(1)));
+    private static boolean erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(
+            LocalDate fødselsdato, Integer antallUkerEtterFødsel, OppgittPeriode aktuellPeriode) {
+        return aktuellPeriode
+                .getTom()
+                .isEqual(helgBlirFredag(fødselsdato.plusWeeks(antallUkerEtterFødsel).minusDays(1)));
     }
 }

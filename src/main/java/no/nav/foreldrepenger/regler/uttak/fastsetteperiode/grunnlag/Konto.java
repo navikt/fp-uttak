@@ -5,8 +5,7 @@ public final class Konto {
     private Stønadskontotype type;
     private int trekkdager;
 
-    private Konto() {
-    }
+    private Konto() {}
 
     public Stønadskontotype getType() {
         return type;

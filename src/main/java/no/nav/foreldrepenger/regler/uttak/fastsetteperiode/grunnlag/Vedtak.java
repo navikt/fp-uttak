@@ -7,8 +7,7 @@ public final class Vedtak {
 
     private final List<FastsattUttakPeriode> perioder = new ArrayList<>();
 
-    private Vedtak() {
-    }
+    private Vedtak() {}
 
     public List<FastsattUttakPeriode> getPerioder() {
         return perioder;

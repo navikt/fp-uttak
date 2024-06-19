@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Virkedager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -17,16 +16,19 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 final class ManglendeSøktPeriodeUtil {
-    private ManglendeSøktPeriodeUtil() {
+    private ManglendeSøktPeriodeUtil() {}
 
-    }
-
-    static List<OppgittPeriode> finnManglendeSøktePerioder(List<LukketPeriode> perioder, LukketPeriode periode) {
+    static List<OppgittPeriode> finnManglendeSøktePerioder(
+            List<LukketPeriode> perioder, LukketPeriode periode) {
         Objects.requireNonNull(periode, "periode");
-        var sortertePerioder = perioder.stream()
-            .filter(p -> !p.getTom().isBefore(periode.getFom()) && !p.getFom().isAfter(periode.getTom()))
-            .sorted(Comparator.comparing(Periode::getFom))
-            .toList();
+        var sortertePerioder =
+                perioder.stream()
+                        .filter(
+                                p ->
+                                        !p.getTom().isBefore(periode.getFom())
+                                                && !p.getFom().isAfter(periode.getTom()))
+                        .sorted(Comparator.comparing(Periode::getFom))
+                        .toList();
 
         List<OppgittPeriode> msp = new ArrayList<>();
         var hullFom = periode.getFom();
@@ -47,7 +49,6 @@ final class ManglendeSøktPeriodeUtil {
             if (Virkedager.beregnAntallVirkedager(hullFom, hullTom) > 0) {
                 msp.add(lagManglendeSøktPeriode(hullFom, hullTom));
             }
-
         }
         return msp;
     }
@@ -56,10 +57,14 @@ final class ManglendeSøktPeriodeUtil {
      * Fjern helgedager i begynnelse og slutt av msp.
      *
      * @param msp perioder som skal strippes.
-     * @return periode uten helg i begynnelsen og slutten. Optional.empty() dersom perioden bare besto av helgedager.
+     * @return periode uten helg i begynnelsen og slutten. Optional.empty() dersom perioden bare
+     *     besto av helgedager.
      */
     static Optional<OppgittPeriode> fjernHelg(OppgittPeriode msp) {
-        Predicate<LocalDate> sjekkOmHelg = dato -> dato.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dato.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+        Predicate<LocalDate> sjekkOmHelg =
+                dato ->
+                        dato.getDayOfWeek().equals(DayOfWeek.SATURDAY)
+                                || dato.getDayOfWeek().equals(DayOfWeek.SUNDAY);
 
         var fom = msp.getFom();
         var tom = msp.getTom();
@@ -81,11 +86,13 @@ final class ManglendeSøktPeriodeUtil {
         return lagManglendeSøktPeriode(hullFom, hullTom, null);
     }
 
-    static OppgittPeriode lagManglendeSøktPeriode(LocalDate hullFom, LocalDate hullTom, Stønadskontotype type) {
+    static OppgittPeriode lagManglendeSøktPeriode(
+            LocalDate hullFom, LocalDate hullTom, Stønadskontotype type) {
         return OppgittPeriode.forManglendeSøkt(type, hullFom, hullTom);
     }
 
-    static Optional<OppgittPeriode> fjernPerioderFørEndringsdatoVedRevurdering(OppgittPeriode msp, RegelGrunnlag grunnlag) {
+    static Optional<OppgittPeriode> fjernPerioderFørEndringsdatoVedRevurdering(
+            OppgittPeriode msp, RegelGrunnlag grunnlag) {
         if (!grunnlag.erRevurdering()) {
             return Optional.of(msp);
         }
@@ -111,7 +118,9 @@ final class ManglendeSøktPeriodeUtil {
         List<LukketPeriode> allePerioder = new ArrayList<>();
         if (grunnlag.getAnnenPart() != null) {
             allePerioder.addAll(
-                grunnlag.getAnnenPart().getUttaksperioder().stream().filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling()).toList());
+                    grunnlag.getAnnenPart().getUttaksperioder().stream()
+                            .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
+                            .toList());
         }
         allePerioder.addAll(grunnlag.getSøknad().getOppgittePerioder());
         return allePerioder;
@@ -126,5 +135,4 @@ final class ManglendeSøktPeriodeUtil {
         }
         return omsorgsovertakelseDato;
     }
-
 }

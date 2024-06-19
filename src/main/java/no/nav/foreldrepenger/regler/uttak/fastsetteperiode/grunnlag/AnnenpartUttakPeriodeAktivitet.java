@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 
 public class AnnenpartUttakPeriodeAktivitet {
@@ -10,10 +9,11 @@ public class AnnenpartUttakPeriodeAktivitet {
     private final Trekkdager trekkdager;
     private final Utbetalingsgrad utbetalingsgrad;
 
-    public AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator aktivitetIdentifikator,
-                                          Stønadskontotype stønadskontotype,
-                                          Trekkdager trekkdager,
-                                          Utbetalingsgrad utbetalingsgrad) {
+    public AnnenpartUttakPeriodeAktivitet(
+            AktivitetIdentifikator aktivitetIdentifikator,
+            Stønadskontotype stønadskontotype,
+            Trekkdager trekkdager,
+            Utbetalingsgrad utbetalingsgrad) {
         Objects.requireNonNull(aktivitetIdentifikator);
         Objects.requireNonNull(utbetalingsgrad);
         this.aktivitetIdentifikator = aktivitetIdentifikator;
@@ -37,5 +37,4 @@ public class AnnenpartUttakPeriodeAktivitet {
     public Utbetalingsgrad getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
-
 }

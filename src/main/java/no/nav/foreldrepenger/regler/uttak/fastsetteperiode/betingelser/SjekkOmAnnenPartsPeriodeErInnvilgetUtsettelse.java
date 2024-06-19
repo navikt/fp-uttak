@@ -7,7 +7,8 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse.ID)
-public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse
+        extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 30.0.4";
 
@@ -18,10 +19,13 @@ public class SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse extends LeafSpecifica
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        var overlappErUtsettelse = grunnlag.getAnnenPartUttaksperioder()
-            .stream()
-            .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app))
-            .anyMatch(app -> app.isUtsettelse() && app.isInnvilget());
+        var overlappErUtsettelse =
+                grunnlag.getAnnenPartUttaksperioder().stream()
+                        .filter(
+                                app ->
+                                        PerioderUtenHelgUtil.perioderUtenHelgOverlapper(
+                                                aktuellPeriode, app))
+                        .anyMatch(app -> app.isUtsettelse() && app.isInnvilget());
         return overlappErUtsettelse ? ja() : nei();
     }
 }

@@ -1,15 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet.INNLAGT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype.FØDSEL;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak.INNLAGT_SØKER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlagImpl;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
@@ -18,6 +14,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnla
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.Resultat;
+import org.junit.jupiter.api.Test;
 
 class SjekkOmTidsperiodeForbeholdtMorTest {
 
@@ -89,11 +86,23 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
         return new SjekkOmTidsperiodeForbeholdtMor();
     }
 
-    private FastsettePeriodeGrunnlagImpl grunnlag(LocalDate familiehendelse, LocalDate periodeFom, LocalDate periodeTom) {
+    private FastsettePeriodeGrunnlagImpl grunnlag(
+            LocalDate familiehendelse, LocalDate periodeFom, LocalDate periodeTom) {
         var datoer = new Datoer.Builder().fødsel(familiehendelse);
-        var regelGrunnlag = new RegelGrunnlag.Builder().datoer(datoer).søknad(new Søknad.Builder().type(FØDSEL)).build();
-        var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom, INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT,
-            DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT);
+        var regelGrunnlag =
+                new RegelGrunnlag.Builder()
+                        .datoer(datoer)
+                        .søknad(new Søknad.Builder().type(FØDSEL))
+                        .build();
+        var aktuellPeriode =
+                OppgittPeriode.forUtsettelse(
+                        periodeFom,
+                        periodeTom,
+                        INNLAGT_SØKER,
+                        periodeFom,
+                        periodeFom,
+                        INNLAGT,
+                        DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT);
         return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);
     }
 }

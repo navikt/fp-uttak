@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 
 public class UttakPeriodeAktivitet {
@@ -11,10 +10,11 @@ public class UttakPeriodeAktivitet {
     private final Trekkdager trekkdager;
     private final boolean søktGradering;
 
-    public UttakPeriodeAktivitet(AktivitetIdentifikator identifikator,
-                                 Utbetalingsgrad utbetalingsgrad,
-                                 Trekkdager trekkdager,
-                                 boolean søktGradering) {
+    public UttakPeriodeAktivitet(
+            AktivitetIdentifikator identifikator,
+            Utbetalingsgrad utbetalingsgrad,
+            Trekkdager trekkdager,
+            boolean søktGradering) {
         this.identifikator = identifikator;
         this.utbetalingsgrad = utbetalingsgrad;
         this.trekkdager = trekkdager;
@@ -46,8 +46,10 @@ public class UttakPeriodeAktivitet {
             return false;
         }
         var that = (UttakPeriodeAktivitet) o;
-        return søktGradering == that.søktGradering && Objects.equals(identifikator, that.identifikator) && Objects.equals(utbetalingsgrad,
-            that.utbetalingsgrad) && Objects.equals(trekkdager, that.trekkdager);
+        return søktGradering == that.søktGradering
+                && Objects.equals(identifikator, that.identifikator)
+                && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
+                && Objects.equals(trekkdager, that.trekkdager);
     }
 
     @Override
@@ -57,7 +59,15 @@ public class UttakPeriodeAktivitet {
 
     @Override
     public String toString() {
-        return "UttakPeriodeAktivitet{" + "identifikator=" + identifikator + ", utbetalingsgrad=" + utbetalingsgrad + ", trekkdager=" + trekkdager
-            + ", gradering=" + søktGradering + '}';
+        return "UttakPeriodeAktivitet{"
+                + "identifikator="
+                + identifikator
+                + ", utbetalingsgrad="
+                + utbetalingsgrad
+                + ", trekkdager="
+                + trekkdager
+                + ", gradering="
+                + søktGradering
+                + '}';
     }
 }

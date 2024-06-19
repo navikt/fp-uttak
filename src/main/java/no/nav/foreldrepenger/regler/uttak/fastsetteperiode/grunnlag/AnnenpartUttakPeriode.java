@@ -50,18 +50,19 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return oppholdÅrsak;
     }
 
-    public AnnenpartUttakPeriode kopiMedNyPeriode(LocalDate fom,
-                                                  LocalDate tom,
-                                                  List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+    public AnnenpartUttakPeriode kopiMedNyPeriode(
+            LocalDate fom,
+            LocalDate tom,
+            List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
         return Builder.uttak(fom, tom)
-            .samtidigUttak(this.samtidigUttak)
-            .flerbarnsdager(this.flerbarnsdager)
-            .utsettelse(this.innvilget)
-            .innvilget(this.innvilget)
-            .oppholdsårsak(this.oppholdÅrsak)
-            .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
-            .senestMottattDato(this.senestMottattDato)
-            .build();
+                .samtidigUttak(this.samtidigUttak)
+                .flerbarnsdager(this.flerbarnsdager)
+                .utsettelse(this.innvilget)
+                .innvilget(this.innvilget)
+                .oppholdsårsak(this.oppholdÅrsak)
+                .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
+                .senestMottattDato(this.senestMottattDato)
+                .build();
     }
 
     public boolean harTrekkdager() {
@@ -88,14 +89,26 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             return false;
         }
         var that = (AnnenpartUttakPeriode) o;
-        return samtidigUttak == that.samtidigUttak && flerbarnsdager == that.flerbarnsdager && utsettelse == that.utsettelse
-            && innvilget == that.innvilget && Objects.equals(aktiviteter, that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(
-            senestMottattDato, that.senestMottattDato);
+        return samtidigUttak == that.samtidigUttak
+                && flerbarnsdager == that.flerbarnsdager
+                && utsettelse == that.utsettelse
+                && innvilget == that.innvilget
+                && Objects.equals(aktiviteter, that.aktiviteter)
+                && oppholdÅrsak == that.oppholdÅrsak
+                && Objects.equals(senestMottattDato, that.senestMottattDato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdÅrsak, innvilget, senestMottattDato);
+        return Objects.hash(
+                super.hashCode(),
+                aktiviteter,
+                samtidigUttak,
+                flerbarnsdager,
+                utsettelse,
+                oppholdÅrsak,
+                innvilget,
+                senestMottattDato);
     }
 
     public static class Builder {
@@ -118,12 +131,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             kladd.innvilget = true;
         }
 
-        public Builder uttakPeriodeAktivitet(AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
+        public Builder uttakPeriodeAktivitet(
+                AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
             kladd.aktiviteter.add(annenpartUttakPeriodeAktivitet);
             return this;
         }
 
-        public Builder uttakPeriodeAktiviteter(List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+        public Builder uttakPeriodeAktiviteter(
+                List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
             kladd.aktiviteter.addAll(annenpartUttakPeriodeAktiviteter);
             return this;
         }
@@ -161,6 +176,5 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         public AnnenpartUttakPeriode build() {
             return kladd;
         }
-
     }
 }

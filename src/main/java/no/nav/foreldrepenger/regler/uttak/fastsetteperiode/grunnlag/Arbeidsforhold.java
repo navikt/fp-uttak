@@ -7,7 +7,8 @@ public record Arbeidsforhold(AktivitetIdentifikator identifikator, LocalDate sta
 
     private static final LocalDate DEFAULT_STARTDATO = LocalDate.MIN;
 
-    public static Arbeidsforhold opprett(AktivitetIdentifikator identifikator, LocalDate startdato) {
+    public static Arbeidsforhold opprett(
+            AktivitetIdentifikator identifikator, LocalDate startdato) {
         return new Arbeidsforhold(identifikator, startdato == null ? DEFAULT_STARTDATO : startdato);
     }
 
@@ -24,7 +25,8 @@ public record Arbeidsforhold(AktivitetIdentifikator identifikator, LocalDate sta
         if (this == o) {
             return true;
         }
-        return o instanceof Arbeidsforhold that && Objects.equals(identifikator, that.identifikator);
+        return o instanceof Arbeidsforhold that
+                && Objects.equals(identifikator, that.identifikator);
     }
 
     @Override

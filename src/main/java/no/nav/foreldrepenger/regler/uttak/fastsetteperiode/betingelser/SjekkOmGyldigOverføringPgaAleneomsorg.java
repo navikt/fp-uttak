@@ -9,7 +9,8 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmGyldigOverføringPgaAleneomsorg.ID)
-public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmGyldigOverføringPgaAleneomsorg
+        extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 9.3";
 
@@ -20,7 +21,10 @@ public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<Fa
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak()) && ER_ALENEOMSORG_GODKJENT.equals(
-            oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+        return ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak())
+                        && ER_ALENEOMSORG_GODKJENT.equals(
+                                oppgittPeriode.getDokumentasjonVurdering())
+                ? ja()
+                : nei();
     }
 }

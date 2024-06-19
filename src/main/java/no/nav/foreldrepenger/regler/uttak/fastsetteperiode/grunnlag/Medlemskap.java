@@ -6,9 +6,7 @@ public class Medlemskap {
 
     private LocalDate opphørsdato;
 
-    private Medlemskap() {
-
-    }
+    private Medlemskap() {}
 
     public LocalDate getOpphørsdato() {
         return opphørsdato;

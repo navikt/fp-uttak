@@ -1,12 +1,9 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-
 import org.junit.jupiter.api.Test;
-
 
 class PeriodeTest {
 
@@ -17,14 +14,12 @@ class PeriodeTest {
         assertThat(testPeriode.overlapper(LocalDate.of(2019, 1, 1))).isFalse();
     }
 
-
     @Test
     void periode_uten_start_og_slutt_skal_overlappe() {
         var testPeriode = new Periode(null, null);
 
         assertThat(testPeriode.overlapper(LocalDate.of(2017, 1, 1))).isTrue();
     }
-
 
     @Test
     void periode_med_start_og_slutt_skal_overlappe() {
@@ -53,8 +48,10 @@ class PeriodeTest {
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
 
-        assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(1), tom.plusDays(1)))).isTrue();
-        assertThat(periode.overlapper(new LukketPeriode(fom.plusDays(1), tom.minusDays(1)))).isTrue();
+        assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(1), tom.plusDays(1))))
+                .isTrue();
+        assertThat(periode.overlapper(new LukketPeriode(fom.plusDays(1), tom.minusDays(1))))
+                .isTrue();
         assertThat(periode.overlapper(periode)).isTrue();
     }
 
@@ -64,7 +61,8 @@ class PeriodeTest {
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
 
-        assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(1), tom.minusDays(1)))).isTrue();
+        assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(1), tom.minusDays(1))))
+                .isTrue();
         assertThat(periode.overlapper(new LukketPeriode(fom, fom))).isTrue();
         assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(1), fom))).isTrue();
     }
@@ -75,7 +73,8 @@ class PeriodeTest {
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
 
-        assertThat(periode.overlapper(new LukketPeriode(fom.plusDays(1), tom.plusDays(1)))).isTrue();
+        assertThat(periode.overlapper(new LukketPeriode(fom.plusDays(1), tom.plusDays(1))))
+                .isTrue();
         assertThat(periode.overlapper(new LukketPeriode(tom, tom))).isTrue();
         assertThat(periode.overlapper(new LukketPeriode(tom, tom.plusDays(1)))).isTrue();
     }
@@ -86,7 +85,8 @@ class PeriodeTest {
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
 
-        assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(10), fom.minusDays(1)))).isFalse();
+        assertThat(periode.overlapper(new LukketPeriode(fom.minusDays(10), fom.minusDays(1))))
+                .isFalse();
     }
 
     @Test
@@ -95,8 +95,7 @@ class PeriodeTest {
         var tom = fom.plusWeeks(2);
         var periode = new LukketPeriode(fom, tom);
 
-        assertThat(periode.overlapper(new LukketPeriode(tom.plusDays(1), tom.plusDays(5)))).isFalse();
+        assertThat(periode.overlapper(new LukketPeriode(tom.plusDays(1), tom.plusDays(5))))
+                .isFalse();
     }
-
-
 }

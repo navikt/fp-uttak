@@ -9,7 +9,8 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodenInnenforUkerReservertMor.ID)
-public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodenInnenforUkerReservertMor
+        extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.3";
 
@@ -23,15 +24,23 @@ public class SjekkOmPeriodenInnenforUkerReservertMor extends LeafSpecification<F
 
         var familiehendelse = grunnlag.getFamiliehendelse();
 
-        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtterFødsel =
+                Konfigurasjon.STANDARD.getParameter(
+                        Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
 
-        var periodeEtterFødselNormaltReservertMor = new LukketPeriode(familiehendelse, familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));
+        var periodeEtterFødselNormaltReservertMor =
+                new LukketPeriode(
+                        familiehendelse,
+                        familiehendelse.plusWeeks(antallUkerEtterFødsel).minusDays(1));
         if (periodeEtterFødselNormaltReservertMor.overlapper(aktuellPeriode)) {
             if (aktuellPeriode.erOmsluttetAv(periodeEtterFødselNormaltReservertMor)) {
                 return ja();
             }
             throw new IllegalArgumentException(
-                "Utvikler-feil: periode er ikke knekt riktig fom=" + aktuellPeriode.getFom() + " tom=" + aktuellPeriode.getTom());
+                    "Utvikler-feil: periode er ikke knekt riktig fom="
+                            + aktuellPeriode.getFom()
+                            + " tom="
+                            + aktuellPeriode.getTom());
         }
         return nei();
     }

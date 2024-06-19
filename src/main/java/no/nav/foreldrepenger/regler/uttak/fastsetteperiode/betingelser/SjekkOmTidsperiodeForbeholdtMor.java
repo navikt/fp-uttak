@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
@@ -28,17 +27,23 @@ public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<Fastsette
         var fomDatoForbeholdtMor = fomDatoForbeholdtMor(familiehendelse);
         var tomDatoForbeholdtMor = tomDatoForbeholdtMor(familiehendelse);
 
-        //Regner med at oppgitte perioder er knekk riktig
-        return periode.overlapper(new LukketPeriode(fomDatoForbeholdtMor, tomDatoForbeholdtMor)) ? ja() : nei();
+        // Regner med at oppgitte perioder er knekk riktig
+        return periode.overlapper(new LukketPeriode(fomDatoForbeholdtMor, tomDatoForbeholdtMor))
+                ? ja()
+                : nei();
     }
 
     private LocalDate fomDatoForbeholdtMor(LocalDate familiehendelse) {
-        var antallUkerFør = Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
+        var antallUkerFør =
+                Konfigurasjon.STANDARD.getParameter(
+                        Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
         return familiehendelse.minusWeeks(antallUkerFør);
     }
 
     private LocalDate tomDatoForbeholdtMor(LocalDate familiehendelse) {
-        var antallUkerEtter = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
+        var antallUkerEtter =
+                Konfigurasjon.STANDARD.getParameter(
+                        Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
         return familiehendelse.plusWeeks(antallUkerEtter).minusDays(1);
     }
 }

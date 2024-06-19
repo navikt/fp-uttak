@@ -8,7 +8,8 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmGyldigOverføringPgaSykdomSkade.ID)
-public class SjekkOmGyldigOverføringPgaSykdomSkade extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmGyldigOverføringPgaSykdomSkade
+        extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 9.3";
 
@@ -20,6 +21,9 @@ public class SjekkOmGyldigOverføringPgaSykdomSkade extends LeafSpecification<Fa
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
         return OverføringÅrsak.SYKDOM_ELLER_SKADE.equals(oppgittPeriode.getOverføringÅrsak())
-            && DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+                        && DokumentasjonVurdering.SYKDOM_ANNEN_FORELDER_GODKJENT.equals(
+                                oppgittPeriode.getDokumentasjonVurdering())
+                ? ja()
+                : nei();
     }
 }

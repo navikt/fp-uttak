@@ -19,8 +19,4 @@ public class SjekkOmPeriodeErUtsettelse extends LeafSpecification<FastsettePerio
         var oppgittPeriode = grunnlag.getAktuellPeriode();
         return oppgittPeriode.isUtsettelse() ? ja() : nei();
     }
-
 }
-
-
-

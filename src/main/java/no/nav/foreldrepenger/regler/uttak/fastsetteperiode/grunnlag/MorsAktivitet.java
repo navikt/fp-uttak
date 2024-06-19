@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 public enum MorsAktivitet {
-
     ARBEID,
     SYK,
     INNLAGT,

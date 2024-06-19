@@ -7,13 +7,11 @@ public final class Opptjening {
 
     private LocalDate skjæringstidspunkt;
 
-    private Opptjening() {
-    }
+    private Opptjening() {}
 
     public LocalDate getSkjæringstidspunkt() {
         return skjæringstidspunkt;
     }
-
 
     public static class Builder {
         private final Opptjening kladd = new Opptjening();

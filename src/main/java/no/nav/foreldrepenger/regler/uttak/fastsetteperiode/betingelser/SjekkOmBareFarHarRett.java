@@ -10,7 +10,6 @@ public class SjekkOmBareFarHarRett extends LeafSpecification<FastsettePeriodeGru
     public static final String ID = "FP_VK 18.3.2";
     public static final String BESKRIVELSE = "Er det bare far som har rett?";
 
-
     public SjekkOmBareFarHarRett() {
         super(ID);
     }

@@ -9,25 +9,30 @@ import java.util.stream.Collectors;
 
 public final class Arbeid {
 
-    private final Set<Arbeidsforhold> arbeidsforholdListe = new HashSet<>(); // Arbeidsforhold brukt i beregning, tilkommet dersom gradering eller refusjon
-    private final Set<EndringAvStilling> endringAvStillingListe = new HashSet<>(); // Tidslinje for sum stillingsprosent fra AAregister
+    private final Set<Arbeidsforhold> arbeidsforholdListe =
+            new HashSet<>(); // Arbeidsforhold brukt i beregning, tilkommet dersom gradering eller
+    // refusjon
+    private final Set<EndringAvStilling> endringAvStillingListe =
+            new HashSet<>(); // Tidslinje for sum stillingsprosent fra AAregister
 
-    private Arbeid() {
-    }
+    private Arbeid() {}
 
     public BigDecimal getStillingsprosent(LocalDate dato) {
         return endringAvStillingListe.stream()
-            .filter(eas -> !eas.dato().isAfter(dato))
-            .max(Comparator.comparing(EndringAvStilling::dato))
-            .map(EndringAvStilling::summertStillingsprosent)
-            .orElseGet(() -> BigDecimal.valueOf(100));
+                .filter(eas -> !eas.dato().isAfter(dato))
+                .max(Comparator.comparing(EndringAvStilling::dato))
+                .map(EndringAvStilling::summertStillingsprosent)
+                .orElseGet(() -> BigDecimal.valueOf(100));
     }
 
     /**
-     * ALLE aktiviteter, som regel burde aktivitene hentes fra {@link OppgittPeriode ()} mtp at alle perioder ikke har samme aktivieter
+     * ALLE aktiviteter, som regel burde aktivitene hentes fra {@link OppgittPeriode ()} mtp at alle
+     * perioder ikke har samme aktivieter
      */
     public Set<AktivitetIdentifikator> getAktiviteter() {
-        return arbeidsforholdListe.stream().map(Arbeidsforhold::identifikator).collect(Collectors.toSet());
+        return arbeidsforholdListe.stream()
+                .map(Arbeidsforhold::identifikator)
+                .collect(Collectors.toSet());
     }
 
     public Set<Arbeidsforhold> getArbeidsforhold() {

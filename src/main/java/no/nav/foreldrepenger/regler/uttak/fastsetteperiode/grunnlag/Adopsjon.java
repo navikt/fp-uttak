@@ -7,8 +7,7 @@ public final class Adopsjon {
     private LocalDate ankomstNorge;
     private boolean stebarnsadopsjon;
 
-    private Adopsjon() {
-    }
+    private Adopsjon() {}
 
     public LocalDate getAnkomstNorgeDato() {
         return ankomstNorge;

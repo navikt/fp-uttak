@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
@@ -13,9 +12,10 @@ class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning 
     private final BigDecimal graderingArbeidstidsprosent;
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
 
-    UtbetalingsgradSamtidigUttakUtregning(SamtidigUttaksprosent samtidigUttaksprosent,
-                                          BigDecimal graderingArbeidstidsprosent,
-                                          SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
+    UtbetalingsgradSamtidigUttakUtregning(
+            SamtidigUttaksprosent samtidigUttaksprosent,
+            BigDecimal graderingArbeidstidsprosent,
+            SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         Objects.requireNonNull(samtidigUttaksprosent);
         Objects.requireNonNull(annenpartSamtidigUttaksprosent);
         this.graderingArbeidstidsprosent = graderingArbeidstidsprosent;
@@ -26,10 +26,12 @@ class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning 
     @Override
     public Utbetalingsgrad resultat() {
         // Samtidiguttaksprosent med mindre gradering på noen aktiviteter i perioden
-        var lokalSamtidigUttaksprosent = Optional.ofNullable(graderingArbeidstidsprosent)
-            .map(SamtidigUttaksprosent.HUNDRED::subtract)
-            .orElse(samtidigUttaksprosent);
-        var maksSamtidigUttakUtFraAnnenpart = SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
+        var lokalSamtidigUttaksprosent =
+                Optional.ofNullable(graderingArbeidstidsprosent)
+                        .map(SamtidigUttaksprosent.HUNDRED::subtract)
+                        .orElse(samtidigUttaksprosent);
+        var maksSamtidigUttakUtFraAnnenpart =
+                SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
         // Reduser utbetaling dersom annenpart > 0 og det ligger an til mer enn 100 prosent
         if (lokalSamtidigUttaksprosent.subtract(maksSamtidigUttakUtFraAnnenpart).merEnn0()) {
             return new Utbetalingsgrad(maksSamtidigUttakUtFraAnnenpart.decimalValue());

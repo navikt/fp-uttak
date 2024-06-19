@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
@@ -33,10 +32,11 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     private final LukketPeriode farRundtFødselIntervall;
 
-    public FastsettePeriodeGrunnlagImpl(RegelGrunnlag regelGrunnlag,
-                                        LukketPeriode farRundtFødselIntervall,
-                                        SaldoUtregning saldoUtregning,
-                                        OppgittPeriode aktuellPeriode) {
+    public FastsettePeriodeGrunnlagImpl(
+            RegelGrunnlag regelGrunnlag,
+            LukketPeriode farRundtFødselIntervall,
+            SaldoUtregning saldoUtregning,
+            OppgittPeriode aktuellPeriode) {
         this.regelGrunnlag = regelGrunnlag;
         this.saldoUtregning = saldoUtregning;
         this.aktuellPeriode = aktuellPeriode;
@@ -55,12 +55,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<PleiepengerPeriode> getPleiepengerInnleggelse() {
-        return regelGrunnlag.getYtelser()
-            .pleiepenger()
-            .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
-            .orElse(List.of())
-            .stream()
-            .toList();
+        return regelGrunnlag
+                .getYtelser()
+                .pleiepenger()
+                .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
+                .orElse(List.of())
+                .stream()
+                .toList();
     }
 
     @Override
@@ -111,19 +112,28 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean isSakMedMinsterett() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.BARE_FAR_MINSTERETT)
-            && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT) > 0;
+                && regelGrunnlag
+                                .getKontoer()
+                                .getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT)
+                        > 0;
     }
 
     @Override
     public boolean isSakMedDagerUtenAktivitetskrav() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV)
-            && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV) > 0;
+                && regelGrunnlag
+                                .getKontoer()
+                                .getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV)
+                        > 0;
     }
 
     @Override
     public boolean isSakMedRettEtterStartNesteStønadsperiode() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER)
-            && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
+                && regelGrunnlag
+                                .getKontoer()
+                                .getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER)
+                        > 0;
     }
 
     @Override
@@ -133,12 +143,16 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder() {
-        return regelGrunnlag.getAnnenPart() != null ? regelGrunnlag.getAnnenPart().getUttaksperioder() : Collections.emptyList();
+        return regelGrunnlag.getAnnenPart() != null
+                ? regelGrunnlag.getAnnenPart().getUttaksperioder()
+                : Collections.emptyList();
     }
 
     @Override
     public LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt() {
-        return Optional.ofNullable(regelGrunnlag.getAnnenPart()).map(AnnenPart::getSisteSøknadMottattTidspunkt).orElse(null);
+        return Optional.ofNullable(regelGrunnlag.getAnnenPart())
+                .map(AnnenPart::getSisteSøknadMottattTidspunkt)
+                .orElse(null);
     }
 
     @Override
@@ -148,28 +162,39 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public LocalDate getOpphørsdatoForMedlemskap() {
-        return regelGrunnlag.getMedlemskap() == null ? null : regelGrunnlag.getMedlemskap().getOpphørsdato();
+        return regelGrunnlag.getMedlemskap() == null
+                ? null
+                : regelGrunnlag.getMedlemskap().getOpphørsdato();
     }
 
     @Override
     public LocalDate getDødsdatoForSøker() {
-        return regelGrunnlag.getDatoer().getDødsdatoer() == null ? null : regelGrunnlag.getDatoer().getDødsdatoer().getSøkersDødsdato();
+        return regelGrunnlag.getDatoer().getDødsdatoer() == null
+                ? null
+                : regelGrunnlag.getDatoer().getDødsdatoer().getSøkersDødsdato();
     }
 
     @Override
     public LocalDate getDødsdatoForBarn() {
-        return regelGrunnlag.getDatoer().getDødsdatoer() == null ? null : regelGrunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato();
+        return regelGrunnlag.getDatoer().getDødsdatoer() == null
+                ? null
+                : regelGrunnlag.getDatoer().getDødsdatoer().getBarnsDødsdato();
     }
 
     @Override
     public boolean erAlleBarnDøde() {
-        return regelGrunnlag.getDatoer().getDødsdatoer() != null && regelGrunnlag.getDatoer().getDødsdatoer().erAlleBarnDøde();
+        return regelGrunnlag.getDatoer().getDødsdatoer() != null
+                && regelGrunnlag.getDatoer().getDødsdatoer().erAlleBarnDøde();
     }
 
     @Override
     public boolean erAktuellPeriodeEtterStartNesteStønadsperiode() {
         var fom = aktuellPeriode.getFom();
-        return regelGrunnlag.getDatoer().getStartdatoNesteStønadsperiode().filter(d -> !fom.isBefore(d)).isPresent();
+        return regelGrunnlag
+                .getDatoer()
+                .getStartdatoNesteStønadsperiode()
+                .filter(d -> !fom.isBefore(d))
+                .isPresent();
     }
 
     @Override
@@ -204,7 +229,9 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public LocalDateTime getSisteSøknadMottattTidspunkt() {
-        return Optional.ofNullable(regelGrunnlag.getSøknad()).map(Søknad::getMottattTidspunkt).orElse(null);
+        return Optional.ofNullable(regelGrunnlag.getSøknad())
+                .map(Søknad::getMottattTidspunkt)
+                .orElse(null);
     }
 
     @Override

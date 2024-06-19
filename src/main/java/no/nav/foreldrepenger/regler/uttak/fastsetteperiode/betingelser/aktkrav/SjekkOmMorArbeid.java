@@ -21,7 +21,8 @@ public class SjekkOmMorArbeid extends LeafSpecification<FastsettePeriodeGrunnlag
         return sjekk(fastsettePeriodeGrunnlag, MorsAktivitet.ARBEID) ? ja() : nei();
     }
 
-    static boolean sjekk(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag, MorsAktivitet morsAktivitet) {
+    static boolean sjekk(
+            FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag, MorsAktivitet morsAktivitet) {
         var morsAktivitetIPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode().getMorsAktivitet();
         if (morsAktivitetIPeriode == null) {
             throw new IllegalStateException("Forventer mors aktivitet");

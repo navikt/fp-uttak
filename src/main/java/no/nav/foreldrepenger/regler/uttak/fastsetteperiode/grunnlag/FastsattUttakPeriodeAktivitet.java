@@ -7,7 +7,10 @@ public class FastsattUttakPeriodeAktivitet {
     private final Stønadskontotype stønadskontotype;
     private final AktivitetIdentifikator aktivitetIdentifikator;
 
-    public FastsattUttakPeriodeAktivitet(Trekkdager trekkdager, Stønadskontotype stønadskontotype, AktivitetIdentifikator aktivitetIdentifikator) {
+    public FastsattUttakPeriodeAktivitet(
+            Trekkdager trekkdager,
+            Stønadskontotype stønadskontotype,
+            AktivitetIdentifikator aktivitetIdentifikator) {
         this.trekkdager = trekkdager;
         this.stønadskontotype = stønadskontotype;
         this.aktivitetIdentifikator = aktivitetIdentifikator;

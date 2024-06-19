@@ -6,8 +6,7 @@ public final class Behandling {
     private boolean berørtBehandling;
     private boolean kreverSammenhengendeUttak;
 
-    private Behandling() {
-    }
+    private Behandling() {}
 
     public boolean isSøkerMor() {
         return søkerMor;
@@ -28,7 +27,6 @@ public final class Behandling {
     public static class Builder {
 
         private final Behandling kladd = new Behandling();
-
 
         public Builder søkerErMor(boolean søkerErMor) {
             kladd.søkerMor = søkerErMor;

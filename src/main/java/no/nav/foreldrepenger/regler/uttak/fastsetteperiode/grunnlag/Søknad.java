@@ -11,11 +11,12 @@ public final class Søknad {
     private Søknadstype type = Søknadstype.FØDSEL;
     private LocalDateTime mottattTidspunkt;
 
-    private Søknad() {
-    }
+    private Søknad() {}
 
     public List<OppgittPeriode> getOppgittePerioder() {
-        return oppgittePerioder.stream().sorted(Comparator.comparing(OppgittPeriode::getFom)).toList();
+        return oppgittePerioder.stream()
+                .sorted(Comparator.comparing(OppgittPeriode::getFom))
+                .toList();
     }
 
     public Søknadstype getType() {

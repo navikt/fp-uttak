@@ -9,8 +9,7 @@ public final class SøknadsfristUtil {
 
     private static final long SØKNADSFRIST_MÅNEDER = 3;
 
-    private SøknadsfristUtil() {
-    }
+    private SøknadsfristUtil() {}
 
     public static LocalDate finnFørsteLoveligeUttaksdag(LocalDate søknadMottattDato) {
         return søknadMottattDato.withDayOfMonth(1).minusMonths(SØKNADSFRIST_MÅNEDER);

@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 
 class Parameter extends Periode {

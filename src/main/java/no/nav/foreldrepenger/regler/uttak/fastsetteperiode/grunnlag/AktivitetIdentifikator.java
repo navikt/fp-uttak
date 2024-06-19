@@ -8,7 +8,10 @@ public class AktivitetIdentifikator {
     private final String arbeidsforholdId;
     private final ArbeidsgiverIdentifikator arbeidsgiverIdentifikator;
 
-    private AktivitetIdentifikator(AktivitetType aktivitetType, ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, String arbeidsforholdId) {
+    private AktivitetIdentifikator(
+            AktivitetType aktivitetType,
+            ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+            String arbeidsforholdId) {
         this.aktivitetType = aktivitetType;
         this.arbeidsforholdId = arbeidsforholdId;
         this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
@@ -18,8 +21,10 @@ public class AktivitetIdentifikator {
         this(aktivitetType, null, null);
     }
 
-    public static AktivitetIdentifikator forArbeid(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, String arbeidsforholdId) {
-        return new AktivitetIdentifikator(AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId);
+    public static AktivitetIdentifikator forArbeid(
+            ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, String arbeidsforholdId) {
+        return new AktivitetIdentifikator(
+                AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId);
     }
 
     public static AktivitetIdentifikator forSelvstendigNæringsdrivende() {
@@ -55,8 +60,9 @@ public class AktivitetIdentifikator {
             return false;
         }
         var that = (AktivitetIdentifikator) o;
-        return aktivitetType == that.aktivitetType && Objects.equals(arbeidsgiverIdentifikator, that.arbeidsgiverIdentifikator) && Objects.equals(
-            arbeidsforholdId, that.arbeidsforholdId);
+        return aktivitetType == that.aktivitetType
+                && Objects.equals(arbeidsgiverIdentifikator, that.arbeidsgiverIdentifikator)
+                && Objects.equals(arbeidsforholdId, that.arbeidsforholdId);
     }
 
     @Override
@@ -66,7 +72,14 @@ public class AktivitetIdentifikator {
 
     @Override
     public String toString() {
-        return "AktivitetIdentifikator{" + "aktivitetType=" + aktivitetType + ", arbeidsforholdId='" + arbeidsforholdId + '\''
-            + ", arbeidsgiverIdentifikator=" + arbeidsgiverIdentifikator + '}';
+        return "AktivitetIdentifikator{"
+                + "aktivitetType="
+                + aktivitetType
+                + ", arbeidsforholdId='"
+                + arbeidsforholdId
+                + '\''
+                + ", arbeidsgiverIdentifikator="
+                + arbeidsgiverIdentifikator
+                + '}';
     }
 }
