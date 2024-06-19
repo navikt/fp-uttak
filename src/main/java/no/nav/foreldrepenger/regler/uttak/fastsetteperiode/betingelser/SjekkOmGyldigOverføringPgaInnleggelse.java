@@ -8,8 +8,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmGyldigOverføringPgaInnleggelse.ID)
-public class SjekkOmGyldigOverføringPgaInnleggelse
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmGyldigOverføringPgaInnleggelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 9.1";
 

@@ -19,17 +19,11 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Tre dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                Arrays.asList(
-                        // !!! Skal finne et msp her (f.o.m. i dag t.o.m. i dag) !!!
-                        periode(
-                                start.plusDays(1),
-                                start.plusDays(
-                                        1)), // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
-                        periode(
-                                slutt,
-                                slutt) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
-                        );
+        List<LukketPeriode> perioder = Arrays.asList(
+                // !!! Skal finne et msp her (f.o.m. i dag t.o.m. i dag) !!!
+                periode(start.plusDays(1), start.plusDays(1)), // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
+                periode(slutt, slutt) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -39,8 +33,7 @@ class ManglendeSøktPeriodeUtilTest {
     }
 
     private OppgittPeriode periode(LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(
-                MØDREKVOTE, fom, tom, null, false, null, null, null, null);
+        return OppgittPeriode.forVanligPeriode(MØDREKVOTE, fom, tom, null, false, null, null, null, null);
     }
 
     @Test
@@ -50,15 +43,12 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Tre dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                Arrays.asList(
-                        periode(start, start),
-                        // En uttaksperiode f.o.m. i dag t.o.m. i dag
-                        // !!! Skal finne et msp her (f.o.m. i morgen t.o.m. i morgen) !!!
-                        periode(
-                                slutt,
-                                slutt) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
-                        );
+        List<LukketPeriode> perioder = Arrays.asList(
+                periode(start, start),
+                // En uttaksperiode f.o.m. i dag t.o.m. i dag
+                // !!! Skal finne et msp her (f.o.m. i morgen t.o.m. i morgen) !!!
+                periode(slutt, slutt) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -74,20 +64,15 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Fem dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                Arrays.asList(
-                        periode(start, start),
-                        // En uttaksperiode f.o.m. i dag t.o.m. i dag
-                        // !!! Skal finne et msp her (f.o.m. i morgen t.o.m. i morgen) !!!
-                        periode(
-                                start.plusDays(2),
-                                start.plusDays(2)), // En uttaksperiode f.o.m. overimorgen t.o.m.
-                        // overimorgen
-                        // !!! Skal finne et msp her (f.o.m. om tre dager t.o.m. om tre dager) !!!
-                        periode(
-                                slutt,
-                                slutt) // En uttaksperiode f.o.m. om fire dager t.o.m. om fire dager
-                        );
+        List<LukketPeriode> perioder = Arrays.asList(
+                periode(start, start),
+                // En uttaksperiode f.o.m. i dag t.o.m. i dag
+                // !!! Skal finne et msp her (f.o.m. i morgen t.o.m. i morgen) !!!
+                periode(start.plusDays(2), start.plusDays(2)), // En uttaksperiode f.o.m. overimorgen t.o.m.
+                // overimorgen
+                // !!! Skal finne et msp her (f.o.m. om tre dager t.o.m. om tre dager) !!!
+                periode(slutt, slutt) // En uttaksperiode f.o.m. om fire dager t.o.m. om fire dager
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -105,16 +90,12 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Tre dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                Arrays.asList(
-                        periode(start, start),
-                        // En uttaksperiode f.o.m. i dag t.o.m. i dag
-                        periode(
-                                start.plusDays(1),
-                                start.plusDays(
-                                        1)) // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
-                        // !!! Skal finne et msp her (f.o.m. overimorgen t.o.m. overimorgen) !!!
-                        );
+        List<LukketPeriode> perioder = Arrays.asList(
+                periode(start, start),
+                // En uttaksperiode f.o.m. i dag t.o.m. i dag
+                periode(start.plusDays(1), start.plusDays(1)) // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
+                // !!! Skal finne et msp her (f.o.m. overimorgen t.o.m. overimorgen) !!!
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -130,19 +111,13 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Tre dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                Arrays.asList(
-                        periode(start, start),
-                        // En uttaksperiode f.o.m. i dag t.o.m. i dag
-                        periode(
-                                start.plusDays(1),
-                                start.plusDays(
-                                        1)), // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
-                        periode(
-                                slutt,
-                                slutt) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
-                        /// !!! Skal ikke finne noen msp !!!
-                        );
+        List<LukketPeriode> perioder = Arrays.asList(
+                periode(start, start),
+                // En uttaksperiode f.o.m. i dag t.o.m. i dag
+                periode(start.plusDays(1), start.plusDays(1)), // En uttaksperiode f.o.m. i morgen t.o.m. i morgen
+                periode(slutt, slutt) // En uttaksperiode f.o.m. overimorgen t.o.m. overimorgen
+                /// !!! Skal ikke finne noen msp !!!
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -156,12 +131,11 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Tre dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                List.of(
-                        periode(start.minusDays(1), slutt.minusDays(1))
-                        // En uttaksperiode f.o.m. i går t.o.m. i morgen
-                        // !!! Skal finne et msp her (f.o.m. overimorgen t.o.m. overimorgen) !!!
-                        );
+        List<LukketPeriode> perioder = List.of(
+                periode(start.minusDays(1), slutt.minusDays(1))
+                // En uttaksperiode f.o.m. i går t.o.m. i morgen
+                // !!! Skal finne et msp her (f.o.m. overimorgen t.o.m. overimorgen) !!!
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -177,14 +151,10 @@ class ManglendeSøktPeriodeUtilTest {
 
         /* Tre dagers "period of interest" f.o.m. i dag */
         var poi = new LukketPeriode(start, slutt);
-        List<LukketPeriode> perioder =
-                List.of(
-                        // !!! Skal finne et msp her (f.o.m. i dag t.o.m. i dag) !!!
-                        periode(
-                                start.plusDays(1),
-                                slutt.plusDays(
-                                        1)) // En uttaksperiode f.o.m. i morgen t.o.m. om tre dager
-                        );
+        List<LukketPeriode> perioder = List.of(
+                // !!! Skal finne et msp her (f.o.m. i dag t.o.m. i dag) !!!
+                periode(start.plusDays(1), slutt.plusDays(1)) // En uttaksperiode f.o.m. i morgen t.o.m. om tre dager
+                );
 
         var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(perioder, poi);
 
@@ -199,9 +169,8 @@ class ManglendeSøktPeriodeUtilTest {
         var enDagPeriode = new LukketPeriode(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 1, 1));
         var etterPeriode = new LukketPeriode(LocalDate.of(2019, 1, 2), LocalDate.of(2019, 1, 10));
         var perioder = Arrays.asList(førPeriode, enDagPeriode, etterPeriode);
-        var msp =
-                ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(
-                        perioder, new LukketPeriode(førPeriode.getFom(), etterPeriode.getTom()));
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(
+                perioder, new LukketPeriode(førPeriode.getFom(), etterPeriode.getTom()));
 
         assertThat(msp).isEmpty();
     }
@@ -214,9 +183,8 @@ class ManglendeSøktPeriodeUtilTest {
         var periode4 = new LukketPeriode(LocalDate.of(2019, 1, 15), LocalDate.of(2019, 1, 20));
         var periode5 = new LukketPeriode(LocalDate.of(2019, 1, 25), LocalDate.of(2019, 1, 30));
         var perioder = Arrays.asList(periode1, periode2, periode3, periode4, periode5);
-        var msp =
-                ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(
-                        perioder, new LukketPeriode(periode1.getFom(), periode5.getTom()));
+        var msp = ManglendeSøktPeriodeUtil.finnManglendeSøktePerioder(
+                perioder, new LukketPeriode(periode1.getFom(), periode5.getTom()));
 
         assertThat(msp).hasSize(2);
         assertThat(msp.get(0).getFom()).isEqualTo(LocalDate.of(2019, 1, 11));

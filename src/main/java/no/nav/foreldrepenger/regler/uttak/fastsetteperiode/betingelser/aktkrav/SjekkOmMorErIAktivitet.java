@@ -19,9 +19,6 @@ public class SjekkOmMorErIAktivitet extends LeafSpecification<FastsettePeriodeGr
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return MORS_AKTIVITET_GODKJENT.equals(
-                        grunnlag.getAktuellPeriode().getDokumentasjonVurdering())
-                ? ja()
-                : nei();
+        return MORS_AKTIVITET_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

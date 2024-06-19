@@ -4,8 +4,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunn
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-public class SjekkOmForeldreansvarsvilkåretErOppfylt
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmForeldreansvarsvilkåretErOppfylt extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 8";
 

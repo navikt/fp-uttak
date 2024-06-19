@@ -60,35 +60,21 @@ final class ForbruksTeller {
         // forekomster.
         if (startindex > 0) {
             var perioderTomPeriode = søkersPerioder.subList(0, startindex);
-            var minForbrukteDagerEksisterendeAktiviteter =
-                    aktiviteterIPerioder(perioderTomPeriode).stream()
-                            .filter(
-                                    a ->
-                                            førstePeriodeSomTellesMedAktivitet(
-                                                            a, perioderTomPeriode, tellPeriode)
-                                                    < startindex) // Tell aktiviteter begynner
-                            // tidligere
-                            .map(
-                                    a ->
-                                            forbruksTeller(
-                                                    stønadskonto,
-                                                    a,
-                                                    perioderTomPeriode,
-                                                    tellPeriode,
-                                                    unntaksTeller,
-                                                    aktivitetsfilter))
-                            .min(Trekkdager::compareTo)
-                            .orElse(Trekkdager.ZERO);
+            var minForbrukteDagerEksisterendeAktiviteter = aktiviteterIPerioder(perioderTomPeriode).stream()
+                    .filter(a -> førstePeriodeSomTellesMedAktivitet(a, perioderTomPeriode, tellPeriode)
+                            < startindex) // Tell aktiviteter begynner
+                    // tidligere
+                    .map(a -> forbruksTeller(
+                            stønadskonto, a, perioderTomPeriode, tellPeriode, unntaksTeller, aktivitetsfilter))
+                    .min(Trekkdager::compareTo)
+                    .orElse(Trekkdager.ZERO);
             sum = sum.add(minForbrukteDagerEksisterendeAktiviteter);
         }
 
         for (var i = startindex; i < søkersPerioder.size(); i++) {
             var periodeSøker = søkersPerioder.get(i);
             if (tellPeriode.test(periodeSøker)) {
-                sum =
-                        sum.add(
-                                trekkdagerForUttaksperiode(
-                                        aktivitet, periodeSøker, aktivitetsfilter));
+                sum = sum.add(trekkdagerForUttaksperiode(aktivitet, periodeSøker, aktivitetsfilter));
             } else {
                 sum = sum.add(unntaksTeller.apply(stønadskonto, periodeSøker));
             }

@@ -20,8 +20,7 @@ public class UttakOutcome implements RuleReasonRef {
         return new UttakOutcome(UtfallType.INNVILGET).medPeriodeResultatÅrsak(årsak);
     }
 
-    public static UttakOutcome manuell(
-            PeriodeResultatÅrsak årsak, Manuellbehandlingårsak manuellårsak) {
+    public static UttakOutcome manuell(PeriodeResultatÅrsak årsak, Manuellbehandlingårsak manuellårsak) {
         return new UttakOutcome(UtfallType.MANUELL_BEHANDLING)
                 .medPeriodeResultatÅrsak(årsak)
                 .medManuellBehandlingårsak(manuellårsak);
@@ -65,8 +64,7 @@ public class UttakOutcome implements RuleReasonRef {
         return this;
     }
 
-    public UttakOutcome medGraderingIkkeInnvilgetÅrsak(
-            GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
+    public UttakOutcome medGraderingIkkeInnvilgetÅrsak(GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         this.graderingIkkeInnvilgetÅrsak = graderingIkkeInnvilgetÅrsak;
         return this;
     }

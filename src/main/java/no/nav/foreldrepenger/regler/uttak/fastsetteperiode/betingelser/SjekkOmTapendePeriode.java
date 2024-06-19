@@ -10,8 +10,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmTapendePeriode extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 30.0.7";
-    public static final String BESKRIVELSE =
-            "Har annen part senere søkt om uttak/utsettelse i samme tidsperiode?";
+    public static final String BESKRIVELSE = "Har annen part senere søkt om uttak/utsettelse i samme tidsperiode?";
 
     public SjekkOmTapendePeriode() {
         super(ID);

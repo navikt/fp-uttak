@@ -12,8 +12,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmMorIntroduksjonsprogram extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "AVSLAG_AKT_3";
-    public static final String BESKRIVELSE =
-            "Har søker oppgitt at mor er deltaker i introduksjonsprogrammet?";
+    public static final String BESKRIVELSE = "Har søker oppgitt at mor er deltaker i introduksjonsprogrammet?";
 
     public SjekkOmMorIntroduksjonsprogram() {
         super(ID);

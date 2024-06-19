@@ -20,31 +20,28 @@ class UtbetalingsgradMedGraderingUtregningTest {
         var aktivitet2 = AktivitetIdentifikator.forFrilans();
         var arbeidstidsprosent = BigDecimal.valueOf(20);
 
-        var periode =
-                OppgittPeriode.forGradering(
-                        Stønadskontotype.FEDREKVOTE,
-                        LocalDate.now(),
-                        LocalDate.now().plusWeeks(1),
-                        arbeidstidsprosent,
-                        null,
-                        false,
-                        Set.of(aktivitet1),
-                        null,
-                        null,
-                        null,
-                        null);
+        var periode = OppgittPeriode.forGradering(
+                Stønadskontotype.FEDREKVOTE,
+                LocalDate.now(),
+                LocalDate.now().plusWeeks(1),
+                arbeidstidsprosent,
+                null,
+                false,
+                Set.of(aktivitet1),
+                null,
+                null,
+                null,
+                null);
 
         var utregningForAktivitet1 = utregning(aktivitet1, periode);
         var utregningForAktivitet2 = utregning(aktivitet2, periode);
 
-        assertThat(utregningForAktivitet1.resultat())
-                .isEqualTo(Utbetalingsgrad.FULL.subtract(arbeidstidsprosent));
+        assertThat(utregningForAktivitet1.resultat()).isEqualTo(Utbetalingsgrad.FULL.subtract(arbeidstidsprosent));
         assertThat(utregningForAktivitet2.resultat()).isEqualTo(Utbetalingsgrad.FULL);
     }
 
     private UtbetalingsgradMedGraderingUtregning utregning(
             AktivitetIdentifikator aktivitetIdentifikator, OppgittPeriode periode) {
-        return new UtbetalingsgradMedGraderingUtregning(
-                periode, aktivitetIdentifikator, SamtidigUttaksprosent.ZERO);
+        return new UtbetalingsgradMedGraderingUtregning(periode, aktivitetIdentifikator, SamtidigUttaksprosent.ZERO);
     }
 }

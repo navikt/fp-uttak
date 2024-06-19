@@ -90,10 +90,11 @@ public class BevegeligeHelligdagerUtil {
         return LocalDate.of(år, n, p + 1);
     }
 
-    private static List<Integer> utledÅreneDetSkalFinnesHelligdagerFor(
-            LukketPeriode uttaksperiode) {
+    private static List<Integer> utledÅreneDetSkalFinnesHelligdagerFor(LukketPeriode uttaksperiode) {
         List<Integer> årene = new ArrayList<>();
-        for (var i = uttaksperiode.getFom().getYear(); i <= uttaksperiode.getTom().getYear(); i++) {
+        for (var i = uttaksperiode.getFom().getYear();
+                i <= uttaksperiode.getTom().getYear();
+                i++) {
             årene.add(i);
         }
         return årene;

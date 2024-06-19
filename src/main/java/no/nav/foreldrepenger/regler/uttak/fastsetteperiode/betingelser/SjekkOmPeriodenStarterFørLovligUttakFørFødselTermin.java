@@ -12,12 +12,10 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID)
-public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 27.2";
-    public static final String BESKRIVELSE =
-            "Starter uttaket tidligere enn 12 uker før fødsel/termin";
+    public static final String BESKRIVELSE = "Starter uttaket tidligere enn 12 uker før fødsel/termin";
 
     public SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin() {
         super(ID);
@@ -29,8 +27,7 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
         var ukerFørFamiliehendelseUttaksgrense =
-                Konfigurasjon.STANDARD.getParameter(
-                        Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, hendelseDato);
+                Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, hendelseDato);
         if (startDatoUttak.isBefore(hendelseDato.minusWeeks(ukerFørFamiliehendelseUttaksgrense))) {
             return ja();
         }
@@ -40,8 +37,7 @@ public class SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin
     private LocalDate hendelseDato(FastsettePeriodeGrunnlag grunnlag) {
         var søknadType = grunnlag.getSøknadstype();
         if (søknadType != TERMIN && søknadType != FØDSEL) {
-            throw new IllegalArgumentException(
-                    "Forventer Søknadstype termin eller fødsel, fikk " + søknadType);
+            throw new IllegalArgumentException("Forventer Søknadstype termin eller fødsel, fikk " + søknadType);
         }
         return søknadType == TERMIN
                 ? grunnlag.getTermindato() // søknadsfrist regnes fra termindato ved terminsøknad

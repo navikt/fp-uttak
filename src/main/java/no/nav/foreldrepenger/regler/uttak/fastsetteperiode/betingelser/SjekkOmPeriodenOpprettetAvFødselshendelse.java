@@ -13,12 +13,10 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodenOpprettetAvFødselshendelse.ID)
-public class SjekkOmPeriodenOpprettetAvFødselshendelse
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.4";
-    public static final String BESKRIVELSE =
-            "Er perioden opprettet pga justering ved fødselshendelse?";
+    public static final String BESKRIVELSE = "Er perioden opprettet pga justering ved fødselshendelse?";
 
     public SjekkOmPeriodenOpprettetAvFødselshendelse() {
         super(ID);
@@ -44,14 +42,12 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse
         }
 
         var antallUkerEtterFødsel =
-                Konfigurasjon.STANDARD.getParameter(
-                        Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
+                Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
 
         // Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i
         // perioden. Burde være veldig få saker
-        if (erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(
-                fødselsdato, antallUkerEtterFødsel, aktuellPeriode)) {
+        if (erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(fødselsdato, antallUkerEtterFødsel, aktuellPeriode)) {
             return ja();
         }
         return nei();
@@ -66,6 +62,7 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse
             LocalDate fødselsdato, Integer antallUkerEtterFødsel, OppgittPeriode aktuellPeriode) {
         return aktuellPeriode
                 .getTom()
-                .isEqual(helgBlirFredag(fødselsdato.plusWeeks(antallUkerEtterFødsel).minusDays(1)));
+                .isEqual(helgBlirFredag(
+                        fødselsdato.plusWeeks(antallUkerEtterFødsel).minusDays(1)));
     }
 }

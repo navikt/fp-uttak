@@ -12,18 +12,15 @@ public class UttakParametre {
 
     /** Grenser for mors uttak og periode forbeholdt mor */
     public static int ukerFørTerminTidligstUttak(LocalDate dato) {
-        return Konfigurasjon.STANDARD.getParameter(
-                Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, dato);
+        return Konfigurasjon.STANDARD.getParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, dato);
     }
 
     public static int ukerFørTerminSenestUttak(LocalDate dato) {
-        return Konfigurasjon.STANDARD.getParameter(
-                Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, dato);
+        return Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, dato);
     }
 
     public static int ukerReservertMorEtterFødsel(LocalDate dato) {
-        return Konfigurasjon.STANDARD.getParameter(
-                Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, dato);
+        return Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, dato);
     }
 
     /** Grenser for fars/medmors uttak i forbindelse med fødsel. */

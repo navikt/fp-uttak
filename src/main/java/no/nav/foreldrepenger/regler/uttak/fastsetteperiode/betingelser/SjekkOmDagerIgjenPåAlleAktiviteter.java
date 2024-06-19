@@ -9,8 +9,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmDagerIgjenPåAlleAktiviteter.ID)
-public class SjekkOmDagerIgjenPåAlleAktiviteter
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmDagerIgjenPåAlleAktiviteter extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.5.3";
     public static final String BESKRIVELSE =
@@ -30,8 +29,7 @@ public class SjekkOmDagerIgjenPåAlleAktiviteter
         return nei();
     }
 
-    private boolean dagerIgjenPåKonto(
-            FastsettePeriodeGrunnlag grunnlag, Stønadskontotype stønadskontotype) {
+    private boolean dagerIgjenPåKonto(FastsettePeriodeGrunnlag grunnlag, Stønadskontotype stønadskontotype) {
         for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
             var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (!saldo.merEnn0()) {

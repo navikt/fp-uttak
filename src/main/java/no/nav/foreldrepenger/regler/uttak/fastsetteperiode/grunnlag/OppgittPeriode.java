@@ -57,23 +57,22 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public OppgittPeriode kopiMedNyPeriode(LocalDate nyFom, LocalDate nyTom) {
-        var kopi =
-                new OppgittPeriode(
-                        stønadskontotype,
-                        nyFom,
-                        nyTom,
-                        manglendeSøktPeriode,
-                        arbeidsprosent,
-                        gradertAktiviteter,
-                        overføringÅrsak,
-                        samtidigUttaksprosent,
-                        flerbarnsdager,
-                        utsettelseÅrsak,
-                        oppholdÅrsak,
-                        senestMottattDato,
-                        tidligstMottattDato,
-                        morsAktivitet,
-                        dokumentasjonVurdering);
+        var kopi = new OppgittPeriode(
+                stønadskontotype,
+                nyFom,
+                nyTom,
+                manglendeSøktPeriode,
+                arbeidsprosent,
+                gradertAktiviteter,
+                overføringÅrsak,
+                samtidigUttaksprosent,
+                flerbarnsdager,
+                utsettelseÅrsak,
+                oppholdÅrsak,
+                senestMottattDato,
+                tidligstMottattDato,
+                morsAktivitet,
+                dokumentasjonVurdering);
         kopi.aktiviteter = aktiviteter;
         return kopi;
     }
@@ -186,11 +185,9 @@ public final class OppgittPeriode extends LukketPeriode {
         return dokumentasjonVurdering;
     }
 
-    public static OppgittPeriode forManglendeSøkt(
-            Stønadskontotype type, LocalDate fom, LocalDate tom) {
+    public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
         return new OppgittPeriode(
-                type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null,
-                null, null);
+                type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null, null, null);
     }
 
     public static OppgittPeriode forUtsettelse(

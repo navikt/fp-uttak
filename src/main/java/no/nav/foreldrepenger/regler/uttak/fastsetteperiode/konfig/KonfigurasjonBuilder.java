@@ -18,8 +18,7 @@ class KonfigurasjonBuilder {
         return new KonfigurasjonBuilder();
     }
 
-    KonfigurasjonBuilder leggTilParameter(
-            Parametertype parametertype, LocalDate fom, LocalDate tom, Integer verdi) {
+    KonfigurasjonBuilder leggTilParameter(Parametertype parametertype, LocalDate fom, LocalDate tom, Integer verdi) {
         var nyParameter = new Parameter(fom, tom, verdi);
         var parameterListe = parameterMap.get(parametertype);
         if (parameterListe == null) {
@@ -29,8 +28,7 @@ class KonfigurasjonBuilder {
         } else {
             var overlapp = parameterListe.stream().anyMatch(nyParameter::overlapper);
             if (overlapp) {
-                throw new IllegalArgumentException(
-                        "Overlappende perioder kan ikke eksistere i konfigurasjon.");
+                throw new IllegalArgumentException("Overlappende perioder kan ikke eksistere i konfigurasjon.");
             }
             parameterListe.add(nyParameter);
         }

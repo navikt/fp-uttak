@@ -22,10 +22,7 @@ public class SjekkOmPeriodenErFørGyldigDato extends LeafSpecification<Fastsette
         if (tidligstMottattDato.isEmpty()) {
             return nei();
         }
-        if (oppgittPeriode
-                .getTom()
-                .isBefore(
-                        SøknadsfristUtil.finnFørsteLoveligeUttaksdag(tidligstMottattDato.get()))) {
+        if (oppgittPeriode.getTom().isBefore(SøknadsfristUtil.finnFørsteLoveligeUttaksdag(tidligstMottattDato.get()))) {
             return ja();
         }
         return nei();

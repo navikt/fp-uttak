@@ -18,8 +18,6 @@ public class SjekkOmOverføringPgaAleneomsorg extends LeafSpecification<Fastsett
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return OverføringÅrsak.ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak())
-                ? ja()
-                : nei();
+        return OverføringÅrsak.ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak()) ? ja() : nei();
     }
 }

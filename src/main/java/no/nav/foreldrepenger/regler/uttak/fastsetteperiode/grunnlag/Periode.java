@@ -10,8 +10,7 @@ public class Periode {
 
     public Periode(LocalDate fom, LocalDate tom) {
         if (fom != null && tom != null && tom.isBefore(fom)) {
-            throw new IllegalArgumentException(
-                    "Til og med dato før fra og med dato: " + fom + ">" + tom);
+            throw new IllegalArgumentException("Til og med dato før fra og med dato: " + fom + ">" + tom);
         }
         this.fom = fom == null ? LocalDate.MIN : fom;
         this.tom = tom == null ? LocalDate.MAX : tom;
@@ -30,9 +29,7 @@ public class Periode {
     }
 
     public boolean overlapper(Periode periode) {
-        return overlapper(periode.getFom())
-                || overlapper(periode.getTom())
-                || erOmsluttetAv(periode);
+        return overlapper(periode.getFom()) || overlapper(periode.getTom()) || erOmsluttetAv(periode);
     }
 
     // Også true hvis perioden er lik
@@ -41,8 +38,7 @@ public class Periode {
     }
 
     public boolean erLik(Periode periode) {
-        return Objects.equals(getFom(), periode.getFom())
-                && Objects.equals(getTom(), periode.getTom());
+        return Objects.equals(getFom(), periode.getFom()) && Objects.equals(getTom(), periode.getTom());
     }
 
     @Override

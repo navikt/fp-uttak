@@ -60,8 +60,7 @@ class SaldoUtregningFlerbarnsdager {
         return Optional.ofNullable(flerbarnsdager).orElse(Trekkdager.ZERO);
     }
 
-    private Trekkdager forbruktSøker(
-            AktivitetIdentifikator aktivitet, List<FastsattUttakPeriode> søkersPerioder) {
+    private Trekkdager forbruktSøker(AktivitetIdentifikator aktivitet, List<FastsattUttakPeriode> søkersPerioder) {
 
         var perioderMedFlerbarnsdager =
                 søkersPerioder.stream().filter(this::trekkFlerbarnsdager).toList();
@@ -98,8 +97,7 @@ class SaldoUtregningFlerbarnsdager {
     }
 
     private boolean trekkFlerbarnsdager(FastsattUttakPeriode periode) {
-        return periode.isFlerbarnsdager()
-                && (periode.isForbrukMinsterett() || minsterettDager.equals(Trekkdager.ZERO));
+        return periode.isFlerbarnsdager() && (periode.isForbrukMinsterett() || minsterettDager.equals(Trekkdager.ZERO));
     }
 
     private Trekkdager minForbrukteDager(FastsattUttakPeriode periode) {
@@ -116,10 +114,9 @@ class SaldoUtregningFlerbarnsdager {
         Trekkdager sum = Trekkdager.ZERO;
         for (var periode : søkersPerioder) {
             if (trekkFlerbarnsdager(periode)) {
-                var overlappendePerioderMedFlerbarnsdager =
-                        overlappendePeriode(periode, annenpartsPerioder).stream()
-                                .filter(this::trekkFlerbarnsdager)
-                                .toList();
+                var overlappendePerioderMedFlerbarnsdager = overlappendePeriode(periode, annenpartsPerioder).stream()
+                        .filter(this::trekkFlerbarnsdager)
+                        .toList();
                 for (var overlappendePeriode : overlappendePerioderMedFlerbarnsdager) {
                     if (innvilgetMedTrekkdager(periode)) {
                         sum = sum.add(frigitteDager(periode, overlappendePeriode));
@@ -130,33 +127,23 @@ class SaldoUtregningFlerbarnsdager {
         return sum;
     }
 
-    private Trekkdager dagerForUttaksperiode(
-            AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
+    private Trekkdager dagerForUttaksperiode(AktivitetIdentifikator aktivitet, FastsattUttakPeriode periode) {
         return periode.getAktiviteter().stream()
-                .filter(
-                        a ->
-                                a.getAktivitetIdentifikator().equals(aktivitet)
-                                        && trekkFlerbarnsdager(periode))
+                .filter(a -> a.getAktivitetIdentifikator().equals(aktivitet) && trekkFlerbarnsdager(periode))
                 .map(FastsattUttakPeriodeAktivitet::getTrekkdager)
                 .findFirst()
                 .orElse(Trekkdager.ZERO);
     }
 
-    private Trekkdager frigitteDager(
-            FastsattUttakPeriode periode, FastsattUttakPeriode overlappende) {
+    private Trekkdager frigitteDager(FastsattUttakPeriode periode, FastsattUttakPeriode overlappende) {
         var flerbarnsdagerOverlappendePeriode = minForbrukteDager(overlappende);
         var flerbarnsdagerPeriode = minForbrukteDager(periode);
         // Forenkling: Mulig vi trenger utvidelse her, kan bli feil hvis begge graderer
         // flerbarnsdager
-        var min =
-                flerbarnsdagerPeriode.compareTo(flerbarnsdagerOverlappendePeriode) > 0
-                        ? flerbarnsdagerPeriode
-                        : flerbarnsdagerOverlappendePeriode;
+        var min = flerbarnsdagerPeriode.compareTo(flerbarnsdagerOverlappendePeriode) > 0
+                ? flerbarnsdagerPeriode
+                : flerbarnsdagerOverlappendePeriode;
         return trekkDagerFraDelAvPeriode(
-                periode.getFom(),
-                periode.getTom(),
-                overlappende.getFom(),
-                overlappende.getTom(),
-                min);
+                periode.getFom(), periode.getTom(), overlappende.getFom(), overlappende.getTom(), min);
     }
 }

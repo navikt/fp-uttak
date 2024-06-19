@@ -6,12 +6,10 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.ID)
-public class SjekkOmEtterNesteStønadsperiodeHarDisponibleDager
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmEtterNesteStønadsperiodeHarDisponibleDager extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.5.7";
-    public static final String BESKRIVELSE =
-            "Er det disponible minsterettdager etter start av neste stønadsperiode?";
+    public static final String BESKRIVELSE = "Er det disponible minsterettdager etter start av neste stønadsperiode?";
 
     public SjekkOmEtterNesteStønadsperiodeHarDisponibleDager() {
         super(ID);
@@ -30,8 +28,7 @@ public class SjekkOmEtterNesteStønadsperiodeHarDisponibleDager
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldoUtregning = grunnlag.getSaldoUtregning();
                 if (saldoUtregning
-                        .saldoITrekkdager(
-                                grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet)
+                        .saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet)
                         .merEnn0()) {
                     var saldo = saldoUtregning.restSaldoEtterNesteStønadsperiode(aktivitet);
                     if (saldo.merEnn0()) {

@@ -28,22 +28,18 @@ public class SjekkOmTidsperiodeForbeholdtMor extends LeafSpecification<Fastsette
         var tomDatoForbeholdtMor = tomDatoForbeholdtMor(familiehendelse);
 
         // Regner med at oppgitte perioder er knekk riktig
-        return periode.overlapper(new LukketPeriode(fomDatoForbeholdtMor, tomDatoForbeholdtMor))
-                ? ja()
-                : nei();
+        return periode.overlapper(new LukketPeriode(fomDatoForbeholdtMor, tomDatoForbeholdtMor)) ? ja() : nei();
     }
 
     private LocalDate fomDatoForbeholdtMor(LocalDate familiehendelse) {
         var antallUkerFør =
-                Konfigurasjon.STANDARD.getParameter(
-                        Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
+                Konfigurasjon.STANDARD.getParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, familiehendelse);
         return familiehendelse.minusWeeks(antallUkerFør);
     }
 
     private LocalDate tomDatoForbeholdtMor(LocalDate familiehendelse) {
         var antallUkerEtter =
-                Konfigurasjon.STANDARD.getParameter(
-                        Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
+                Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, familiehendelse);
         return familiehendelse.plusWeeks(antallUkerEtter).minusDays(1);
     }
 }

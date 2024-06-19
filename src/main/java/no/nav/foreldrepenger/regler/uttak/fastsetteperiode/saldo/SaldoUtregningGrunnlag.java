@@ -25,10 +25,8 @@ public class SaldoUtregningGrunnlag {
     private final boolean berørtBehandling;
     private final List<AnnenpartUttakPeriode> annenpartsPerioder;
     private final List<LukketPeriode> søktePerioder;
-    private final Map<Stønadskontotype, Trekkdager> stønadskonti =
-            new EnumMap<>(Stønadskontotype.class);
-    private final Map<Spesialkontotype, Trekkdager> spesialkonti =
-            new EnumMap<>(Spesialkontotype.class);
+    private final Map<Stønadskontotype, Trekkdager> stønadskonti = new EnumMap<>(Stønadskontotype.class);
+    private final Map<Spesialkontotype, Trekkdager> spesialkonti = new EnumMap<>(Spesialkontotype.class);
     private final Set<AktivitetIdentifikator> aktiviteter;
     private final LocalDateTime sisteSøknadMottattTidspunktSøker;
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
@@ -55,15 +53,9 @@ public class SaldoUtregningGrunnlag {
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
         this.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
         kontoer.getStønadskontotyper()
-                .forEach(
-                        k ->
-                                this.stønadskonti.put(
-                                        k, new Trekkdager(kontoer.getStønadskontoTrekkdager(k))));
+                .forEach(k -> this.stønadskonti.put(k, new Trekkdager(kontoer.getStønadskontoTrekkdager(k))));
         kontoer.getSpesialkontotyper()
-                .forEach(
-                        k ->
-                                this.spesialkonti.put(
-                                        k, new Trekkdager(kontoer.getSpesialkontoTrekkdager(k))));
+                .forEach(k -> this.spesialkonti.put(k, new Trekkdager(kontoer.getSpesialkontoTrekkdager(k))));
     }
 
     // Brukes av fpsak til utregning av alt
@@ -75,11 +67,10 @@ public class SaldoUtregningGrunnlag {
             LocalDateTime sisteSøknadMottattTidspunktSøker,
             LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
             boolean kreverSammenhengendeUttak) {
-        var aktiviteter =
-                søkersFastsattePerioder.stream()
-                        .flatMap(p -> p.getAktiviteter().stream())
-                        .map(a -> a.getAktivitetIdentifikator())
-                        .collect(Collectors.toSet());
+        var aktiviteter = søkersFastsattePerioder.stream()
+                .flatMap(p -> p.getAktiviteter().stream())
+                .map(a -> a.getAktivitetIdentifikator())
+                .collect(Collectors.toSet());
         return new SaldoUtregningGrunnlag(
                 søkersFastsattePerioder,
                 LocalDate.MAX,
@@ -100,10 +91,9 @@ public class SaldoUtregningGrunnlag {
             List<AnnenpartUttakPeriode> annenpartsPerioder,
             RegelGrunnlag grunnlag,
             LocalDate utregningsdato) {
-        var sisteSøknadMottattTidspunktAnnenpart =
-                Optional.ofNullable(grunnlag.getAnnenPart())
-                        .map(AnnenPart::getSisteSøknadMottattTidspunkt)
-                        .orElse(null);
+        var sisteSøknadMottattTidspunktAnnenpart = Optional.ofNullable(grunnlag.getAnnenPart())
+                .map(AnnenPart::getSisteSøknadMottattTidspunkt)
+                .orElse(null);
         return new SaldoUtregningGrunnlag(
                 søkersFastsattePerioder,
                 utregningsdato,

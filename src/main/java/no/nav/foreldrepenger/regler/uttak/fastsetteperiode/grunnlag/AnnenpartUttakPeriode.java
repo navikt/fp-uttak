@@ -51,9 +51,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     }
 
     public AnnenpartUttakPeriode kopiMedNyPeriode(
-            LocalDate fom,
-            LocalDate tom,
-            List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+            LocalDate fom, LocalDate tom, List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
         return Builder.uttak(fom, tom)
                 .samtidigUttak(this.samtidigUttak)
                 .flerbarnsdager(this.flerbarnsdager)
@@ -131,14 +129,12 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             kladd.innvilget = true;
         }
 
-        public Builder uttakPeriodeAktivitet(
-                AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
+        public Builder uttakPeriodeAktivitet(AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
             kladd.aktiviteter.add(annenpartUttakPeriodeAktivitet);
             return this;
         }
 
-        public Builder uttakPeriodeAktiviteter(
-                List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
+        public Builder uttakPeriodeAktiviteter(List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {
             kladd.aktiviteter.addAll(annenpartUttakPeriodeAktiviteter);
             return this;
         }

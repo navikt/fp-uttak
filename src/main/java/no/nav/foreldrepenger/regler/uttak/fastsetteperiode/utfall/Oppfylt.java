@@ -14,8 +14,7 @@ public class Oppfylt {
      * @param utbetal skal det utbetales for denne perioden.
      * @return periode utfall.
      */
-    public static FastsettePeriodeUtfall opprett(
-            String id, InnvilgetÅrsak innvilgetÅrsak, boolean utbetal) {
+    public static FastsettePeriodeUtfall opprett(String id, InnvilgetÅrsak innvilgetÅrsak, boolean utbetal) {
         return opprett(id, innvilgetÅrsak, true, utbetal);
     }
 
@@ -58,8 +57,7 @@ public class Oppfylt {
      * @param id sluttnode id.
      * @return periode utfall.
      */
-    public static FastsettePeriodeUtfall opprettForOppholds(
-            String id, boolean trekkDagerFraSaldo, boolean utbetal) {
+    public static FastsettePeriodeUtfall opprettForOppholds(String id, boolean trekkDagerFraSaldo, boolean utbetal) {
         return FastsettePeriodeUtfall.builder()
                 .oppfylt(null)
                 .utbetal(utbetal)

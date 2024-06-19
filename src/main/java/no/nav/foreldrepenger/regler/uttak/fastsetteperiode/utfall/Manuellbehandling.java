@@ -14,13 +14,7 @@ public class Manuellbehandling {
             Manuellbehandlingårsak manuellbehandlingårsak,
             boolean trekkDagerFraSaldo,
             boolean utbetal) {
-        return opprett(
-                id,
-                periodeResultatÅrsak,
-                manuellbehandlingårsak,
-                trekkDagerFraSaldo,
-                utbetal,
-                Optional.empty());
+        return opprett(id, periodeResultatÅrsak, manuellbehandlingårsak, trekkDagerFraSaldo, utbetal, Optional.empty());
     }
 
     public static FastsettePeriodeUtfall opprett(
@@ -30,12 +24,11 @@ public class Manuellbehandling {
             boolean trekkDagerFraSaldo,
             boolean utbetal,
             Optional<GraderingIkkeInnvilgetÅrsak> graderingIkkeInnvilgetÅrsak) {
-        var builder =
-                FastsettePeriodeUtfall.builder()
-                        .manuellBehandling(periodeResultatÅrsak, manuellbehandlingårsak)
-                        .utbetal(utbetal)
-                        .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
-                        .medId(id);
+        var builder = FastsettePeriodeUtfall.builder()
+                .manuellBehandling(periodeResultatÅrsak, manuellbehandlingårsak)
+                .utbetal(utbetal)
+                .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
+                .medId(id);
         graderingIkkeInnvilgetÅrsak.ifPresent(builder::medAvslåttGradering);
         return builder.create();
     }

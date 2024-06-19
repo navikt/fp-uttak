@@ -19,8 +19,7 @@ public class SjekkOmAkseptertSamtidigUttak extends LeafSpecification<FastsettePe
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         // Inntil 200% samtidig uttak ved flerbarnsdager eller perioden rundt fødsel
-        if (SamtidigUttakUtil.gjelderFlerbarnsdager(grunnlag)
-                || SamtidigUttakUtil.gjelderFarRundtFødsel(grunnlag)) {
+        if (SamtidigUttakUtil.gjelderFlerbarnsdager(grunnlag) || SamtidigUttakUtil.gjelderFarRundtFødsel(grunnlag)) {
             return ja();
         }
         // Inntil 100% samtidig uttak er alltid OK

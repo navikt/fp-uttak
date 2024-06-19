@@ -31,30 +31,25 @@ class FellesperiodeMedGraderingTest {
     void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_5_uker_igjen_på_saldo() {
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
-        var aktuellPeriode =
-                OppgittPeriode.forGradering(
-                        Stønadskontotype.FELLESPERIODE,
-                        graderingFom,
-                        graderingTom,
-                        BigDecimal.valueOf(50),
-                        null,
-                        false,
-                        Set.of(ARBEIDSFORHOLD_1),
-                        null,
-                        null,
-                        null,
-                        null);
+        var aktuellPeriode = OppgittPeriode.forGradering(
+                Stønadskontotype.FELLESPERIODE,
+                graderingFom,
+                graderingTom,
+                BigDecimal.valueOf(50),
+                null,
+                false,
+                Set.of(ARBEIDSFORHOLD_1),
+                null,
+                null,
+                null,
+                null);
         var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FELLESPERIODE, 5 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        var grunnlag =
-                basicGrunnlag()
-                        .kontoer(kontoer)
-                        .søknad(
-                                new Søknad.Builder()
-                                        .type(Søknadstype.FØDSEL)
-                                        .oppgittPeriode(aktuellPeriode))
-                        .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
-                        .build();
+        var grunnlag = basicGrunnlag()
+                .kontoer(kontoer)
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(aktuellPeriode))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
+                .build();
 
         var regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
@@ -65,30 +60,25 @@ class FellesperiodeMedGraderingTest {
     void mor_graderer_med_50_prosent_arbeid_i_10_uker_med_4_uker_igjen_på_saldo() {
         var graderingFom = fødselsdato.plusWeeks(10);
         var graderingTom = fødselsdato.plusWeeks(20).minusDays(1);
-        var aktuellPeriode =
-                OppgittPeriode.forGradering(
-                        Stønadskontotype.FELLESPERIODE,
-                        graderingFom,
-                        graderingTom,
-                        BigDecimal.valueOf(50),
-                        null,
-                        false,
-                        Set.of(ARBEIDSFORHOLD_1),
-                        null,
-                        null,
-                        null,
-                        null);
+        var aktuellPeriode = OppgittPeriode.forGradering(
+                Stønadskontotype.FELLESPERIODE,
+                graderingFom,
+                graderingTom,
+                BigDecimal.valueOf(50),
+                null,
+                false,
+                Set.of(ARBEIDSFORHOLD_1),
+                null,
+                null,
+                null,
+                null);
         var kontoer = new Kontoer.Builder().konto(konto(Stønadskontotype.FELLESPERIODE, 4 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
-        var grunnlag =
-                basicGrunnlag()
-                        .kontoer(kontoer)
-                        .søknad(
-                                new Søknad.Builder()
-                                        .type(Søknadstype.FØDSEL)
-                                        .oppgittPeriode(aktuellPeriode))
-                        .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
-                        .build();
+        var grunnlag = basicGrunnlag()
+                .kontoer(kontoer)
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(aktuellPeriode))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
+                .build();
 
         var regelresultat = kjørRegel(aktuellPeriode, grunnlag);
 
@@ -103,13 +93,14 @@ class FellesperiodeMedGraderingTest {
         return RegelGrunnlagTestBuilder.create()
                 .datoer(new Datoer.Builder().fødsel(fødselsdato))
                 .behandling(new Behandling.Builder().søkerErMor(true))
-                .rettOgOmsorg(
-                        new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).samtykke(true))
-                .inngangsvilkår(
-                        new Inngangsvilkår.Builder()
-                                .adopsjonOppfylt(true)
-                                .foreldreansvarnOppfylt(true)
-                                .fødselOppfylt(true)
-                                .opptjeningOppfylt(true));
+                .rettOgOmsorg(new RettOgOmsorg.Builder()
+                        .farHarRett(true)
+                        .morHarRett(true)
+                        .samtykke(true))
+                .inngangsvilkår(new Inngangsvilkår.Builder()
+                        .adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 }

@@ -21,59 +21,49 @@ public final class SaldoUtregningTjeneste {
     private SaldoUtregningTjeneste() {}
 
     public static SaldoUtregning lagUtregning(SaldoUtregningGrunnlag grunnlag) {
-        var annenpartsPerioder =
-                finnRelevanteAnnenpartsPerioder(
-                        grunnlag.isBerørtBehandling(),
-                        grunnlag.getUtregningsdato(),
-                        grunnlag.getAnnenpartsPerioder(),
-                        grunnlag.getSøktePerioder());
+        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(
+                grunnlag.isBerørtBehandling(),
+                grunnlag.getUtregningsdato(),
+                grunnlag.getAnnenpartsPerioder(),
+                grunnlag.getSøktePerioder());
 
         var søkersFastsattePerioder =
-                knekkSøkersOppholdsperioder(
-                                annenpartsPerioder, grunnlag.getSøkersFastsattePerioder())
-                        .stream()
+                knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder()).stream()
                         .filter(p -> !p.isInnvilgetGyldigUtsettelse())
                         .toList();
-        return new SaldoUtregning(
-                grunnlag.getStønadskonti(), søkersFastsattePerioder, annenpartsPerioder, grunnlag);
+        return new SaldoUtregning(grunnlag.getStønadskonti(), søkersFastsattePerioder, annenpartsPerioder, grunnlag);
     }
 
     private static List<FastsattUttakPeriode> knekkSøkersOppholdsperioder(
-            List<FastsattUttakPeriode> annenpartsPerioder,
-            List<FastsattUttakPeriode> søkersFastsattePerioder1) {
-        var knekkpunkter =
-                annenpartsPerioder.stream()
-                        .flatMap(ap -> Stream.of(ap.getFom().minusDays(1), ap.getTom()))
-                        .toList();
+            List<FastsattUttakPeriode> annenpartsPerioder, List<FastsattUttakPeriode> søkersFastsattePerioder1) {
+        var knekkpunkter = annenpartsPerioder.stream()
+                .flatMap(ap -> Stream.of(ap.getFom().minusDays(1), ap.getTom()))
+                .toList();
         return søkersFastsattePerioder1.stream()
-                .flatMap(
-                        p -> {
-                            if (p.isOpphold()) {
-                                return knekkOpphold(p, knekkpunkter).stream();
-                            }
-                            return Stream.of(p);
-                        })
+                .flatMap(p -> {
+                    if (p.isOpphold()) {
+                        return knekkOpphold(p, knekkpunkter).stream();
+                    }
+                    return Stream.of(p);
+                })
                 .toList();
     }
 
-    private static List<FastsattUttakPeriode> knekkOpphold(
-            FastsattUttakPeriode opphold, List<LocalDate> knekkpunkter) {
+    private static List<FastsattUttakPeriode> knekkOpphold(FastsattUttakPeriode opphold, List<LocalDate> knekkpunkter) {
 
         var etterKnekk = new ArrayList<FastsattUttakPeriode>();
-        var sortedKnekk = knekkpunkter.stream().sorted(Comparator.naturalOrder()).toList();
+        var sortedKnekk =
+                knekkpunkter.stream().sorted(Comparator.naturalOrder()).toList();
         var etterKnekkOpphold = opphold;
         for (var knekk : sortedKnekk) {
-            var tidsperiode =
-                    new LukketPeriode(etterKnekkOpphold.getFom(), etterKnekkOpphold.getTom());
+            var tidsperiode = new LukketPeriode(etterKnekkOpphold.getFom(), etterKnekkOpphold.getTom());
             if (tidsperiode.overlapper(knekk) && !etterKnekkOpphold.getTom().isEqual(knekk)) {
-                var førKnekkOpphold =
-                        new FastsattUttakPeriode.Builder(etterKnekkOpphold)
-                                .tidsperiode(etterKnekkOpphold.getFom(), knekk)
-                                .build();
-                etterKnekkOpphold =
-                        new FastsattUttakPeriode.Builder(etterKnekkOpphold)
-                                .tidsperiode(knekk.plusDays(1), etterKnekkOpphold.getTom())
-                                .build();
+                var førKnekkOpphold = new FastsattUttakPeriode.Builder(etterKnekkOpphold)
+                        .tidsperiode(etterKnekkOpphold.getFom(), knekk)
+                        .build();
+                etterKnekkOpphold = new FastsattUttakPeriode.Builder(etterKnekkOpphold)
+                        .tidsperiode(knekk.plusDays(1), etterKnekkOpphold.getTom())
+                        .build();
                 etterKnekk.add(førKnekkOpphold);
             }
         }
@@ -88,23 +78,19 @@ public final class SaldoUtregningTjeneste {
             List<LukketPeriode> søktePerioder) {
         var annenpartsPerioder = annenPartUttaksperioder;
         if (isBerørtBehandling) {
-            annenpartsPerioder =
-                    annenpartsPerioder.stream()
-                            .flatMap(ap -> finnDelerAvOppholdsperiode(søktePerioder, ap))
-                            .toList();
+            annenpartsPerioder = annenpartsPerioder.stream()
+                    .flatMap(ap -> finnDelerAvOppholdsperiode(søktePerioder, ap))
+                    .toList();
         } else {
-            annenpartsPerioder =
-                    annenpartsPerioder.stream()
-                            .filter(ap -> ap.getFom().isBefore(utregningsdato))
-                            .map(
-                                    ap -> {
-                                        if (ap.overlapper(utregningsdato)) {
-                                            return knekk(
-                                                    ap, ap.getFom(), utregningsdato.minusDays(1));
-                                        }
-                                        return ap;
-                                    })
-                            .toList();
+            annenpartsPerioder = annenpartsPerioder.stream()
+                    .filter(ap -> ap.getFom().isBefore(utregningsdato))
+                    .map(ap -> {
+                        if (ap.overlapper(utregningsdato)) {
+                            return knekk(ap, ap.getFom(), utregningsdato.minusDays(1));
+                        }
+                        return ap;
+                    })
+                    .toList();
         }
 
         return annenpartsPerioder.stream().map(SaldoUtregningTjeneste::map).toList();
@@ -131,10 +117,8 @@ public final class SaldoUtregningTjeneste {
         return Stream.of(ap);
     }
 
-    private static AnnenpartUttakPeriode knekk(
-            AnnenpartUttakPeriode ap, LocalDate nyFom, LocalDate nyTom) {
-        var aktiviteterForPeriodeFørKnekkpunkt =
-                aktiviteterForPeriodeFørKnekkpunkt(ap, nyFom, nyTom);
+    private static AnnenpartUttakPeriode knekk(AnnenpartUttakPeriode ap, LocalDate nyFom, LocalDate nyTom) {
+        var aktiviteterForPeriodeFørKnekkpunkt = aktiviteterForPeriodeFørKnekkpunkt(ap, nyFom, nyTom);
         return ap.kopiMedNyPeriode(nyFom, nyTom, aktiviteterForPeriodeFørKnekkpunkt);
     }
 
@@ -154,15 +138,12 @@ public final class SaldoUtregningTjeneste {
         return innvilget ? Perioderesultattype.INNVILGET : Perioderesultattype.AVSLÅTT;
     }
 
-    private static List<FastsattUttakPeriodeAktivitet> mapAktiviteter(
-            AnnenpartUttakPeriode annenpartsPeriode) {
+    private static List<FastsattUttakPeriodeAktivitet> mapAktiviteter(AnnenpartUttakPeriode annenpartsPeriode) {
         return annenpartsPeriode.getAktiviteter().stream()
-                .map(
-                        aktivitet ->
-                                new FastsattUttakPeriodeAktivitet(
-                                        aktivitet.getTrekkdager(),
-                                        aktivitet.getStønadskontotype(),
-                                        aktivitet.getAktivitetIdentifikator()))
+                .map(aktivitet -> new FastsattUttakPeriodeAktivitet(
+                        aktivitet.getTrekkdager(),
+                        aktivitet.getStønadskontotype(),
+                        aktivitet.getAktivitetIdentifikator()))
                 .toList();
     }
 
@@ -171,23 +152,20 @@ public final class SaldoUtregningTjeneste {
         var virkedagerInnenfor = Virkedager.beregnAntallVirkedager(nyFom, nyTom);
         var virkedagerHele = periode.virkedager();
 
-        List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktivitetMedNyttTrekkDager =
-                new ArrayList<>();
+        List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktivitetMedNyttTrekkDager = new ArrayList<>();
 
         for (var annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
             var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
             if (virkedagerInnenfor > 0 && opprinneligeTrekkdager.merEnn0()) {
-                var vektetTrekkdager =
-                        opprinneligeTrekkdager
-                                .decimalValue()
-                                .multiply(BigDecimal.valueOf(virkedagerInnenfor))
-                                .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
-                annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(
-                        new AnnenpartUttakPeriodeAktivitet(
-                                annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
-                                annenpartUttakPeriodeAktivitet.getStønadskontotype(),
-                                new Trekkdager(vektetTrekkdager),
-                                annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
+                var vektetTrekkdager = opprinneligeTrekkdager
+                        .decimalValue()
+                        .multiply(BigDecimal.valueOf(virkedagerInnenfor))
+                        .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
+                annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(new AnnenpartUttakPeriodeAktivitet(
+                        annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
+                        annenpartUttakPeriodeAktivitet.getStønadskontotype(),
+                        new Trekkdager(vektetTrekkdager),
+                        annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
             }
         }
 

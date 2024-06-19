@@ -92,8 +92,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
             Manuellbehandlingårsak manuellbehandlingårsak) {
         assertThat(periode.getFom()).isEqualTo(forventetFom);
         assertThat(periode.getTom()).isEqualTo(forventetTom);
-        assertThat(periode.getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(periode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
         assertThat(periode.getStønadskontotype()).isEqualTo(stønadskontotype);
         assertThat(periode.getManuellbehandlingårsak()).isEqualTo(manuellbehandlingårsak);
         assertThat(periode.getPeriodeResultatÅrsak()).isEqualTo(ikkeOppfyltÅrsak);
@@ -117,8 +116,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
             LocalDate tom,
             boolean flerbarnsdager,
             SamtidigUttaksprosent samtidigUttaksprosent) {
-        return oppgittPeriode(
-                stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, null);
+        return oppgittPeriode(stønadskontotype, fom, tom, flerbarnsdager, samtidigUttaksprosent, null);
     }
 
     OppgittPeriode oppgittPeriode(
@@ -150,12 +148,8 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     OppgittPeriode gradertoppgittPeriode(
-            Stønadskontotype stønadskontotype,
-            LocalDate fom,
-            LocalDate tom,
-            BigDecimal arbeidsprosent) {
-        return gradertoppgittPeriode(
-                stønadskontotype, fom, tom, arbeidsprosent, Set.of(ARBEIDSFORHOLD_1));
+            Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom, BigDecimal arbeidsprosent) {
+        return gradertoppgittPeriode(stønadskontotype, fom, tom, arbeidsprosent, Set.of(ARBEIDSFORHOLD_1));
     }
 
     OppgittPeriode gradertoppgittPeriode(
@@ -165,17 +159,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
             BigDecimal arbeidsprosent,
             Set<AktivitetIdentifikator> gradertAktiviteter) {
         return OppgittPeriode.forGradering(
-                stønadskontotype,
-                fom,
-                tom,
-                arbeidsprosent,
-                null,
-                false,
-                gradertAktiviteter,
-                null,
-                null,
-                null,
-                null);
+                stønadskontotype, fom, tom, arbeidsprosent, null, false, gradertAktiviteter, null, null, null, null);
     }
 
     RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
@@ -195,9 +179,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RegelGrunnlag.Builder basicGrunnlag(LocalDate fødselsdato) {
-        return basicGrunnlag()
-                .datoer(new Datoer.Builder().fødsel(fødselsdato))
-                .rettOgOmsorg(beggeRett());
+        return basicGrunnlag().datoer(new Datoer.Builder().fødsel(fødselsdato)).rettOgOmsorg(beggeRett());
     }
 
     Konto.Builder konto(Stønadskontotype stønadskontotype, int antallDager) {

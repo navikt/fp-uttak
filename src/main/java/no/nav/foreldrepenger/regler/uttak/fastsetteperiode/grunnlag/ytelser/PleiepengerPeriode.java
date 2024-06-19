@@ -19,12 +19,7 @@ public class PleiepengerPeriode extends LukketPeriode {
 
     @Override
     public String toString() {
-        return "PleiepengerPeriode{"
-                + "periode="
-                + super.toString()
-                + ", barnInnlagt="
-                + barnInnlagt
-                + '}';
+        return "PleiepengerPeriode{" + "periode=" + super.toString() + ", barnInnlagt=" + barnInnlagt + '}';
     }
 
     @Override

@@ -21,8 +21,7 @@ public final class TrekkdagerUtregningUtil {
         if (samtidigUttaksprosent != null) {
             // Samme utregning som med gradering
             return trekkdagerMedGradering(
-                    trekkdagerUtenGradering,
-                    BigDecimal.valueOf(100).subtract(samtidigUttaksprosent.decimalValue()));
+                    trekkdagerUtenGradering, BigDecimal.valueOf(100).subtract(samtidigUttaksprosent.decimalValue()));
         }
         return new Trekkdager(trekkdagerUtenGradering);
     }
@@ -32,10 +31,9 @@ public final class TrekkdagerUtregningUtil {
         if (gradertArbeidstidsprosent.compareTo(BigDecimal.valueOf(100)) >= 0) {
             return Trekkdager.ZERO;
         }
-        var trekkdager =
-                BigDecimal.valueOf(trekkdagerUtenGradering)
-                        .multiply(BigDecimal.valueOf(100).subtract(gradertArbeidstidsprosent))
-                        .divide(BigDecimal.valueOf(100), 1, RoundingMode.DOWN);
+        var trekkdager = BigDecimal.valueOf(trekkdagerUtenGradering)
+                .multiply(BigDecimal.valueOf(100).subtract(gradertArbeidstidsprosent))
+                .divide(BigDecimal.valueOf(100), 1, RoundingMode.DOWN);
         return new Trekkdager(trekkdager);
     }
 }

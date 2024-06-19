@@ -18,16 +18,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Plei
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.fpsak.nare.doc.RuleDocumentationGrunnlag;
 
-/**
- * Interface for fastsette periode grunnlaget. Det er kun dette interfacet som skal brukes i selve
- * regelen.
- */
+/** Interface for fastsette periode grunnlaget. Det er kun dette interfacet som skal brukes i selve regelen. */
 @RuleDocumentationGrunnlag
 public interface FastsettePeriodeGrunnlag {
 
-    /**
-     * @return Aktuell periode. Det er den perioden som skal behandles av regel.
-     */
+    /** @return Aktuell periode. Det er den perioden som skal behandles av regel. */
     OppgittPeriode getAktuellPeriode();
 
     /**
@@ -45,8 +40,7 @@ public interface FastsettePeriodeGrunnlag {
     Søknadstype getSøknadstype();
 
     /**
-     * Finner dato for familiehendelsen som søknaden gjelder. Kan være dato for termin, fødsel eller
-     * omsorgsovertakelse.
+     * Finner dato for familiehendelsen som søknaden gjelder. Kan være dato for termin, fødsel eller omsorgsovertakelse.
      *
      * @return dato for familiehendelse.
      */
@@ -104,8 +98,7 @@ public interface FastsettePeriodeGrunnlag {
     boolean isBareFarHarRettMorUføretrygd();
 
     /**
-     * Har saken perioder uten aktivitetskrav iht 14-14 tredje ledd Slike saker skal ikke ha
-     * minsterett.
+     * Har saken perioder uten aktivitetskrav iht 14-14 tredje ledd Slike saker skal ikke ha minsterett.
      *
      * @return true dersom saken tilsier dager uten aktivitetskrav.
      */

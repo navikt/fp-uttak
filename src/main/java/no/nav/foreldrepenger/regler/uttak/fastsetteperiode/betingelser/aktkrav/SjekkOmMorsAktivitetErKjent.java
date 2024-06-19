@@ -17,8 +17,6 @@ public class SjekkOmMorsAktivitetErKjent extends LeafSpecification<FastsettePeri
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        return fastsettePeriodeGrunnlag.getAktuellPeriode().getMorsAktivitet() == null
-                ? nei()
-                : ja();
+        return fastsettePeriodeGrunnlag.getAktuellPeriode().getMorsAktivitet() == null ? nei() : ja();
     }
 }

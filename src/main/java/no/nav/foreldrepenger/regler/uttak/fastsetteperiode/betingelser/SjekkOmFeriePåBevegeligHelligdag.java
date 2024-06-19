@@ -16,8 +16,7 @@ public class SjekkOmFeriePåBevegeligHelligdag extends LeafSpecification<Fastset
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        for (var bevegeligHelligdag :
-                BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(oppgittPeriode)) {
+        for (var bevegeligHelligdag : BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(oppgittPeriode)) {
             if (oppgittPeriode.overlapper(bevegeligHelligdag)) {
                 return ja();
             }

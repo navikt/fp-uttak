@@ -8,15 +8,13 @@ public final class PrematurukerUtil {
 
     private PrematurukerUtil() {}
 
-    public static boolean oppfyllerKravTilPrematuruker(
-            LocalDate fødselsdato, LocalDate termindato) {
+    public static boolean oppfyllerKravTilPrematuruker(LocalDate fødselsdato, LocalDate termindato) {
         if (fødselsdato == null || termindato == null) {
             return false;
         }
         if (erEtterRegelendringStartdato(fødselsdato)) {
-            var antallDagerFørTermin =
-                    Konfigurasjon.STANDARD.getParameter(
-                            Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, fødselsdato);
+            var antallDagerFørTermin = Konfigurasjon.STANDARD.getParameter(
+                    Parametertype.PREMATURUKER_ANTALL_DAGER_FØR_TERMIN, fødselsdato);
             return fødselsdato.plusDays(antallDagerFørTermin).isBefore(termindato);
         }
         return false;

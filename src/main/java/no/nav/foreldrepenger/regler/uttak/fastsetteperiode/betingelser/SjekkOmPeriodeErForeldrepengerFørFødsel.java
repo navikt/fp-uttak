@@ -7,8 +7,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodeErForeldrepengerFørFødsel.ID)
-public class SjekkOmPeriodeErForeldrepengerFørFødsel
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodeErForeldrepengerFørFødsel extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 27";
 

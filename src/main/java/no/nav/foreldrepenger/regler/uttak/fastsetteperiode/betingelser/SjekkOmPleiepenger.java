@@ -20,8 +20,6 @@ public class SjekkOmPleiepenger extends LeafSpecification<FastsettePeriodeGrunnl
         var periode = grunnlag.getAktuellPeriode();
         var perioderMedPleiepenger = grunnlag.perioderMedPleiepenger();
         // Regner med at søknadsperiode er knekt etter perioder med pleiepenger
-        return perioderMedPleiepenger.stream().anyMatch(pp -> pp.overlapper(periode))
-                ? ja()
-                : nei();
+        return perioderMedPleiepenger.stream().anyMatch(pp -> pp.overlapper(periode)) ? ja() : nei();
     }
 }

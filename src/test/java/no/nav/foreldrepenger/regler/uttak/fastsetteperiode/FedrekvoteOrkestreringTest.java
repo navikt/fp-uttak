@@ -31,19 +31,14 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void
             fedrekvote_med_tidlig_oppstart_og_gyldig_grunn_fra_første_dag_til_midten_av_perioden_blir_innvilget_med_knekkpunkt() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                fødselsdato,
-                                                fødselsdato.plusWeeks(1).minusDays(1),
-                                                INNLEGGELSE_ANNEN_FORELDER_GODKJENT),
-                                        oppgittPeriode(
-                                                fødselsdato.plusWeeks(1),
-                                                fødselsdato.plusWeeks(2),
-                                                null)));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(
+                                fødselsdato,
+                                fødselsdato.plusWeeks(1).minusDays(1),
+                                INNLEGGELSE_ANNEN_FORELDER_GODKJENT),
+                        oppgittPeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2), null)));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -63,8 +58,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 FEDREKVOTE);
     }
 
-    private OppgittPeriode oppgittPeriode(
-            LocalDate fom, LocalDate tom, DokumentasjonVurdering dokumentasjonVurdering) {
+    private OppgittPeriode oppgittPeriode(LocalDate fom, LocalDate tom, DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forVanligPeriode(
                 FEDREKVOTE, fom, tom, null, false, null, null, null, dokumentasjonVurdering);
     }
@@ -74,32 +68,25 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer =
                 new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(100));
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .rettOgOmsorg(
-                                new RettOgOmsorg.Builder()
-                                        .samtykke(true)
-                                        .morHarRett(true)
-                                        .farHarRett(true)
-                                        .harOmsorg(false))
-                        .søknad(
-                                new Søknad.Builder()
-                                        .type(Søknadstype.FØDSEL)
-                                        .oppgittPeriode(
-                                                oppgittPeriode(
-                                                        fødselsdato,
-                                                        fødselsdato.plusWeeks(6).minusDays(1),
-                                                        SYKDOM_ANNEN_FORELDER_GODKJENT)))
-                        .kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(new RettOgOmsorg.Builder()
+                        .samtykke(true)
+                        .morHarRett(true)
+                        .farHarRett(true)
+                        .harOmsorg(false))
+                .søknad(new Søknad.Builder()
+                        .type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(
+                                fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), SYKDOM_ANNEN_FORELDER_GODKJENT)))
+                .kontoer(kontoer);
 
         var periodeResultater = fastsettPerioder(grunnlag);
 
         assertThat(periodeResultater).hasSize(1);
-        var perioder =
-                periodeResultater.stream()
-                        .map(FastsettePeriodeResultat::uttakPeriode)
-                        .sorted(comparing(UttakPeriode::getFom))
-                        .toList();
+        var perioder = periodeResultater.stream()
+                .map(FastsettePeriodeResultat::uttakPeriode)
+                .sorted(comparing(UttakPeriode::getFom))
+                .toList();
 
         verifiserAvslåttPeriode(
                 perioder.get(0),
@@ -113,16 +100,14 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void fedrekvote_fra_1_dag_før_6_uker_skal_behandles_manuelt() {
         var fødselsdato = LocalDate.of(2018, 1, 3);
 
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                fødselsdato.plusWeeks(6).minusDays(1),
-                                                fødselsdato.plusWeeks(10).minusDays(1),
-                                                null)))
-                        .build();
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(
+                                fødselsdato.plusWeeks(6).minusDays(1),
+                                fødselsdato.plusWeeks(10).minusDays(1),
+                                null)))
+                .build();
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -171,23 +156,19 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer =
                 new Kontoer.Builder().konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(100));
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .rettOgOmsorg(
-                                new RettOgOmsorg.Builder()
-                                        .samtykke(true)
-                                        .morHarRett(true)
-                                        .farHarRett(true)
-                                        .harOmsorg(false))
-                        .søknad(
-                                new Søknad.Builder()
-                                        .type(Søknadstype.FØDSEL)
-                                        .oppgittPeriode(
-                                                oppgittPeriode(
-                                                        Stønadskontotype.FEDREKVOTE,
-                                                        fødselsdato.plusWeeks(6),
-                                                        fødselsdato.plusWeeks(10).minusDays(1))))
-                        .kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .rettOgOmsorg(new RettOgOmsorg.Builder()
+                        .samtykke(true)
+                        .morHarRett(true)
+                        .farHarRett(true)
+                        .harOmsorg(false))
+                .søknad(new Søknad.Builder()
+                        .type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(
+                                Stønadskontotype.FEDREKVOTE,
+                                fødselsdato.plusWeeks(6),
+                                fødselsdato.plusWeeks(10).minusDays(1))))
+                .kontoer(kontoer);
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -203,36 +184,30 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_innvilges() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var grunnlag =
-                basicGrunnlagMor(fødselsdato)
-                        .søknad(
-                                new Søknad.Builder()
-                                        .type(Søknadstype.FØDSEL)
-                                        .oppgittPeriode(
-                                                oppgittPeriode(
-                                                        Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
-                                                        fødselsdato.minusWeeks(3),
-                                                        fødselsdato.minusDays(1)))
-                                        .oppgittPeriode(
-                                                oppgittPeriode(
-                                                        Stønadskontotype.MØDREKVOTE,
-                                                        fødselsdato,
-                                                        fødselsdato.plusWeeks(10).minusDays(1)))
-                                        .oppgittPeriode(
-                                                overføringPeriode(
-                                                        Stønadskontotype.FEDREKVOTE,
-                                                        fødselsdato.plusWeeks(10),
-                                                        fødselsdato.plusWeeks(12).minusDays(1),
-                                                        OverføringÅrsak.SYKDOM_ELLER_SKADE,
-                                                        SYKDOM_ANNEN_FORELDER_GODKJENT)));
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .søknad(new Søknad.Builder()
+                        .type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(oppgittPeriode(
+                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
+                                fødselsdato.minusWeeks(3),
+                                fødselsdato.minusDays(1)))
+                        .oppgittPeriode(oppgittPeriode(
+                                Stønadskontotype.MØDREKVOTE,
+                                fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1)))
+                        .oppgittPeriode(overføringPeriode(
+                                Stønadskontotype.FEDREKVOTE,
+                                fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1),
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE,
+                                SYKDOM_ANNEN_FORELDER_GODKJENT)));
 
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
         // 3 uker foreldrepenger før fødsel innvilges
-        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(0).uttakPeriode().getStønadskontotype())
                 .isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
         // assertThat(perioder.get(0).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
@@ -240,30 +215,24 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
 
         // 6 første uker mødrekvote innvilges
-        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         // assertThat(perioder.get(1).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
         assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(1).uttakPeriode().getTom())
                 .isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
 
         // 3 neste uker mødrekvote innvilges
-        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         // assertThat(perioder.get(2).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
         assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(2).uttakPeriode().getTom())
                 .isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
 
         // 2 neste uker fedrekvote innvilges
-        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.FEDREKVOTE);
+        assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FEDREKVOTE);
         // assertThat(perioder.get(3).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
         assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(perioder.get(3).uttakPeriode().getTom())
@@ -273,33 +242,30 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void overføring_av_fedrekvote_grunnet_sykdom_skade_skal_gå_til_avslag_hvis_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var grunnlag =
-                basicGrunnlagMor(fødselsdato)
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
-                                                fødselsdato.minusWeeks(3),
-                                                fødselsdato.minusDays(1)),
-                                        oppgittPeriode(
-                                                Stønadskontotype.MØDREKVOTE,
-                                                fødselsdato,
-                                                fødselsdato.plusWeeks(10).minusDays(1)),
-                                        overføringPeriode(
-                                                Stønadskontotype.FEDREKVOTE,
-                                                fødselsdato.plusWeeks(10),
-                                                fødselsdato.plusWeeks(12).minusDays(1),
-                                                OverføringÅrsak.SYKDOM_ELLER_SKADE,
-                                                null)));
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(
+                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
+                                fødselsdato.minusWeeks(3),
+                                fødselsdato.minusDays(1)),
+                        oppgittPeriode(
+                                Stønadskontotype.MØDREKVOTE,
+                                fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1)),
+                        overføringPeriode(
+                                Stønadskontotype.FEDREKVOTE,
+                                fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1),
+                                OverføringÅrsak.SYKDOM_ELLER_SKADE,
+                                null)));
 
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
         // 3 uker foreldrepenger før fødsel innvilges
-        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(0).uttakPeriode().getStønadskontotype())
                 .isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
         // assertThat(perioder.get(0).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
@@ -307,20 +273,16 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
 
         // 6 første uker mødrekvote innvilges
-        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         // assertThat(perioder.get(1).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(30);
         assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(1).uttakPeriode().getTom())
                 .isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
 
         // 3 neste uker mødrekvote innvilges
-        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         // assertThat(perioder.get(2).uttakPeriode().trekkdager(ARBEIDSFORHOLD)).isEqualTo(20);
         assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(2).uttakPeriode().getTom())
@@ -333,52 +295,45 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void overføring_av_fedrekvote_ugyldig_årsak_skal_til_manuell_behandling() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
-        var grunnlag =
-                basicGrunnlagMor(fødselsdato)
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
-                                                fødselsdato.minusWeeks(3),
-                                                fødselsdato.minusDays(1)),
-                                        oppgittPeriode(
-                                                Stønadskontotype.MØDREKVOTE,
-                                                fødselsdato,
-                                                fødselsdato.plusWeeks(10).minusDays(1)),
-                                        overføringPeriode(
-                                                Stønadskontotype.FEDREKVOTE,
-                                                fødselsdato.plusWeeks(10),
-                                                fødselsdato.plusWeeks(12).minusDays(1),
-                                                null,
-                                                null)));
+        var grunnlag = basicGrunnlagMor(fødselsdato)
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(
+                                Stønadskontotype.FORELDREPENGER_FØR_FØDSEL,
+                                fødselsdato.minusWeeks(3),
+                                fødselsdato.minusDays(1)),
+                        oppgittPeriode(
+                                Stønadskontotype.MØDREKVOTE,
+                                fødselsdato,
+                                fødselsdato.plusWeeks(10).minusDays(1)),
+                        overføringPeriode(
+                                Stønadskontotype.FEDREKVOTE,
+                                fødselsdato.plusWeeks(10),
+                                fødselsdato.plusWeeks(12).minusDays(1),
+                                null,
+                                null)));
 
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(4);
 
         // 3 uker foreldrepenger før fødsel innvilges
-        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
         assertThat(perioder.get(0).uttakPeriode().getStønadskontotype())
                 .isEqualTo(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL);
         assertThat(perioder.get(0).uttakPeriode().getFom()).isEqualTo(fødselsdato.minusWeeks(3));
         assertThat(perioder.get(0).uttakPeriode().getTom()).isEqualTo(fødselsdato.minusDays(1));
 
         // 6 første uker mødrekvote innvilges
-        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         assertThat(perioder.get(1).uttakPeriode().getFom()).isEqualTo(fødselsdato);
         assertThat(perioder.get(1).uttakPeriode().getTom())
                 .isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
 
         // 3 neste uker mødrekvote innvilges
-        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype())
-                .isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.MØDREKVOTE);
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.MØDREKVOTE);
         assertThat(perioder.get(2).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(6));
         assertThat(perioder.get(2).uttakPeriode().getTom())
                 .isEqualTo(fødselsdato.plusWeeks(10).minusDays(1));
@@ -386,8 +341,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         // 2 neste uker fedrekvote skal til manuell behandling
         assertThat(perioder.get(3).uttakPeriode().getPerioderesultattype())
                 .isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
-        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype())
-                .isEqualTo(Stønadskontotype.FEDREKVOTE);
+        assertThat(perioder.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(Stønadskontotype.FEDREKVOTE);
         assertThat(perioder.get(3).uttakPeriode().getFom()).isEqualTo(fødselsdato.plusWeeks(10));
         assertThat(perioder.get(3).uttakPeriode().getTom())
                 .isEqualTo(fødselsdato.plusWeeks(12).minusDays(1));
@@ -396,26 +350,17 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void fedrekvote_med_enkelt_uttak_rundt_fødsel_blir_avkortet_og_innvilget_riktig() {
         var fødselsdato = LocalDate.of(2022, 10, 3);
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .kontoer(
-                                new Kontoer.Builder()
-                                        .konto(
-                                                new Konto.Builder()
-                                                        .type(FEDREKVOTE)
-                                                        .trekkdager(15 * 5))
-                                        .farUttakRundtFødselDager(10))
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                fødselsdato,
-                                                fødselsdato.plusWeeks(1).minusDays(1),
-                                                null),
-                                        oppgittPeriode(
-                                                fødselsdato.plusWeeks(31),
-                                                fødselsdato.plusWeeks(40).minusDays(1),
-                                                null)));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(15 * 5))
+                        .farUttakRundtFødselDager(10))
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), null),
+                        oppgittPeriode(
+                                fødselsdato.plusWeeks(31),
+                                fødselsdato.plusWeeks(40).minusDays(1),
+                                null)));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -439,27 +384,19 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void fedrekvote_med_enkelt_uttak_rundt_termin_blir_avkortet_og_innvilget_riktig() {
         var fødselsdato = LocalDate.of(2022, 10, 4);
         var termindato = fødselsdato.plusDays(1);
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .datoer(datoer(fødselsdato).termin(termindato))
-                        .kontoer(
-                                new Kontoer.Builder()
-                                        .konto(
-                                                new Konto.Builder()
-                                                        .type(FEDREKVOTE)
-                                                        .trekkdager(15 * 5))
-                                        .farUttakRundtFødselDager(10))
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                termindato.minusDays(2),
-                                                termindato.plusWeeks(2).minusDays(3),
-                                                null),
-                                        oppgittPeriode(
-                                                fødselsdato.plusWeeks(31),
-                                                fødselsdato.plusWeeks(50).minusDays(1),
-                                                null)));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .datoer(datoer(fødselsdato).termin(termindato))
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(15 * 5))
+                        .farUttakRundtFødselDager(10))
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(
+                                termindato.minusDays(2), termindato.plusWeeks(2).minusDays(3), null),
+                        oppgittPeriode(
+                                fødselsdato.plusWeeks(31),
+                                fødselsdato.plusWeeks(50).minusDays(1),
+                                null)));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -494,22 +431,16 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void fedrekvote_med_uttak_rundt_fødsel_blir_avkortet_og_innvilget_riktig() {
         var fødselsdato = LocalDate.of(2022, 10, 3);
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .kontoer(
-                                new Kontoer.Builder()
-                                        .konto(
-                                                new Konto.Builder()
-                                                        .type(FEDREKVOTE)
-                                                        .trekkdager(15 * 5))
-                                        .farUttakRundtFødselDager(10))
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                fødselsdato.minusWeeks(1),
-                                                fødselsdato.plusWeeks(3).minusDays(1),
-                                                null)));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(15 * 5))
+                        .farUttakRundtFødselDager(10))
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(
+                                fødselsdato.minusWeeks(1),
+                                fødselsdato.plusWeeks(3).minusDays(1),
+                                null)));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -539,27 +470,18 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     void fedrekvote_med_for_mye_uttak_rundt_fødsel_blir_avkortet_og_innvilget_riktig() {
         var fødselsdato = LocalDate.of(2022, 10, 4);
         var termindato = fødselsdato.plusDays(1);
-        var grunnlag =
-                basicGrunnlagFar(fødselsdato)
-                        .datoer(datoer(fødselsdato).termin(termindato))
-                        .kontoer(
-                                new Kontoer.Builder()
-                                        .konto(
-                                                new Konto.Builder()
-                                                        .type(FEDREKVOTE)
-                                                        .trekkdager(15 * 5))
-                                        .farUttakRundtFødselDager(10))
-                        .søknad(
-                                søknad(
-                                        Søknadstype.FØDSEL,
-                                        oppgittPeriode(
-                                                termindato.minusDays(2),
-                                                termindato.plusWeeks(1),
-                                                null),
-                                        oppgittPeriode(
-                                                fødselsdato.plusWeeks(4),
-                                                fødselsdato.plusWeeks(6).minusDays(1),
-                                                null)));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+                .datoer(datoer(fødselsdato).termin(termindato))
+                .kontoer(new Kontoer.Builder()
+                        .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(15 * 5))
+                        .farUttakRundtFødselDager(10))
+                .søknad(søknad(
+                        Søknadstype.FØDSEL,
+                        oppgittPeriode(termindato.minusDays(2), termindato.plusWeeks(1), null),
+                        oppgittPeriode(
+                                fødselsdato.plusWeeks(4),
+                                fødselsdato.plusWeeks(6).minusDays(1),
+                                null)));
 
         var resultater = fastsettPerioder(grunnlag);
 
@@ -571,12 +493,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                 fødselsdato.minusDays(1),
                 INNVILGET,
                 FEDREKVOTE);
-        verifiserPeriode(
-                resultater.get(1).uttakPeriode(),
-                fødselsdato,
-                termindato.plusWeeks(1),
-                INNVILGET,
-                FEDREKVOTE);
+        verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato, termindato.plusWeeks(1), INNVILGET, FEDREKVOTE);
         verifiserPeriode(
                 resultater.get(2).uttakPeriode(),
                 fødselsdato.plusWeeks(4),
@@ -597,8 +514,7 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             LocalDate tom,
             OverføringÅrsak årsak,
             DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forOverføring(
-                stønadskontotype, fom, tom, årsak, null, null, dokumentasjonVurdering);
+        return OppgittPeriode.forOverføring(stønadskontotype, fom, tom, årsak, null, null, dokumentasjonVurdering);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {

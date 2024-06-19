@@ -6,8 +6,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodenSlutterFørFamiliehendelse.ID)
-public class SjekkOmPeriodenSlutterFørFamiliehendelse
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodenSlutterFørFamiliehendelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 11.5";
 

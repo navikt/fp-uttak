@@ -18,8 +18,7 @@ public class SjekkOmSøkerInnlagt extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return INNLEGGELSE_SØKER_GODKJENT.equals(
-                        grunnlag.getAktuellPeriode().getDokumentasjonVurdering())
+        return INNLEGGELSE_SØKER_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering())
                 ? ja()
                 : nei();
     }

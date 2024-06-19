@@ -8,8 +8,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel.ID)
-public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 27.5";
 
@@ -21,12 +20,10 @@ public class SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var startDatoUttak = aktuellPeriode.getFom();
-        var ukerFørFødselUttaksgrenseForeldrepenger =
-                Konfigurasjon.STANDARD.getParameter(
-                        Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, grunnlag.getFamiliehendelse());
+        var ukerFørFødselUttaksgrenseForeldrepenger = Konfigurasjon.STANDARD.getParameter(
+                Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, grunnlag.getFamiliehendelse());
         if (startDatoUttak.isBefore(
-                grunnlag.getFamiliehendelse()
-                        .minusWeeks(ukerFørFødselUttaksgrenseForeldrepenger))) {
+                grunnlag.getFamiliehendelse().minusWeeks(ukerFørFødselUttaksgrenseForeldrepenger))) {
             return ja();
         }
         return nei();

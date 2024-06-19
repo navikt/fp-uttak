@@ -7,11 +7,9 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmUtsettelsePgaSøkerInnleggelse.ID)
-public class SjekkOmUtsettelsePgaSøkerInnleggelse
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmUtsettelsePgaSøkerInnleggelse extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "FP_VK 18.3.3";
-    public static final String BESKRIVELSE =
-            "Er det utsettelse pga søkers innleggelse i helseinstitusjon?";
+    public static final String BESKRIVELSE = "Er det utsettelse pga søkers innleggelse i helseinstitusjon?";
 
     public SjekkOmUtsettelsePgaSøkerInnleggelse() {
         super(ID);

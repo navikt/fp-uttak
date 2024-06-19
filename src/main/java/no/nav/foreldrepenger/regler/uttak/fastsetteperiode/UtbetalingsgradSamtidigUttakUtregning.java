@@ -26,12 +26,10 @@ class UtbetalingsgradSamtidigUttakUtregning implements UtbetalingsgradUtregning 
     @Override
     public Utbetalingsgrad resultat() {
         // Samtidiguttaksprosent med mindre gradering på noen aktiviteter i perioden
-        var lokalSamtidigUttaksprosent =
-                Optional.ofNullable(graderingArbeidstidsprosent)
-                        .map(SamtidigUttaksprosent.HUNDRED::subtract)
-                        .orElse(samtidigUttaksprosent);
-        var maksSamtidigUttakUtFraAnnenpart =
-                SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
+        var lokalSamtidigUttaksprosent = Optional.ofNullable(graderingArbeidstidsprosent)
+                .map(SamtidigUttaksprosent.HUNDRED::subtract)
+                .orElse(samtidigUttaksprosent);
+        var maksSamtidigUttakUtFraAnnenpart = SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
         // Reduser utbetaling dersom annenpart > 0 og det ligger an til mer enn 100 prosent
         if (lokalSamtidigUttaksprosent.subtract(maksSamtidigUttakUtFraAnnenpart).merEnn0()) {
             return new Utbetalingsgrad(maksSamtidigUttakUtFraAnnenpart.decimalValue());

@@ -30,8 +30,7 @@ public record FastsettePeriodeResultat(
     }
 
     public boolean isManuellBehandling() {
-        return Perioderesultattype.MANUELL_BEHANDLING.equals(
-                uttakPeriode().getPerioderesultattype());
+        return Perioderesultattype.MANUELL_BEHANDLING.equals(uttakPeriode().getPerioderesultattype());
     }
 
     boolean harFørtTilKnekk() {

@@ -194,9 +194,11 @@
                 <configuration>
                     <java>
                         <cleanthat/>
-                        <googleJavaFormat>
-                            <style>AOSP</style>
-                        </googleJavaFormat>
+                        <palantirJavaFormat>
+                            <version>2.39.0</version>
+                            <style>PALANTIR</style>
+                            <formatJavadoc>true</formatJavadoc>
+                        </palantirJavaFormat>
                         <importOrder/>
                     </java>
 

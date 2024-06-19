@@ -21,9 +21,8 @@ class BevegeligeHelligdagerUtilTest {
         var førsteJuledag = LocalDate.of(2017, 12, 25);
         var andreJuledag = LocalDate.of(2017, 12, 26);
 
-        var helligdager2018 =
-                BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(
-                        new LukketPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 1)));
+        var helligdager2018 = BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(
+                new LukketPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 1)));
 
         assertThat(helligdager2018).hasSize(9);
 
@@ -53,9 +52,8 @@ class BevegeligeHelligdagerUtilTest {
         var førsteJuledag = LocalDate.of(2018, 12, 25);
         var andreJuledag = LocalDate.of(2018, 12, 26);
 
-        var helligdager2018 =
-                BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(
-                        new LukketPeriode(LocalDate.of(2018, 1, 1), LocalDate.of(2018, 1, 1)));
+        var helligdager2018 = BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(
+                new LukketPeriode(LocalDate.of(2018, 1, 1), LocalDate.of(2018, 1, 1)));
 
         assertThat(helligdager2018).hasSize(10);
 
@@ -85,9 +83,8 @@ class BevegeligeHelligdagerUtilTest {
         var førsteJuledag = LocalDate.of(2019, 12, 25);
         var andreJuledag = LocalDate.of(2019, 12, 26);
 
-        var helligdager2018 =
-                BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(
-                        new LukketPeriode(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 1, 1)));
+        var helligdager2018 = BevegeligeHelligdagerUtil.finnBevegeligeHelligdagerUtenHelg(
+                new LukketPeriode(LocalDate.of(2019, 1, 1), LocalDate.of(2019, 1, 1)));
 
         assertThat(helligdager2018).hasSize(10);
 

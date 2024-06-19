@@ -26,13 +26,11 @@ public final class Arbeid {
     }
 
     /**
-     * ALLE aktiviteter, som regel burde aktivitene hentes fra {@link OppgittPeriode ()} mtp at alle
-     * perioder ikke har samme aktivieter
+     * ALLE aktiviteter, som regel burde aktivitene hentes fra {@link OppgittPeriode ()} mtp at alle perioder ikke har
+     * samme aktivieter
      */
     public Set<AktivitetIdentifikator> getAktiviteter() {
-        return arbeidsforholdListe.stream()
-                .map(Arbeidsforhold::identifikator)
-                .collect(Collectors.toSet());
+        return arbeidsforholdListe.stream().map(Arbeidsforhold::identifikator).collect(Collectors.toSet());
     }
 
     public Set<Arbeidsforhold> getArbeidsforhold() {

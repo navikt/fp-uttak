@@ -16,8 +16,7 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
- * Delregel innenfor regeltjenesten FastsettePeriodeRegel som fastsetter uttak av foreldrepenger før
- * fødsel.
+ * Delregel innenfor regeltjenesten FastsettePeriodeRegel som fastsetter uttak av foreldrepenger før fødsel.
  *
  * <p>Utfall definisjoner:<br>
  *
@@ -30,8 +29,7 @@ import no.nav.fpsak.nare.specification.Specification;
  */
 @RuleDocumentation(
         value = ForeldrepengerFørFødselDelregel.ID,
-        specificationReference =
-                "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
+        specificationReference = "https://confluence.adeo.no/display/MODNAV/1.+Samleside+for+oppdaterte+regelflyter")
 public class ForeldrepengerFørFødselDelregel implements RuleService<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK XX10";
@@ -45,17 +43,15 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
         return sjekkOmSøkerErMorNode(new Ruleset<>());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMorNode(
-            Ruleset<FastsettePeriodeGrunnlag> rs) {
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMorNode(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
                 .hvis(new SjekkOmSøkerErMor(), sjekkOmPeriodenStarterForTidligNode(rs))
-                .ellers(
-                        Manuellbehandling.opprett(
-                                "UT1076",
-                                IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
-                                Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL,
-                                false,
-                                false));
+                .ellers(Manuellbehandling.opprett(
+                        "UT1076",
+                        IkkeOppfyltÅrsak.FAR_PERIODE_FØR_FØDSEL,
+                        Manuellbehandlingårsak.FAR_SØKER_FØR_FØDSEL,
+                        false,
+                        false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterForTidligNode(
@@ -66,16 +62,11 @@ public class ForeldrepengerFørFødselDelregel implements RuleService<FastsetteP
                 .hvis(
                         new SjekkOmForeldrepengerFørFødselStarterForTidligEllerSlutterForSent(),
                         Manuellbehandling.opprett(
-                                "UT1070",
-                                null,
-                                Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO,
-                                true,
-                                false))
+                                "UT1070", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false))
                 .ellers(sjekkOmGradering(rs));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmGradering(
-            Ruleset<FastsettePeriodeGrunnlag> rs) {
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGradering(Ruleset<FastsettePeriodeGrunnlag> rs) {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(
                         new SjekkOmGradertPeriode(),

@@ -53,8 +53,7 @@ public final class UttakPeriode extends LukketPeriode {
 
     private void validerKontoVedTrekkdager() {
         if (stønadskontotype == null
-                && getAktiviteter().stream()
-                        .anyMatch(a -> a.getTrekkdager().compareTo(Trekkdager.ZERO) > 0)) {
+                && getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().compareTo(Trekkdager.ZERO) > 0)) {
             throw new IllegalStateException("Kan ikke trekke dager ved ukjent stønadskonto");
         }
     }

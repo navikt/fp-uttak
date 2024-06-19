@@ -18,8 +18,6 @@ public class SjekkOmDokumentertHV extends LeafSpecification<FastsettePeriodeGrun
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return HV_OVELSE_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering())
-                ? ja()
-                : nei();
+        return HV_OVELSE_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
     }
 }

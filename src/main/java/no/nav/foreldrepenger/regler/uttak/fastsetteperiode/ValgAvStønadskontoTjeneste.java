@@ -49,8 +49,7 @@ final class ValgAvStønadskontoTjeneste {
         return Optional.empty();
     }
 
-    private static boolean periodeErPleiepenger(
-            OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
+    private static boolean periodeErPleiepenger(OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
         return PrematurukerUtil.oppfyllerKravTilPrematuruker(
                         regelGrunnlag.getDatoer().getFødsel(),
                         regelGrunnlag.getDatoer().getTermin())
@@ -63,8 +62,7 @@ final class ValgAvStønadskontoTjeneste {
                 && periode.getTom().isBefore(regelGrunnlag.getDatoer().getTermin());
     }
 
-    private static Optional<Stønadskontotype> stønadskontoVedPleiepenger(
-            RegelGrunnlag regelGrunnlag) {
+    private static Optional<Stønadskontotype> stønadskontoVedPleiepenger(RegelGrunnlag regelGrunnlag) {
         // Trenger ikke å sjekke om tom på konto, ettersom bruker ikke kan gå tom før termin
         if (regelGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FELLESPERIODE)) {
             return Optional.of(Stønadskontotype.FELLESPERIODE);
@@ -72,27 +70,19 @@ final class ValgAvStønadskontoTjeneste {
         if (regelGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FORELDREPENGER)) {
             return Optional.of(Stønadskontotype.FORELDREPENGER);
         }
-        throw new IllegalStateException(
-                "Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: "
-                        + regelGrunnlag.getGyldigeStønadskontotyper());
+        throw new IllegalStateException("Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: "
+                + regelGrunnlag.getGyldigeStønadskontotyper());
     }
 
     private static List<Stønadskontotype> hentSøkerSineKontoer(RegelGrunnlag regelGrunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
         var gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
-        if (regelGrunnlag.getBehandling().isSøkerMor()
-                && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
-            søkerSineKonto =
-                    Arrays.asList(
-                            Stønadskontotype.MØDREKVOTE,
-                            Stønadskontotype.FELLESPERIODE,
-                            Stønadskontotype.FORELDREPENGER);
+        if (regelGrunnlag.getBehandling().isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
+            søkerSineKonto = Arrays.asList(
+                    Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
         } else if (gyldige.contains(Stønadskontotype.FEDREKVOTE)) {
-            søkerSineKonto =
-                    Arrays.asList(
-                            Stønadskontotype.FEDREKVOTE,
-                            Stønadskontotype.FELLESPERIODE,
-                            Stønadskontotype.FORELDREPENGER);
+            søkerSineKonto = Arrays.asList(
+                    Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
         } else {
             søkerSineKonto = List.of(Stønadskontotype.FORELDREPENGER);
         }
@@ -100,14 +90,11 @@ final class ValgAvStønadskontoTjeneste {
     }
 
     private static boolean erTomForKonto(
-            OppgittPeriode periode,
-            Stønadskontotype stønadskontotype,
-            SaldoUtregning saldoUtregning) {
+            OppgittPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
         var tomForKonto = true;
         for (var arbeidsforhold : periode.getAktiviteter()) {
-            var saldo =
-                    saldoUtregning.nettoSaldoJustertForMinsterett(
-                            stønadskontotype, arbeidsforhold, periode.kanTrekkeAvMinsterett());
+            var saldo = saldoUtregning.nettoSaldoJustertForMinsterett(
+                    stønadskontotype, arbeidsforhold, periode.kanTrekkeAvMinsterett());
             if (saldo.merEnn0()) {
                 tomForKonto = false;
             } else {

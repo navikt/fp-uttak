@@ -27,8 +27,7 @@ public final class SamtidigUttakUtil {
 
     private SamtidigUttakUtil() {}
 
-    public static boolean annenpartHarSamtidigPeriodeMedUtbetaling(
-            FastsettePeriodeGrunnlag grunnlag) {
+    public static boolean annenpartHarSamtidigPeriodeMedUtbetaling(FastsettePeriodeGrunnlag grunnlag) {
         return finnOverlappendeAnnenpartPeriode(grunnlag, SamtidigUttakUtil::periodeHarUtbetaling)
                 .isPresent();
     }
@@ -45,8 +44,7 @@ public final class SamtidigUttakUtil {
 
     public static boolean søktSamtidigUttakForPeriode(FastsettePeriodeGrunnlag grunnlag) {
         return grunnlag.getAktuellPeriode().erSøktSamtidigUttak()
-                || finnOverlappendeAnnenpartPeriode(
-                                grunnlag, AnnenpartUttakPeriode::isSamtidigUttak)
+                || finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::isSamtidigUttak)
                         .isPresent();
     }
 
@@ -79,17 +77,14 @@ public final class SamtidigUttakUtil {
         // Dessuten avventer vi tilfelle av gradering og flere aktiviteter - reduser dersom 1
         // aktivitet eller ikke gradering
         return !er150ProsentKonfigurasjon(grunnlag)
-                && uttaksprosentSomGir100ProsentSamtidigUttak(grunnlag)
-                                .compareTo(SamtidigUttaksprosent.TWENTY)
-                        >= 0
+                && uttaksprosentSomGir100ProsentSamtidigUttak(grunnlag).compareTo(SamtidigUttaksprosent.TWENTY) >= 0
                 && !(grunnlag.getAktuellPeriode().getAktiviteter().size() > 1
                         && grunnlag.getAktuellPeriode().erSøktGradering());
     }
 
     public static boolean gjelderFlerbarnsdager(FastsettePeriodeGrunnlag grunnlag) {
         return grunnlag.getAktuellPeriode().isFlerbarnsdager()
-                || finnOverlappendeAnnenpartPeriode(
-                                grunnlag, AnnenpartUttakPeriode::isFlerbarnsdager)
+                || finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::isFlerbarnsdager)
                         .isPresent();
     }
 
@@ -99,8 +94,7 @@ public final class SamtidigUttakUtil {
             return false;
         }
         return grunnlag.getAktuellPeriode().erOmsluttetAv(farRundtFødselIntervall)
-                || finnOverlappendeAnnenpartPeriode(
-                                grunnlag, app -> app.erOmsluttetAv(farRundtFødselIntervall))
+                || finnOverlappendeAnnenpartPeriode(grunnlag, app -> app.erOmsluttetAv(farRundtFødselIntervall))
                         .isPresent();
     }
 
@@ -108,8 +102,7 @@ public final class SamtidigUttakUtil {
             FastsettePeriodeGrunnlag periodeGrunnlag, RegelGrunnlag regelGrunnlag) {
         // Er det ikkejusterbar periode, samtidig uttak under 100% eller 150/200% tilfelle?
         var kanReduseres =
-                regelGrunnlag.getBehandling().isBerørtBehandling()
-                        || erTapendePeriodeUtregning(periodeGrunnlag);
+                regelGrunnlag.getBehandling().isBerørtBehandling() || erTapendePeriodeUtregning(periodeGrunnlag);
         if (!kanReduseres
                 || !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag)
                 || !merEnn100ProsentSamtidigUttak(periodeGrunnlag)
@@ -128,28 +121,26 @@ public final class SamtidigUttakUtil {
                 .orElse(SamtidigUttaksprosent.ZERO);
     }
 
-    private static SamtidigUttaksprosent uttaksprosentSomGir100ProsentSamtidigUttak(
-            FastsettePeriodeGrunnlag grunnlag) {
+    private static SamtidigUttaksprosent uttaksprosentSomGir100ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
         var annenpart = uttaksprosentAnnenpart(grunnlag);
         return SamtidigUttaksprosent.HUNDRED.subtract(annenpart);
     }
 
     private static boolean annenpartHarPeriodeMottattSenere(
             FastsettePeriodeGrunnlag grunnlag, boolean forNedjustering) {
-        var overlappende =
-                finnOverlappendeAnnenpartPeriode(
-                                grunnlag,
-                                aup ->
-                                        ((aup.isInnvilget() && aup.isUtsettelse())
-                                                        || aup.harUtbetaling())
-                                                && (forNedjustering || !aup.isSamtidigUttak()))
-                        .flatMap(AnnenpartUttakPeriode::getSenestMottattDato);
+        var overlappende = finnOverlappendeAnnenpartPeriode(
+                        grunnlag,
+                        aup -> ((aup.isInnvilget() && aup.isUtsettelse()) || aup.harUtbetaling())
+                                && (forNedjustering || !aup.isSamtidigUttak()))
+                .flatMap(AnnenpartUttakPeriode::getSenestMottattDato);
         var periodeMottatt = grunnlag.getAktuellPeriode().getSenestMottattDato().orElseThrow();
         if (overlappende.filter(ol -> ol.equals(periodeMottatt)).isPresent()) {
             return grunnlag.getAnnenPartSisteSøknadMottattTidspunkt()
                     .isAfter(grunnlag.getSisteSøknadMottattTidspunkt());
         }
-        return overlappende.filter(apmottatt -> apmottatt.isAfter(periodeMottatt)).isPresent();
+        return overlappende
+                .filter(apmottatt -> apmottatt.isAfter(periodeMottatt))
+                .isPresent();
     }
 
     private static boolean er150ProsentKonfigurasjon(FastsettePeriodeGrunnlag grunnlag) {
@@ -166,8 +157,7 @@ public final class SamtidigUttakUtil {
         return false;
     }
 
-    private static Set<Stønadskontotype> getAnnenpartStønadskontotyper(
-            FastsettePeriodeGrunnlag grunnlag) {
+    private static Set<Stønadskontotype> getAnnenpartStønadskontotyper(FastsettePeriodeGrunnlag grunnlag) {
         return finnOverlappendeAnnenpartPeriode(grunnlag, app -> true)
                 .map(AnnenpartUttakPeriode::getAktiviteter)
                 .orElse(Set.of())
@@ -182,10 +172,7 @@ public final class SamtidigUttakUtil {
             FastsettePeriodeGrunnlag grunnlag, Predicate<AnnenpartUttakPeriode> filter) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         return grunnlag.getAnnenPartUttaksperioder().stream()
-                .filter(
-                        app ->
-                                PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app)
-                                        && filter.test(app))
+                .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app) && filter.test(app))
                 .findFirst();
     }
 

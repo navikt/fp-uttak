@@ -34,10 +34,8 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     UTSETTELSE_GYLDIG_PGA_SYKDOM(2014, "Utsettelse pga sykdom"),
 
     UTSETTELSE_GYLDIG(2024, "Gyldig utsettelse"),
-    UTSETTELSE_GYLDIG_SEKS_UKER_INNLEGGELSE(
-            2025, "Gyldig utsettelse første 6 uker pga. innleggelse"),
-    UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT(
-            2026, "Gyldig utsettelse første 6 uker pga. barn innlagt"),
+    UTSETTELSE_GYLDIG_SEKS_UKER_INNLEGGELSE(2025, "Gyldig utsettelse første 6 uker pga. innleggelse"),
+    UTSETTELSE_GYLDIG_SEKS_UKER_FRI_BARN_INNLAGT(2026, "Gyldig utsettelse første 6 uker pga. barn innlagt"),
     UTSETTELSE_GYLDIG_SEKS_UKER_FRI_SYKDOM(2027, "Gyldig utsettelse første 6 uker pga. sykdom"),
     UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT(2028, "Gyldig utsettelse aktivitetskrav oppfylt "),
     ;

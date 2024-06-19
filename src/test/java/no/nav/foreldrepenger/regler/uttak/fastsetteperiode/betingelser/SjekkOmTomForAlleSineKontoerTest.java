@@ -29,19 +29,16 @@ class SjekkOmTomForAlleSineKontoerTest {
     void
             når_søknadstype_er_fødsel_og_søker_er_mor_og_begge_har_rett_skal_søker_sine_kontoer_vær_MK_FP_og_FORELDREPENGER() { // 1
 
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .behandling(new Behandling.Builder().søkerErMor(true))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                        .build();
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene)
                 .containsExactly(
-                        Stønadskontotype.MØDREKVOTE,
-                        Stønadskontotype.FELLESPERIODE,
-                        Stønadskontotype.FORELDREPENGER);
+                        Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     private List<Stønadskontotype> stønadskontotypene(RegelGrunnlag grunnlag) {
@@ -50,59 +47,32 @@ class SjekkOmTomForAlleSineKontoerTest {
     }
 
     @Test
-    void
-            når_søker_har_kontoene_FPFF_MK_FP_er_søker_ikke_tom_for_alle_sine_konto_selvom_en_konto_er_tom() {
+    void når_søker_har_kontoene_FPFF_MK_FP_er_søker_ikke_tom_for_alle_sine_konto_selvom_en_konto_er_tom() {
         var periodeStart = LocalDate.of(2018, 1, 8);
         var periodeSlutt = periodeStart.plusWeeks(6);
 
-        var uttakPeriode =
-                OppgittPeriode.forVanligPeriode(
-                        Stønadskontotype.MØDREKVOTE,
-                        periodeStart,
-                        periodeSlutt,
-                        null,
-                        false,
-                        null,
-                        null,
-                        null,
-                        null);
-        var kontoer =
-                new Kontoer.Builder()
-                        .konto(
-                                new Konto.Builder()
-                                        .type(Stønadskontotype.MØDREKVOTE)
-                                        .trekkdager(15 * 5))
-                        .konto(
-                                new Konto.Builder()
-                                        .type(Stønadskontotype.FELLESPERIODE)
-                                        .trekkdager(10 * 5));
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .kontoer(kontoer)
-                        .søknad(
-                                new Søknad.Builder()
-                                        .type(Søknadstype.FØDSEL)
-                                        .oppgittPeriode(uttakPeriode)
-                                        .mottattTidspunkt(periodeStart.atStartOfDay()))
-                        .behandling(new Behandling.Builder().søkerErMor(true))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
-                        .arbeid(
-                                new Arbeid.Builder()
-                                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                        .build();
+        var uttakPeriode = OppgittPeriode.forVanligPeriode(
+                Stønadskontotype.MØDREKVOTE, periodeStart, periodeSlutt, null, false, null, null, null, null);
+        var kontoer = new Kontoer.Builder()
+                .konto(new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(15 * 5))
+                .konto(new Konto.Builder().type(Stønadskontotype.FELLESPERIODE).trekkdager(10 * 5));
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .kontoer(kontoer)
+                .søknad(new Søknad.Builder()
+                        .type(Søknadstype.FØDSEL)
+                        .oppgittPeriode(uttakPeriode)
+                        .mottattTidspunkt(periodeStart.atStartOfDay()))
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .build();
 
         var sjekkOmTomForAlleSineKontoer = new SjekkOmTomForAlleSineKontoer();
         uttakPeriode.setAktiviteter(grunnlag.getArbeid().getAktiviteter());
-        var saldoUtregningGrunnlag =
-                SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(
-                        List.of(), List.of(), grunnlag, uttakPeriode.getFom());
-        var evaluation =
-                sjekkOmTomForAlleSineKontoer.evaluate(
-                        new FastsettePeriodeGrunnlagImpl(
-                                grunnlag,
-                                null,
-                                SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag),
-                                uttakPeriode));
+        var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(
+                List.of(), List.of(), grunnlag, uttakPeriode.getFom());
+        var evaluation = sjekkOmTomForAlleSineKontoer.evaluate(new FastsettePeriodeGrunnlagImpl(
+                grunnlag, null, SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), uttakPeriode));
         assertThat(evaluation.result()).isEqualTo(Resultat.NEI);
     }
 
@@ -110,22 +80,15 @@ class SjekkOmTomForAlleSineKontoerTest {
     void
             når_søknadstype_er_fødsel_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 2
 
-        var kontoer =
-                new Kontoer.Builder()
-                        .konto(
-                                new Konto.Builder()
-                                        .type(Stønadskontotype.FORELDREPENGER)
-                                        .trekkdager(50));
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .kontoer(kontoer)
-                        .arbeid(
-                                new Arbeid.Builder()
-                                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                        .behandling(new Behandling.Builder().søkerErMor(true))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                        .build();
+        var kontoer = new Kontoer.Builder()
+                .konto(new Konto.Builder().type(Stønadskontotype.FORELDREPENGER).trekkdager(50));
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .kontoer(kontoer)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
@@ -135,41 +98,31 @@ class SjekkOmTomForAlleSineKontoerTest {
     void
             når_søknadstype_er_fødsel_og_søker_er_far_og_begge_har_rett_skal_søker_sine_kontoer_være_FK_FP_og_FORELDREPENGER() { // 3
 
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .behandling(new Behandling.Builder().søkerErMor(false))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                        .build();
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .behandling(new Behandling.Builder().søkerErMor(false))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene)
                 .containsExactly(
-                        Stønadskontotype.FEDREKVOTE,
-                        Stønadskontotype.FELLESPERIODE,
-                        Stønadskontotype.FORELDREPENGER);
+                        Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
     void
             når_søknadstype_er_fødsel_og_søker_er_far_og_kun_far_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 4
 
-        var kontoer =
-                new Kontoer.Builder()
-                        .konto(
-                                new Konto.Builder()
-                                        .type(Stønadskontotype.FORELDREPENGER)
-                                        .trekkdager(50));
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .kontoer(kontoer)
-                        .arbeid(
-                                new Arbeid.Builder()
-                                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                        .behandling(new Behandling.Builder().søkerErMor(false))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
-                        .build();
+        var kontoer = new Kontoer.Builder()
+                .konto(new Konto.Builder().type(Stønadskontotype.FORELDREPENGER).trekkdager(50));
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .kontoer(kontoer)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .behandling(new Behandling.Builder().søkerErMor(false))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
@@ -179,41 +132,31 @@ class SjekkOmTomForAlleSineKontoerTest {
     void
             når_søknadstype_er_adopsjon_og_søker_er_mor_og_begge_har_rett_skal_søker_sine_kontoer_være_MK_FP_og_FORELDREPENGER() { // 5
 
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .behandling(new Behandling.Builder().søkerErMor(true))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
-                        .build();
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene)
                 .containsExactly(
-                        Stønadskontotype.MØDREKVOTE,
-                        Stønadskontotype.FELLESPERIODE,
-                        Stønadskontotype.FORELDREPENGER);
+                        Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
     void
             når_søknadstype_er_adopsjon_og_søker_er_mor_og_kun_mor_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 6
 
-        var kontoer =
-                new Kontoer.Builder()
-                        .konto(
-                                new Konto.Builder()
-                                        .type(Stønadskontotype.FORELDREPENGER)
-                                        .trekkdager(50));
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .kontoer(kontoer)
-                        .arbeid(
-                                new Arbeid.Builder()
-                                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                        .behandling(new Behandling.Builder().søkerErMor(true))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
-                        .build();
+        var kontoer = new Kontoer.Builder()
+                .konto(new Konto.Builder().type(Stønadskontotype.FORELDREPENGER).trekkdager(50));
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .kontoer(kontoer)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .behandling(new Behandling.Builder().søkerErMor(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);
@@ -223,41 +166,31 @@ class SjekkOmTomForAlleSineKontoerTest {
     void
             når_søknadstype_er_adopsjon_og_søker_er_far_og_begge_har_rett_skal_søker_sine_kontoer_være_FK_FP_og_FORELDREPENGER() { // 7
 
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .behandling(new Behandling.Builder().søkerErMor(false))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
-                        .build();
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .behandling(new Behandling.Builder().søkerErMor(false))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene)
                 .containsExactly(
-                        Stønadskontotype.FEDREKVOTE,
-                        Stønadskontotype.FELLESPERIODE,
-                        Stønadskontotype.FORELDREPENGER);
+                        Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
     }
 
     @Test
     void
             når_søknadstype_er_adopsjon_og_søker_er_far_og_kun_en_har_rett_skal_søker_sine_kontoer_være_FORELDREPENGER() { // 8
 
-        var kontoer =
-                new Kontoer.Builder()
-                        .konto(
-                                new Konto.Builder()
-                                        .type(Stønadskontotype.FORELDREPENGER)
-                                        .trekkdager(50));
-        var grunnlag =
-                RegelGrunnlagTestBuilder.create()
-                        .kontoer(kontoer)
-                        .arbeid(
-                                new Arbeid.Builder()
-                                        .arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-                        .behandling(new Behandling.Builder().søkerErMor(false))
-                        .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true))
-                        .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
-                        .build();
+        var kontoer = new Kontoer.Builder()
+                .konto(new Konto.Builder().type(Stønadskontotype.FORELDREPENGER).trekkdager(50));
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+                .kontoer(kontoer)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+                .behandling(new Behandling.Builder().søkerErMor(false))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true))
+                .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
+                .build();
 
         var stønadskontotypene = stønadskontotypene(grunnlag);
         assertThat(stønadskontotypene).containsExactly(Stønadskontotype.FORELDREPENGER);

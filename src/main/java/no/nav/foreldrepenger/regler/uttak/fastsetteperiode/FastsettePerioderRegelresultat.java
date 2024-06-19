@@ -16,12 +16,11 @@ class FastsettePerioderRegelresultat {
 
     FastsettePerioderRegelresultat(Evaluation evaluation) {
         this.evaluationSummary = new EvaluationSummary(evaluation);
-        this.utfall =
-                evaluationSummary.allOutcomes().stream()
-                        .filter(UttakOutcome.class::isInstance)
-                        .map(UttakOutcome.class::cast)
-                        .findFirst()
-                        .orElseThrow();
+        this.utfall = evaluationSummary.allOutcomes().stream()
+                .filter(UttakOutcome.class::isInstance)
+                .map(UttakOutcome.class::cast)
+                .findFirst()
+                .orElseThrow();
     }
 
     public FastsettePerioderRegelresultat(Evaluation evaluation, UttakOutcome utfall) {

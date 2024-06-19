@@ -17,8 +17,7 @@ public class RegelResultatBehandlerResultat {
         return new RegelResultatBehandlerResultat(utenKnekk, null);
     }
 
-    public static RegelResultatBehandlerResultat medKnekk(
-            UttakPeriode førKnekk, OppgittPeriode etterKnekk) {
+    public static RegelResultatBehandlerResultat medKnekk(UttakPeriode førKnekk, OppgittPeriode etterKnekk) {
         return new RegelResultatBehandlerResultat(førKnekk, etterKnekk);
     }
 

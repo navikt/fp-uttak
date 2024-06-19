@@ -28,25 +28,25 @@ public class RegelGrunnlagTestBuilder {
             AktivitetIdentifikator.forArbeid(new Orgnummer("000000003"), null);
 
     public static RegelGrunnlag.Builder create() {
-        var kontoer =
-                new Kontoer.Builder()
-                        .konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
-                        .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
-                        .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(75))
-                        .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(80));
+        var kontoer = new Kontoer.Builder()
+                .konto(new Konto.Builder().type(FORELDREPENGER_FØR_FØDSEL).trekkdager(15))
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
+                .konto(new Konto.Builder().type(FEDREKVOTE).trekkdager(75))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(80));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         return new RegelGrunnlag.Builder()
                 .kontoer(kontoer)
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(LocalDate.MIN))
                 .behandling(new Behandling.Builder().søkerErMor(true))
-                .rettOgOmsorg(
-                        new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+                .rettOgOmsorg(new RettOgOmsorg.Builder()
+                        .morHarRett(true)
+                        .farHarRett(true)
+                        .samtykke(true))
                 .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
-                .inngangsvilkår(
-                        new Inngangsvilkår.Builder()
-                                .adopsjonOppfylt(true)
-                                .foreldreansvarnOppfylt(true)
-                                .fødselOppfylt(true)
-                                .opptjeningOppfylt(true));
+                .inngangsvilkår(new Inngangsvilkår.Builder()
+                        .adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 }

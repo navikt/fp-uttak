@@ -27,56 +27,38 @@ public class StebarnsadopsjonDelRegel implements RuleService<FastsettePeriodeGru
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
-        return rs.hvisRegel(
-                        SjekkOmPeriodenStarterFørFamiliehendelse.ID,
-                        "Starter perioden før omsorgsovertakelse?")
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før omsorgsovertakelse?")
                 .hvis(
                         new SjekkOmPeriodenStarterFørFamiliehendelse(),
-                        IkkeOppfylt.opprett(
-                                "UT1285", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
+                        IkkeOppfylt.opprett("UT1285", IkkeOppfyltÅrsak.FØR_OMSORGSOVERTAKELSE, false, false))
                 .ellers(sjekkOmSøkerHarOmsorg());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerHarOmsorg() {
         return rs.hvisRegel(SjekkOmOmsorgHelePerioden.ID, "Har søker omsorg for barnet?")
                 .hvis(new SjekkOmOmsorgHelePerioden(), sjekkOmNoenDisponibleDager())
-                .ellers(
-                        IkkeOppfylt.opprett(
-                                "UT1240", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
+                .ellers(IkkeOppfylt.opprett("UT1240", IkkeOppfyltÅrsak.FAR_HAR_IKKE_OMSORG, true, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmNoenDisponibleDager() {
         return rs.hvisRegel(
                         SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto.ID,
                         "Er det noen disponible stønadsdager på mødrekvote?")
-                .hvis(
-                        new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(),
-                        sjekkOmGraderingIPerioden())
-                .ellers(
-                        Manuellbehandling.opprett(
-                                "UT1244",
-                                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
-                                Manuellbehandlingårsak.STØNADSKONTO_TOM,
-                                true,
-                                false));
+                .hvis(new SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto(), sjekkOmGraderingIPerioden())
+                .ellers(Manuellbehandling.opprett(
+                        "UT1244",
+                        IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN,
+                        Manuellbehandlingårsak.STØNADSKONTO_TOM,
+                        true,
+                        false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPerioden() {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
                 .hvis(
                         new SjekkOmGradertPeriode(),
-                        Manuellbehandling.opprett(
-                                "UT1242",
-                                null,
-                                Manuellbehandlingårsak.STEBARNSADOPSJON,
-                                true,
-                                false))
-                .ellers(
-                        Manuellbehandling.opprett(
-                                "UT1241",
-                                null,
-                                Manuellbehandlingårsak.STEBARNSADOPSJON,
-                                true,
-                                false));
+                        Manuellbehandling.opprett("UT1242", null, Manuellbehandlingårsak.STEBARNSADOPSJON, true, false))
+                .ellers(Manuellbehandling.opprett(
+                        "UT1241", null, Manuellbehandlingårsak.STEBARNSADOPSJON, true, false));
     }
 }

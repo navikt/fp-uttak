@@ -10,8 +10,7 @@ public class OrkestreringTillegg {
     private final List<OppgittPeriode> manglendeSøktPerioder;
     private final Set<LocalDate> knekkpunkter;
 
-    public OrkestreringTillegg(
-            List<OppgittPeriode> manglendeSøktPerioder, Set<LocalDate> knekkpunkter) {
+    public OrkestreringTillegg(List<OppgittPeriode> manglendeSøktPerioder, Set<LocalDate> knekkpunkter) {
         this.manglendeSøktPerioder = manglendeSøktPerioder;
         this.knekkpunkter = knekkpunkter;
     }
@@ -26,12 +25,9 @@ public class OrkestreringTillegg {
 
     @Override
     public String toString() {
-        var msp = manglendeSøktPerioder.stream().map(p -> p.getFom() + " - " + p.getTom()).toList();
-        return "OrkestreringTillegg{"
-                + "manglendeSøktPerioder="
-                + msp
-                + ", knekkpunkter="
-                + knekkpunkter
-                + '}';
+        var msp = manglendeSøktPerioder.stream()
+                .map(p -> p.getFom() + " - " + p.getTom())
+                .toList();
+        return "OrkestreringTillegg{" + "manglendeSøktPerioder=" + msp + ", knekkpunkter=" + knekkpunkter + '}';
     }
 }

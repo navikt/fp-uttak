@@ -10,8 +10,7 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto
         extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 10.5";
-    public static final String BESKRIVELSE =
-            "Har noen aktiviteter disponible stønadsdager på kvoten?";
+    public static final String BESKRIVELSE = "Har noen aktiviteter disponible stønadsdager på kvoten?";
 
     public SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto() {
         super(ID);
@@ -26,8 +25,7 @@ public class SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto
             var saldo = grunnlag.getSaldoUtregning().saldoITrekkdager(stønadskontotype, aktivitet);
             if (saldo.merEnn0()) {
                 if (aktuellPeriode.isFlerbarnsdager()) {
-                    var saldoFlerbarnsdager =
-                            grunnlag.getSaldoUtregning().restSaldoFlerbarnsdager(aktivitet);
+                    var saldoFlerbarnsdager = grunnlag.getSaldoUtregning().restSaldoFlerbarnsdager(aktivitet);
                     if (saldoFlerbarnsdager.merEnn0()) {
                         return ja();
                     }

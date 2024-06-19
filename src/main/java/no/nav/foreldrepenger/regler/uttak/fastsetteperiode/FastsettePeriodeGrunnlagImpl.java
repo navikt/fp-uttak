@@ -112,28 +112,19 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public boolean isSakMedMinsterett() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.BARE_FAR_MINSTERETT)
-                && regelGrunnlag
-                                .getKontoer()
-                                .getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT)
-                        > 0;
+                && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT) > 0;
     }
 
     @Override
     public boolean isSakMedDagerUtenAktivitetskrav() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.UTEN_AKTIVITETSKRAV)
-                && regelGrunnlag
-                                .getKontoer()
-                                .getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV)
-                        > 0;
+                && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV) > 0;
     }
 
     @Override
     public boolean isSakMedRettEtterStartNesteStønadsperiode() {
         return regelGrunnlag.getKontoer().harSpesialkonto(Spesialkontotype.TETTE_FØDSLER)
-                && regelGrunnlag
-                                .getKontoer()
-                                .getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER)
-                        > 0;
+                && regelGrunnlag.getKontoer().getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER) > 0;
     }
 
     @Override

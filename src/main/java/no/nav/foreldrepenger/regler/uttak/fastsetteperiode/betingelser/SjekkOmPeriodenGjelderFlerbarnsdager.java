@@ -6,8 +6,7 @@ import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
 @RuleDocumentation(SjekkOmPeriodenGjelderFlerbarnsdager.ID)
-public class SjekkOmPeriodenGjelderFlerbarnsdager
-        extends LeafSpecification<FastsettePeriodeGrunnlag> {
+public class SjekkOmPeriodenGjelderFlerbarnsdager extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "FP_VK 13.4";
     public static final String BESKRIVELSE = "Gjelder perioden flerbarnsdager?";

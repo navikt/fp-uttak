@@ -31,8 +31,7 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoFørSluttAvGraderingBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode =
-                gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
+        var søknadsperiode = gradertoppgittPeriode(mottattDato.minusWeeks(1), mottattDato, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -46,8 +45,7 @@ class SøknadMottattDatoRegelTest {
     void mottattDatoFørSluttAvFerieBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode =
-                utsettelsePeriode(
-                        mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
+                utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -60,12 +58,8 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoEtterSluttAvFerieBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode =
-                utsettelsePeriode(
-                        mottattDato.plusDays(1),
-                        mottattDato.plusWeeks(1),
-                        UtsettelseÅrsak.FERIE,
-                        mottattDato);
+        var søknadsperiode = utsettelsePeriode(
+                mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -79,11 +73,7 @@ class SøknadMottattDatoRegelTest {
     void mottattDatoFørSluttAvArbeidBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
         var søknadsperiode =
-                utsettelsePeriode(
-                        mottattDato.minusWeeks(1),
-                        mottattDato,
-                        UtsettelseÅrsak.ARBEID,
-                        mottattDato);
+                utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -96,12 +86,8 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode =
-                utsettelsePeriode(
-                        mottattDato.plusDays(1),
-                        mottattDato.plusWeeks(1),
-                        UtsettelseÅrsak.ARBEID,
-                        mottattDato);
+        var søknadsperiode = utsettelsePeriode(
+                mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -117,8 +103,7 @@ class SøknadMottattDatoRegelTest {
 
     private OppgittPeriode utsettelsePeriode(
             LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, LocalDate mottattDato) {
-        return OppgittPeriode.forUtsettelse(
-                fom, tom, utsettelseÅrsak, mottattDato, mottattDato, null, null);
+        return OppgittPeriode.forUtsettelse(fom, tom, utsettelseÅrsak, mottattDato, mottattDato, null, null);
     }
 
     private RegelGrunnlag.Builder basicBuilder() {
@@ -127,23 +112,18 @@ class SøknadMottattDatoRegelTest {
         var kontoer = new Kontoer.Builder().konto(konto);
         return new RegelGrunnlag.Builder()
                 .kontoer(kontoer)
-                .arbeid(
-                        new Arbeid.Builder()
-                                .arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
                 .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
                 .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
-                .behandling(
-                        new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
-                .inngangsvilkår(
-                        new Inngangsvilkår.Builder()
-                                .adopsjonOppfylt(true)
-                                .foreldreansvarnOppfylt(true)
-                                .fødselOppfylt(true)
-                                .opptjeningOppfylt(true));
+                .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+                .inngangsvilkår(new Inngangsvilkår.Builder()
+                        .adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 
-    private OppgittPeriode gradertoppgittPeriode(
-            LocalDate fom, LocalDate tom, LocalDate mottattDato) {
+    private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {
         return OppgittPeriode.forGradering(
                 Stønadskontotype.MØDREKVOTE,
                 fom,

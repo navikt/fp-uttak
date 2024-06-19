@@ -77,12 +77,10 @@ public class FastsattUttakPeriode {
                         && !erPeriodeMedGodkjentAktivitet(resultatÅrsak))
                 || (Perioderesultattype.AVSLÅTT.equals(perioderesultattype)
                         && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak))
-                || (Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype)
-                        && !utsettelse);
+                || (Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
     }
 
-    private static boolean erPeriodeMedGodkjentAktivitet(
-            FastsattUttakPeriode.ResultatÅrsak resultatÅrsak) {
+    private static boolean erPeriodeMedGodkjentAktivitet(FastsattUttakPeriode.ResultatÅrsak resultatÅrsak) {
         // Inntil videre: Perioder med godkjent aktivitet iht 14-14 første ledd skal ikke gå til
         // fratrekk på rett etter tredje ledd
         // Når logikken skal utvides til andre tilfelle - vær obs på flerbarnsdager
@@ -159,8 +157,7 @@ public class FastsattUttakPeriode {
 
         public Builder tidsperiode(LocalDate fom, LocalDate tom) {
             if (tom.isBefore(fom)) {
-                throw new IllegalArgumentException(
-                        "Tom(" + tom + ") kan ikke ligge før fom(" + fom + ")");
+                throw new IllegalArgumentException("Tom(" + tom + ") kan ikke ligge før fom(" + fom + ")");
             }
             kladd.fom = fom;
             kladd.tom = tom;

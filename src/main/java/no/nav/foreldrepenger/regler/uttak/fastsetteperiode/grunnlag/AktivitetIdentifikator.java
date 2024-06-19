@@ -9,9 +9,7 @@ public class AktivitetIdentifikator {
     private final ArbeidsgiverIdentifikator arbeidsgiverIdentifikator;
 
     private AktivitetIdentifikator(
-            AktivitetType aktivitetType,
-            ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
-            String arbeidsforholdId) {
+            AktivitetType aktivitetType, ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, String arbeidsforholdId) {
         this.aktivitetType = aktivitetType;
         this.arbeidsforholdId = arbeidsforholdId;
         this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
@@ -23,8 +21,7 @@ public class AktivitetIdentifikator {
 
     public static AktivitetIdentifikator forArbeid(
             ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, String arbeidsforholdId) {
-        return new AktivitetIdentifikator(
-                AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId);
+        return new AktivitetIdentifikator(AktivitetType.ARBEID, arbeidsgiverIdentifikator, arbeidsforholdId);
     }
 
     public static AktivitetIdentifikator forSelvstendigNæringsdrivende() {

@@ -23,14 +23,10 @@ public class SjekkOmOpphørsdatoTrefferPerioden extends LeafSpecification<Fastse
             return nei();
         }
 
-        return erOpphørsdatoIEllerFørPerioden(oppgittPeriode, opphørsdatoForMedlemskap)
-                ? ja()
-                : nei();
+        return erOpphørsdatoIEllerFørPerioden(oppgittPeriode, opphørsdatoForMedlemskap) ? ja() : nei();
     }
 
-    private boolean erOpphørsdatoIEllerFørPerioden(
-            OppgittPeriode oppgittPeriode, LocalDate opphørsdato) {
-        return oppgittPeriode.overlapper(opphørsdato)
-                || oppgittPeriode.getFom().isAfter(opphørsdato);
+    private boolean erOpphørsdatoIEllerFørPerioden(OppgittPeriode oppgittPeriode, LocalDate opphørsdato) {
+        return oppgittPeriode.overlapper(opphørsdato) || oppgittPeriode.getFom().isAfter(opphørsdato);
     }
 }

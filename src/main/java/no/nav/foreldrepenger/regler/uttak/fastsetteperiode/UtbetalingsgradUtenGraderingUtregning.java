@@ -8,8 +8,7 @@ class UtbetalingsgradUtenGraderingUtregning implements UtbetalingsgradUtregning 
 
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
 
-    public UtbetalingsgradUtenGraderingUtregning(
-            SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
+    public UtbetalingsgradUtenGraderingUtregning(SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         Objects.requireNonNull(annenpartSamtidigUttaksprosent);
         this.annenpartSamtidigUttaksprosent = annenpartSamtidigUttaksprosent;
     }

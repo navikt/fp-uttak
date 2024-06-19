@@ -27,10 +27,9 @@ public final class AnnenPart {
     }
 
     public Optional<LocalDate> sisteUttaksdag() {
-        var sisteInnvilgetPeriode =
-                uttaksperioder.stream()
-                        .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
-                        .min((o1, o2) -> o2.getTom().compareTo(o1.getTom()));
+        var sisteInnvilgetPeriode = uttaksperioder.stream()
+                .filter(p -> p.isInnvilget() || p.harTrekkdager() || p.harUtbetaling())
+                .min((o1, o2) -> o2.getTom().compareTo(o1.getTom()));
         return sisteInnvilgetPeriode.map(Periode::getTom);
     }
 

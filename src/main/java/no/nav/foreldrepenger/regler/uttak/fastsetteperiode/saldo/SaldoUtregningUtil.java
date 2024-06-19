@@ -17,8 +17,7 @@ final class SaldoUtregningUtil {
 
     private SaldoUtregningUtil() {}
 
-    static boolean aktivitetIPeriode(
-            FastsattUttakPeriode periode, AktivitetIdentifikator aktivitet) {
+    static boolean aktivitetIPeriode(FastsattUttakPeriode periode, AktivitetIdentifikator aktivitet) {
         return periode.getAktiviteter().stream()
                 .map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator)
                 .anyMatch(aktivitetIdentifikator -> aktivitetIdentifikator.equals(aktivitet));
@@ -58,11 +57,10 @@ final class SaldoUtregningUtil {
         if (virkedagerHele == 0) {
             return Trekkdager.ZERO;
         }
-        var utregning =
-                periodeTrekkdager
-                        .decimalValue()
-                        .multiply(BigDecimal.valueOf(virkedagerInnenfor))
-                        .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
+        var utregning = periodeTrekkdager
+                .decimalValue()
+                .multiply(BigDecimal.valueOf(virkedagerInnenfor))
+                .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
         return new Trekkdager(utregning);
     }
 }
