@@ -24,5 +24,4 @@ public class SjekkOmPeriodenStarterFørFamiliehendelse extends LeafSpecification
         }
         return nei();
     }
-
 }

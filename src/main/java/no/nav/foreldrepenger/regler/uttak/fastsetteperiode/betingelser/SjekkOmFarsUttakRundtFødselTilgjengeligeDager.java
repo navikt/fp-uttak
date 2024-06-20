@@ -17,15 +17,17 @@ public class SjekkOmFarsUttakRundtFødselTilgjengeligeDager extends LeafSpecific
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSøkerMor() || grunnlag.getSaldoUtregning().getFarUttakRundtFødselDager().equals(Trekkdager.ZERO)
-            || grunnlag.periodeFarRundtFødsel().isEmpty()) {
+        if (grunnlag.isSøkerMor()
+                || grunnlag.getSaldoUtregning().getFarUttakRundtFødselDager().equals(Trekkdager.ZERO)
+                || grunnlag.periodeFarRundtFødsel().isEmpty()) {
             return nei();
         }
         var periodeForUttakRundtFødsel = grunnlag.periodeFarRundtFødsel().orElseThrow();
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         if (aktuellPeriode.erOmsluttetAv(periodeForUttakRundtFødsel)) {
             for (var aktivitet : aktuellPeriode.getAktiviteter()) {
-                var saldo = grunnlag.getSaldoUtregning().restSaldoFarUttakRundtFødsel(aktivitet, periodeForUttakRundtFødsel);
+                var saldo = grunnlag.getSaldoUtregning()
+                        .restSaldoFarUttakRundtFødsel(aktivitet, periodeForUttakRundtFødsel);
                 if (saldo.merEnn0()) {
                     return ja();
                 }

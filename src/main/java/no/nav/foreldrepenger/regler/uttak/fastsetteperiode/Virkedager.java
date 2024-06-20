@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 
 public class Virkedager {
@@ -40,8 +39,9 @@ public class Virkedager {
             // Utvid til nærmeste søndag fram i tid fra og med slutt (tom) (0-6 dager)
             var padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
             // Antall virkedager i perioden utvidet til hele uker
-            var virkedagerPadded = toIntExact(
-                ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
+            var virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(
+                            fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1))
+                    * VIRKEDAGER_PR_UKE);
             // Antall virkedager i utvidelse
             var virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
             // Virkedager i perioden uten virkedagene fra utvidelse
@@ -67,5 +67,4 @@ public class Virkedager {
         var plussen = dato.plusDays(1);
         return WEEKEND.contains(plussen.getDayOfWeek()) ? dato.with(next(DayOfWeek.MONDAY)) : plussen;
     }
-
 }

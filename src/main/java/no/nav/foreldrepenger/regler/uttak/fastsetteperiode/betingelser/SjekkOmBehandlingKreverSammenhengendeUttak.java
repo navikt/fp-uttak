@@ -19,6 +19,3 @@ public class SjekkOmBehandlingKreverSammenhengendeUttak extends LeafSpecificatio
         return grunnlag.kreverBehandlingSammenhengendeUttak() ? ja() : nei();
     }
 }
-
-
-

@@ -11,7 +11,6 @@ public class SjekkOmSøkerErMor extends LeafSpecification<FastsettePeriodeGrunnl
     public static final String ID = "FP_VK 27.3.1";
     public static final String BESKRIVELSE = "Er søker mor?";
 
-
     public SjekkOmSøkerErMor() {
         super(ID);
     }

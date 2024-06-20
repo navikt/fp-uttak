@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -18,10 +17,13 @@ public class SjekkOmUføreUtenAktivitetskravHarDisponibleDager extends LeafSpeci
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSakMedDagerUtenAktivitetskrav() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
+        if (grunnlag.isSakMedDagerUtenAktivitetskrav()
+                && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldoUtregning = grunnlag.getSaldoUtregning();
-                if (saldoUtregning.saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet).merEnn0()) {
+                if (saldoUtregning
+                        .saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet)
+                        .merEnn0()) {
                     var saldo = saldoUtregning.restSaldoDagerUtenAktivitetskrav(aktivitet);
                     if (saldo.merEnn0()) {
                         return ja();

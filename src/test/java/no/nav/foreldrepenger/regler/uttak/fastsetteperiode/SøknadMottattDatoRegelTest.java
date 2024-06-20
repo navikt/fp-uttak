@@ -6,9 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
@@ -25,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
+import org.junit.jupiter.api.Test;
 
 class SøknadMottattDatoRegelTest {
 
@@ -46,7 +44,8 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoFørSluttAvFerieBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
+        var søknadsperiode =
+                utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -59,7 +58,8 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoEtterSluttAvFerieBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE, mottattDato);
+        var søknadsperiode = utsettelsePeriode(
+                mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.FERIE, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -72,7 +72,8 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoFørSluttAvArbeidBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode = utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
+        var søknadsperiode =
+                utsettelsePeriode(mottattDato.minusWeeks(1), mottattDato, UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -85,7 +86,8 @@ class SøknadMottattDatoRegelTest {
     @Test
     void mottattDatoEtterSluttAvArbeidBlirInnvilget() {
         var mottattDato = FAMILIEHENDELSE_DATO.plusWeeks(7);
-        var søknadsperiode = utsettelsePeriode(mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID, mottattDato);
+        var søknadsperiode = utsettelsePeriode(
+                mottattDato.plusDays(1), mottattDato.plusWeeks(1), UtsettelseÅrsak.ARBEID, mottattDato);
         var grunnlag = basicBuilder().søknad(søknad(søknadsperiode)).build();
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
@@ -99,7 +101,8 @@ class SøknadMottattDatoRegelTest {
         return new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(søknadsperiode);
     }
 
-    private OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, LocalDate mottattDato) {
+    private OppgittPeriode utsettelsePeriode(
+            LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, LocalDate mottattDato) {
         return OppgittPeriode.forUtsettelse(fom, tom, utsettelseÅrsak, mottattDato, mottattDato, null, null);
     }
 
@@ -107,17 +110,31 @@ class SøknadMottattDatoRegelTest {
         var aktivitetIdentifikator = AktivitetIdentifikator.forArbeid(new Orgnummer("123"), null);
         var konto = new Konto.Builder().type(Stønadskontotype.MØDREKVOTE).trekkdager(50);
         var kontoer = new Kontoer.Builder().konto(konto);
-        return new RegelGrunnlag.Builder().kontoer(kontoer)
-            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
-            .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
-            .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
-            .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+        return new RegelGrunnlag.Builder()
+                .kontoer(kontoer)
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
+                .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
+                .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+                .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+                .inngangsvilkår(new Inngangsvilkår.Builder()
+                        .adopsjonOppfylt(true)
+                        .foreldreansvarnOppfylt(true)
+                        .fødselOppfylt(true)
+                        .opptjeningOppfylt(true));
     }
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {
-        return OppgittPeriode.forGradering(Stønadskontotype.MØDREKVOTE, fom, tom, BigDecimal.TEN, null, false,
-            Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()), mottattDato, mottattDato, null, null);
+        return OppgittPeriode.forGradering(
+                Stønadskontotype.MØDREKVOTE,
+                fom,
+                tom,
+                BigDecimal.TEN,
+                null,
+                false,
+                Set.of(AktivitetIdentifikator.forSelvstendigNæringsdrivende()),
+                mottattDato,
+                mottattDato,
+                null,
+                null);
     }
 }

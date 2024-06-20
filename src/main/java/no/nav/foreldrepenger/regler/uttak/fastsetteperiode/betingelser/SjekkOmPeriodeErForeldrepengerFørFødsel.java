@@ -15,7 +15,6 @@ public class SjekkOmPeriodeErForeldrepengerFørFødsel extends LeafSpecification
         super(ID);
     }
 
-
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var stønadskontotype = grunnlag.getAktuellPeriode().getStønadskontotype();

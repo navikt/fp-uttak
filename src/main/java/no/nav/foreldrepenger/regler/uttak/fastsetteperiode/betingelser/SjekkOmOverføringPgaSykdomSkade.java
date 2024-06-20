@@ -24,4 +24,3 @@ public class SjekkOmOverføringPgaSykdomSkade extends LeafSpecification<Fastsett
         return nei();
     }
 }
-

@@ -17,7 +17,9 @@ public class SjekkGyldigGrunnForTidligOppstartHelePerioden extends LeafSpecifica
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        return aktuellPeriode.getDokumentasjonVurdering() != null && aktuellPeriode.getDokumentasjonVurdering()
-            .erGyldigGrunnForTidligOppstart() ? ja() : nei();
+        return aktuellPeriode.getDokumentasjonVurdering() != null
+                        && aktuellPeriode.getDokumentasjonVurdering().erGyldigGrunnForTidligOppstart()
+                ? ja()
+                : nei();
     }
 }

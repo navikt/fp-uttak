@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 public enum OppholdÅrsak {
-
     FELLESPERIODE_ANNEN_FORELDER,
     MØDREKVOTE_ANNEN_FORELDER,
     FEDREKVOTE_ANNEN_FORELDER,

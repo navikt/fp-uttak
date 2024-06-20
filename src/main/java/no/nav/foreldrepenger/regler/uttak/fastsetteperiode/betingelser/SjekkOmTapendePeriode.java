@@ -24,5 +24,4 @@ public class SjekkOmTapendePeriode extends LeafSpecification<FastsettePeriodeGru
     private boolean harAnnenpartSenereMottattDato(FastsettePeriodeGrunnlag grunnlag) {
         return SamtidigUttakUtil.erTapendePeriodeRegel(grunnlag);
     }
-
 }

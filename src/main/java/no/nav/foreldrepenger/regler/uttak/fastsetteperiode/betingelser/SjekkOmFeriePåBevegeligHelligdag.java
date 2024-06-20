@@ -23,5 +23,4 @@ public class SjekkOmFeriePåBevegeligHelligdag extends LeafSpecification<Fastset
         }
         return nei();
     }
-
 }

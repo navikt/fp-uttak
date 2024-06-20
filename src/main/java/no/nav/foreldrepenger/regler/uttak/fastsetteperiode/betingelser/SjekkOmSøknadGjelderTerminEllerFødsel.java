@@ -19,5 +19,4 @@ public class SjekkOmSøknadGjelderTerminEllerFødsel extends LeafSpecification<F
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         return grunnlag.getSøknadstype().gjelderTerminFødsel() ? ja() : nei();
     }
-
 }

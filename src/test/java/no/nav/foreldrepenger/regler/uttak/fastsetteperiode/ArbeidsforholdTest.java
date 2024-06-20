@@ -4,11 +4,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvStilling;
+import org.junit.jupiter.api.Test;
 
 class ArbeidsforholdTest {
 
@@ -27,5 +25,4 @@ class ArbeidsforholdTest {
         assertThat(arbeid.getStillingsprosent(LocalDate.of(2019, 12, 12))).isEqualTo(BigDecimal.valueOf(50));
         assertThat(arbeid.getStillingsprosent(LocalDate.of(2020, 2, 2))).isEqualTo(BigDecimal.valueOf(100));
     }
-
 }

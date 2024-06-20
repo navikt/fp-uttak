@@ -51,7 +51,11 @@ public class Trekkdager implements Comparable<Trekkdager> {
     }
 
     public boolean gårAkkuratOppIHeleVirkedager(BigDecimal uttaksprosent) {
-        return decimalValue().remainder(uttaksprosent).setScale(0, RoundingMode.UP).compareTo(BigDecimal.ZERO) == 0;
+        return decimalValue()
+                        .remainder(uttaksprosent)
+                        .setScale(0, RoundingMode.UP)
+                        .compareTo(BigDecimal.ZERO)
+                == 0;
     }
 
     @Override

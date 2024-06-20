@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.util.Objects;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 

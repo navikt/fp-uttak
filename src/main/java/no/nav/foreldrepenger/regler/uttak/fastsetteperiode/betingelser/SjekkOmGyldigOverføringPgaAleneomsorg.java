@@ -20,7 +20,9 @@ public class SjekkOmGyldigOverføringPgaAleneomsorg extends LeafSpecification<Fa
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();
-        return ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak()) && ER_ALENEOMSORG_GODKJENT.equals(
-            oppgittPeriode.getDokumentasjonVurdering()) ? ja() : nei();
+        return ALENEOMSORG.equals(oppgittPeriode.getOverføringÅrsak())
+                        && ER_ALENEOMSORG_GODKJENT.equals(oppgittPeriode.getDokumentasjonVurdering())
+                ? ja()
+                : nei();
     }
 }

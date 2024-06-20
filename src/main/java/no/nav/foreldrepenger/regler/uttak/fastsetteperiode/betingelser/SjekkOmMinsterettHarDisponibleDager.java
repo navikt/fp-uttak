@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -18,11 +17,14 @@ public class SjekkOmMinsterettHarDisponibleDager extends LeafSpecification<Fasts
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isSakMedMinsterett() && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()
-            && !grunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode()) {
+        if (grunnlag.isSakMedMinsterett()
+                && grunnlag.getAktuellPeriode().gjelderPeriodeMinsterett()
+                && !grunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode()) {
             for (var aktivitet : grunnlag.getAktuellPeriode().getAktiviteter()) {
                 var saldoUtregning = grunnlag.getSaldoUtregning();
-                if (saldoUtregning.saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet).merEnn0()) {
+                if (saldoUtregning
+                        .saldoITrekkdager(grunnlag.getAktuellPeriode().getStønadskontotype(), aktivitet)
+                        .merEnn0()) {
                     var saldo = saldoUtregning.restSaldoMinsterett(aktivitet);
                     if (saldo.merEnn0()) {
                         return ja();

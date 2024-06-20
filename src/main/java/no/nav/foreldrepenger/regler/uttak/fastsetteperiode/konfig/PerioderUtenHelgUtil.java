@@ -5,7 +5,6 @@ import static java.time.temporal.TemporalAdjusters.next;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 
 public final class PerioderUtenHelgUtil {
@@ -13,7 +12,7 @@ public final class PerioderUtenHelgUtil {
     private static final Set<DayOfWeek> WEEKEND = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     private PerioderUtenHelgUtil() {
-        //Privat constructor for å hindre instanser.
+        // Privat constructor for å hindre instanser.
     }
 
     public static boolean periodeUtenHelgOmslutter(LukketPeriode omsluttendePeriode, LukketPeriode omsluttetPeriode) {
@@ -70,5 +69,4 @@ public final class PerioderUtenHelgUtil {
     public static LocalDate fredagLørdagBlirSøndag(LocalDate dato) {
         return WEEKEND.contains(dato.plusDays(1).getDayOfWeek()) ? dato.with(next(DayOfWeek.MONDAY)) : dato;
     }
-
 }

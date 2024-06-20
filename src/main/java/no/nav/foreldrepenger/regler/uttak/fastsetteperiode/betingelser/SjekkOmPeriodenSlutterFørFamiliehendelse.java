@@ -23,6 +23,4 @@ public class SjekkOmPeriodenSlutterFørFamiliehendelse extends LeafSpecification
         }
         return nei();
     }
-
-
 }

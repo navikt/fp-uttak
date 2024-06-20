@@ -18,7 +18,13 @@ public enum DokumentasjonVurdering {
     TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT;
 
     public boolean erGyldigGrunnForTidligOppstart() {
-        return Set.of(SYKDOM_ANNEN_FORELDER_GODKJENT, INNLEGGELSE_ANNEN_FORELDER_GODKJENT, MORS_AKTIVITET_GODKJENT, ER_ALENEOMSORG_GODKJENT,
-            ER_BARE_SØKER_RETT_GODKJENT, TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT).contains(this);
+        return Set.of(
+                        SYKDOM_ANNEN_FORELDER_GODKJENT,
+                        INNLEGGELSE_ANNEN_FORELDER_GODKJENT,
+                        MORS_AKTIVITET_GODKJENT,
+                        ER_ALENEOMSORG_GODKJENT,
+                        ER_BARE_SØKER_RETT_GODKJENT,
+                        TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT)
+                .contains(this);
     }
 }

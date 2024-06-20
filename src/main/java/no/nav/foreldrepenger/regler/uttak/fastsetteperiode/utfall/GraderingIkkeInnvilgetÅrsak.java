@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
 public enum GraderingIkkeInnvilgetÅrsak {
-
     AVSLAG_PGA_FOR_TIDLIG_GRADERING(4504, "Gradering før uke 7");
 
     private final int id;
@@ -20,4 +19,3 @@ public enum GraderingIkkeInnvilgetÅrsak {
         return beskrivelse;
     }
 }
-

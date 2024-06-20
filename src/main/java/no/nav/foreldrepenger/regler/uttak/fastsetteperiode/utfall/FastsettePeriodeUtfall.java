@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.node.SingleEvaluation;
@@ -20,9 +19,10 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
     private final UttakOutcome uttakOutcome;
     private final List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere;
 
-    private FastsettePeriodeUtfall(String id,
-                                   UttakOutcome uttakOutcome,
-                                   List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere) {
+    private FastsettePeriodeUtfall(
+            String id,
+            UttakOutcome uttakOutcome,
+            List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere) {
         super(id);
         if (uttakOutcome.getUtfallType() == null) {
             throw new IllegalArgumentException("UtfallType kan ikke være null.");
@@ -59,7 +59,8 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
     public static class Builder {
         private UttakOutcome uttakOutcome;
         private String id;
-        private final List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere = new ArrayList<>();
+        private final List<BiConsumer<SingleEvaluation, FastsettePeriodeGrunnlag>> utfallSpesifiserere =
+                new ArrayList<>();
 
         public Builder ikkeOppfylt(IkkeOppfyltÅrsak årsak) {
             this.uttakOutcome = UttakOutcome.ikkeOppfylt(årsak);
@@ -79,7 +80,6 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
             return this;
         }
 
-
         public Builder medId(String id) {
             this.id = id;
             return this;
@@ -87,19 +87,20 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
 
         public Builder medTrekkDagerFraSaldo(boolean trekkDagerFraSaldo) {
             this.uttakOutcome = uttakOutcome.medTrekkDagerFraSaldo(trekkDagerFraSaldo);
-            this.utfallSpesifiserere.add(
-                (singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(TREKK_DAGER_FRA_SALDO, trekkDagerFraSaldo));
+            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) ->
+                    singleEvaluation.setEvaluationProperty(TREKK_DAGER_FRA_SALDO, trekkDagerFraSaldo));
             return this;
         }
 
         public Builder medAvslåttGradering(GraderingIkkeInnvilgetÅrsak graderingAvslagÅrsak) {
             this.uttakOutcome = uttakOutcome.medGraderingIkkeInnvilgetÅrsak(graderingAvslagÅrsak);
-            this.utfallSpesifiserere.add(
-                (singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
+            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) ->
+                    singleEvaluation.setEvaluationProperty(GRADERING_IKKE_OPPFYLT_ÅRSAK, graderingAvslagÅrsak));
             return this;
         }
 
-        public Builder manuellBehandling(PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellbehandlingårsak) {
+        public Builder manuellBehandling(
+                PeriodeResultatÅrsak periodeResultatÅrsak, Manuellbehandlingårsak manuellbehandlingårsak) {
             this.uttakOutcome = UttakOutcome.manuell(periodeResultatÅrsak, manuellbehandlingårsak);
             this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> {
                 singleEvaluation.setEvaluationProperty(UTFALL, UtfallType.MANUELL_BEHANDLING);
@@ -115,7 +116,8 @@ public class FastsettePeriodeUtfall extends LeafSpecification<FastsettePeriodeGr
 
         public Builder utbetal(boolean utbetal) {
             this.uttakOutcome = uttakOutcome.medSkalUtbetale(utbetal);
-            this.utfallSpesifiserere.add((singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(UTBETAL, utbetal));
+            this.utfallSpesifiserere.add(
+                    (singleEvaluation, grunnlag) -> singleEvaluation.setEvaluationProperty(UTBETAL, utbetal));
             return this;
         }
     }

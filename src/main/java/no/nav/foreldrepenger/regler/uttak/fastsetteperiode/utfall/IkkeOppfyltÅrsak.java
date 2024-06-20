@@ -7,7 +7,8 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     MOR_HAR_IKKE_OMSORG(4003, "Mor har ikke omsorg"),
     HULL_MELLOM_FORELDRENES_PERIODER(4005, "Hull mellom foreldrenes perioder"),
     FAR_HAR_IKKE_OMSORG(4012, "Far har ikke omsorg"),
-    MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL(4013, "Mor søker fellesperiode før 12 uker før termin/fødsel"),
+    MOR_SØKER_FELLESPERIODE_FØR_12_UKER_FØR_TERMIN_FØDSEL(
+            4013, "Mor søker fellesperiode før 12 uker før termin/fødsel"),
     SØKNADSFRIST(4020, "Brudd på søknadsfrist"),
     UTTAK_ETTER_3_ÅRSGRENSE(4022, "Uttak etter 3 årsgrense"),
     ARBEID_HUNDRE_PROSENT_ELLER_MER(4025, "Arbeider 100 prosent eller mer"),
@@ -49,19 +50,19 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT(4111, "Søkers innleggelse første 6 uker ikke oppfylt"),
     BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT(4112, "Barnets innleggelse første 6 uker ikke oppfylt"),
 
-    //Medlem
+    // Medlem
     SØKER_IKKE_MEDLEM(4087, "Søker ikke medlem"),
 
-    //Vilkår
+    // Vilkår
     FØDSELSVILKÅRET_IKKE_OPPFYLT(4096, "Fødselsvilkåret er ikke oppfylt"),
     ADOPSJONSVILKÅRET_IKKE_OPPFYLT(4097, "Adopsjonsvilkåret er ikke oppfylt"),
     FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT(4098, "Foreldreansvarsvilkåret er ikke oppfylt"),
     OPPTJENINGSVILKÅRET_IKKE_OPPFYLT(4099, "Opptjeningsvilkåret er ikke oppfylt"),
 
-    //Prematur
+    // Prematur
     FRATREKK_PLEIEPENGER(4077, "Avslag utsettelse, fratrekk pleiepenger"),
 
-    //aktivitetskrav
+    // aktivitetskrav
     AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT(4050, "Aktivitetskravet arbeid ikke oppfylt"),
     AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT(4066, "Aktivitetskravet arbeid ikke dokumentert"),
 
@@ -69,7 +70,8 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT(4067, "Aktivitetskravet utdanning ikke dokumentert"),
 
     AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_OPPFYLT(4052, "Aktivitetskravet arbeid+utdanning ikke oppfylt"),
-    AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_DOKUMENTERT(4068, "Aktivitetskravet arbeid+utdanning ikke dokumentert"),
+    AKTIVITETSKRAVET_KOMBINASJON_ARBEID_UTDANNING_IKKE_DOKUMENTERT(
+            4068, "Aktivitetskravet arbeid+utdanning ikke dokumentert"),
 
     AKTIVITETSKRAVET_SYKDOM_IKKE_OPPFYLT(4053, "Aktivitetskravet sykdom ikke oppfylt"),
     AKTIVITETSKRAVET_SYKDOM_IKKE_DOKUMENTERT(4069, "Aktivitetskravet sykdom ikke dokumentert"),
@@ -77,12 +79,15 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     AKTIVITETSKRAVET_INNLEGGELSE_IKKE_OPPFYLT(4054, "Aktivitetskravet innleggelse ikke oppfylt"),
     AKTIVITETSKRAVET_INNLEGGELSE_IKKE_DOKUMENTERT(4070, "Aktivitetskravet innleggelse ikke dokumentert"),
 
-    AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT(4055, "Aktivitetskravet introduksjonsprogrammet ikke oppfylt"),
-    AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT(4088, "Aktivitetskravet introduksjonsprogrammet ikke dokumentert"),
+    AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_OPPFYLT(
+            4055, "Aktivitetskravet introduksjonsprogrammet ikke oppfylt"),
+    AKTIVITETSKRAVET_DELTAKELSE_INTRODUKSJONSPROGRAM_IKKE_DOKUMENTERT(
+            4088, "Aktivitetskravet introduksjonsprogrammet ikke dokumentert"),
 
-    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT(4056, "Aktivitetskravet kvalifiseringsprogrammet ikke oppfylt"),
-    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT(4089, "Aktivitetskravet kvalifiseringsprogrammet ikke dokumentert"),
-
+    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_OPPFYLT(
+            4056, "Aktivitetskravet kvalifiseringsprogrammet ikke oppfylt"),
+    AKTIVITETSKRAVET_DELTAKELSE_KVALIFISERINGSPROGRAM_IKKE_DOKUMENTERT(
+            4089, "Aktivitetskravet kvalifiseringsprogrammet ikke dokumentert"),
 
     FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_IKKE_UFØR(4057, "Foreldrepenger, kun far har rett mor er ikke ufør");
 

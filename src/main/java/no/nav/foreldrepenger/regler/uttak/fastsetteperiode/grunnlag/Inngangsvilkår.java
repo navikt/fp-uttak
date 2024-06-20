@@ -7,9 +7,7 @@ public final class Inngangsvilkår {
     private boolean fødselOppfylt;
     private boolean opptjeningOppfylt;
 
-    private Inngangsvilkår() {
-
-    }
+    private Inngangsvilkår() {}
 
     public boolean erAdopsjonOppfylt() {
         return adopsjonOppfylt;

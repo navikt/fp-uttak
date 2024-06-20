@@ -22,10 +22,9 @@ public class SjekkOmHvisOverlapperSåSamtykkeMellomParter extends LeafSpecificat
 
     private boolean ingenOverlapp(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        return grunnlag.getAnnenPartUttaksperioder()
-            .stream()
-            .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app))
-            .findFirst()
-            .isEmpty();
+        return grunnlag.getAnnenPartUttaksperioder().stream()
+                .filter(app -> PerioderUtenHelgUtil.perioderUtenHelgOverlapper(aktuellPeriode, app))
+                .findFirst()
+                .isEmpty();
     }
 }

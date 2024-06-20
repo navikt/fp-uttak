@@ -32,7 +32,7 @@ public class Periode {
         return overlapper(periode.getFom()) || overlapper(periode.getTom()) || erOmsluttetAv(periode);
     }
 
-    //Også true hvis perioden er lik
+    // Også true hvis perioden er lik
     public boolean erOmsluttetAv(Periode periode) {
         return !periode.getFom().isAfter(fom) && !periode.getTom().isBefore(tom);
     }

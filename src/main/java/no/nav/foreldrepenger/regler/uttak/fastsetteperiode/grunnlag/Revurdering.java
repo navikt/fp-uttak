@@ -7,8 +7,7 @@ public final class Revurdering {
     private LocalDate endringsdato;
     private Vedtak gjeldendeVedtak;
 
-    private Revurdering() {
-    }
+    private Revurdering() {}
 
     public LocalDate getEndringsdato() {
         return endringsdato;

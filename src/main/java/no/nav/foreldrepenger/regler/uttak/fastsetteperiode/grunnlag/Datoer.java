@@ -9,17 +9,16 @@ public final class Datoer {
     private LocalDate termin;
     private LocalDate fødsel;
     private Dødsdatoer dødsdatoer;
-    //Ikke sleng inn flere datoer her uten å prøve å plassere i andre mer passende klasser
-    private LocalDate startdatoNesteStønadsperiode;  // Solo-dato
+    // Ikke sleng inn flere datoer her uten å prøve å plassere i andre mer passende klasser
+    private LocalDate startdatoNesteStønadsperiode; // Solo-dato
 
-    private Datoer() {
-    }
+    private Datoer() {}
 
     public LocalDate getFamiliehendelse() {
         return Optional.ofNullable(omsorgsovertakelse)
-            .or(() -> Optional.ofNullable(fødsel))
-            .or(() -> Optional.ofNullable(termin))
-            .orElseThrow(() -> new IllegalStateException("Ingen familiehendelse"));
+                .or(() -> Optional.ofNullable(fødsel))
+                .or(() -> Optional.ofNullable(termin))
+                .orElseThrow(() -> new IllegalStateException("Ingen familiehendelse"));
     }
 
     public LocalDate getTermin() {

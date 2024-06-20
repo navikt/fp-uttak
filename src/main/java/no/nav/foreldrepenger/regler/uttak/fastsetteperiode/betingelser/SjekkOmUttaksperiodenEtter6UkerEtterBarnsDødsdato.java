@@ -18,13 +18,14 @@ public class SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato extends LeafSpec
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        var antallUkerUttakEtterBarnDødt = Konfigurasjon.STANDARD.getParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER,
-            fastsettePeriodeGrunnlag.getFamiliehendelse());
+        var antallUkerUttakEtterBarnDødt = Konfigurasjon.STANDARD.getParameter(
+                Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, fastsettePeriodeGrunnlag.getFamiliehendelse());
         if (fastsettePeriodeGrunnlag.getDødsdatoForBarn() != null) {
             var dødsdatoForBarn = fastsettePeriodeGrunnlag.getDødsdatoForBarn();
             var oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
             var ukerEtterBarnDødt = dødsdatoForBarn.plusWeeks(antallUkerUttakEtterBarnDødt);
-            if (oppgittPeriode.getFom().isAfter(ukerEtterBarnDødt) || oppgittPeriode.getFom().equals(ukerEtterBarnDødt)) {
+            if (oppgittPeriode.getFom().isAfter(ukerEtterBarnDødt)
+                    || oppgittPeriode.getFom().equals(ukerEtterBarnDødt)) {
                 return ja();
             }
         }

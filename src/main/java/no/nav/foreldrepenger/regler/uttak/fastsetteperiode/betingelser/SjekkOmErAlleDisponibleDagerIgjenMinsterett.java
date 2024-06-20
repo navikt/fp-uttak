@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
-
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTomForAlleSineKontoer.hentSøkerSineKontoer;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;

@@ -9,12 +9,17 @@ public class IkkeOppfylt {
     /**
      * Opprette endenode for ikke oppfylt periode.
      *
-     * @param id    sluttnode id.
+     * @param id sluttnode id.
      * @param årsak årsak til at periode ble ikke oppfylt.
      * @return periode utfall.
      */
-    public static FastsettePeriodeUtfall opprett(String id, IkkeOppfyltÅrsak årsak, boolean trekkDagerFraSaldo, boolean utbetal) {
-        return FastsettePeriodeUtfall.builder().ikkeOppfylt(årsak).utbetal(utbetal).medTrekkDagerFraSaldo(trekkDagerFraSaldo).medId(id).create();
+    public static FastsettePeriodeUtfall opprett(
+            String id, IkkeOppfyltÅrsak årsak, boolean trekkDagerFraSaldo, boolean utbetal) {
+        return FastsettePeriodeUtfall.builder()
+                .ikkeOppfylt(årsak)
+                .utbetal(utbetal)
+                .medTrekkDagerFraSaldo(trekkDagerFraSaldo)
+                .medId(id)
+                .create();
     }
-
 }

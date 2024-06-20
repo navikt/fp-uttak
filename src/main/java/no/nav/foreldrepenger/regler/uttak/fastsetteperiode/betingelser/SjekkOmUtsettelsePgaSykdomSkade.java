@@ -15,7 +15,6 @@ public class SjekkOmUtsettelsePgaSykdomSkade extends LeafSpecification<Fastsette
         super(ID);
     }
 
-
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var oppgittPeriode = grunnlag.getAktuellPeriode();

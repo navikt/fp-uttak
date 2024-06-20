@@ -11,5 +11,4 @@ class OrgnummerTest {
         var orgnr = new Orgnummer("000000000");
         assertThat(orgnr.toString()).hasToString("*****0000");
     }
-
 }

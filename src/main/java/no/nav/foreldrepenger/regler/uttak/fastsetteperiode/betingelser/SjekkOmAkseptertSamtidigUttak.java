@@ -37,5 +37,4 @@ public class SjekkOmAkseptertSamtidigUttak extends LeafSpecification<FastsettePe
         }
         return nei();
     }
-
 }

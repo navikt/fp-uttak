@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import java.time.LocalDate;
 import java.time.Period;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Parametertype;
@@ -32,7 +31,7 @@ public class SjekkOmPeriodenErEtterMaksgrenseForUttak extends LeafSpecification<
 
     public static LocalDate regnUtMaksgrenseForLovligeUttaksdag(LocalDate familiehendelse) {
         var maksGrenseRelativTilFamiliehendelse = Period.ofYears(
-            Konfigurasjon.STANDARD.getParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, familiehendelse));
+                Konfigurasjon.STANDARD.getParameter(Parametertype.GRENSE_ETTER_FØDSELSDATO_ÅR, familiehendelse));
         return familiehendelse.plus(maksGrenseRelativTilFamiliehendelse);
     }
 }

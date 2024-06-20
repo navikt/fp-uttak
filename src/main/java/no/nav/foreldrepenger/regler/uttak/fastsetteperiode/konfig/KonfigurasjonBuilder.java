@@ -38,5 +38,4 @@ class KonfigurasjonBuilder {
     public Konfigurasjon build() {
         return new Konfigurasjon(parameterMap);
     }
-
 }

@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Støn
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.PerioderUtenHelgUtil.helgBlirFredag;
 
 import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
@@ -35,16 +34,19 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
             return nei();
         }
 
-        //Ved fødsel etter termin vil det ligge en periode fellesperiode som første periode i uttaket. Sjekker dette for
-        //å ikke innvilge msp hvis det ikke har vært noe justering. Best effort
+        // Ved fødsel etter termin vil det ligge en periode fellesperiode som første periode i
+        // uttaket. Sjekker dette for
+        // å ikke innvilge msp hvis det ikke har vært noe justering. Best effort
         if (!forbruktFellesperiode(grunnlag)) {
             return nei();
         }
 
-        var antallUkerEtterFødsel = Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
+        var antallUkerEtterFødsel =
+                Konfigurasjon.STANDARD.getParameter(Parametertype.FORBEHOLDT_MOR_ETTER_FØDSEL_UKER, fødselsdato);
         var aktuellPeriode = grunnlag.getAktuellPeriode();
 
-        //Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i perioden. Burde være veldig få saker
+        // Noen caser vil vi innvilge msp selv om bruker bestemt har søkt om å ikke ha uttak i
+        // perioden. Burde være veldig få saker
         if (erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(fødselsdato, antallUkerEtterFødsel, aktuellPeriode)) {
             return ja();
         }
@@ -56,9 +58,11 @@ public class SjekkOmPeriodenOpprettetAvFødselshendelse extends LeafSpecificatio
         return saldoUtregning.getMaxDager(FELLESPERIODE) > saldoUtregning.saldo(FELLESPERIODE);
     }
 
-    private static boolean erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(LocalDate fødselsdato,
-                                                                        Integer antallUkerEtterFødsel,
-                                                                        OppgittPeriode aktuellPeriode) {
-        return aktuellPeriode.getTom().isEqual(helgBlirFredag(fødselsdato.plusWeeks(antallUkerEtterFødsel).minusDays(1)));
+    private static boolean erPeriodeISisteDelAvFørsteUkeneForbeholdtMor(
+            LocalDate fødselsdato, Integer antallUkerEtterFødsel, OppgittPeriode aktuellPeriode) {
+        return aktuellPeriode
+                .getTom()
+                .isEqual(helgBlirFredag(
+                        fødselsdato.plusWeeks(antallUkerEtterFødsel).minusDays(1)));
     }
 }

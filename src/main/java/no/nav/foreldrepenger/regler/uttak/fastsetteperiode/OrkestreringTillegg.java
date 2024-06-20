@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 
 public class OrkestreringTillegg {
@@ -26,7 +25,9 @@ public class OrkestreringTillegg {
 
     @Override
     public String toString() {
-        var msp = manglendeSøktPerioder.stream().map(p -> p.getFom() + " - " + p.getTom()).toList();
+        var msp = manglendeSøktPerioder.stream()
+                .map(p -> p.getFom() + " - " + p.getTom())
+                .toList();
         return "OrkestreringTillegg{" + "manglendeSøktPerioder=" + msp + ", knekkpunkter=" + knekkpunkter + '}';
     }
 }

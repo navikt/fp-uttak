@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall;
 
 import java.util.Optional;
-
 import no.nav.fpsak.nare.evaluation.RuleReasonRef;
 
 public class UttakOutcome implements RuleReasonRef {
@@ -22,7 +21,9 @@ public class UttakOutcome implements RuleReasonRef {
     }
 
     public static UttakOutcome manuell(PeriodeResultatÅrsak årsak, Manuellbehandlingårsak manuellårsak) {
-        return new UttakOutcome(UtfallType.MANUELL_BEHANDLING).medPeriodeResultatÅrsak(årsak).medManuellBehandlingårsak(manuellårsak);
+        return new UttakOutcome(UtfallType.MANUELL_BEHANDLING)
+                .medPeriodeResultatÅrsak(årsak)
+                .medManuellBehandlingårsak(manuellårsak);
     }
 
     public static UttakOutcome ikkeOppfylt(IkkeOppfyltÅrsak årsak) {
@@ -80,11 +81,16 @@ public class UttakOutcome implements RuleReasonRef {
 
     @Override
     public String getReasonTextTemplate() {
-        return Optional.ofNullable(periodeÅrsak).map(PeriodeResultatÅrsak::getBeskrivelse).orElse("");
+        return Optional.ofNullable(periodeÅrsak)
+                .map(PeriodeResultatÅrsak::getBeskrivelse)
+                .orElse("");
     }
 
     @Override
     public String getReasonCode() {
-        return Optional.ofNullable(periodeÅrsak).map(PeriodeResultatÅrsak::getId).map(String::valueOf).orElse("");
+        return Optional.ofNullable(periodeÅrsak)
+                .map(PeriodeResultatÅrsak::getId)
+                .map(String::valueOf)
+                .orElse("");
     }
 }

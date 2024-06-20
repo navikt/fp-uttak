@@ -18,6 +18,9 @@ public class SjekkOmGyldigOverføringPgaInnleggelse extends LeafSpecification<Fa
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return INNLEGGELSE_ANNEN_FORELDER_GODKJENT.equals(grunnlag.getAktuellPeriode().getDokumentasjonVurdering()) ? ja() : nei();
+        return INNLEGGELSE_ANNEN_FORELDER_GODKJENT.equals(
+                        grunnlag.getAktuellPeriode().getDokumentasjonVurdering())
+                ? ja()
+                : nei();
     }
 }

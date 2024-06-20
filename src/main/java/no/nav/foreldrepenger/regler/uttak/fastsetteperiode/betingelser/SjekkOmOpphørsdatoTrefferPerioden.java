@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import java.time.LocalDate;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.fpsak.nare.evaluation.Evaluation;
@@ -26,7 +25,6 @@ public class SjekkOmOpphørsdatoTrefferPerioden extends LeafSpecification<Fastse
 
         return erOpphørsdatoIEllerFørPerioden(oppgittPeriode, opphørsdatoForMedlemskap) ? ja() : nei();
     }
-
 
     private boolean erOpphørsdatoIEllerFørPerioden(OppgittPeriode oppgittPeriode, LocalDate opphørsdato) {
         return oppgittPeriode.overlapper(opphørsdato) || oppgittPeriode.getFom().isAfter(opphørsdato);

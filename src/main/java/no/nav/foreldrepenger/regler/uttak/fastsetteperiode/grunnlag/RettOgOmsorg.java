@@ -12,8 +12,7 @@ public final class RettOgOmsorg {
     private boolean morOppgittUføretrygd;
     private boolean harOmsorg = true;
 
-    private RettOgOmsorg() {
-    }
+    private RettOgOmsorg() {}
 
     public boolean getFarHarRett() {
         return farHarRett || farHarRettEØS;

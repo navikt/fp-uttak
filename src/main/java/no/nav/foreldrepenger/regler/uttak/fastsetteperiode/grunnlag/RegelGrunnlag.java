@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
 import java.util.Set;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
 
 public class RegelGrunnlag {
@@ -20,9 +19,7 @@ public class RegelGrunnlag {
     private Kontoer kontoer;
     private Ytelser ytelser;
 
-    private RegelGrunnlag() {
-
-    }
+    private RegelGrunnlag() {}
 
     public Søknad getSøknad() {
         return søknad;
@@ -160,7 +157,7 @@ public class RegelGrunnlag {
             if (kladd.ytelser == null) {
                 kladd.ytelser = new Ytelser(null);
             }
-            //Hindre gjenbruk
+            // Hindre gjenbruk
             var regelGrunnlag = this.kladd;
             kladd = null;
             return regelGrunnlag;
