@@ -151,7 +151,7 @@ class RegelResultatBehandler {
             } else {
                 var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(aktivitet);
                 trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget, oppgittPeriode.getArbeidsprosent(),
-                    regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent));
+                    regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent), oppgittPeriode.getMorsStillingsprosent());
             }
         }
         return new PeriodeAktivitetResultat(utbetalingsgrad, trekkdager);

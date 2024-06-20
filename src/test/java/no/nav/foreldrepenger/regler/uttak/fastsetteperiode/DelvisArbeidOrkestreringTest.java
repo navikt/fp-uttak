@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
@@ -119,19 +120,9 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
     class BeggeHarRett {
         @Test
         void far_søker_20_prosent_uttak_mor_arbeider_40_prosent() {
-            var oppgittPeriode = OppgittPeriode.forGradering(
-                FELLESPERIODE,
-                FØDSELSDATO.plusWeeks(6), // 30 dager
-                FØDSELSDATO.plusWeeks(12).minusDays(1),
-                BigDecimal.valueOf(80),
-                null,
-                false,
-                Set.of(ARBEIDSFORHOLD),
-                FØDSELSDATO,
-                FØDSELSDATO,
-                ARBEID,
-                new MorsStillingsprosent(40),
-                DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
+            var oppgittPeriode = OppgittPeriode.forGradering(FELLESPERIODE, FØDSELSDATO.plusWeeks(6), // 30 dager
+                FØDSELSDATO.plusWeeks(12).minusDays(1), BigDecimal.valueOf(80), null, false, Set.of(ARBEIDSFORHOLD), FØDSELSDATO, FØDSELSDATO, ARBEID,
+                new MorsStillingsprosent(40), DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
 
             var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
                 .opptjening(new Opptjening.Builder().skjæringstidspunkt(FØDSELSDATO))
@@ -150,37 +141,43 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(15)); // 50% av 30
         }
 
+        @Test
+        void far_søker_50_prosent_uttak_mor_arbeider_40_prosent() {
+            var oppgittPeriode = OppgittPeriode.forGradering(FELLESPERIODE, FØDSELSDATO.plusWeeks(6), // 30 dager
+                FØDSELSDATO.plusWeeks(12).minusDays(1), BigDecimal.valueOf(80), SamtidigUttaksprosent.FIFTY, false, Set.of(),
+                FØDSELSDATO, FØDSELSDATO, ARBEID, new MorsStillingsprosent(40), DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
+
+            var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+                .opptjening(new Opptjening.Builder().skjæringstidspunkt(FØDSELSDATO))
+                .datoer(new Datoer.Builder().fødsel(FØDSELSDATO))
+                .rettOgOmsorg(beggeRett())
+                .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
+                .inngangsvilkår(oppfyltAlleVilkår())
+                .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+                .kontoer(new Kontoer.Builder().konto(FELLESPERIODE, 100));
+
+            var fastsattePerioder = fastsettPerioder(grunnlag);
+
+            //TODO
+            assertThat(fastsattePerioder).hasSize(1);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(99));
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(15)); // 50% av 30
+        }
+
     }
 
 
     private static OppgittPeriode lagOppgittPeriode(MorsStillingsprosent morsStillingsprosent) {
-        return OppgittPeriode.forVanligPeriode(
-            FORELDREPENGER,
-            FØDSELSDATO.plusWeeks(6), // 30 dager
-            FØDSELSDATO.plusWeeks(12).minusDays(1),
-            null,
-            false,
-            FØDSELSDATO,
-            FØDSELSDATO,
-            ARBEID,
-            morsStillingsprosent,
+        return OppgittPeriode.forVanligPeriode(FORELDREPENGER, FØDSELSDATO.plusWeeks(6), // 30 dager
+            FØDSELSDATO.plusWeeks(12).minusDays(1), null, false, FØDSELSDATO, FØDSELSDATO, ARBEID, morsStillingsprosent,
             DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
     }
 
     private static OppgittPeriode lagOppgittPeriode(MorsStillingsprosent morsStillingsprosent, Integer farsArbeidsprosent) {
-        return OppgittPeriode.forGradering(
-            FORELDREPENGER,
-            FØDSELSDATO.plusWeeks(6), // 30 dager
-            FØDSELSDATO.plusWeeks(12).minusDays(1),
-            BigDecimal.valueOf(farsArbeidsprosent),
-            null,
-            false,
-            Set.of(ARBEIDSFORHOLD),
-            FØDSELSDATO,
-            FØDSELSDATO,
-            ARBEID,
-            morsStillingsprosent,
-            DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
+        return OppgittPeriode.forGradering(FORELDREPENGER, FØDSELSDATO.plusWeeks(6), // 30 dager
+            FØDSELSDATO.plusWeeks(12).minusDays(1), BigDecimal.valueOf(farsArbeidsprosent), null, false, Set.of(ARBEIDSFORHOLD), FØDSELSDATO,
+            FØDSELSDATO, ARBEID, morsStillingsprosent, DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
     }
 
     private RegelGrunnlag.Builder lagGrunnlag(OppgittPeriode oppgittPeriode) {
