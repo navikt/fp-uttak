@@ -64,11 +64,22 @@ class UtbetalingsgradUtilTest {
 
     @Test
     void utbetalingsgraden_skal_redusers_hvis_redusertUttaksprosent_er_satt_hvis_utbetalingsgrad_er_over_denne_verdien() {
+        var redusertUttaksprosent = SamtidigUttaksprosent.FIFTY;
         var periode = vanligPeriode(null);
 
-        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, SamtidigUttaksprosent.FIFTY);
+        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, redusertUttaksprosent);
 
-        assertThat(resultat).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat).isEqualTo(new Utbetalingsgrad(redusertUttaksprosent.decimalValue()));
+    }
+
+    @Test
+    void utbetalingsgraden_skal_redusers_hvis_redusertUttaksprosent_er_satt_hvis_utbetalingsgrad_er_over_denne_verdien_også_for_gradering() {
+        var redusertUttaksprosent = SamtidigUttaksprosent.FIFTY;
+        var periode = graderingsPeriode(BigDecimal.valueOf(20), AKTIVITET_1, null);
+
+        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, redusertUttaksprosent);
+
+        assertThat(resultat).isEqualTo(new Utbetalingsgrad(redusertUttaksprosent.decimalValue()));
     }
 
 
