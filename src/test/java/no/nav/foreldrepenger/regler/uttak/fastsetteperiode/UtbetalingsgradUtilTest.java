@@ -17,111 +17,89 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UtbetalingsgradUtilTest {
 
+    private static final AktivitetIdentifikator AKTIVITET_1 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
+    private static final AktivitetIdentifikator AKTIVITET_2 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000002"), null);
+
     @Test
     void utbetaling_skal_være_100_prosent_når_en_ikke_graderer_eller_samtidig_uttak_eller_grense() {
-        var aktivitet = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
-        var periode = OppgittPeriode.forVanligPeriode(
-            Stønadskontotype.FELLESPERIODE,
-            LocalDate.now(),
-            LocalDate.now().plusWeeks(1),
-            null,
-            false,
-            null,
-            null,
-            null,
-            null
-        );
-        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet, null);
+        var periode = vanligPeriode(null);
+
+        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, null);
+
         assertThat(resultat).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
     void toArbeidsforholdMedEnGradertGirRedusertUtbetalingsgrad() {
-        var aktivitet1 = AktivitetIdentifikator.annenAktivitet();
-        var aktivitet2 = AktivitetIdentifikator.forFrilans();
         var arbeidstidsprosent = BigDecimal.valueOf(20);
+        var periode = graderingsPeriode(arbeidstidsprosent, AKTIVITET_1, null);
 
-        var periode = OppgittPeriode.forGradering(
-            Stønadskontotype.FEDREKVOTE,
-            LocalDate.now(),
-            LocalDate.now().plusWeeks(1),
-            arbeidstidsprosent,
-            null,
-            false,
-            Set.of(aktivitet1),
-            null,
-            null,
-            null,
-            null
-        );
+        var utregningForAktivitetGradert = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, null);
+        var utregningForAktivitetUgradert = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_2, null);
 
-        var utregningForAktivitet1 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet1, null);
-        var utregningForAktivitet2 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet2, null);
-
-        assertThat(utregningForAktivitet1).isEqualTo(Utbetalingsgrad.FULL.subtract(arbeidstidsprosent));
-        assertThat(utregningForAktivitet2).isEqualTo(Utbetalingsgrad.FULL);
+        assertThat(utregningForAktivitetGradert).isEqualTo(Utbetalingsgrad.FULL.subtract(arbeidstidsprosent));
+        assertThat(utregningForAktivitetUgradert).isEqualTo(Utbetalingsgrad.FULL);
     }
 
     @Test
     void hvis_ugradert_periode_skal_utbetalingsgrad_være_lik_samtidig_uttaksprosent() {
-        var aktivitet = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
-        var periode = OppgittPeriode.forVanligPeriode(
-            Stønadskontotype.FELLESPERIODE,
-            LocalDate.now(),
-            LocalDate.now().plusWeeks(1),
-            SamtidigUttaksprosent.TEN,
-            false,
-            null,
-            null,
-            null,
-            null
-        );
         var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
-        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet, null);
+        var periode = vanligPeriode(samtidigUttaksprosent);
+
+        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, null);
 
         assertThat(resultat.decimalValue()).isEqualTo(samtidigUttaksprosent.decimalValue());
     }
 
     @Test
     void hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
-        var aktivitet1 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
-        var aktivitet2 = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
-        var samtidigUttaksprosent = SamtidigUttaksprosent.TEN;
         var graderingArbeidstidsprosent = BigDecimal.ONE;
-        var periode = OppgittPeriode.forGradering(
-            Stønadskontotype.FELLESPERIODE,
-            LocalDate.now(),
-            LocalDate.now().plusWeeks(1),
-            graderingArbeidstidsprosent,
-            samtidigUttaksprosent,
-            false,
-            Set.of(aktivitet1),
-            null,
-            null,
-            null,
-            null
-        );
-        var resultat1 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet1, null);
-        var resultat2 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet2, null);
+        var periode = graderingsPeriode(graderingArbeidstidsprosent, AKTIVITET_1, SamtidigUttaksprosent.TEN);
+
+        var resultat1 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, null);
+        var resultat2 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_2, null);
 
         assertThat(resultat1).isEqualTo(resultat2).isEqualTo(Utbetalingsgrad.HUNDRED.subtract(graderingArbeidstidsprosent));
     }
 
     @Test
     void utbetalingsgraden_skal_redusers_hvis_redusertUttaksprosent_er_satt_hvis_utbetalingsgrad_er_over_denne_verdien() {
-        var aktivitet = AktivitetIdentifikator.forArbeid(new Orgnummer("000000001"), null);
-        var periode = OppgittPeriode.forVanligPeriode(
+        var periode = vanligPeriode(null);
+
+        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, SamtidigUttaksprosent.FIFTY);
+
+        assertThat(resultat).isEqualTo(new Utbetalingsgrad(50));
+    }
+
+
+    private static OppgittPeriode vanligPeriode(SamtidigUttaksprosent samtidigUttaksprosent) {
+        return OppgittPeriode.forVanligPeriode(
             Stønadskontotype.FELLESPERIODE,
             LocalDate.now(),
             LocalDate.now().plusWeeks(1),
-            null,
+            samtidigUttaksprosent,
             false,
             null,
             null,
             null,
             null
         );
-        var resultat = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, aktivitet, SamtidigUttaksprosent.FIFTY);
-        assertThat(resultat).isEqualTo(new Utbetalingsgrad(50));
+    }
+
+
+    private static OppgittPeriode graderingsPeriode(BigDecimal arbeidsprosent, AktivitetIdentifikator gradertAktivitet, SamtidigUttaksprosent samtidigUttaksprosent) {
+        return OppgittPeriode.forGradering(
+            Stønadskontotype.FELLESPERIODE,
+            LocalDate.now(),
+            LocalDate.now().plusWeeks(1),
+            arbeidsprosent,
+            samtidigUttaksprosent,
+            false,
+            Set.of(gradertAktivitet),
+            null,
+            null,
+            null,
+            null
+        );
     }
 }
