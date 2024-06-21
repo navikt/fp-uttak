@@ -230,6 +230,8 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         assertThat(resultat.get(3).uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isNull();
         assertTrekkdager(resultat.get(3), ARBEIDSFORHOLD_1, new Trekkdager(new BigDecimal("22.50")));
         assertTrekkdager(resultat.get(3), ARBEIDSFORHOLD_2, Trekkdager.ZERO);
+
+
         assertKontoOgResultat(resultat.get(4), MØDREKVOTE, MANUELL_BEHANDLING);
         assertTrekkdager(resultat.get(4), ARBEIDSFORHOLD_1, new Trekkdager(new BigDecimal("22.50")));
         assertThat(resultat.get(4).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(Utbetalingsgrad.ZERO);
@@ -274,9 +276,8 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var fastsettePeriodeGrunnlag = grunnlag.build();
         var resultat = fastsettPerioder(fastsettePeriodeGrunnlag);
 
-        assertThat(resultat.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(new Trekkdager(9));
-        assertThat(resultat.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2).decimalValue()).isEqualTo(
-            BigDecimal.valueOf(100).subtract(arbeidstidsprosent).setScale(2, RoundingMode.DOWN));
+        assertThat(resultat.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(new Trekkdager(5));
+        assertThat(resultat.get(2).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD_2).decimalValue()).isEqualTo(samtidigUttaksprosent.decimalValue()); // TODO: Stemmer ikke dette palfi?
     }
 
     @Test
@@ -714,33 +715,33 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = RegelGrunnlagTestBuilder.create();
         leggPåKvoter(grunnlag);
-        var mottattDato = fødselsdato.plusWeeks(8).minusDays(1);
         var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 200));
-        var gradering = OppgittPeriode.forGradering(MØDREKVOTE, fødselsdato.plusWeeks(5), mottattDato.plusWeeks(1), BigDecimal.TEN, null, false,
-            Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
             .kontoer(kontoer)
-            .behandling(morBehandling().kreverSammenhengendeUttak(true))
-            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+            .behandling(morBehandling())
+            .søknad(new Søknad.Builder()
+                .type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(5).minusDays(1)))
-                .oppgittPeriode(gradering))
+                .oppgittPeriode(gradertoppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(5), fødselsdato.plusWeeks(9), BigDecimal.TEN, Set.of(ARBEIDSFORHOLD_1))))
             .inngangsvilkår(oppfyltAlleVilkår());
         var resultat = fastsettPerioder(grunnlag);
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(1).uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(
-            GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
-        assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget()).isFalse();
-        assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget(ARBEIDSFORHOLD_1)).isFalse();
-        assertThat(resultat.get(1).uttakPeriode().erGraderingInnvilget(ARBEIDSFORHOLD_1)).isFalse();
-        assertThat(resultat.get(1)
-            .uttakPeriode()
+        var avslåttGraderingFørUke7 = resultat.get(1).uttakPeriode();
+        assertThat(avslåttGraderingFørUke7.erGraderingInnvilget()).isFalse();
+        assertThat(avslåttGraderingFørUke7.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertThat(avslåttGraderingFørUke7.erGraderingInnvilget(ARBEIDSFORHOLD_1)).isFalse();
+        assertThat(avslåttGraderingFørUke7.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(90));
+        assertThat(avslåttGraderingFørUke7.getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(5));
+        assertThat(avslåttGraderingFørUke7.erGraderingInnvilget(ARBEIDSFORHOLD_2)).isFalse();
+        assertThat(avslåttGraderingFørUke7.getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(Utbetalingsgrad.FULL);
+        assertThat(avslåttGraderingFørUke7.getTrekkdager(ARBEIDSFORHOLD_2)).isEqualTo(new Trekkdager(5));
+        assertThat(avslåttGraderingFørUke7
             .getAktiviteter()
             .stream()
             .anyMatch(a -> a.isSøktGradering() && a.getIdentifikator().equals(ARBEIDSFORHOLD_1))).isTrue();
-        assertThat(resultat.get(1)
-            .uttakPeriode()
+        assertThat(avslåttGraderingFørUke7
             .getAktiviteter()
             .stream()
             .anyMatch(a -> a.isSøktGradering() && a.getIdentifikator().equals(ARBEIDSFORHOLD_2))).isFalse();

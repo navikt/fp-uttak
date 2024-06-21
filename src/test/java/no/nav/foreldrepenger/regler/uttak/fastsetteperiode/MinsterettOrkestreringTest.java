@@ -447,6 +447,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var arbeidsforhold2 = AktivitetIdentifikator.forArbeid(new Orgnummer("2"), null);
         var gradering = OppgittPeriode.forGradering(FORELDREPENGER, fødselsdato, LocalDate.of(2024, 1, 22), BigDecimal.valueOf(50), null, false,
             Set.of(arbeidsforhold1), fødselsdato, fødselsdato, null, null, null);
+        var virkedager = Virkedager.beregnAntallVirkedager(gradering);
 
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering));
 
@@ -465,9 +466,9 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(fastsattePerioder.get(2).uttakPeriode().getTrekkdager(arbeidsforhold1)).isEqualTo(new Trekkdager(20));
         assertThat(fastsattePerioder.get(2).uttakPeriode().getTrekkdager(arbeidsforhold2)).isEqualTo(new Trekkdager(0));
         assertThat(fastsattePerioder.get(2).uttakPeriode().getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+
         assertThat(fastsattePerioder.get(3).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
-        //Søkt en dag for mye minsterett
-        assertThat(fastsattePerioder.get(3).uttakPeriode().getTrekkdager(arbeidsforhold1)).isEqualTo(new Trekkdager(0.5));
+        assertThat(fastsattePerioder.get(3).uttakPeriode().getTrekkdager(arbeidsforhold1)).isEqualTo(new Trekkdager(0.5)); //Søkt en dag for mye minsterett
         assertThat(fastsattePerioder.get(3).uttakPeriode().getTrekkdager(arbeidsforhold2)).isEqualTo(new Trekkdager(1));
         assertThat(fastsattePerioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
     }

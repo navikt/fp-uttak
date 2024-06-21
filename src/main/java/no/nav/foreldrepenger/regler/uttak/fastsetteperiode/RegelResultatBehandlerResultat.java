@@ -8,7 +8,7 @@ public class RegelResultatBehandlerResultat {
     private final UttakPeriode periode;
     private final OppgittPeriode etterKnekk;
 
-    private RegelResultatBehandlerResultat(UttakPeriode periode, OppgittPeriode etterKnekk) {
+    RegelResultatBehandlerResultat(UttakPeriode periode, OppgittPeriode etterKnekk) {
         this.periode = periode;
         this.etterKnekk = etterKnekk;
     }
