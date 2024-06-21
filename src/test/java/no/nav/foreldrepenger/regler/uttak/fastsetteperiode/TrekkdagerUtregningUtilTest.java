@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -23,7 +25,7 @@ class TrekkdagerUtregningUtilTest {
         var arbeidstidsprosent = BigDecimal.valueOf(1);
         var periode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, arbeidstidsprosent, null, false, Set.of(), null, null,
             null, null);
-        var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, arbeidstidsprosent, null);
+        var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, true, new Utbetalingsgrad(BigDecimal.valueOf(100).subtract(arbeidstidsprosent)));
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(1.9));
     }
@@ -38,7 +40,7 @@ class TrekkdagerUtregningUtilTest {
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         var periode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, samtidigUttaksprosent, false, null, null, null,
             null);
-        var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, null, samtidigUttaksprosent);
+        var trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(periode, false, new Utbetalingsgrad(samtidigUttaksprosent.decimalValue()));
 
         assertThat(trekkdager).isEqualTo(new Trekkdager(5));
     }

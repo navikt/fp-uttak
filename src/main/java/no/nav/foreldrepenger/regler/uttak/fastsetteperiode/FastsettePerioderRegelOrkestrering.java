@@ -197,13 +197,10 @@ public class FastsettePerioderRegelOrkestrering {
         var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, saldoUtregning, regelresultat,
             fastsettePeriodeGrunnlag.periodeFarRundtFødsel().orElse(null));
 
-        var annenpartSamtidigUttaksprosent = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag,
-            regelGrunnlag) ? SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag) : SamtidigUttaksprosent.ZERO;
-
         return switch (utfallType) {
             case AVSLÅTT -> behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
                 overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenpartUttaksperioder(regelGrunnlag)));
-            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat, annenpartSamtidigUttaksprosent);
+            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat, fastsettePeriodeGrunnlag);
             case MANUELL_BEHANDLING -> behandler.manuellBehandling(aktuellPeriode, regelresultat);
         };
     }

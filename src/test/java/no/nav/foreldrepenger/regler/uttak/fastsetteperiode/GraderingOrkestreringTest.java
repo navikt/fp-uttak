@@ -257,8 +257,19 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         var arbeidstidsprosent = BigDecimal.TEN;
         var samtidigUttaksprosent = new SamtidigUttaksprosent(50);
         //10 virkedager
-        var gradertMedSamtidigUttak = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
-            arbeidstidsprosent, samtidigUttaksprosent, false, Set.of(ARBEIDSFORHOLD_1), null, null, null, null);
+        var gradertMedSamtidigUttak = OppgittPeriode.forGradering(
+            FELLESPERIODE,
+            fødselsdato.plusWeeks(6),
+            fødselsdato.plusWeeks(8).minusDays(1),
+            arbeidstidsprosent,
+            samtidigUttaksprosent,
+            false,
+            Set.of(ARBEIDSFORHOLD_1),
+            null,
+            null,
+            null,
+            null
+        );
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
             .konto(konto(MØDREKVOTE, 50))
             .konto(konto(FEDREKVOTE, 50))

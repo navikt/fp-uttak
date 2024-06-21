@@ -3,37 +3,34 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 
 public final class TrekkdagerUtregningUtil {
+
+    private static final BigDecimal BIG_DECIMAL_100 = BigDecimal.valueOf(100);
 
     private TrekkdagerUtregningUtil() {
     }
 
-    public static Trekkdager trekkdagerFor(Periode periode,
-                                           boolean gradert,
-                                           BigDecimal gradertArbeidstidsprosent,
-                                           SamtidigUttaksprosent samtidigUttaksprosent) {
-        var trekkdagerUtenGradering = Virkedager.beregnAntallVirkedager(periode);
-        if (gradert) {
-            return trekkdagerMedGradering(trekkdagerUtenGradering, gradertArbeidstidsprosent);
+
+    public static Trekkdager trekkdagerFor(OppgittPeriode oppgittPeriode, boolean innvilgetGradering, Utbetalingsgrad utbetalingsgrad) {
+        var virkedagerIPerioden = Virkedager.beregnAntallVirkedager(oppgittPeriode);
+
+        if (innvilgetGradering) {
+            return beregnetTrekkdager(virkedagerIPerioden, BIG_DECIMAL_100.subtract(oppgittPeriode.getArbeidsprosent()));
         }
-        if (samtidigUttaksprosent != null) {
-            //Samme utregning som med gradering
-            return trekkdagerMedGradering(trekkdagerUtenGradering, BigDecimal.valueOf(100).subtract(samtidigUttaksprosent.decimalValue()));
+
+        if (!Utbetalingsgrad.ZERO.equals(utbetalingsgrad)) {
+            return beregnetTrekkdager(virkedagerIPerioden, utbetalingsgrad.decimalValue());
         }
-        return new Trekkdager(trekkdagerUtenGradering);
+
+        return new Trekkdager(virkedagerIPerioden);
     }
 
-    private static Trekkdager trekkdagerMedGradering(int trekkdagerUtenGradering, BigDecimal gradertArbeidstidsprosent) {
-        if (gradertArbeidstidsprosent.compareTo(BigDecimal.valueOf(100)) >= 0) {
-            return Trekkdager.ZERO;
-        }
-        var trekkdager = BigDecimal.valueOf(trekkdagerUtenGradering)
-            .multiply(BigDecimal.valueOf(100).subtract(gradertArbeidstidsprosent))
-            .divide(BigDecimal.valueOf(100), 1, RoundingMode.DOWN);
-        return new Trekkdager(trekkdager);
+    private static Trekkdager beregnetTrekkdager(int virkedagerIPerioden, BigDecimal trekkProsent) {
+        return new Trekkdager(BigDecimal.valueOf(virkedagerIPerioden)
+            .multiply(trekkProsent)
+            .divide(BIG_DECIMAL_100, 1, RoundingMode.DOWN));
     }
-
 }
