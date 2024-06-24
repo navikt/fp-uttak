@@ -14,17 +14,17 @@ public final class UtbetalingsgradUtil {
     private UtbetalingsgradUtil() {}
 
 
-    public static Utbetalingsgrad beregnUtbetalingsgradFor(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent redusertUttaksprosent) {
+    public static Utbetalingsgrad beregnUtbetalingsgradFor(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent øvreGrenseUtbetalingsgrad) {
         var beregnetUtbetalingsgrad = UTBETALINGSGRAD_100;
         if (oppgittPeriode.erSøktGradering(aktivitet) || (oppgittPeriode.erSøktGradering() && oppgittPeriode.erSøktSamtidigUttak())) {
-            beregnetUtbetalingsgrad = BigDecimal.valueOf(100).subtract(oppgittPeriode.getArbeidsprosent());
+            beregnetUtbetalingsgrad = UTBETALINGSGRAD_100.subtract(oppgittPeriode.getArbeidsprosent());
         } else if (oppgittPeriode.erSøktSamtidigUttak()) {
             beregnetUtbetalingsgrad = oppgittPeriode.getSamtidigUttaksprosent().decimalValue();
         }
 
 
-        return redusertUttaksprosent != null
-            ? new Utbetalingsgrad(beregnetUtbetalingsgrad.min(redusertUttaksprosent.decimalValue())) //
+        return øvreGrenseUtbetalingsgrad != null
+            ? new Utbetalingsgrad(beregnetUtbetalingsgrad.min(øvreGrenseUtbetalingsgrad.decimalValue())) //
             : new Utbetalingsgrad(beregnetUtbetalingsgrad);
     }
 }

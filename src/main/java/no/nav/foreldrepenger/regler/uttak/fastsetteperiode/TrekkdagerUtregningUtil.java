@@ -14,10 +14,10 @@ public final class TrekkdagerUtregningUtil {
     }
 
 
-    public static Trekkdager trekkdagerFor(OppgittPeriode oppgittPeriode, boolean innvilgetGradering, Utbetalingsgrad utbetalingsgrad) {
+    public static Trekkdager trekkdagerFor(OppgittPeriode oppgittPeriode, boolean graderingSøktOgInnvilget, Utbetalingsgrad utbetalingsgrad) {
         var virkedagerIPerioden = Virkedager.beregnAntallVirkedager(oppgittPeriode);
 
-        if (innvilgetGradering) {
+        if (graderingSøktOgInnvilget) {
             return beregnetTrekkdager(virkedagerIPerioden, BIG_DECIMAL_100.subtract(oppgittPeriode.getArbeidsprosent()));
         }
 
