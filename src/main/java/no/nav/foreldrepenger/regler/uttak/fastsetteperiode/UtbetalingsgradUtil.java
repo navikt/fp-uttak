@@ -16,15 +16,14 @@ public final class UtbetalingsgradUtil {
 
     public static Utbetalingsgrad beregnUtbetalingsgradFor(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent øvreGrenseUtbetalingsgrad) {
         var beregnetUtbetalingsgrad = UTBETALINGSGRAD_100;
-        if (oppgittPeriode.erSøktGradering(aktivitet) || (oppgittPeriode.erSøktGradering() && oppgittPeriode.erSøktSamtidigUttak())) {
+        if (oppgittPeriode.erSøktGradering(aktivitet) || (oppgittPeriode.erSøktGradering() && oppgittPeriode.erSøktSamtidigUttak())) { // TODO: gradering og samtidig?
             beregnetUtbetalingsgrad = UTBETALINGSGRAD_100.subtract(oppgittPeriode.getArbeidsprosent());
         } else if (oppgittPeriode.erSøktSamtidigUttak()) {
             beregnetUtbetalingsgrad = oppgittPeriode.getSamtidigUttaksprosent().decimalValue();
         }
 
-
         return øvreGrenseUtbetalingsgrad != null
-            ? new Utbetalingsgrad(beregnetUtbetalingsgrad.min(øvreGrenseUtbetalingsgrad.decimalValue())) //
+            ? new Utbetalingsgrad(beregnetUtbetalingsgrad.min(øvreGrenseUtbetalingsgrad.decimalValue()))
             : new Utbetalingsgrad(beregnetUtbetalingsgrad);
     }
 }

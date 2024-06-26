@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ValgAvStønadskontoTjeneste.velgStønadskonto;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende;
 
 import java.util.Optional;
 import java.util.Set;
@@ -30,21 +31,21 @@ class RegelResultatBehandler {
         this.regelGrunnlag = regelGrunnlag;
     }
 
-    RegelResultatBehandlerResultat innvilgAktuellPeriode(OppgittPeriode oppgittPeriode,
-                                                         Optional<TomKontoKnekkpunkt> knekkpunktOpt,
+    RegelResultatBehandlerResultat innvilgAktuellPeriode(Optional<TomKontoKnekkpunkt> knekkpunktOpt,
                                                          FastsettePerioderRegelresultat regelresultat,
                                                          FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        var oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
         var innvilgPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
             .map(k -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), k.minusDays(1)))
             .orElse(oppgittPeriode);
 
         // Vi skal redusere søker i forhold til annenparts uttaksprosent slik at de til sammen har 100% uttaksprosent
-        var redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100 = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag, regelGrunnlag)
+        var redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100 = kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag, regelGrunnlag)
             ? SamtidigUttaksprosent.HUNDRED.subtract(SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag))
             : null;
 
         var aktiviteter = lagAktiviteter(innvilgPeriode, regelresultat, false, redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100);
-        var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(innvilgPeriode, redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100);
+        var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(innvilgPeriode, redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100); // TODO: Gjennomgang av hva dette er brukt til
         var innvilget = new UttakPeriode(innvilgPeriode, Perioderesultattype.INNVILGET, null, regelresultat.getAvklaringÅrsak(),
             regelresultat.getGraderingIkkeInnvilgetÅrsak(), aktiviteter, samtidigUttaksprosent, innvilgPeriode.getStønadskontotype());
 
@@ -151,16 +152,13 @@ class RegelResultatBehandler {
             return new PeriodeAktivitetResultat(Utbetalingsgrad.ZERO, Trekkdager.ZERO);
         }
 
-        var utbetalingsgrad = Utbetalingsgrad.ZERO;
-        if (regelresultat.skalUtbetale()) {
-            // øvreGrenseUtbetalingsgrad kan utledes med hensyn til morsStillingsprosent mot øvreGrenseUtbetalingsgrad (utbetalingsgraden som utgjør 100 samlet samtidig uttak)
-            utbetalingsgrad = UtbetalingsgradUtil.beregnUtbetalingsgradFor(oppgittPeriode, aktivitet, øvreGrenseUtbetalingsgrad);
-        }
-        var trekkdager = Trekkdager.ZERO;
-        if (regelresultat.trekkDagerFraSaldo() && !(manuellBehandling && stønadskonto.isEmpty())) {
-            var graderingSøktOgInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(aktivitet);
-            trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingSøktOgInnvilget, utbetalingsgrad);
-        }
+        var utbetalingsgrad = regelresultat.skalUtbetale()
+            ? UtbetalingsgradUtil.beregnUtbetalingsgradFor(oppgittPeriode, aktivitet, øvreGrenseUtbetalingsgrad)
+            : Utbetalingsgrad.ZERO;
+
+        var trekkdager = regelresultat.trekkDagerFraSaldo() && !(manuellBehandling && stønadskonto.isEmpty())
+            ? TrekkdagerUtregningUtil.beregnTrekkdagerFor(oppgittPeriode, aktivitet, utbetalingsgrad, regelresultat.skalUtbetale(), regelresultat.getGraderingIkkeInnvilgetÅrsak())
+            : Trekkdager.ZERO;
 
         return new PeriodeAktivitetResultat(utbetalingsgrad, trekkdager);
     }

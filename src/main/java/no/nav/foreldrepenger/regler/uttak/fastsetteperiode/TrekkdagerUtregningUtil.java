@@ -3,8 +3,10 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 
 public final class TrekkdagerUtregningUtil {
 
@@ -13,19 +15,24 @@ public final class TrekkdagerUtregningUtil {
     private TrekkdagerUtregningUtil() {
     }
 
-
-    public static Trekkdager trekkdagerFor(OppgittPeriode oppgittPeriode, boolean graderingSøktOgInnvilget, Utbetalingsgrad utbetalingsgrad) {
+    public static Trekkdager beregnTrekkdagerFor(OppgittPeriode oppgittPeriode,
+                                                 AktivitetIdentifikator aktivitet,
+                                                 Utbetalingsgrad utbetalingsgrad,
+                                                 boolean skalUtbetale,
+                                                 GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
         var virkedagerIPerioden = Virkedager.beregnAntallVirkedager(oppgittPeriode);
 
-        if (graderingSøktOgInnvilget) {
-            return beregnetTrekkdager(virkedagerIPerioden, BIG_DECIMAL_100.subtract(oppgittPeriode.getArbeidsprosent()));
-        }
-
-        if (!Utbetalingsgrad.ZERO.equals(utbetalingsgrad)) {
+        if (skalUtbetale) {
+            if (graderingIkkeInnvilgetÅrsak != null) {
+                return new Trekkdager(virkedagerIPerioden);
+            }
             return beregnetTrekkdager(virkedagerIPerioden, utbetalingsgrad.decimalValue());
+        } else {
+            if (oppgittPeriode.erSøktGradering(aktivitet)) {
+                return beregnetTrekkdager(virkedagerIPerioden, BIG_DECIMAL_100.subtract(oppgittPeriode.getArbeidsprosent()));
+            }
+            return new Trekkdager(virkedagerIPerioden);
         }
-
-        return new Trekkdager(virkedagerIPerioden);
     }
 
     private static Trekkdager beregnetTrekkdager(int virkedagerIPerioden, BigDecimal trekkProsent) {
