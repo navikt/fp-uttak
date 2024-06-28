@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ValgAvStønadskontoTjeneste.velgStønadskonto;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende;
 
 import java.util.Optional;
 import java.util.Set;
@@ -31,46 +30,52 @@ class RegelResultatBehandler {
         this.regelGrunnlag = regelGrunnlag;
     }
 
-    RegelResultatBehandlerResultat innvilgAktuellPeriode(Optional<TomKontoKnekkpunkt> knekkpunktOpt,
+    RegelResultatBehandlerResultat innvilgAktuellPeriode(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag,
                                                          FastsettePerioderRegelresultat regelresultat,
-                                                         FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+                                                         Optional<TomKontoKnekkpunkt> knekkpunktOpt) {
         var oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
-        var innvilgPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
+        var innvilgPeriode = knekkpunktOpt
+            .map(TomKontoKnekkpunkt::dato)
             .map(k -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), k.minusDays(1)))
             .orElse(oppgittPeriode);
 
         // Vi skal redusere søker i forhold til annenparts uttaksprosent slik at de til sammen har 100% uttaksprosent
-        var redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100 = kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag, regelGrunnlag)
+        // TODO: Sjekke via nare? Nå er det 2 sannheter
+        var redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100 = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag)
             ? SamtidigUttaksprosent.HUNDRED.subtract(SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag))
             : null;
 
-        var aktiviteter = lagAktiviteter(innvilgPeriode, regelresultat, false, redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100);
-        var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(innvilgPeriode, redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100); // TODO: Gjennomgang av hva dette er brukt til
+        var aktiviteter = lagAktiveteter(innvilgPeriode, regelresultat, redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100);
+        var samtidigUttaksprosent = samtidigUttaksprosentFra(fastsettePeriodeGrunnlag, aktiviteter);
         var innvilget = new UttakPeriode(innvilgPeriode, Perioderesultattype.INNVILGET, null, regelresultat.getAvklaringÅrsak(),
             regelresultat.getGraderingIkkeInnvilgetÅrsak(), aktiviteter, samtidigUttaksprosent, innvilgPeriode.getStønadskontotype());
 
         if (knekkpunktOpt.isEmpty()) {
             return RegelResultatBehandlerResultat.utenKnekk(innvilget);
         } else {
-            validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
-            var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().dato(), oppgittPeriode.getTom());
+            validerKnekkpunkt(innvilgPeriode, knekkpunktOpt.get());
+            var etterKnekk = innvilgPeriode.kopiMedNyPeriode(knekkpunktOpt.get().dato(), innvilgPeriode.getTom());
             return RegelResultatBehandlerResultat.medKnekk(innvilget, etterKnekk);
         }
     }
 
-    RegelResultatBehandlerResultat avslåAktuellPeriode(OppgittPeriode oppgittPeriode,
+    RegelResultatBehandlerResultat avslåAktuellPeriode(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag,
                                                        FastsettePerioderRegelresultat regelresultat,
-                                                       Optional<TomKontoKnekkpunkt> knekkpunktOpt,
-                                                       boolean overlapperInnvilgetAnnenpartsPeriode) {
+                                                       Optional<TomKontoKnekkpunkt> knekkpunktOpt) {
+        var oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
+        var overlapperInnvilgetAnnenpartsPeriode = overlapperMedInnvilgetAnnenpartsPeriode(fastsettePeriodeGrunnlag);
         var avslåPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
             .filter(d -> !overlapperInnvilgetAnnenpartsPeriode)
             .map(knekkdato -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkdato.minusDays(1)))
             .orElse(oppgittPeriode);
 
+        var aktiviteter = overlapperInnvilgetAnnenpartsPeriode
+            ? lagAktiveteter(avslåPeriode, regelresultat, null)
+            : lagAktiviteterUtenTrekkOgUtbetaling(avslåPeriode);
+
         var avslått = new UttakPeriode(avslåPeriode, Perioderesultattype.AVSLÅTT, null, regelresultat.getAvklaringÅrsak(),
-            regelresultat.getGraderingIkkeInnvilgetÅrsak(),
-            lagAktiviteter(avslåPeriode, regelresultat, overlapperInnvilgetAnnenpartsPeriode, null),
-            regnSamtidigUttaksprosentMotGradering(avslåPeriode), konto(avslåPeriode).orElse(null));
+            regelresultat.getGraderingIkkeInnvilgetÅrsak(), aktiviteter, samtidigUttaksprosentFra(fastsettePeriodeGrunnlag, aktiviteter),
+            konto(avslåPeriode).orElse(null));
 
         if (!overlapperInnvilgetAnnenpartsPeriode && knekkpunktOpt.isPresent()) {
             validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
@@ -81,79 +86,91 @@ class RegelResultatBehandler {
         }
     }
 
-    private static SamtidigUttaksprosent regnSamtidigUttaksprosentMotGradering(OppgittPeriode oppgittPeriode) {
-        return regnSamtidigUttaksprosentMotGradering(oppgittPeriode, null);
+    RegelResultatBehandlerResultat manuellBehandling(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag, FastsettePerioderRegelresultat regelresultat) {
+        var oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
+        var stønadskontotype = konto(oppgittPeriode);
+        var aktiviteter = lagAktiveteter(oppgittPeriode, regelresultat,null);
+        var resultat = new UttakPeriode(oppgittPeriode, Perioderesultattype.MANUELL_BEHANDLING, regelresultat.getManuellbehandlingårsak(),
+            regelresultat.getAvklaringÅrsak(), regelresultat.getGraderingIkkeInnvilgetÅrsak(), aktiviteter,
+            samtidigUttaksprosentFra(fastsettePeriodeGrunnlag, aktiviteter), stønadskontotype.orElse(null));
+        return RegelResultatBehandlerResultat.utenKnekk(resultat);
     }
 
-    private static SamtidigUttaksprosent regnSamtidigUttaksprosentMotGradering(OppgittPeriode oppgittPeriode,
-                                                                               SamtidigUttaksprosent redusertSamtidigUttaksprosent) {
-        if (!oppgittPeriode.erSøktSamtidigUttak() && redusertSamtidigUttaksprosent == null) {
+    private static SamtidigUttaksprosent samtidigUttaksprosentFra(FastsettePeriodeGrunnlag grunnlag, Set<UttakPeriodeAktivitet> aktiviteter) {
+        if (!SamtidigUttakUtil.søktSamtidigUttakForPeriode(grunnlag)) {
             return null;
         }
-        if (redusertSamtidigUttaksprosent != null) {
-            return redusertSamtidigUttaksprosent;
+
+        var utbetalingsgrad = aktiviteter.stream()
+            .map(UttakPeriodeAktivitet::getUtbetalingsgrad)
+            .max(Utbetalingsgrad::compareTo)
+            .orElseThrow();
+
+        if (utbetalingsgrad.equals(Utbetalingsgrad.ZERO)) {
+            return grunnlag.getAktuellPeriode().getSamtidigUttaksprosent();
         }
-        return oppgittPeriode.erSøktGradering()
-            ? SamtidigUttaksprosent.HUNDRED.subtract(oppgittPeriode.getArbeidsprosent())
-            : oppgittPeriode.getSamtidigUttaksprosent();
+
+        return new SamtidigUttaksprosent(utbetalingsgrad.decimalValue());
+    }
+
+    private static boolean overlapperMedInnvilgetAnnenpartsPeriode(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        var oppgittPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
+        return fastsettePeriodeGrunnlag.getAnnenPartUttaksperioder().stream()
+            .anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(oppgittPeriode) && annenpartsPeriode.isInnvilget());
     }
 
     private Optional<Stønadskontotype> konto(OppgittPeriode oppgittPeriode) {
         return oppgittPeriode.getStønadskontotype() != null ? Optional.of(oppgittPeriode.getStønadskontotype()) : utledKonto(oppgittPeriode);
     }
 
-    RegelResultatBehandlerResultat manuellBehandling(OppgittPeriode oppgittPeriode, FastsettePerioderRegelresultat regelresultat) {
-        var stønadskontotype = konto(oppgittPeriode);
-        var resultat = new UttakPeriode(oppgittPeriode, Perioderesultattype.MANUELL_BEHANDLING, regelresultat.getManuellbehandlingårsak(),
-            regelresultat.getAvklaringÅrsak(), regelresultat.getGraderingIkkeInnvilgetÅrsak(),
-            lagAktiviteter(oppgittPeriode, regelresultat, false, null),
-            regnSamtidigUttaksprosentMotGradering(oppgittPeriode), stønadskontotype.orElse(null));
-        return RegelResultatBehandlerResultat.utenKnekk(resultat);
-    }
-
     private Optional<Stønadskontotype> utledKonto(OppgittPeriode oppgittPeriode) {
         return velgStønadskonto(oppgittPeriode, regelGrunnlag, saldoUtregning);
     }
 
-    private Set<UttakPeriodeAktivitet> lagAktiviteter(OppgittPeriode oppgittPeriode,
-                                                      FastsettePerioderRegelresultat regelresultat,
-                                                      boolean overlapperMedInnvilgetPeriodeHosAnnenpart,
-                                                      SamtidigUttaksprosent øvreGrenseUtbetalingsgrad) {
-        return oppgittPeriode.getAktiviteter()
-            .stream()
-            .map(a -> lagAktivitet(a, regelresultat, overlapperMedInnvilgetPeriodeHosAnnenpart, oppgittPeriode, øvreGrenseUtbetalingsgrad))
+    private static Set<UttakPeriodeAktivitet> lagAktiviteterUtenTrekkOgUtbetaling(OppgittPeriode oppgittPeriode) {
+        return oppgittPeriode.getAktiviteter().stream()
+            .map(a -> lagAktiviteterUtenTrekkOgUtbetaling(a, oppgittPeriode))
             .collect(Collectors.toSet());
     }
 
+    private static UttakPeriodeAktivitet lagAktiviteterUtenTrekkOgUtbetaling(AktivitetIdentifikator identifikator, OppgittPeriode oppgittPeriode) {
+        return new UttakPeriodeAktivitet(identifikator, Utbetalingsgrad.ZERO, Trekkdager.ZERO, oppgittPeriode.erSøktGradering(identifikator));
+    }
+
+    private Set<UttakPeriodeAktivitet> lagAktiveteter(OppgittPeriode oppgittPeriode,
+                                                      FastsettePerioderRegelresultat regelresultat,
+                                                      SamtidigUttaksprosent avgrensetUttaksprosentForÅOppnåSamtidigUttak100) {
+        return oppgittPeriode.getAktiviteter().stream()
+            .map(a -> lagAktivitet(a, regelresultat, oppgittPeriode, avgrensetUttaksprosentForÅOppnåSamtidigUttak100))
+            .collect(Collectors.toSet());
+    }
+
+
     private UttakPeriodeAktivitet lagAktivitet(AktivitetIdentifikator identifikator,
                                                FastsettePerioderRegelresultat regelresultat,
-                                               boolean overlapperMedInnvilgetPeriodeHosAnnenpart,
                                                OppgittPeriode oppgittPeriode,
-                                               SamtidigUttaksprosent øvreGrenseUtbetalingsgrad) {
+                                               SamtidigUttaksprosent avgrensetUttaksprosentForÅOppnåSamtidigUttak100) {
         var søktGradering = oppgittPeriode.erSøktGradering(identifikator);
-        var periodeAktivitetResultat = finnPeriodeAktivitetResultat(oppgittPeriode, overlapperMedInnvilgetPeriodeHosAnnenpart, identifikator,
-            regelresultat, øvreGrenseUtbetalingsgrad);
-        return new UttakPeriodeAktivitet(identifikator, periodeAktivitetResultat.utbetalingsgrad(), periodeAktivitetResultat.trekkdager(),
-            søktGradering);
+        var periodeAktivitetResultat = finnPeriodeAktivitetResultat(oppgittPeriode, identifikator, regelresultat, avgrensetUttaksprosentForÅOppnåSamtidigUttak100);
+        return new UttakPeriodeAktivitet(identifikator, periodeAktivitetResultat.utbetalingsgrad(), periodeAktivitetResultat.trekkdager(), søktGradering);
     }
 
     private PeriodeAktivitetResultat finnPeriodeAktivitetResultat(OppgittPeriode oppgittPeriode,
-                                                                  boolean overlapperMedInnvilgetPeriodeHosAnnenpart,
                                                                   AktivitetIdentifikator aktivitet,
                                                                   FastsettePerioderRegelresultat regelresultat,
-                                                                  SamtidigUttaksprosent øvreGrenseUtbetalingsgrad) {
+                                                                  SamtidigUttaksprosent avgrensetUttaksprosentForÅOppnåSamtidigUttak100) {
         //Må sjekke saldo her, ved flere arbeidsforhold kan det reglene ha gått til sluttpunkt som trekkes dager selv om ett av arbeidsforholdene er tom
         //På arbeidsforholdet som er tom på konto skal det settes 0 trekkdager
         var stønadskonto = konto(oppgittPeriode);
         var harIgjenTrekkdager = isHarIgjenTrekkdager(oppgittPeriode, aktivitet, regelresultat, stønadskonto.orElse(null));
 
         var manuellBehandling = manuellBehandling(regelresultat);
-        if (overlapperMedInnvilgetPeriodeHosAnnenpart || (!manuellBehandling && !harIgjenTrekkdager)) {
+        if (!manuellBehandling && !harIgjenTrekkdager) {
             return new PeriodeAktivitetResultat(Utbetalingsgrad.ZERO, Trekkdager.ZERO);
         }
 
         var utbetalingsgrad = regelresultat.skalUtbetale()
-            ? UtbetalingsgradUtil.beregnUtbetalingsgradFor(oppgittPeriode, aktivitet, øvreGrenseUtbetalingsgrad)
+            ? UtbetalingsgradUtil.beregnUtbetalingsgradFor(oppgittPeriode, aktivitet, avgrensetUttaksprosentForÅOppnåSamtidigUttak100)
             : Utbetalingsgrad.ZERO;
 
         var trekkdager = regelresultat.trekkDagerFraSaldo() && !(manuellBehandling && stønadskonto.isEmpty())

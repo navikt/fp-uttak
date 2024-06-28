@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
@@ -43,11 +45,14 @@ class RegelResultatBehandlerTest {
         var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag, oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.identifikator()));
-        var behandler = new RegelResultatBehandler(SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), grunnlag);
+        var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
+        var behandler = new RegelResultatBehandler(saldoUtregning, grunnlag);
 
         var regelresultat = new FastsettePerioderRegelresultat(null,
             UttakOutcome.ikkeOppfylt(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN).medTrekkDagerFraSaldo(true));
-        var resultat = behandler.avslåAktuellPeriode(oppgittPeriode, regelresultat, Optional.of(knekkpunkt), false);
+
+        var fastsattPeridoeGrunnlag = new FastsettePeriodeGrunnlagImpl(grunnlag, null, saldoUtregning, oppgittPeriode);
+        var resultat = behandler.avslåAktuellPeriode(fastsattPeridoeGrunnlag, regelresultat, Optional.of(knekkpunkt));
 
         assertThat(resultat.getPeriode().getFom()).isEqualTo(fom);
         assertThat(resultat.getPeriode().getTom()).isEqualTo(knekkpunkt.dato().minusDays(1));

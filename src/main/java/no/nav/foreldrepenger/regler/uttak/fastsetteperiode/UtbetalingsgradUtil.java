@@ -14,16 +14,18 @@ public final class UtbetalingsgradUtil {
     private UtbetalingsgradUtil() {}
 
 
-    public static Utbetalingsgrad beregnUtbetalingsgradFor(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent øvreGrenseUtbetalingsgrad) {
+    public static Utbetalingsgrad beregnUtbetalingsgradFor(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet, SamtidigUttaksprosent avgrensetUttaksprosentForÅOppnåSamtidigUttak100) {
         var beregnetUtbetalingsgrad = UTBETALINGSGRAD_100;
-        if (oppgittPeriode.erSøktGradering(aktivitet) || (oppgittPeriode.erSøktGradering() && oppgittPeriode.erSøktSamtidigUttak())) { // TODO: gradering og samtidig?
+
+        if (oppgittPeriode.erSøktGradering(aktivitet)) {
             beregnetUtbetalingsgrad = UTBETALINGSGRAD_100.subtract(oppgittPeriode.getArbeidsprosent());
-        } else if (oppgittPeriode.erSøktSamtidigUttak()) {
+        } else if (oppgittPeriode.erSøktSamtidigUttak()) { // TODO: erSøktGradering() + erSøktSamtidigUttak() gir samtidig uttaksprosenten?
+            // gradering og samtidig bruker samtidig uttaksprosenten? Riktigt? Feil?
             beregnetUtbetalingsgrad = oppgittPeriode.getSamtidigUttaksprosent().decimalValue();
         }
 
-        return øvreGrenseUtbetalingsgrad != null
-            ? new Utbetalingsgrad(beregnetUtbetalingsgrad.min(øvreGrenseUtbetalingsgrad.decimalValue()))
+        return avgrensetUttaksprosentForÅOppnåSamtidigUttak100 != null
+            ? new Utbetalingsgrad(beregnetUtbetalingsgrad.min(avgrensetUttaksprosentForÅOppnåSamtidigUttak100.decimalValue()))
             : new Utbetalingsgrad(beregnetUtbetalingsgrad);
     }
 }
