@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
-import java.math.BigDecimal;
+import java.util.Optional;
 
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsStillingsprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -10,34 +10,28 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsg
 class UtbetalingsgradMedGraderingUtregning implements UtbetalingsgradUtregning {
 
     private final OppgittPeriode uttakPeriode;
+    private final AktivitetIdentifikator aktivitet;
     private final SamtidigUttaksprosent annenpartSamtidigUttaksprosent;
 
-    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode, SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
+    UtbetalingsgradMedGraderingUtregning(OppgittPeriode uttakPeriode,
+                                         AktivitetIdentifikator aktivitet,
+                                         SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         this.uttakPeriode = uttakPeriode;
+        this.aktivitet = aktivitet;
         this.annenpartSamtidigUttaksprosent = annenpartSamtidigUttaksprosent;
     }
 
     @Override
     public Utbetalingsgrad resultat() {
-        if (uttakPeriode.getArbeidsprosent() == null) {
-            throw new IllegalArgumentException("arbeidstidsprosent kan ikke være null");
+        // Samtidiguttaksprosent med mindre gradering på noen aktiviteter i perioden
+        var lokalSamtidigUttaksprosent = uttakPeriode.erSøktGradering(aktivitet) ? Optional.ofNullable(uttakPeriode.getArbeidsprosent())
+            .map(SamtidigUttaksprosent.HUNDRED::subtract)
+            .orElseThrow(() -> new IllegalArgumentException("arbeidstidsprosent kan ikke være null")) : SamtidigUttaksprosent.HUNDRED;
+        var maksSamtidigUttakUtFraAnnenpart = SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
+        // Reduser utbetaling dersom annenpart > 0 og det ligger an til mer enn 100 prosent
+        if (lokalSamtidigUttaksprosent.subtract(maksSamtidigUttakUtFraAnnenpart).merEnn0()) {
+            return new Utbetalingsgrad(maksSamtidigUttakUtFraAnnenpart.decimalValue());
         }
-        var søktUttaksprosent = SamtidigUttaksprosent.HUNDRED.subtract(uttakPeriode.getArbeidsprosent());
-
-        // Hvis far søker gradering. Mor kan ha mindre enn 75% arbeids
-        var morsStillingsprosent = uttakPeriode.getMorsStillingsprosent();
-        // TODO: Far graderer, mor i arbeid og samtidig uttak. Hva skjer hera?
-        var gjenståendeUttakForBruker = SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
-
-        if (morsStillingsprosent != null) {
-            // Reduser utbetaling dersom annenpart > 0 og det ligger an til mer enn 100 prosent
-            return new Utbetalingsgrad(minstAv(søktUttaksprosent, morsStillingsprosent));
-        }
-        return new Utbetalingsgrad(søktUttaksprosent.decimalValue());
-    }
-
-    private static BigDecimal minstAv(SamtidigUttaksprosent søktUttaksprosent, MorsStillingsprosent morsStillingsprosent) {
-        return søktUttaksprosent.decimalValue().compareTo(morsStillingsprosent.decimalValue())
-            > 0 ? morsStillingsprosent.decimalValue() : søktUttaksprosent.decimalValue();
+        return new Utbetalingsgrad(lokalSamtidigUttaksprosent.decimalValue());
     }
 }

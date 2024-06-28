@@ -151,7 +151,7 @@ class RegelResultatBehandler {
             } else {
                 var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(aktivitet);
                 trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget, oppgittPeriode.getArbeidsprosent(),
-                    regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent), oppgittPeriode.getMorsStillingsprosent());
+                    regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent));
             }
         }
         return new PeriodeAktivitetResultat(utbetalingsgrad, trekkdager);
@@ -184,15 +184,14 @@ class RegelResultatBehandler {
                                                                     AktivitetIdentifikator aktivitet,
                                                                     SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         if (oppgittPeriode.erSøktGradering(aktivitet)) {
-            return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, annenpartSamtidigUttaksprosent);
+            return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent);
         }
         var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent);
         if (samtidigUttaksprosent != null) {
             return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent(),
                 annenpartSamtidigUttaksprosent);
         }
-        var morsStillingsprosent = oppgittPeriode.getMorsStillingsprosent();
-        return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent, morsStillingsprosent);
+        return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent);
     }
 
     private record PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {
