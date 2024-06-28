@@ -24,7 +24,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
@@ -39,7 +38,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdenti
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktePerioderForSammenhengendeUttakTjeneste;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktePerioderTjeneste;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUtil;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
 import no.nav.fpsak.nare.evaluation.summary.NareVersion;
@@ -135,13 +133,11 @@ public class FastsettePerioderRegelOrkestrering {
                                                      SaldoUtregning saldoUtregning,
                                                      LukketPeriode farRundtFødselIntervall) {
         var fastsettePeriodeGrunnlag = new FastsettePeriodeGrunnlagImpl(grunnlag, farRundtFødselIntervall, saldoUtregning, aktuellPeriode);
-        var regelResultatBehandler = new RegelResultatBehandler(saldoUtregning, grunnlag);
 
         var evaluering = fastsettePeriodeRegel.evaluer(fastsettePeriodeGrunnlag);
         var inputJson = toJson(fastsettePeriodeGrunnlag);
         var regelJson = EvaluationSerializer.asJson(evaluering, UttakVersion.UTTAK_VERSION, NareVersion.NARE_VERSION);
-        var regelResultatBehandlerResultat = behandleRegelresultat(evaluering, fastsettePeriodeGrunnlag, regelResultatBehandler, grunnlag,
-            saldoUtregning);
+        var regelResultatBehandlerResultat = behandleRegelresultat(evaluering, fastsettePeriodeGrunnlag, grunnlag);
 
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson,
             regelResultatBehandlerResultat.getEtterKnekkPeriode());
@@ -186,35 +182,25 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private RegelResultatBehandlerResultat behandleRegelresultat(Evaluation evaluering,
-                                                                 FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag,
-                                                                 RegelResultatBehandler behandler,
-                                                                 RegelGrunnlag regelGrunnlag,
-                                                                 SaldoUtregning saldoUtregning) {
-        var aktuellPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
+                                                                 FastsettePeriodeGrunnlag grunnlag,
+                                                                 RegelGrunnlag regelGrunnlag) {
+        var aktuellPeriode = grunnlag.getAktuellPeriode();
         var regelresultat = new FastsettePerioderRegelresultat(evaluering);
         var utfallType = regelresultat.getUtfallType();
 
-        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, saldoUtregning, regelresultat,
-            fastsettePeriodeGrunnlag.periodeFarRundtFødsel().orElse(null));
+        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, regelGrunnlag, grunnlag.getSaldoUtregning(), regelresultat,
+            grunnlag.periodeFarRundtFødsel().orElse(null));
 
-        var annenpartSamtidigUttaksprosent = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag,
-            regelGrunnlag) ? SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag) : SamtidigUttaksprosent.ZERO;
-
+        var behandler = new RegelResultatBehandler(grunnlag.getSaldoUtregning(), regelGrunnlag);
         return switch (utfallType) {
-            case AVSLÅTT -> behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt,
-                overlapperMedInnvilgetAnnenpartsPeriode(aktuellPeriode, annenpartUttaksperioder(regelGrunnlag)));
-            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat, annenpartSamtidigUttaksprosent);
-            case MANUELL_BEHANDLING -> behandler.manuellBehandling(aktuellPeriode, regelresultat);
+            case AVSLÅTT -> behandler.avslåAktuellPeriode(grunnlag, regelresultat, knekkpunktOpt);
+            case INNVILGET -> behandler.innvilgAktuellPeriode(grunnlag, regelresultat, knekkpunktOpt);
+            case MANUELL_BEHANDLING -> behandler.manuellBehandling(grunnlag, regelresultat);
         };
     }
 
-    private List<AnnenpartUttakPeriode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
+    private static List<AnnenpartUttakPeriode> annenpartUttaksperioder(RegelGrunnlag regelGrunnlag) {
         return regelGrunnlag.getAnnenPart() == null ? Collections.emptyList() : regelGrunnlag.getAnnenPart().getUttaksperioder();
-    }
-
-    private boolean overlapperMedInnvilgetAnnenpartsPeriode(OppgittPeriode aktuellPeriode, List<AnnenpartUttakPeriode> annenPartUttaksperioder) {
-        return annenPartUttaksperioder.stream()
-            .anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget());
     }
 
     private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(OppgittPeriode aktuellPeriode,
