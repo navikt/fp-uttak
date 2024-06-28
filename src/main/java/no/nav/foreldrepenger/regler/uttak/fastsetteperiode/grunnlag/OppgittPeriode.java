@@ -20,8 +20,8 @@ public final class OppgittPeriode extends LukketPeriode {
     private final LocalDate senestMottattDato;
     private final LocalDate tidligstMottattDato;
     private final MorsAktivitet morsAktivitet;
-    private final MorsStillingsprosent morsStillingsprosent;
-    private final DokumentasjonVurdering dokumentasjonVurdering;
+    private final MorsStillingsprosent morsStillingsprosent; // Satt hvis saksbehandler har vurdert
+    private final DokumentasjonVurdering dokumentasjonVurdering; // Satt hvis saksbehandler har vurdert
     private Set<AktivitetIdentifikator> aktiviteter = Set.of();
 
     private OppgittPeriode(Stønadskontotype stønadskontotype,

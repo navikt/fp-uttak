@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmS�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -205,14 +206,23 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitetIGradertPeriodeUtenFlerbarnsdager() {
         return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIAktivitet(), Oppfylt.opprett("UT1272", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
+            .hvis(new SjekkOmMorErIAktivitet(), sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent())
             .ellers(new AvslagAktivitetskravDelregel().getSpecification());
     }
 
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent() {
+        return rs.hvisRegel(SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.ID, SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.BESKRIVELSE)
+            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1326", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID, true, true))
+            .ellers(Oppfylt.opprett("UT1272", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true));
+    }
+
     private Specification<FastsettePeriodeGrunnlag> delFlytForVanligUttak() {
+        var sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent = rs.hvisRegel(SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.ID, SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.BESKRIVELSE)
+            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1327", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID, true, true))
+            .ellers(Oppfylt.opprett("UT1258", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
 
         var sjekkOmMorErIAktivitetIPerioden = rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIAktivitet(), Oppfylt.opprett("UT1258", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true))
+            .hvis(new SjekkOmMorErIAktivitet(), sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent)
             .ellers(new AvslagAktivitetskravDelregel().getSpecification());
 
         var sjekkOmPeriodenGjelderFlerbarnsdager = rs.hvisRegel(SjekkOmPeriodenGjelderFlerbarnsdager.ID,

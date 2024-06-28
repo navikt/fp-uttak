@@ -17,7 +17,7 @@ public enum Manuellbehandlingårsak {
     OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE(5029, "Innvilget pleiepenger uten innleggelse, vurder riktig ytelse"),
     FAR_SØKER_FØR_FØDSEL(5030, "Far/medmor periode før fødsel/omsorg"),
     VURDER_OM_UTSETTELSE(5031, "Vurder om det skal være utsettelse i perioden"),
-    ;
+    AKTIVETISKRAV_DELVIS_ARBEID(5032, "Mor jobber under 75 prosent");
 
     private final int id;
     private final String beskrivelse;
