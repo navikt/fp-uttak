@@ -56,7 +56,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(74.99));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
@@ -71,7 +71,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(40));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
@@ -98,7 +98,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(40));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
@@ -113,7 +113,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(40));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
@@ -128,7 +128,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(20));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(15)); // 50% av 30
@@ -157,7 +157,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(20));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(15)); // 50% av 30
@@ -184,7 +184,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
-            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(99));
 //            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(15)); // 50% av 30

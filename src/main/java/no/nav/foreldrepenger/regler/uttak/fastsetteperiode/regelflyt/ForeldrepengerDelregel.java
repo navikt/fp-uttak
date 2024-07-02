@@ -301,13 +301,13 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIArbeidMedStillingprosentUnder75ProsentMedGradering() {
         return rs.hvisRegel(SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.ID, SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1329", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID, true, true))
+            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1329", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true))
             .ellers(Oppfylt.opprett("UT1315", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent() {
         return rs.hvisRegel(SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.ID, SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1328", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVETISKRAV_DELVIS_ARBEID, true, true))
+            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1328", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true))
             .ellers(Oppfylt.opprett("UT1316", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT, true));
     }
 
