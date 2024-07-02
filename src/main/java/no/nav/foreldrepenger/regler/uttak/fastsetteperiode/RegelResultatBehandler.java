@@ -22,6 +22,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUti
 
 class RegelResultatBehandler {
 
+    /**
+     * saldoUtregning
+     * stønadskonto
+     */
+
     private final SaldoUtregning saldoUtregning;
     private final RegelGrunnlag regelGrunnlag;
 
@@ -40,7 +45,6 @@ class RegelResultatBehandler {
             .orElse(oppgittPeriode);
 
         // Vi skal redusere søker i forhold til annenparts uttaksprosent slik at de til sammen har 100% uttaksprosent
-        // TODO: Sjekke via nare? Nå er det 2 sannheter
         var redusertUttaksprosentPgaSamtidigUttakMedSamletUttak100 = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag)
             ? SamtidigUttaksprosent.HUNDRED.subtract(SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag))
             : null;
@@ -53,8 +57,8 @@ class RegelResultatBehandler {
         if (knekkpunktOpt.isEmpty()) {
             return RegelResultatBehandlerResultat.utenKnekk(innvilget);
         } else {
-            validerKnekkpunkt(innvilgPeriode, knekkpunktOpt.get());
-            var etterKnekk = innvilgPeriode.kopiMedNyPeriode(knekkpunktOpt.get().dato(), innvilgPeriode.getTom());
+            validerKnekkpunkt(oppgittPeriode, knekkpunktOpt.get());
+            var etterKnekk = oppgittPeriode.kopiMedNyPeriode(knekkpunktOpt.get().dato(), oppgittPeriode.getTom());
             return RegelResultatBehandlerResultat.medKnekk(innvilget, etterKnekk);
         }
     }
@@ -70,8 +74,8 @@ class RegelResultatBehandler {
             .orElse(oppgittPeriode);
 
         var aktiviteter = overlapperInnvilgetAnnenpartsPeriode
-            ? lagAktiveteter(avslåPeriode, regelresultat, null)
-            : lagAktiviteterUtenTrekkOgUtbetaling(avslåPeriode);
+            ? lagAktiviteterUtenTrekkOgUtbetaling(avslåPeriode)
+            : lagAktiveteter(avslåPeriode, regelresultat, null);
 
         var avslått = new UttakPeriode(avslåPeriode, Perioderesultattype.AVSLÅTT, null, regelresultat.getAvklaringÅrsak(),
             regelresultat.getGraderingIkkeInnvilgetÅrsak(), aktiviteter, samtidigUttaksprosentFra(fastsettePeriodeGrunnlag, aktiviteter),

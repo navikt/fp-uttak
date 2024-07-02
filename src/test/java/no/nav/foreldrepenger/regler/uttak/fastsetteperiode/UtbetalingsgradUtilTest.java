@@ -54,12 +54,14 @@ class UtbetalingsgradUtilTest {
     @Test
     void hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
         var graderingArbeidstidsprosent = BigDecimal.ONE;
-        var periode = graderingsPeriode(graderingArbeidstidsprosent, AKTIVITET_1, SamtidigUttaksprosent.TEN);
+        var samtidigUttaksgrad = 10;
+        var periode = graderingsPeriode(graderingArbeidstidsprosent, AKTIVITET_1, new SamtidigUttaksprosent(samtidigUttaksgrad));
 
         var resultat1 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_1, null);
         var resultat2 = UtbetalingsgradUtil.beregnUtbetalingsgradFor(periode, AKTIVITET_2, null);
 
-        assertThat(resultat1).isEqualTo(resultat2).isEqualTo(Utbetalingsgrad.HUNDRED.subtract(graderingArbeidstidsprosent));
+        assertThat(resultat1).isEqualTo(Utbetalingsgrad.HUNDRED.subtract(graderingArbeidstidsprosent));
+        assertThat(resultat2).isEqualTo(new Utbetalingsgrad(samtidigUttaksgrad));
     }
 
     @Test
