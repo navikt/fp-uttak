@@ -125,7 +125,7 @@ class ForeldrepengerDelregelTest {
                                           boolean flerbarnsdager,
                                           DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN, samtidigUttaksprosent, flerbarnsdager,
-            Set.of(aktivitetIdentifikator), null, null, null, dokumentasjonVurdering);
+            Set.of(aktivitetIdentifikator), null, null, null, null, dokumentasjonVurdering);
     }
 
     @Test
@@ -446,7 +446,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(4);
         var tom = familiehendelseDato.plusWeeks(5);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false, null, null, null, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false, null, null, null, null, null);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
             .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
@@ -580,7 +580,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.now().minusMonths(2);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true, null, null, null, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true, null, null, null, null, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(40, 17);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -617,7 +617,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.now().minusMonths(2);
         var fom = familiehendelseDato.plusWeeks(1);
         var tom = familiehendelseDato.plusWeeks(3);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true, null, null, null, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, true, null, null, null, null, null);
         var kontoer = foreldrepengerOgFlerbarnsdagerKonto(100, 0);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(kontoer)
@@ -637,7 +637,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(10);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false, familiehendelseDato,
-            familiehendelseDato, MorsAktivitet.UFØRE, null);
+            familiehendelseDato, MorsAktivitet.UFØRE, null, null);
         var kontoer = foreldrepengerKonto(40).minsterettDager(10);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -656,7 +656,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(10);
         var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN, SamtidigUttaksprosent.ZERO, false,
-            Set.of(ARBEIDSFORHOLD_1), familiehendelseDato, familiehendelseDato, MorsAktivitet.UFØRE, null);
+            Set.of(ARBEIDSFORHOLD_1), familiehendelseDato, familiehendelseDato, MorsAktivitet.UFØRE, null, null);
         var kontoer = foreldrepengerKonto(40).minsterettDager(10);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -675,7 +675,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(10);
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false, familiehendelseDato,
-            familiehendelseDato, MorsAktivitet.UFØRE, null);
+            familiehendelseDato, MorsAktivitet.UFØRE, null, null);
         var kontoer = foreldrepengerKonto(40).utenAktivitetskravDager(10);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -694,7 +694,7 @@ class ForeldrepengerDelregelTest {
         var fom = familiehendelseDato.plusWeeks(8);
         var tom = familiehendelseDato.plusWeeks(10);
         var oppgittPeriode = OppgittPeriode.forGradering(Stønadskontotype.FORELDREPENGER, fom, tom, BigDecimal.TEN, SamtidigUttaksprosent.ZERO, false,
-            Set.of(ARBEIDSFORHOLD_1), familiehendelseDato, familiehendelseDato, MorsAktivitet.UFØRE, null);
+            Set.of(ARBEIDSFORHOLD_1), familiehendelseDato, familiehendelseDato, MorsAktivitet.UFØRE, null, null);
         var kontoer = foreldrepengerKonto(40).utenAktivitetskravDager(10);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))

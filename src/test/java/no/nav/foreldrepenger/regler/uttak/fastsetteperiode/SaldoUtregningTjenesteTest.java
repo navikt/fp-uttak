@@ -73,7 +73,7 @@ class SaldoUtregningTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null, null);
     }
 
     @Test

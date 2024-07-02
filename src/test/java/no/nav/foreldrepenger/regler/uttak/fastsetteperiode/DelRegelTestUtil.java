@@ -66,7 +66,7 @@ final class DelRegelTestUtil {
                                          LocalDate tom,
                                          Set<AktivitetIdentifikator> gradertAktiviteter,
                                          DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, BigDecimal.TEN, null, false, gradertAktiviteter, null, null, null,
+        return OppgittPeriode.forGradering(stønadskontotype, fom, tom, BigDecimal.TEN, null, false, gradertAktiviteter, null, null, null, null,
             dokumentasjonVurdering);
     }
 
@@ -78,7 +78,7 @@ final class DelRegelTestUtil {
                                          LocalDate fom,
                                          LocalDate tom,
                                          DokumentasjonVurdering dokumentasjonVurdering) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, dokumentasjonVurdering);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null, dokumentasjonVurdering);
     }
 
     static OppgittPeriode oppholdPeriode(LocalDate fom, LocalDate tom, OppholdÅrsak årsak) {

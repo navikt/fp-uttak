@@ -175,7 +175,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
     }
 
     private OppgittPeriode oppgittPeriode(Stønadskontotype stønadskontotype, LocalDate fom, LocalDate tom) {
-        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null);
+        return OppgittPeriode.forVanligPeriode(stønadskontotype, fom, tom, null, false, null, null, null, null, null);
     }
 
     @Test
@@ -745,7 +745,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
         var fødselsdato = LocalDate.of(2018, 6, 13);
 
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22), null, false,
-            fødselsdato.plusWeeks(17), null, null, null);
+            fødselsdato.plusWeeks(17), null, null, null, null);
         var grunnlag = grunnlagMedKontoer().datoer(new Datoer.Builder().fødsel(fødselsdato))
             .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato.plusWeeks(7)))

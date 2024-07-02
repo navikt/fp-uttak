@@ -20,7 +20,8 @@ public final class OppgittPeriode extends LukketPeriode {
     private final LocalDate senestMottattDato;
     private final LocalDate tidligstMottattDato;
     private final MorsAktivitet morsAktivitet;
-    private final DokumentasjonVurdering dokumentasjonVurdering;
+    private final MorsStillingsprosent morsStillingsprosent; // Satt hvis saksbehandler har vurdert
+    private final DokumentasjonVurdering dokumentasjonVurdering; // Satt hvis saksbehandler har vurdert
     private Set<AktivitetIdentifikator> aktiviteter = Set.of();
 
     private OppgittPeriode(Stønadskontotype stønadskontotype,
@@ -37,6 +38,7 @@ public final class OppgittPeriode extends LukketPeriode {
                            LocalDate senestMottattDato,
                            LocalDate tidligstMottattDato,
                            MorsAktivitet morsAktivitet,
+                           MorsStillingsprosent morsStillingsprosent,
                            DokumentasjonVurdering dokumentasjonVurdering) {
         super(fom, tom);
         this.arbeidsprosent = arbeidsprosent;
@@ -51,13 +53,14 @@ public final class OppgittPeriode extends LukketPeriode {
         this.senestMottattDato = senestMottattDato;
         this.tidligstMottattDato = tidligstMottattDato;
         this.morsAktivitet = morsAktivitet;
+        this.morsStillingsprosent = morsStillingsprosent;
         this.dokumentasjonVurdering = dokumentasjonVurdering;
     }
 
     public OppgittPeriode kopiMedNyPeriode(LocalDate nyFom, LocalDate nyTom) {
         var kopi = new OppgittPeriode(stønadskontotype, nyFom, nyTom, manglendeSøktPeriode, arbeidsprosent, gradertAktiviteter, overføringÅrsak,
             samtidigUttaksprosent, flerbarnsdager, utsettelseÅrsak, oppholdÅrsak, senestMottattDato, tidligstMottattDato, morsAktivitet,
-            dokumentasjonVurdering);
+            morsStillingsprosent, dokumentasjonVurdering);
         kopi.aktiviteter = aktiviteter;
         return kopi;
     }
@@ -171,7 +174,7 @@ public final class OppgittPeriode extends LukketPeriode {
     }
 
     public static OppgittPeriode forManglendeSøkt(Stønadskontotype type, LocalDate fom, LocalDate tom) {
-        return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null, null, null);
+        return new OppgittPeriode(type, fom, tom, true, null, Set.of(), null, null, false, null, null, null, null, null, null, null);
     }
 
     public static OppgittPeriode forUtsettelse(LocalDate fom,
@@ -182,7 +185,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                                MorsAktivitet morsAktivitet,
                                                DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(null, fom, tom, false, null, Set.of(), null, null, false, utsettelseÅrsak, null, senestMottattDato,
-            tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+            tidligstMottattDato, morsAktivitet, null, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forOverføring(Stønadskontotype stønadskontotype,
@@ -193,7 +196,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                                LocalDate tidligstMottattDato,
                                                DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), overføringÅrsak, null, false, null, null, senestMottattDato,
-            tidligstMottattDato, null, dokumentasjonVurdering);
+            tidligstMottattDato, null, null, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forOpphold(LocalDate fom,
@@ -202,7 +205,7 @@ public final class OppgittPeriode extends LukketPeriode {
                                             LocalDate senestMottattDato,
                                             LocalDate tidligstMottattDato) {
         return new OppgittPeriode(OppholdÅrsak.map(oppholdÅrsak), fom, tom, false, null, Set.of(), null, null, false, null, oppholdÅrsak,
-            senestMottattDato, tidligstMottattDato, null, null);
+            senestMottattDato, tidligstMottattDato, null, null, null);
     }
 
     public static OppgittPeriode forGradering(Stønadskontotype stønadskontotype,
@@ -215,9 +218,10 @@ public final class OppgittPeriode extends LukketPeriode {
                                               LocalDate senestMottattDato,
                                               LocalDate tidligstMottattDato,
                                               MorsAktivitet morsAktivitet,
+                                              MorsStillingsprosent morsStillingsprosent,
                                               DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, arbeidsprosent, gradertAktiviteter, null, samtidigUttaksprosent, flerbarnsdager,
-            null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+            null, null, senestMottattDato, tidligstMottattDato, morsAktivitet, morsStillingsprosent, dokumentasjonVurdering);
     }
 
     public static OppgittPeriode forVanligPeriode(Stønadskontotype stønadskontotype,
@@ -228,9 +232,10 @@ public final class OppgittPeriode extends LukketPeriode {
                                                   LocalDate senestMottattDato,
                                                   LocalDate tidligstMottattDato,
                                                   MorsAktivitet morsAktivitet,
+                                                  MorsStillingsprosent morsStillingsprosent,
                                                   DokumentasjonVurdering dokumentasjonVurdering) {
         return new OppgittPeriode(stønadskontotype, fom, tom, false, null, Set.of(), null, samtidigUttaksprosent, flerbarnsdager, null, null,
-            senestMottattDato, tidligstMottattDato, morsAktivitet, dokumentasjonVurdering);
+            senestMottattDato, tidligstMottattDato, morsAktivitet, morsStillingsprosent, dokumentasjonVurdering);
     }
 
     @Override
@@ -263,4 +268,9 @@ public final class OppgittPeriode extends LukketPeriode {
             + utsettelseÅrsak + ", oppholdÅrsak=" + oppholdÅrsak + ", senestMottattDato=" + senestMottattDato + ", tidligstMottattDato="
             + tidligstMottattDato + ", aktiviteter=" + aktiviteter + ", dokumentasjonVurdering=" + dokumentasjonVurdering + '}';
     }
+
+    public MorsStillingsprosent getMorsStillingsprosent() {
+        return morsStillingsprosent;
+    }
+
 }

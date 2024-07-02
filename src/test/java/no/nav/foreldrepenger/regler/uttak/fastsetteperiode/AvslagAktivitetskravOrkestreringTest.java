@@ -269,7 +269,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 100));
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10), null, false,
-            fødselsdato, fødselsdato, UTDANNING, MORS_AKTIVITET_IKKE_DOKUMENTERT);
+            fødselsdato, fødselsdato, UTDANNING, null, MORS_AKTIVITET_IKKE_DOKUMENTERT);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
@@ -339,12 +339,12 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
     private OppgittPeriode foreldrepenger(LocalDate fødselsdato, MorsAktivitet morsAktivitet) {
         return OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1), null, false,
-            fødselsdato, fødselsdato, morsAktivitet, null);
+            fødselsdato, fødselsdato, morsAktivitet, null, null);
     }
 
     private OppgittPeriode fellesperiode(LocalDate fødselsdato, MorsAktivitet morsAktivitet, DokumentasjonVurdering dokumentasjonVurdering) {
         return OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(15).minusDays(1), null, false,
-            fødselsdato, fødselsdato, morsAktivitet, dokumentasjonVurdering);
+            fødselsdato, fødselsdato, morsAktivitet, null, dokumentasjonVurdering);
     }
 
     private static Stream<Arguments> dokumentasjonOgAvslagKombinasjoner() {

@@ -241,7 +241,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var fødselsdato = LocalDate.of(2021, 10, 11);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL,
             OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4), null, false, fødselsdato, fødselsdato,
-                MorsAktivitet.SYK, MORS_AKTIVITET_GODKJENT))).kontoer(kontoer(konto(FORELDREPENGER, 100))).rettOgOmsorg(bareFarRett()).build();
+                MorsAktivitet.SYK, null, MORS_AKTIVITET_GODKJENT))).kontoer(kontoer(konto(FORELDREPENGER, 100))).rettOgOmsorg(bareFarRett()).build();
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
@@ -252,9 +252,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_ikke_avslås_pga_tom_på_konto_hvis_dager_igjen_på_minsteretten() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1), null, false,
-            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
+            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, null, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9).minusDays(1), null, false,
-            fødselsdato, fødselsdato, null, null);
+            fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 10)).minsterettDager(5))
             .rettOgOmsorg(bareFarRett())
@@ -272,9 +272,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_avslås_pga_tom_på_konto_hvis_ikke_dager_igjen_på_fp_men_ubrukte_minsterett() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7).minusDays(1), null, false,
-            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
+            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, null, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9).minusDays(1), null, false,
-            fødselsdato, fødselsdato, null, null);
+            fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 5)).minsterettDager(5))
             .rettOgOmsorg(bareFarRett())
@@ -292,9 +292,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_avslås_pga_tom_på_konto_hvis_dager_igjen_på_minsteretten_men_brukt_alle_dager_foreldrepenger() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), null, false,
-            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
+            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, null, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1), null,
-            false, fødselsdato, fødselsdato, null, null);
+            false, fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 20)).minsterettDager(5))
             .rettOgOmsorg(bareFarRett())
@@ -312,9 +312,9 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
     void bfhr_msp_skal_ikke_avslås_pga_tom_på_konto_hvis_flere_dager_igjen_på_minsteretten_enn_foreldrepenger() {
         var fødselsdato = LocalDate.of(2022, 6, 15);
         var fpFørMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), null, false,
-            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
+            fødselsdato, fødselsdato, MorsAktivitet.UTDANNING, null, MORS_AKTIVITET_GODKJENT);
         var fpEtterMsp = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1), null,
-            false, fødselsdato, fødselsdato, null, null);
+            false, fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 30)).minsterettDager(20))
             .rettOgOmsorg(bareFarRett())

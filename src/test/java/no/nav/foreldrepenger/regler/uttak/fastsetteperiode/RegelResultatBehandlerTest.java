@@ -33,7 +33,7 @@ class RegelResultatBehandlerTest {
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet());
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
-        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom, null, false, null, null, null, null);
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FELLESPERIODE, fom, tom, null, false, null, null, null, null, null);
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(false))
