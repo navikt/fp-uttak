@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUtil;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -20,7 +21,7 @@ public class SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent extends LeafSpe
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
-        if (erMorIArbeidOgHarEnStillingsprosentMindreEnn75Prosent(aktuellPeriode)) {
+        if (erMorIArbeidOgHarEnStillingsprosentMindreEnn75Prosent(aktuellPeriode) && (SamtidigUttakUtil.søktSamtidigUttakForPeriode(grunnlag) || grunnlag.getAktuellPeriode().erSøktGradering())) {
             return ja();
         }
         return nei();

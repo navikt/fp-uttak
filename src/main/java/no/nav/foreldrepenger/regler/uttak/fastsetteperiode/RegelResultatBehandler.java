@@ -191,6 +191,9 @@ class RegelResultatBehandler {
             return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent(),
                 annenpartSamtidigUttaksprosent);
         }
+        if (oppgittPeriode.getMorsStillingsprosent() != null) {
+            return new UtbetalingsgradMorsStillingsprosentUtregning(oppgittPeriode.getMorsStillingsprosent(), annenpartSamtidigUttaksprosent);
+        }
         return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent);
     }
 
