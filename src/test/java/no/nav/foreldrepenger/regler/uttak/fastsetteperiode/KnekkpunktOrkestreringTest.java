@@ -179,7 +179,7 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     }
 
     @Test
-    void en_lang_manglende_søkt_før_første_uttaksperiode_skal_gå_til_manuell_når_alle_dager_brukes_opp() {
+    void en_lang_manglende_søkt_før_første_uttaksperiode_skal_gå_til_avslag_når_alle_dager_brukes_opp() {
         var fødselsdato = LocalDate.of(2018, 2, 13);
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(200));
         var grunnlag = basicGrunnlag(fødselsdato).behandling(farBehandling())
