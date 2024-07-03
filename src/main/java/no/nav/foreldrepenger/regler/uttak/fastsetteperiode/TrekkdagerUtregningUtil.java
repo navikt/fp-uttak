@@ -23,7 +23,7 @@ public final class TrekkdagerUtregningUtil {
         var virkedagerIPerioden = Virkedager.beregnAntallVirkedager(oppgittPeriode);
 
         if (skalUtbetale) {
-            if (graderingIkkeInnvilgetÅrsak != null) {
+            if (graderingIkkeInnvilgetÅrsak != null || oppgittPeriode.getMorsStillingsprosent() != null) {
                 return new Trekkdager(virkedagerIPerioden);
             }
             return beregnetTrekkdager(virkedagerIPerioden, utbetalingsgrad.decimalValue());

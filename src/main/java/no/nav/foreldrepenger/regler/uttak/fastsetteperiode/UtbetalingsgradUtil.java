@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
+import java.math.BigDecimal;
+
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
-
-import java.math.BigDecimal;
 
 public final class UtbetalingsgradUtil {
 
@@ -20,8 +20,9 @@ public final class UtbetalingsgradUtil {
         if (oppgittPeriode.erSøktGradering(aktivitet)) {
             beregnetUtbetalingsgrad = UTBETALINGSGRAD_100.subtract(oppgittPeriode.getArbeidsprosent());
         } else if (oppgittPeriode.erSøktSamtidigUttak()) { // TODO: erSøktGradering() + erSøktSamtidigUttak() gir samtidig uttaksprosenten?
-            // gradering og samtidig bruker samtidig uttaksprosenten? Riktigt? Feil?
             beregnetUtbetalingsgrad = oppgittPeriode.getSamtidigUttaksprosent().decimalValue();
+        } else if (oppgittPeriode.getMorsStillingsprosent() != null) {
+            beregnetUtbetalingsgrad = oppgittPeriode.getMorsStillingsprosent().decimalValue();
         }
 
         return avgrensetUttaksprosentForÅOppnåSamtidigUttak100 != null
