@@ -184,10 +184,6 @@ class RegelResultatBehandler {
                                                                     AktivitetIdentifikator aktivitet,
                                                                     SamtidigUttaksprosent annenpartSamtidigUttaksprosent,
                                                                     boolean graderingInnvilget) {
-        // jobber 30
-        // mor 20
-        // graderingInnvilget == false
-
         if (graderingInnvilget) {
             return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent);
         }
@@ -199,7 +195,6 @@ class RegelResultatBehandler {
             return new UtbetalingsgradMorsStillingsprosentUtregning(oppgittPeriode.getMorsStillingsprosent(), annenpartSamtidigUttaksprosent);
         }
         return new UtbetalingsgradUtenGraderingUtregning(annenpartSamtidigUttaksprosent);
-
     }
 
     private record PeriodeAktivitetResultat(Utbetalingsgrad utbetalingsgrad, Trekkdager trekkdager) {

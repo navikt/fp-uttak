@@ -27,7 +27,6 @@ public class SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent extends LeafSpe
         return nei();
     }
 
-
     private static boolean erMorIArbeidOgHarEnStillingsprosentMindreEnn75Prosent(OppgittPeriode aktuellPeriode) {
         return MorsAktivitet.ARBEID.equals(aktuellPeriode.getMorsAktivitet()) && aktuellPeriode.getMorsStillingsprosent() != null;
     }
