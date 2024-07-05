@@ -12,7 +12,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "AKT_ARBEID_1";
-    public static final String BESKRIVELSE = "Er mor i arbeid og har en stillingsprosent under 75 prosent";
+    public static final String BESKRIVELSE = "Er mor i arbeid og har en stillingsprosent under 75 prosent?";
 
     public SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent() {
         super(ID);

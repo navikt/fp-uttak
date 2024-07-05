@@ -12,11 +12,11 @@ public final class TrekkdagerUtregningUtil {
     }
 
     public static Trekkdager trekkdagerFor(Periode periode,
-                                           boolean gradert,
+                                           boolean graderingInnvilget,
                                            BigDecimal gradertArbeidstidsprosent,
                                            SamtidigUttaksprosent samtidigUttaksprosent) {
         var trekkdagerUtenGradering = Virkedager.beregnAntallVirkedager(periode);
-        if (gradert) {
+        if (graderingInnvilget) {
             return trekkdagerMedGradering(trekkdagerUtenGradering, gradertArbeidstidsprosent);
         }
         if (samtidigUttaksprosent != null) {

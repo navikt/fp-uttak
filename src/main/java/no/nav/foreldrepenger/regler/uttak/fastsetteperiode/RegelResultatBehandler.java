@@ -139,9 +139,10 @@ class RegelResultatBehandler {
             return new PeriodeAktivitetResultat(Utbetalingsgrad.ZERO, Trekkdager.ZERO);
         }
 
+        var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(aktivitet);
         var utbetalingsgrad = Utbetalingsgrad.ZERO;
         if (regelresultat.skalUtbetale()) {
-            var utbetalingsgradUtregning = bestemUtbetalingsgradUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent);
+            var utbetalingsgradUtregning = bestemUtbetalingsgradUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent, graderingInnvilget);
             utbetalingsgrad = utbetalingsgradUtregning.resultat();
         }
         var trekkdager = Trekkdager.ZERO;
@@ -149,7 +150,6 @@ class RegelResultatBehandler {
             if (manuellBehandling && stønadskonto.isEmpty()) {
                 trekkdager = Trekkdager.ZERO;
             } else {
-                var graderingInnvilget = regelresultat.getGraderingIkkeInnvilgetÅrsak() == null && oppgittPeriode.erSøktGradering(aktivitet);
                 trekkdager = TrekkdagerUtregningUtil.trekkdagerFor(oppgittPeriode, graderingInnvilget, oppgittPeriode.getArbeidsprosent(),
                     regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent));
             }
@@ -182,14 +182,14 @@ class RegelResultatBehandler {
 
     private UtbetalingsgradUtregning bestemUtbetalingsgradUtregning(OppgittPeriode oppgittPeriode,
                                                                     AktivitetIdentifikator aktivitet,
-                                                                    SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
-        if (oppgittPeriode.erSøktGradering(aktivitet)) {
+                                                                    SamtidigUttaksprosent annenpartSamtidigUttaksprosent,
+                                                                    boolean graderingInnvilget) {
+        if (graderingInnvilget) {
             return new UtbetalingsgradMedGraderingUtregning(oppgittPeriode, aktivitet, annenpartSamtidigUttaksprosent);
         }
         var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(oppgittPeriode, annenpartSamtidigUttaksprosent);
         if (samtidigUttaksprosent != null) {
-            return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent(),
-                annenpartSamtidigUttaksprosent);
+            return new UtbetalingsgradSamtidigUttakUtregning(samtidigUttaksprosent, oppgittPeriode.getArbeidsprosent(), annenpartSamtidigUttaksprosent);
         }
         if (oppgittPeriode.getMorsStillingsprosent() != null) {
             return new UtbetalingsgradMorsStillingsprosentUtregning(oppgittPeriode.getMorsStillingsprosent(), annenpartSamtidigUttaksprosent);

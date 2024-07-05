@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUt
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -301,8 +302,14 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIArbeidMedStillingprosentUnder75ProsentMedGradering() {
         return rs.hvisRegel(SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.ID, SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1329", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true))
+            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), sjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent())
             .ellers(Oppfylt.opprett("UT1315", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, true));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent() {
+        return rs.hvisRegel(SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent.ID, SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent.BESKRIVELSE)
+            .hvis(new SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent(), Oppfylt.opprettMedAvslåttGradering("UT1331", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, GraderingIkkeInnvilgetÅrsak.MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV, true))
+            .ellers(Manuellbehandling.opprett("UT1329", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent() {
