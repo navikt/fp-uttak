@@ -224,8 +224,8 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> delFlytForVanligUttak() {
         var sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent = rs.hvisRegel(SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.ID, SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1327", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true))
-            .ellers(Oppfylt.opprett("UT1258", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+            .hvis(new SjekkOmMorErIArbeidMedStillingprosentUnder75Prosent(), Manuellbehandling.opprett("UT1327", InnvilgetÅrsak.FORELDREPENGER_FELLESPERIODE_TIL_FAR, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true))
+            .ellers(Oppfylt.opprett("UT1258", InnvilgetÅrsak.FORELDREPENGER_FELLESPERIODE_TIL_FAR, true));
 
         var sjekkOmMorErIAktivitetIPerioden = rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
             .hvis(new SjekkOmMorErIAktivitet(), sjekkOmMorErIArbeidMedStillingprosentUnder75Prosent)

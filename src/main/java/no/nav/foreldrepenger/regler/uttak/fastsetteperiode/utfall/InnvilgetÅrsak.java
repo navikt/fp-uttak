@@ -16,6 +16,7 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT(2034, "Gradering foreldrepenger, kun mor har rett"),
     GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(2035, "Gradering foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
     FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV(2036, "Innvilget foreldrepenger, kun far har rett - dager uten aktivitetskrav"),
+    FORELDREPENGER_FELLESPERIODE_TIL_FAR(2037, "Innvilget fellesperiode til far"),
     MSP_INNVILGET(2039, "Innvilger msp første 6 ukene"),
 
     // Overføring årsaker

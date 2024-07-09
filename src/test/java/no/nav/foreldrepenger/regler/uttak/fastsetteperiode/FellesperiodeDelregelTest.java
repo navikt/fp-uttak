@@ -392,7 +392,7 @@ class FellesperiodeDelregelTest {
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertInnvilget(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_FELLESPERIODE_TIL_FAR);
     }
 
     @Test
