@@ -462,7 +462,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
     }
 
     @Test
-    void fellesperiode_før_fødsel_skal_ikke_kunne_ha_gradering() {
+    void fellesperiode_med_gradering_før_fødsel_skal_innvilges_automatisk_for_mor() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = create();
         leggPåKvoter(grunnlag);
@@ -483,7 +483,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.minusWeeks(6));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.minusWeeks(3).minusDays(1));
         assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
-        assertThat(uttakPeriode.erGraderingInnvilget()).isFalse();
+        assertThat(uttakPeriode.erGraderingInnvilget()).isTrue();
 
         //3 uker før fødsel innvilges
         uttakPeriode = resultat.get(1).uttakPeriode();
