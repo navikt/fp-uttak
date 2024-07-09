@@ -33,18 +33,17 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.GraderingIkkeInnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
 class FellesperiodeDelregelTest {
 
-    private final LocalDate fødselsdato = LocalDate.of(2018, 1, 1);
+    private final static LocalDate FØDSELSDATO = LocalDate.of(2018, 1, 1);
 
     @Test
     void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_ved_3_uker_før_fødsel_blir_innvilget() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(3), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.minusWeeks(12), FØDSELSDATO.minusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -59,7 +58,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_mor_uttak_starter_etter_fødsel_og_som_slutter_før_7_uker_blir_avslått() {
-        var søknadsperiode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(3), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO, FØDSELSDATO.plusWeeks(3), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -73,7 +72,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_mor_uttak_starter_ved_3_uker_før_fødsel_slutter_før_fødsel_blir_innvilget() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(1), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.minusWeeks(3), FØDSELSDATO.minusWeeks(1), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -87,7 +86,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_mor_uttak_starter_ved_7_uker_etter_fødsel_blir_innvilget() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(10), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(7), FØDSELSDATO.plusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -101,7 +100,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_far_før_fødsel_slutter_før_fødsel_blir_avslått_uten_knekk() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(10), fødselsdato.minusWeeks(5), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.minusWeeks(10), FØDSELSDATO.minusWeeks(5), null, false);
         var kontoer = enFellesperiodeKonto(10 * 5);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -119,7 +118,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
@@ -135,7 +134,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg_sammenhengede_uttak() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
@@ -152,7 +151,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
@@ -168,7 +167,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg_sammenhengede_uttak() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(true))
@@ -185,7 +184,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void fellesperiode_før_fødsel_innvilges_uavhengig_av_om_søker_har_omsorg_da_det_ikke_er_mulig_å_ha_omsorg_fordi_barnet_ikke_er_født() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(12), fødselsdato.minusWeeks(10), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.minusWeeks(12), FØDSELSDATO.minusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
@@ -200,7 +199,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1041_mor_før3UkerFørFamilieHendelse_ikkeGradert() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.minusWeeks(5), FØDSELSDATO.minusWeeks(4), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -214,7 +213,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1064_mor_før3UkerFørFamilieHendelse_gradert() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.minusWeeks(5), fødselsdato.minusWeeks(4), null, false, null);
+        var søknadsperiode = gradertoppgittPeriode(FØDSELSDATO.minusWeeks(5), FØDSELSDATO.minusWeeks(4), null, false, null);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -223,13 +222,12 @@ class FellesperiodeDelregelTest {
 
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
-        assertInnvilgetAvslåttGradering(regelresultat, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER,
-            GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     @Test
     void UT1219_mor_tidligstUke7_omsorg_disponibleStønadsdager_gradert_avklart() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), null, false, null);
+        var søknadsperiode = gradertoppgittPeriode(FØDSELSDATO.plusWeeks(8), FØDSELSDATO.plusWeeks(9), null, false, null);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -243,7 +241,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1047_mor_fellesperioder_etter_uke7() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(9), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(8), FØDSELSDATO.plusWeeks(9), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -257,7 +255,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1048_mor_fellesperiode_før_uke7() {
-        var søknadsperiode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), null, false);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO, FØDSELSDATO.plusWeeks(6).minusDays(1), null, false);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -271,7 +269,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1255_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_gradert_avklart() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, SYKDOM_ANNEN_FORELDER_GODKJENT);
+        var søknadsperiode = gradertoppgittPeriode(FØDSELSDATO.plusWeeks(4), FØDSELSDATO.plusWeeks(5), null, false, SYKDOM_ANNEN_FORELDER_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -285,7 +283,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1054_far_førUke7_etterFamileHendelse_utenGyldigGrunn_flerbarnsdager_ikkeOmsorg() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, true);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(4), FØDSELSDATO.plusWeeks(5), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
@@ -300,7 +298,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1256_far_førUke7_etterFamileHendelse_gyldigGrunn_omsorg_disponibleStønadsdager_utenGradering() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(5), null, false, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(4), FØDSELSDATO.plusWeeks(5), null, false, INNLEGGELSE_ANNEN_FORELDER_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -355,7 +353,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void far_etterUke7_omsorg_disponibleStønadsdager_gradering_ikkeFlerbarnsdager() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_GODKJENT);
+        var søknadsperiode = gradertoppgittPeriode(FØDSELSDATO.plusWeeks(7), FØDSELSDATO.plusWeeks(9), null, false, MORS_AKTIVITET_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
@@ -370,7 +368,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1270_far_etterUke7_omsorg_disponibleStønadsdager_gradering_flerbarnsdager() {
-        var søknadsperiode = gradertoppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, true, null);
+        var søknadsperiode = gradertoppgittPeriode(FØDSELSDATO.plusWeeks(7), FØDSELSDATO.plusWeeks(9), null, true, null);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -384,7 +382,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_ikkeFlerbarnsdager() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, false, MORS_AKTIVITET_GODKJENT);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(7), FØDSELSDATO.plusWeeks(9), null, false, MORS_AKTIVITET_GODKJENT);
         var kontoer = enFellesperiodeKonto(100);
         var søknad = søknad(søknadsperiode);
         var grunnlag = basicGrunnlagFar().søknad(søknad)
@@ -399,7 +397,7 @@ class FellesperiodeDelregelTest {
 
     @Test
     void UT1271_far_etterUke7_omsorg_disponibleStønadsdager_utenGradering_flerbarnsdager() {
-        var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9), null, true);
+        var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(7), FØDSELSDATO.plusWeeks(9), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
         var grunnlag = basicGrunnlagFar().søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -475,12 +473,6 @@ class FellesperiodeDelregelTest {
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(innvilgetÅrsak);
     }
 
-    private void assertInnvilgetAvslåttGradering(FastsettePerioderRegelresultat regelresultat,
-                                                 InnvilgetÅrsak innvilgetÅrsak,
-                                                 GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
-        assertInnvilget(regelresultat, innvilgetÅrsak);
-        assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(graderingIkkeInnvilgetÅrsak);
-    }
 
     private void assertManuellBehandling(FastsettePerioderRegelresultat regelresultat,
                                          IkkeOppfyltÅrsak ikkeOppfyltÅrsak,
@@ -508,7 +500,7 @@ class FellesperiodeDelregelTest {
 
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
-            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .datoer(new Datoer.Builder().fødsel(FØDSELSDATO))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));

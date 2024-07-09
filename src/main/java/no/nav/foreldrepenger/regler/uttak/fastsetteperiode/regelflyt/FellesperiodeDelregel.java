@@ -124,8 +124,7 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPerioden() {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, "Er perioden gradert?")
-            .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprettMedAvslåttGradering("UT1064", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER,
-                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true))
+            .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1064", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
             .ellers(Oppfylt.opprett("UT1041", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
     }
 
