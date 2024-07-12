@@ -125,10 +125,8 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
         var erDetBareMorSomHarRettUtenGradering = erDetAleneomsorgSjekk(Oppfylt.opprett("UT1186", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true),
             Oppfylt.opprett("UT1211", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true));
         var erDetBareMorSomHarRettVedGradering = erDetAleneomsorgSjekk(
-            Oppfylt.opprettMedAvslåttGradering("UT1187", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
-                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true),
-            Oppfylt.opprettMedAvslåttGradering("UT1212", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT,
-                GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING, true));
+            Oppfylt.opprett("UT1187", InnvilgetÅrsak.GRADERING_ALENEOMSORG, true),
+            Oppfylt.opprett("UT1212", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT, true));
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
             .hvis(new SjekkOmGradertPeriode(), erDetBareMorSomHarRettVedGradering)
             .ellers(erDetBareMorSomHarRettUtenGradering);
