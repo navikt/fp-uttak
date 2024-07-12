@@ -93,8 +93,8 @@ class ForeldrepengerDelregelTest {
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
-        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
-            GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1187");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_ALENEOMSORG);
     }
 
     @Test
@@ -133,14 +133,14 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato, AktivitetIdentifikator.forFrilans(), null);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(gradertPeriode))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(false).morHarRett(true))
             .kontoer(foreldrepengerKonto(100))
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
-        assertInnvilgetMenAvslåttGradering(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG,
-            GraderingIkkeInnvilgetÅrsak.AVSLAG_PGA_FOR_TIDLIG_GRADERING);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1212");
+        assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT);
     }
 
     @Test
@@ -202,13 +202,6 @@ class ForeldrepengerDelregelTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
-    }
-
-    private void assertInnvilgetMenAvslåttGradering(FastsettePerioderRegelresultat regelresultat,
-                                                    InnvilgetÅrsak innvilgetÅrsak,
-                                                    GraderingIkkeInnvilgetÅrsak graderingIkkeInnvilgetÅrsak) {
-        assertInnvilget(regelresultat, innvilgetÅrsak);
-        assertThat(regelresultat.getGraderingIkkeInnvilgetÅrsak()).isEqualTo(graderingIkkeInnvilgetÅrsak);
     }
 
     @Test
