@@ -14,7 +14,7 @@ public record FastsettePeriodeResultat(UttakPeriode uttakPeriode, String evaluer
     }
 
     public FastsettePeriodeResultat(UttakPeriode uttakPeriode, String evalueringResultat, String innsendtGrunnlag, OppgittPeriode periodeEtterKnekk) {
-        this(uttakPeriode, evalueringResultat, innsendtGrunnlag, periodeEtterKnekk, UttakVersion.UTTAK_VERSION.version());
+        this(uttakPeriode, evalueringResultat, innsendtGrunnlag, periodeEtterKnekk, UttakVersion.UTTAK_VERSION.nameAndVersion());
     }
 
     public boolean isManuellBehandling() {
