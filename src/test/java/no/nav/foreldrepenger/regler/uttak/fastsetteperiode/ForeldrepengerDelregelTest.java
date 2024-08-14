@@ -293,6 +293,21 @@ class ForeldrepengerDelregelTest {
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, "UT1197");
     }
 
+    @Test
+    void fødsel_bare_mor_rett_gradert_periode_før_fødsel() {
+        var familiehendelseDato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = gradertPeriode(familiehendelseDato.minusWeeks(3), familiehendelseDato.minusWeeks(2), ARBEIDSFORHOLD_1, null);
+        var grunnlag = grunnlagMor(familiehendelseDato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
+            .kontoer(foreldrepengerKonto(100))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+            .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AVKLAR_ARBEID, true, true);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1066");
+    }
+
     private void assertManuellBehandling(FastsettePerioderRegelresultat regelresultat,
                                          PeriodeResultatÅrsak periodeResultatÅrsak,
                                          Manuellbehandlingårsak manuellBehandlingÅrsak) {

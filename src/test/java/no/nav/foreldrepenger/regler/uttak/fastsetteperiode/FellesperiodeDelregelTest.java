@@ -39,7 +39,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandl
 
 class FellesperiodeDelregelTest {
 
-    private final static LocalDate FØDSELSDATO = LocalDate.of(2018, 1, 1);
+    private static final LocalDate FØDSELSDATO = LocalDate.of(2018, 1, 1);
 
     @Test
     void fellesperiode_mor_uttak_starter_ved_12_uker_og_slutter_ved_3_uker_før_fødsel_blir_innvilget() {
@@ -223,6 +223,21 @@ class FellesperiodeDelregelTest {
         var regelresultat = kjørRegel(søknadsperiode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER);
+    }
+
+    @Test
+    void UT1065_mor_gradert_innenfor_periode_forbeholdt_mor_før_fødsel() {
+        var søknadsperiode = gradertoppgittPeriode(FØDSELSDATO.minusWeeks(3), FØDSELSDATO.minusWeeks(2), null, false, null);
+        var kontoer = enFellesperiodeKonto(13 * 5);
+        var grunnlag = basicGrunnlagMor().søknad(søknad(søknadsperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
+            .kontoer(kontoer)
+            .build();
+
+        var regelresultat = kjørRegel(søknadsperiode, grunnlag);
+
+        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.AVKLAR_ARBEID, true, true);
+        assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1065");
     }
 
     @Test

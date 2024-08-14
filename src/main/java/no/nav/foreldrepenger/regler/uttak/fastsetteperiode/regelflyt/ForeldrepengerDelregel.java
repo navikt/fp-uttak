@@ -137,11 +137,17 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenStarterFørFamilieHendelse() {
+        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før termin/fødsel?")
+            .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), sjekkOmGraderingIPeriodenForbeholdMorFørFødsel())
+            .ellers(sjekkErPeriodenInnenforUkerReservertMor());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPeriodenForbeholdMorFørFødsel() {
         var sjekkErDetAleneomsorg = erDetAleneomsorgSjekk(Oppfylt.opprett("UT1197", InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG, true, true),
             Oppfylt.opprett("UT1192", InnvilgetÅrsak.FORELDREPENGER_KUN_MOR_HAR_RETT, true, true));
-        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, "Starter perioden før termin/fødsel?")
-            .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), sjekkErDetAleneomsorg)
-            .ellers(sjekkErPeriodenInnenforUkerReservertMor());
+        return rs.hvisRegel(SjekkOmGradertPeriode.ID, SjekkOmGradertPeriode.BESKRIVELSE)
+            .hvis(new SjekkOmGradertPeriode(), Manuellbehandling.opprett("UT1066", null, Manuellbehandlingårsak.AVKLAR_ARBEID, true, true))
+            .ellers(sjekkErDetAleneomsorg);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErPeriodenInnenforUkerReservertMor() {
