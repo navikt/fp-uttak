@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTidsperiodeForbeholdtMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTilgjengeligeDagerPåNoenAktiviteteneForSøktStønadskonto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUttakSkjerEtterDeFørsteUkene;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
@@ -124,8 +125,14 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingIPerioden() {
         return rs.hvisRegel(SjekkOmGradertPeriode.ID, "Er perioden gradert?")
-            .hvis(new SjekkOmGradertPeriode(), Oppfylt.opprett("UT1064", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true))
+            .hvis(new SjekkOmGradertPeriode(), sjekkOmGraderingITidsperiodeForbeholdtMor())
             .ellers(Oppfylt.opprett("UT1041", InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER, true));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmGraderingITidsperiodeForbeholdtMor() {
+        return rs.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
+            .hvis(new SjekkOmTidsperiodeForbeholdtMor(), Manuellbehandling.opprett("UT1065", null, Manuellbehandlingårsak.AVKLAR_ARBEID, true, true))
+            .ellers(Oppfylt.opprett("UT1064", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, true));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmUttakSkjerEtterDeFørsteUkene() {
