@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.PrematurukerUtil;
@@ -19,65 +18,62 @@ final class ValgAvStønadskontoTjeneste {
     private ValgAvStønadskontoTjeneste() {
     }
 
-    static Optional<Stønadskontotype> velgStønadskonto(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
-        if (periode.getStønadskontotype() != null) {
+    static Optional<Stønadskontotype> velgStønadskonto(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        if (fastsettePeriodeGrunnlag.getAktuellPeriode().getStønadskontotype() != null) {
             throw new IllegalArgumentException("Forventet periode uten stønadskontotype");
         }
-        if (periode.isUtsettelse()) {
-            return velgStønadskontoForUtsettelse(periode, regelGrunnlag, saldoUtregning);
+        if (fastsettePeriodeGrunnlag.getAktuellPeriode().isUtsettelse()) {
+            return velgStønadskontoForUtsettelse(fastsettePeriodeGrunnlag);
         }
-        return velgStønadskontoVanligPeriode(periode, regelGrunnlag, saldoUtregning);
+        return velgStønadskontoVanligPeriode(fastsettePeriodeGrunnlag);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(OppgittPeriode periode,
-                                                                            RegelGrunnlag regelGrunnlag,
-                                                                            SaldoUtregning saldoUtregning) {
-        return velg(periode, regelGrunnlag, saldoUtregning);
+    private static Optional<Stønadskontotype> velgStønadskontoVanligPeriode(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        return velg(fastsettePeriodeGrunnlag);
     }
 
-    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(OppgittPeriode periode,
-                                                                            RegelGrunnlag regelGrunnlag,
-                                                                            SaldoUtregning saldoUtregning) {
-        if (periodeErPleiepenger(periode, regelGrunnlag)) {
-            return stønadskontoVedPleiepenger(regelGrunnlag);
+    private static Optional<Stønadskontotype> velgStønadskontoForUtsettelse(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        if (periodeErPleiepenger(fastsettePeriodeGrunnlag)) {
+            return stønadskontoVedPleiepenger(fastsettePeriodeGrunnlag);
         }
-        return velg(periode, regelGrunnlag, saldoUtregning);
+        return velg(fastsettePeriodeGrunnlag);
     }
 
-    private static Optional<Stønadskontotype> velg(OppgittPeriode periode, RegelGrunnlag regelGrunnlag, SaldoUtregning saldoUtregning) {
-        for (var stønadskontotype : hentSøkerSineKontoer(regelGrunnlag)) {
-            if (!erTomForKonto(periode, stønadskontotype, saldoUtregning)) {
+    private static Optional<Stønadskontotype> velg(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        for (var stønadskontotype : hentSøkerSineKontoer(fastsettePeriodeGrunnlag)) {
+            if (!erTomForKonto(fastsettePeriodeGrunnlag.getAktuellPeriode(), stønadskontotype, fastsettePeriodeGrunnlag.getSaldoUtregning())) {
                 return Optional.of(stønadskontotype);
             }
         }
         return Optional.empty();
     }
 
-    private static boolean periodeErPleiepenger(OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
-        return PrematurukerUtil.oppfyllerKravTilPrematuruker(regelGrunnlag.getDatoer().getFødsel(), regelGrunnlag.getDatoer().getTermin())
-            && periodeErFørTermin(periode, regelGrunnlag) && periode.isUtsettelsePga(UtsettelseÅrsak.INNLAGT_BARN);
+    private static boolean periodeErPleiepenger(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        return PrematurukerUtil.oppfyllerKravTilPrematuruker(fastsettePeriodeGrunnlag.getFødselsdato(), fastsettePeriodeGrunnlag.getTermindato())
+            && periodeErFørTermin(fastsettePeriodeGrunnlag) && fastsettePeriodeGrunnlag.getAktuellPeriode().isUtsettelsePga(UtsettelseÅrsak.INNLAGT_BARN);
     }
 
-    private static boolean periodeErFørTermin(OppgittPeriode periode, RegelGrunnlag regelGrunnlag) {
-        return regelGrunnlag.getDatoer().getTermin() != null && periode.getTom().isBefore(regelGrunnlag.getDatoer().getTermin());
+    private static boolean periodeErFørTermin(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        return fastsettePeriodeGrunnlag.getTermindato() != null &&
+            fastsettePeriodeGrunnlag.getAktuellPeriode().getTom().isBefore(fastsettePeriodeGrunnlag.getTermindato());
     }
 
-    private static Optional<Stønadskontotype> stønadskontoVedPleiepenger(RegelGrunnlag regelGrunnlag) {
+    private static Optional<Stønadskontotype> stønadskontoVedPleiepenger(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
         //Trenger ikke å sjekke om tom på konto, ettersom bruker ikke kan gå tom før termin
-        if (regelGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FELLESPERIODE)) {
+        if (fastsettePeriodeGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FELLESPERIODE)) {
             return Optional.of(Stønadskontotype.FELLESPERIODE);
         }
-        if (regelGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FORELDREPENGER)) {
+        if (fastsettePeriodeGrunnlag.getGyldigeStønadskontotyper().contains(Stønadskontotype.FORELDREPENGER)) {
             return Optional.of(Stønadskontotype.FORELDREPENGER);
         }
         throw new IllegalStateException(
-            "Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: " + regelGrunnlag.getGyldigeStønadskontotyper());
+            "Trenger enten fellesperiode eller foreldrepenger konto. Kontotyper: " + fastsettePeriodeGrunnlag.getGyldigeStønadskontotyper());
     }
 
-    private static List<Stønadskontotype> hentSøkerSineKontoer(RegelGrunnlag regelGrunnlag) {
+    private static List<Stønadskontotype> hentSøkerSineKontoer(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
         final List<Stønadskontotype> søkerSineKonto;
-        var gyldige = regelGrunnlag.getGyldigeStønadskontotyper();
-        if (regelGrunnlag.getBehandling().isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
+        var gyldige = fastsettePeriodeGrunnlag.getGyldigeStønadskontotyper();
+        if (fastsettePeriodeGrunnlag.isSøkerMor() && gyldige.contains(Stønadskontotype.MØDREKVOTE)) {
             søkerSineKonto = Arrays.asList(Stønadskontotype.MØDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);
         } else if (gyldige.contains(Stønadskontotype.FEDREKVOTE)) {
             søkerSineKonto = Arrays.asList(Stønadskontotype.FEDREKVOTE, Stønadskontotype.FELLESPERIODE, Stønadskontotype.FORELDREPENGER);

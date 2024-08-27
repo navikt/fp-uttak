@@ -35,15 +35,12 @@ public class TomKontoIdentifiserer {
                                                            SaldoUtregning saldoUtregning,
                                                            Stønadskontotype stønadskontotype,
                                                            LukketPeriode farRundtFødselIntervall,
-                                                           LocalDate startdatoNesteStønadsperiode,
+                                                           boolean etterNesteStønadsperiode,
                                                            boolean skalTrekkeDager,
                                                            PeriodeResultatÅrsak periodeResultatÅrsak,
                                                            UtfallType utfallType) {
 
         Map<LocalDate, TomKontoKnekkpunkt> knekkpunkter = new HashMap<>();
-        var etterNesteStønadsperiode = Optional.ofNullable(startdatoNesteStønadsperiode)
-            .filter(d -> !uttakPeriode.getFom().isBefore(d))
-            .isPresent(); // Om aktuell periode begynner fom neste stønadsperiode
         for (var aktivitet : aktiviteter) {
             var datoKontoGårTomIPeriode = finnDatoKontoGårTomIPeriode(uttakPeriode, aktivitet, saldoUtregning, stønadskontotype, skalTrekkeDager);
             datoKontoGårTomIPeriode.ifPresent(dato -> knekkpunkter.put(dato, new TomKontoKnekkpunkt(dato)));

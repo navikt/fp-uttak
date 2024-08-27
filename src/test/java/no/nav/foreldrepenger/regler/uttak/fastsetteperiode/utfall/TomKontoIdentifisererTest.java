@@ -68,7 +68,7 @@ class TomKontoIdentifisererTest {
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag, oppgittPeriode.getFom());
         var saldoUtregning = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
         var tomKontoKnekkpunkt = TomKontoIdentifiserer.identifiser(oppgittPeriode, List.of(ARBEIDSFORHOLD_1), saldoUtregning,
-            Stønadskontotype.MØDREKVOTE, null, null, true, InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, UtfallType.INNVILGET);
+            Stønadskontotype.MØDREKVOTE, null, false, true, InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE, UtfallType.INNVILGET);
         assertThat(tomKontoKnekkpunkt.orElseThrow().dato()).isEqualTo(Virkedager.plusVirkedager(idag, virkedagerVarighet));
     }
 }
