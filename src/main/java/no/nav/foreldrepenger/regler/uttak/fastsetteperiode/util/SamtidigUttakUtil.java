@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunn
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -88,9 +87,9 @@ public final class SamtidigUttakUtil {
             app -> app.erOmsluttetAv(farRundtFødselIntervall)).isPresent();
     }
 
-    public static boolean kanRedusereUtbetalingsgradForTapende(FastsettePeriodeGrunnlag periodeGrunnlag, RegelGrunnlag regelGrunnlag) {
+    public static boolean kanRedusereUtbetalingsgradForTapende(FastsettePeriodeGrunnlag periodeGrunnlag) {
         // Er det ikkejusterbar periode, samtidig uttak under 100% eller 150/200% tilfelle?
-        var kanReduseres = regelGrunnlag.getBehandling().isBerørtBehandling() || erTapendePeriodeUtregning(periodeGrunnlag);
+        var kanReduseres = periodeGrunnlag.isBerørtBehandling() || erTapendePeriodeUtregning(periodeGrunnlag);
         if (!kanReduseres || !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag) || !merEnn100ProsentSamtidigUttak(periodeGrunnlag)
             || akseptert200ProsentSamtidigUttak(periodeGrunnlag) || akseptert150ProsentSamtidigUttak(periodeGrunnlag)) {
             return false;

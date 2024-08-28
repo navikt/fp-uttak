@@ -2,37 +2,39 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.ValgAvStønadskontoTjeneste.velgStønadskonto;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.UtfallType;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.SamtidigUttakUtil;
 
 class RegelResultatBehandler {
 
-    private final SaldoUtregning saldoUtregning;
-    private final RegelGrunnlag regelGrunnlag;
+    private final FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag;
 
-    RegelResultatBehandler(SaldoUtregning saldoUtregning, RegelGrunnlag regelGrunnlag) {
-        this.saldoUtregning = saldoUtregning;
-        this.regelGrunnlag = regelGrunnlag;
+    RegelResultatBehandler(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
+        this.fastsettePeriodeGrunnlag = fastsettePeriodeGrunnlag;
     }
 
     RegelResultatBehandlerResultat innvilgAktuellPeriode(OppgittPeriode oppgittPeriode,
                                                          Optional<TomKontoKnekkpunkt> knekkpunktOpt,
-                                                         FastsettePerioderRegelresultat regelresultat,
-                                                         SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
+                                                         FastsettePerioderRegelresultat regelresultat) {
+
+        var annenpartSamtidigUttaksprosent = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag) ?
+            SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag) : SamtidigUttaksprosent.ZERO;
+
         var innvilgPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
             .map(k -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), k.minusDays(1)))
             .orElse(oppgittPeriode);
@@ -52,8 +54,9 @@ class RegelResultatBehandler {
 
     RegelResultatBehandlerResultat avslåAktuellPeriode(OppgittPeriode oppgittPeriode,
                                                        FastsettePerioderRegelresultat regelresultat,
-                                                       Optional<TomKontoKnekkpunkt> knekkpunktOpt,
-                                                       boolean overlapperInnvilgetAnnenpartsPeriode) {
+                                                       Optional<TomKontoKnekkpunkt> knekkpunktOpt) {
+        var overlapperInnvilgetAnnenpartsPeriode = overlapperMedInnvilgetAnnenpartsPeriode(oppgittPeriode, fastsettePeriodeGrunnlag.getAnnenPartUttaksperioder());
+
         var avslåPeriode = knekkpunktOpt.map(TomKontoKnekkpunkt::dato)
             .filter(d -> !overlapperInnvilgetAnnenpartsPeriode)
             .map(knekkdato -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), knekkdato.minusDays(1)))
@@ -73,6 +76,11 @@ class RegelResultatBehandler {
         }
     }
 
+    private boolean overlapperMedInnvilgetAnnenpartsPeriode(OppgittPeriode aktuellPeriode, List<AnnenpartUttakPeriode> annenPartUttaksperioder) {
+        return annenPartUttaksperioder.stream()
+            .anyMatch(annenpartsPeriode -> annenpartsPeriode.overlapper(aktuellPeriode) && annenpartsPeriode.isInnvilget());
+    }
+
     private static SamtidigUttaksprosent regnSamtidigUttaksprosentMotGradering(OppgittPeriode oppgittPeriode,
                                                                                SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
         if (!oppgittPeriode.erSøktSamtidigUttak() && !annenpartSamtidigUttaksprosent.merEnn0()) {
@@ -86,7 +94,8 @@ class RegelResultatBehandler {
     }
 
     private Optional<Stønadskontotype> konto(OppgittPeriode oppgittPeriode) {
-        return oppgittPeriode.getStønadskontotype() != null ? Optional.of(oppgittPeriode.getStønadskontotype()) : utledKonto(oppgittPeriode);
+        return Optional.ofNullable(oppgittPeriode.getStønadskontotype())
+            .or(() -> velgStønadskonto(fastsettePeriodeGrunnlag));
     }
 
     RegelResultatBehandlerResultat manuellBehandling(OppgittPeriode oppgittPeriode, FastsettePerioderRegelresultat regelresultat) {
@@ -96,10 +105,6 @@ class RegelResultatBehandler {
             lagAktiviteter(oppgittPeriode, regelresultat, false, SamtidigUttaksprosent.ZERO),
             regnSamtidigUttaksprosentMotGradering(oppgittPeriode, SamtidigUttaksprosent.ZERO), stønadskontotype.orElse(null));
         return RegelResultatBehandlerResultat.utenKnekk(resultat);
-    }
-
-    private Optional<Stønadskontotype> utledKonto(OppgittPeriode oppgittPeriode) {
-        return velgStønadskonto(oppgittPeriode, regelGrunnlag, saldoUtregning);
     }
 
     private Set<UttakPeriodeAktivitet> lagAktiviteter(OppgittPeriode oppgittPeriode,
@@ -161,6 +166,7 @@ class RegelResultatBehandler {
                                          AktivitetIdentifikator aktivitet,
                                          FastsettePerioderRegelresultat regelresultat,
                                          Stønadskontotype stønadskonto) {
+        var saldoUtregning = fastsettePeriodeGrunnlag.getSaldoUtregning();
         var nettosaldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskonto, aktivitet, oppgittPeriode.kanTrekkeAvMinsterett());
         if (regelresultat.getAvklaringÅrsak() != null && regelresultat.getAvklaringÅrsak().trekkerMinsterett()) {
             var minsterettSaldo = saldoUtregning.restSaldoMinsterett(aktivitet);

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -133,7 +132,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder() {
-        return regelGrunnlag.getAnnenPart() != null ? regelGrunnlag.getAnnenPart().getUttaksperioder() : Collections.emptyList();
+        return regelGrunnlag.getAnnenpartUttaksperioder();
     }
 
     @Override

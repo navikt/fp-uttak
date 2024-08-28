@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Ytelser;
@@ -58,6 +60,10 @@ public class RegelGrunnlag {
 
     public AnnenPart getAnnenPart() {
         return annenPart;
+    }
+
+    public List<AnnenpartUttakPeriode> getAnnenpartUttaksperioder() {
+        return Optional.ofNullable(getAnnenPart()).map(AnnenPart::getUttaksperioder).orElseGet(List::of);
     }
 
     public Medlemskap getMedlemskap() {
