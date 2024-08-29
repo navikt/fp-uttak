@@ -720,7 +720,7 @@ class ForeldrepengerDelregelTest {
         var fødselsdato = LocalDate.of(2022, 10, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).plusDays(1));
-        var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(false))
+        var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
             .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
             .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
@@ -736,7 +736,7 @@ class ForeldrepengerDelregelTest {
         var fødselsdato = LocalDate.of(2022, 10, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.minusDays(2), fødselsdato.minusDays(1));
-        var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(false))
+        var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
             .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
             .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
@@ -752,7 +752,7 @@ class ForeldrepengerDelregelTest {
         var termindato = LocalDate.of(2022, 10, 1);
 
         var oppgittPeriode = oppgittPeriode(termindato.minusDays(3), termindato.plusWeeks(1).plusDays(1));
-        var grunnlag = grunnlagFar(termindato).behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(false))
+        var grunnlag = grunnlagFar(termindato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
             .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
             .datoer(new Datoer.Builder().termin(termindato))

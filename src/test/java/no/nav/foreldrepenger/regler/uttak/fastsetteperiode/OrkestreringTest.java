@@ -489,7 +489,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var aktivitetIdentifikator = AktivitetIdentifikator.annenAktivitet();
         var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 75)).konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
         var grunnlag = new RegelGrunnlag.Builder().datoer(datoer(fødselsdato))
-            .behandling(morBehandling().kreverSammenhengendeUttak(true))
+            .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
             .kontoer(kontoer)
@@ -629,7 +629,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
             .datoer(datoer(fødselsdato))
-            .behandling(morBehandling().kreverSammenhengendeUttak(true))
+            .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .rettOgOmsorg(beggeRett())
             .søknad(
                 new Søknad.Builder().oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
@@ -802,7 +802,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var fødselsdato = LocalDate.of(2018, 6, 14);
         var arbeidsforhold1 = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var arbeidsforhold2 = new Arbeidsforhold(ARBEIDSFORHOLD_2);
-        var grunnlag = basicGrunnlag(fødselsdato).behandling(morBehandling().kreverSammenhengendeUttak(true))
+        var grunnlag = basicGrunnlag(fødselsdato).behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .rettOgOmsorg(aleneomsorg())
             //50% prosent stilling, men søker utsettelse. Går til manuell behandling
             .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold1)

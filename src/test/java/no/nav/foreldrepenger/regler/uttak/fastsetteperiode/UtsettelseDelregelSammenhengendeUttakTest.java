@@ -129,7 +129,7 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     }
 
     private Behandling.Builder morBehandling() {
-        return new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true);
+        return new Behandling.Builder().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1));
     }
 
     private Inngangsvilkår.Builder oppfylt() {

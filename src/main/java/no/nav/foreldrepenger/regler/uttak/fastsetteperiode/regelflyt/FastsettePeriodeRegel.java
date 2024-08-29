@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
@@ -133,8 +133,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBehandlingKreverSammenhengendeUttak() {
-        return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
-            .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), ikkeOppfyltUT1166())
+        return rs.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
+            .hvis(new SjekkOmPeriodenKreverSammenhengendeUttak(), ikkeOppfyltUT1166())
             .ellers(sjekkOmFødselTermin());
     }
 
@@ -295,8 +295,8 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private Specification<FastsettePeriodeGrunnlag> kreverBehandlingenSammenhengendeUttak() {
-        return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
-            .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(), new UtsettelseDelregelSammenhengendeUttak().getSpecification())
+        return rs.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
+            .hvis(new SjekkOmPeriodenKreverSammenhengendeUttak(), new UtsettelseDelregelSammenhengendeUttak().getSpecification())
             .ellers(new UtsettelseDelregel().getSpecification());
     }
 

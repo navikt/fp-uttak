@@ -295,7 +295,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
             fødselsdato, ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(true))
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(bareFarRett())
@@ -379,7 +379,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var oppgittPeriode = fellesperiode(fødselsdato, morsAktivitet, dokumentasjonVurdering);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode);
 
-        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().kreverSammenhengendeUttak(sammenhengendeUttak))
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().sammenhengendeUttakTomDato(sammenhengendeUttak ? LocalDate.of(9999, 1, 1) : LocalDate.MIN))
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
             .søknad(søknad)

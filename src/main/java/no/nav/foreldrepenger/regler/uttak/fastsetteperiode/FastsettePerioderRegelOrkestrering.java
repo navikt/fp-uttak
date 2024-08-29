@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.feil.UttakRegelFeil;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
@@ -51,7 +52,7 @@ public class FastsettePerioderRegelOrkestrering {
         var allePerioderSomSkalFastsettes = samletUttaksperioder(grunnlag, orkestreringTillegg).stream()
             .filter(periode -> !erHelg(periode))
             .filter(periode -> !oppholdSomFyllesAvAnnenpart(periode, grunnlag.getAnnenpartUttaksperioder()))
-            .filter(periode -> grunnlag.getBehandling().isKreverSammenhengendeUttak() || !periode.isOpphold())
+            .filter(periode -> periode.kreverSammenhengendeUttak(grunnlag.getBehandling().getSammenhengendeUttakTomDato()) || !periode.isOpphold())
             .map(periode -> oppdaterMedAktiviteter(periode, grunnlag.getArbeid()))
             .toList();
         validerOverlapp(map(allePerioderSomSkalFastsettes));
@@ -170,10 +171,9 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
-        if (grunnlag.getBehandling().isKreverSammenhengendeUttak()) {
-            return ManglendeSøktePerioderForSammenhengendeUttakTjeneste.finnManglendeSøktePerioder(grunnlag);
-        }
-        return ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag);
+        var mspSammenhengende = ManglendeSøktePerioderForSammenhengendeUttakTjeneste.finnManglendeSøktePerioder(grunnlag);
+        var mspFritt = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag);
+        return Stream.concat(mspSammenhengende.stream(), mspFritt.stream()).toList();
     }
 
     private RegelResultatBehandlerResultat behandleRegelresultat(FastsettePerioderRegelresultat regelresultat,

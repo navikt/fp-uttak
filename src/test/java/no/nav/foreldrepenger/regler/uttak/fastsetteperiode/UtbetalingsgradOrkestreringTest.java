@@ -70,7 +70,7 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
         var fellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1));
 
         //Krever sammenhengende pga søkt om ferie som innvilges, dette er gamle regler
-        var grunnlag = basicGrunnlag(fødselsdato).behandling(morBehandling().kreverSammenhengendeUttak(true))
+        var grunnlag = basicGrunnlag(fødselsdato).behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().oppgittPeriode(fpff)
                 .oppgittPeriode(mødrekvote)
                 .oppgittPeriode(utsettelseFellesperiode)

@@ -57,11 +57,23 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return samlet;
     }
 
+    private static Optional<OppgittPeriode> fjernPerioderEtterSammenhengendeTomDato(RegelGrunnlag grunnlag, OppgittPeriode msp) {
+        if (msp.overlapper(grunnlag.getBehandling().getSammenhengendeUttakTomDato())) {
+            return Optional.of(
+                lagManglendeSøktPeriode(msp.getFom(), grunnlag.getBehandling().getSammenhengendeUttakTomDato(), msp.getStønadskontotype()));
+        }
+        if (msp.getTom().isBefore(grunnlag.getBehandling().getSammenhengendeUttakTomDato())) {
+            return Optional.of(msp);
+        }
+        return Optional.empty();
+    }
+
     private static List<OppgittPeriode> trimPerioder(RegelGrunnlag grunnlag, List<OppgittPeriode> manglendeSøktePerioder) {
         return manglendeSøktePerioder.stream()
             .map(ManglendeSøktPeriodeUtil::fjernHelg)
             .filter(Optional::isPresent)
             .map(Optional::get)
+            .flatMap(msp -> fjernPerioderEtterSammenhengendeTomDato(grunnlag, msp).stream())
             .map(p -> fjernPerioderFørSkjæringstidspunktOpptjening(p, grunnlag))
             .filter(Optional::isPresent)
             .map(Optional::get)

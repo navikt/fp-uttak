@@ -97,6 +97,10 @@ public class FastsattUttakPeriode {
         return utsettelse && resultatÅrsak.equals(UTSETTELSE_GYLDIG);
     }
 
+    public boolean kreverSammenhengendeUttak(LocalDate sammenhengendeUttakTomDato) {
+        return !getFom().isAfter(sammenhengendeUttakTomDato);
+    }
+
     @Override
     public String toString() {
         return "FastsattUttakPeriode{" + "fom=" + fom + ", tom=" + tom + '}';

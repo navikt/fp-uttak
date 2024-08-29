@@ -137,7 +137,7 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
-            .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -170,7 +170,7 @@ class FellesperiodeDelregelTest {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
         var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
-            .behandling(new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().søkerErMor(false).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)

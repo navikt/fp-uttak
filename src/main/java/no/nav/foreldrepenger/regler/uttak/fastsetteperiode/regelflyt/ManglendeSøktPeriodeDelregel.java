@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBehandlingKreverSammenhengendeUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDagerIgjenPåAlleAktiviteter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAlleDisponibleDagerIgjenMinsterett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
@@ -77,8 +77,8 @@ public class ManglendeSøktPeriodeDelregel implements RuleService<FastsettePerio
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBrukSammenhengendeUttakÅrsaker(Ruleset<FastsettePeriodeGrunnlag> rs) {
-        return rs.hvisRegel(SjekkOmBehandlingKreverSammenhengendeUttak.ID, SjekkOmBehandlingKreverSammenhengendeUttak.BESKRIVELSE)
-            .hvis(new SjekkOmBehandlingKreverSammenhengendeUttak(),
+        return rs.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
+            .hvis(new SjekkOmPeriodenKreverSammenhengendeUttak(),
                 Manuellbehandling.opprett("UT1096", IkkeOppfyltÅrsak.HULL_MELLOM_FORELDRENES_PERIODER, Manuellbehandlingårsak.VURDER_OM_UTSETTELSE,
                     true, false))
             .ellers(sjekkOmPeriodeGjelderMorsReserverteUker(rs));

@@ -84,11 +84,11 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFarSammenhengendeUttak(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato).behandling(farBehandling().kreverSammenhengendeUttak(true));
+        return basicGrunnlag(fødselsdato).behandling(farBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMorSammenhengendeUttak(LocalDate fødselsdato) {
-        return basicGrunnlag(fødselsdato).behandling(morBehandling().kreverSammenhengendeUttak(true));
+        return basicGrunnlag(fødselsdato).behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)));
     }
 
     @Test
@@ -176,7 +176,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
             .kontoer(defaultKontoer())
             .inngangsvilkår(oppfyltAlleVilkår())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .behandling(morBehandling().kreverSammenhengendeUttak(true))
+            .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .rettOgOmsorg(beggeRett())
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))

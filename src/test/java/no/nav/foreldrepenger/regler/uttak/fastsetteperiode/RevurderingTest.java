@@ -77,7 +77,7 @@ class RevurderingTest {
             .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12))
                 .innvilget(true)
                 .build()))
-            .behandling(berørtBehandling().søkerErMor(true).kreverSammenhengendeUttak(true))
+            .behandling(berørtBehandling().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
