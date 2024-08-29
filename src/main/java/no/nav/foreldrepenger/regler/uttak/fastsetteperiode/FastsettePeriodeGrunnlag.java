@@ -193,9 +193,9 @@ public interface FastsettePeriodeGrunnlag {
 
     LocalDateTime getSisteSøknadMottattTidspunkt();
 
-    boolean kreverBehandlingSammenhengendeUttak();
-
     Optional<LukketPeriode> periodeFarRundtFødsel();
 
     Collection<PleiepengerPeriode> perioderMedPleiepenger();
+
+    LocalDate getSammenhengendeUttakTomDato();
 }

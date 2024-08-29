@@ -50,6 +50,10 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return oppholdÅrsak;
     }
 
+    public boolean kreverSammenhengendeUttak(LocalDate sammenhengendeUttakTomDato) {
+        return !getFom().isAfter(sammenhengendeUttakTomDato);
+    }
+
     public AnnenpartUttakPeriode kopiMedNyPeriode(LocalDate fom,
                                                   LocalDate tom,
                                                   List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktiviteter) {

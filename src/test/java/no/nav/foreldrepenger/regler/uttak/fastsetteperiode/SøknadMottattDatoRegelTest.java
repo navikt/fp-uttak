@@ -111,7 +111,7 @@ class SøknadMottattDatoRegelTest {
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
             .datoer(new Datoer.Builder().fødsel(FAMILIEHENDELSE_DATO))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
-            .behandling(new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
     }

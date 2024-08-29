@@ -660,7 +660,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
             Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
-            .behandling(morBehandling().kreverSammenhengendeUttak(true))
+            .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                 .oppgittPeriode(gradering));
@@ -679,7 +679,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
             Set.of(ARBEIDSFORHOLD_1), mottattDato, mottattDato, null, null, null);
         grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(beggeRett())
-            .behandling(morBehandling().kreverSammenhengendeUttak(false))
+            .behandling(morBehandling())
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)))
                 .oppgittPeriode(gradering));
@@ -722,7 +722,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
             .rettOgOmsorg(beggeRett())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)))
             .kontoer(kontoer)
-            .behandling(morBehandling().kreverSammenhengendeUttak(true))
+            .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(5).minusDays(1)))
                 .oppgittPeriode(gradering))

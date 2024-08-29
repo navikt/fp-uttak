@@ -842,11 +842,11 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
 
     @Override
     Behandling.Builder morBehandling() {
-        return super.morBehandling().kreverSammenhengendeUttak(true);
+        return super.morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1));
     }
 
     @Override
     Behandling.Builder farBehandling() {
-        return super.farBehandling().kreverSammenhengendeUttak(true);
+        return super.farBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1));
     }
 }

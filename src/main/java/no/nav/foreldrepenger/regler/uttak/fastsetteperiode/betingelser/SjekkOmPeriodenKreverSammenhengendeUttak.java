@@ -5,18 +5,18 @@ import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
 
-@RuleDocumentation(SjekkOmBehandlingKreverSammenhengendeUttak.ID)
-public class SjekkOmBehandlingKreverSammenhengendeUttak extends LeafSpecification<FastsettePeriodeGrunnlag> {
+@RuleDocumentation(SjekkOmPeriodenKreverSammenhengendeUttak.ID)
+public class SjekkOmPeriodenKreverSammenhengendeUttak extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "SHU.1";
-    public static final String BESKRIVELSE = "Krever behandlingen sammenhengende uttak?";
+    public static final String BESKRIVELSE = "Krever perioden krever sammenhengende uttak?";
 
-    public SjekkOmBehandlingKreverSammenhengendeUttak() {
+    public SjekkOmPeriodenKreverSammenhengendeUttak() {
         super(ID);
     }
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        return grunnlag.kreverBehandlingSammenhengendeUttak() ? ja() : nei();
+        return grunnlag.getAktuellPeriode().kreverSammenhengendeUttak(grunnlag.getSammenhengendeUttakTomDato()) ? ja() : nei();
     }
 }
 

@@ -93,7 +93,7 @@ class SaldoUtregningTjenesteTest {
                 new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().berørtBehandling(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
             .build();
 
@@ -120,7 +120,7 @@ class SaldoUtregningTjenesteTest {
                 new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().berørtBehandling(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
             .build();
 
@@ -147,7 +147,7 @@ class SaldoUtregningTjenesteTest {
                 new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().berørtBehandling(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
             .build();
 
@@ -174,7 +174,7 @@ class SaldoUtregningTjenesteTest {
                 new AnnenPart.Builder().uttaksperiode(annenpartOpphold).uttaksperiode(annenpartUttaksperiode))
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
-            .behandling(new Behandling.Builder().berørtBehandling(true).kreverSammenhengendeUttak(true))
+            .behandling(new Behandling.Builder().berørtBehandling(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
             .build();
 
@@ -385,7 +385,7 @@ class SaldoUtregningTjenesteTest {
                 new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), FELLESPERIODE, new Trekkdager(5), Utbetalingsgrad.HUNDRED)))
             .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode), true, List.of(annenpartsPeriode),
-            kontoer.build(), null, null, false);
+            kontoer.build(), null, null, LocalDate.MIN);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.restSaldoFlerbarnsdager(identifikator)).isEqualTo(new Trekkdager(16 * 5));
@@ -595,7 +595,7 @@ class SaldoUtregningTjenesteTest {
                 new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold2, FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.HUNDRED))
             .build();
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(fastsattPeriode), false,
-            List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build(), null, null, false);
+            List.of(annenpartPeriode1, annenpartPeriode2), kontoer.build(), null, null, LocalDate.MIN);
         var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
 
         assertThat(resultat.saldoITrekkdager(FELLESPERIODE, søkersArbeidsforhold)).isEqualTo(new Trekkdager(97));
@@ -630,7 +630,7 @@ class SaldoUtregningTjenesteTest {
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
             List.of(annenpartUttaksperiode1, annenpartUttaksperiode2, annenpartUttaksperiode3), kontoer.build(),
-            LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
+            LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON), LocalDate.MAX);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 25 - 25 - 25 - 1
@@ -655,7 +655,7 @@ class SaldoUtregningTjenesteTest {
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false, List.of(annenpartUttaksperiode),
             kontoer.build(), LocalDateTime.of(annenpartUttaksperiode.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON),
-            true);
+            LocalDate.MAX);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 3 - 2 - 1
@@ -684,7 +684,7 @@ class SaldoUtregningTjenesteTest {
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
             List.of(annenpartUttaksperiode1, annenpartUttaksperiode2), kontoer.build(),
-            LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON), true);
+            LocalDateTime.of(annenpartUttaksperiode1.getFom(), LocalTime.NOON), LocalDateTime.of(opphold.getFom(), LocalTime.NOON), LocalDate.MAX);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         //100 - 2 - 2 - 1 - 1
@@ -715,7 +715,7 @@ class SaldoUtregningTjenesteTest {
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100)).build();
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
-            List.of(annenpartOpphold, annenpartUttak), kontoer, null, null, false);
+            List.of(annenpartOpphold, annenpartUttak), kontoer, null, null, LocalDate.MIN);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         assertThat(resultat.saldo(FELLESPERIODE)).isEqualTo(98);
@@ -745,7 +745,7 @@ class SaldoUtregningTjenesteTest {
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100)).build();
 
         var grunnlag = SaldoUtregningGrunnlag.forUtregningAvHeleUttaket(List.of(opphold, uttakEtterOpphold), false,
-            List.of(annenpartOpphold, annenpartUttak), kontoer, null, null, true);
+            List.of(annenpartOpphold, annenpartUttak), kontoer, null, null, LocalDate.MAX);
         var resultat = SaldoUtregningTjeneste.lagUtregning(grunnlag);
 
         assertThat(resultat.saldo(FELLESPERIODE)).isEqualTo(96);

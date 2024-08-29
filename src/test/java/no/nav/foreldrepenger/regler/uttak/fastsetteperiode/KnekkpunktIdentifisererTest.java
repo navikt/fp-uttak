@@ -357,6 +357,20 @@ class KnekkpunktIdentifisererTest {
         assertThat(knekkpunkter).isNotEmpty().doesNotContain(mottattdato);
     }
 
+    @Test
+    void skalKnekkePåSammenhengendeUttakTom() {
+        var dato = LocalDate.of(2024, 1, 1);
+        var grunnlag = RegelGrunnlagTestBuilder.create()
+            .behandling(new Behandling.Builder().sammenhengendeUttakTomDato(dato))
+            .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
+            .datoer(new Datoer.Builder().fødsel(dato.minusWeeks(2)))
+            .build();
+
+        var knekkpunkter = KnekkpunktIdentifiserer.finnKnekkpunkter(grunnlag);
+
+        assertThat(knekkpunkter).contains(dato.plusDays(1));
+    }
+
     private List<LocalDate> standardKnekkpunktFødsel(LocalDate fødselsdato, LocalDate førsteLovligeSøknadsperiode) {
         return List.of(fødselsdato.minusWeeks(12), //tidligste mulige uttak
             førsteLovligeSøknadsperiode,//ifbm søknadsfrist

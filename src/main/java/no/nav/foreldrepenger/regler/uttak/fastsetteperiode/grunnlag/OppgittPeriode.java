@@ -238,6 +238,10 @@ public final class OppgittPeriode extends LukketPeriode {
             senestMottattDato, tidligstMottattDato, morsAktivitet, morsStillingsprosent, dokumentasjonVurdering);
     }
 
+    public boolean kreverSammenhengendeUttak(LocalDate sammenhengendeUttakTomDato) {
+        return !getFom().isAfter(sammenhengendeUttakTomDato);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -272,5 +276,4 @@ public final class OppgittPeriode extends LukketPeriode {
     public MorsStillingsprosent getMorsStillingsprosent() {
         return morsStillingsprosent;
     }
-
 }

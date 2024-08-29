@@ -69,7 +69,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
     }
 
     private Behandling.Builder farBehandling() {
-        return new Behandling.Builder().søkerErMor(false).kreverSammenhengendeUttak(true);
+        return new Behandling.Builder().søkerErMor(false).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1));
     }
 
     @Test
@@ -119,6 +119,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
             .konto(konto(FELLESPERIODE, fellesperiodDedager))
             .konto(konto(FEDREKVOTE, fedrekvoteDager));
         return RegelGrunnlagTestBuilder.create()
+            .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(LocalDate.MIN))
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(RegelGrunnlagTestBuilder.ARBEIDSFORHOLD_1)));
@@ -514,7 +515,7 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
     }
 
     private Behandling.Builder morBehandling() {
-        return new Behandling.Builder().søkerErMor(true).kreverSammenhengendeUttak(true);
+        return new Behandling.Builder().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1));
     }
 
     @Test

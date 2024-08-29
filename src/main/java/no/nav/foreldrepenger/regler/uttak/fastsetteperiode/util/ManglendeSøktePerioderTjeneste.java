@@ -53,8 +53,21 @@ public final class ManglendeSøktePerioderTjeneste {
             .map(ManglendeSøktPeriodeUtil::fjernHelg)
             .filter(Optional::isPresent)
             .map(Optional::get)
+            .flatMap(msp -> fjernPerioderFørSammenhengendeTom(grunnlag, msp).stream())
             .sorted(Comparator.comparing(Periode::getFom))
             .toList();
+    }
+
+    private static Optional<OppgittPeriode> fjernPerioderFørSammenhengendeTom(RegelGrunnlag grunnlag, OppgittPeriode msp) {
+        var sammenhengendeUttakTomDato = grunnlag.getBehandling().getSammenhengendeUttakTomDato();
+        if (msp.overlapper(sammenhengendeUttakTomDato)) {
+            return Optional.of(
+                lagManglendeSøktPeriode(sammenhengendeUttakTomDato.plusDays(1), msp.getTom(), msp.getStønadskontotype()));
+        }
+        if (msp.getFom().isAfter(sammenhengendeUttakTomDato)) {
+            return Optional.of(msp);
+        }
+        return Optional.empty();
     }
 
     /**

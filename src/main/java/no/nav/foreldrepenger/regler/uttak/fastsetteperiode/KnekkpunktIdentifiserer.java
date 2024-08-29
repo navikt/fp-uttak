@@ -41,6 +41,7 @@ class KnekkpunktIdentifiserer {
         knekkpunkter.addAll(knekkPunkterBaserPåFørsteLovligeUttaksdag(grunnlag));
         knekkpunkter.add(familiehendelseDato);
         knekkpunkter.add(maksimumsgrenseForLovligeUttak);
+        knekkpunkter.add(grunnlag.getBehandling().getSammenhengendeUttakTomDato().plusDays(1));
         grunnlag.getDatoer().getStartdatoNesteStønadsperiode().ifPresent(knekkpunkter::add);
 
         if (PrematurukerUtil.oppfyllerKravTilPrematuruker(grunnlag.getDatoer().getFødsel(), grunnlag.getDatoer().getTermin())) {

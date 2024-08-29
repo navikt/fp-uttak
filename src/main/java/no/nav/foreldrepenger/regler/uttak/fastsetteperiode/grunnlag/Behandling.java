@@ -1,10 +1,12 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import java.time.LocalDate;
+
 public final class Behandling {
 
     private boolean søkerMor;
     private boolean berørtBehandling;
-    private boolean kreverSammenhengendeUttak;
+    private LocalDate sammenhengendeUttakTomDato = LocalDate.MIN;
 
     private Behandling() {
     }
@@ -21,8 +23,8 @@ public final class Behandling {
         return berørtBehandling;
     }
 
-    public boolean isKreverSammenhengendeUttak() {
-        return kreverSammenhengendeUttak;
+    public LocalDate getSammenhengendeUttakTomDato() {
+        return sammenhengendeUttakTomDato;
     }
 
     public static class Builder {
@@ -40,8 +42,8 @@ public final class Behandling {
             return this;
         }
 
-        public Builder kreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
-            kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
+        public Builder sammenhengendeUttakTomDato(LocalDate sammenhengendeUttakTomDato) {
+            kladd.sammenhengendeUttakTomDato = sammenhengendeUttakTomDato;
             return this;
         }
 

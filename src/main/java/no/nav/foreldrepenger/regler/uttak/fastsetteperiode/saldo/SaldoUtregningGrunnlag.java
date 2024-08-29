@@ -31,7 +31,7 @@ public class SaldoUtregningGrunnlag {
     private final Set<AktivitetIdentifikator> aktiviteter;
     private final LocalDateTime sisteSøknadMottattTidspunktSøker;
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
-    private final boolean kreverSammenhengendeUttak;
+    private final LocalDate sammenhengendeUttakTomDato;
 
     private SaldoUtregningGrunnlag(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                    LocalDate utregningsdato,
@@ -42,7 +42,7 @@ public class SaldoUtregningGrunnlag {
                                    Set<AktivitetIdentifikator> aktiviteter,
                                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                                   boolean kreverSammenhengendeUttak) {
+                                   LocalDate sammenhengendeUttakTomDato) {
         this.søkersFastsattePerioder = søkersFastsattePerioder;
         this.utregningsdato = utregningsdato;
         this.berørtBehandling = berørtBehandling;
@@ -51,7 +51,7 @@ public class SaldoUtregningGrunnlag {
         this.aktiviteter = aktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
-        this.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
+        this.sammenhengendeUttakTomDato = sammenhengendeUttakTomDato;
         kontoer.getStønadskontotyper().forEach(k -> this.stønadskonti.put(k, new Trekkdager(kontoer.getStønadskontoTrekkdager(k))));
         kontoer.getSpesialkontotyper().forEach(k -> this.spesialkonti.put(k, new Trekkdager(kontoer.getSpesialkontoTrekkdager(k))));
     }
@@ -63,13 +63,13 @@ public class SaldoUtregningGrunnlag {
                                                                    Kontoer kontoer,
                                                                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                                                                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                                                                   boolean kreverSammenhengendeUttak) {
+                                                                   LocalDate sammenhengendeUttakTomDato) {
         var aktiviteter = søkersFastsattePerioder.stream()
             .flatMap(p -> p.getAktiviteter().stream())
             .map(a -> a.getAktivitetIdentifikator())
             .collect(Collectors.toSet());
         return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, berørtBehandling, annenpartsPerioder, List.of(), kontoer,
-            aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, kreverSammenhengendeUttak);
+            aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, sammenhengendeUttakTomDato);
     }
 
     // Brukes som input til fastsettingsregler - inneholder tidligere vedtatte før endringsdato + perioder opp til aktuell periode
@@ -82,7 +82,7 @@ public class SaldoUtregningGrunnlag {
             .orElse(null);
         return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, false, annenpartsPerioder, List.of(), grunnlag.getKontoer(),
             grunnlag.getArbeid().getAktiviteter(), grunnlag.getSøknad().getMottattTidspunkt(), sisteSøknadMottattTidspunktAnnenpart,
-            grunnlag.getBehandling().isKreverSammenhengendeUttak());
+            grunnlag.getBehandling().getSammenhengendeUttakTomDato());
     }
 
     // Brukes som input til fastsettingsregler for berørte behandlinger
@@ -92,11 +92,11 @@ public class SaldoUtregningGrunnlag {
                                                                                     LocalDate utregningsdato,
                                                                                     List<LukketPeriode> søktePerioder) {
         return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, true, annenpartsPerioder, søktePerioder, grunnlag.getKontoer(),
-            grunnlag.getArbeid().getAktiviteter(), null, null, grunnlag.getBehandling().isKreverSammenhengendeUttak());
+            grunnlag.getArbeid().getAktiviteter(), null, null, grunnlag.getBehandling().getSammenhengendeUttakTomDato());
     }
 
     List<FastsattUttakPeriode> getSøkersFastsattePerioder() {
-        return søkersFastsattePerioder.stream().filter(p -> kreverSammenhengendeUttak || !p.isOpphold()).toList();
+        return søkersFastsattePerioder.stream().filter(p -> p.kreverSammenhengendeUttak(sammenhengendeUttakTomDato) || !p.isOpphold()).toList();
     }
 
     LocalDate getUtregningsdato() {
@@ -108,7 +108,7 @@ public class SaldoUtregningGrunnlag {
     }
 
     List<AnnenpartUttakPeriode> getAnnenpartsPerioder() {
-        return annenpartsPerioder.stream().filter(p -> kreverSammenhengendeUttak || !p.isOppholdsperiode()).toList();
+        return annenpartsPerioder.stream().filter(p -> p.kreverSammenhengendeUttak(sammenhengendeUttakTomDato) || !p.isOppholdsperiode()).toList();
     }
 
     public List<LukketPeriode> getSøktePerioder() {

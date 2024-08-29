@@ -207,11 +207,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public boolean kreverBehandlingSammenhengendeUttak() {
-        return regelGrunnlag.getBehandling().isKreverSammenhengendeUttak();
-    }
-
-    @Override
     public Optional<LukketPeriode> periodeFarRundtFødsel() {
         return Optional.ofNullable(farRundtFødselIntervall);
     }
@@ -219,5 +214,10 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public Collection<PleiepengerPeriode> perioderMedPleiepenger() {
         return regelGrunnlag.getYtelser().pleiepenger().map(p -> p.perioder()).orElse(List.of());
+    }
+
+    @Override
+    public LocalDate getSammenhengendeUttakTomDato() {
+        return regelGrunnlag.getBehandling().getSammenhengendeUttakTomDato();
     }
 }
