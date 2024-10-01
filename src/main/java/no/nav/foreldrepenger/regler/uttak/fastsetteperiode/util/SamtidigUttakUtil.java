@@ -90,8 +90,11 @@ public final class SamtidigUttakUtil {
     public static boolean kanRedusereUtbetalingsgradForTapende(FastsettePeriodeGrunnlag periodeGrunnlag) {
         // Er det ikkejusterbar periode, samtidig uttak under 100% eller 150/200% tilfelle?
         var kanReduseres = periodeGrunnlag.isBerørtBehandling() || erTapendePeriodeUtregning(periodeGrunnlag);
-        if (!kanReduseres || !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag) || !merEnn100ProsentSamtidigUttak(periodeGrunnlag)
-            || akseptert200ProsentSamtidigUttak(periodeGrunnlag) || akseptert150ProsentSamtidigUttak(periodeGrunnlag)) {
+        if (!kanReduseres ||
+            !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag) ||
+            !merEnn100ProsentSamtidigUttak(periodeGrunnlag) ||
+            akseptert200ProsentSamtidigUttak(periodeGrunnlag) ||
+            akseptert150ProsentSamtidigUttak(periodeGrunnlag)) {
             return false;
         }
         // Sjekker om annenparts utbetalingsgrad <=80 slik at gjenværende utbetaling etter reduksjon er >= 20% (i første omgang)
