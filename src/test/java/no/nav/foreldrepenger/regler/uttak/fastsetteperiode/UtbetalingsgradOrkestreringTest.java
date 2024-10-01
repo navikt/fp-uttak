@@ -19,7 +19,11 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsStillingsprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -161,6 +165,105 @@ class UtbetalingsgradOrkestreringTest extends FastsettePerioderRegelOrkestrering
         assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(82.45));
         assertThat(uttakPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_2)).isEqualTo(new Utbetalingsgrad(82.45));
     }
+
+    @Test
+    void samtidig_hvis_ugradert_periode_skal_utbetalingsgrad_være_lik_samtidig_uttaksprosent() {;
+        var fødselsdato = LocalDate.of(2023, 1, 1);
+        var grunnlag = basicGrunnlag();
+        leggPåKvoter(grunnlag);
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var samtidigFellesperiode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            false, SamtidigUttaksprosent.TEN, null);
+        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling())
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .søknad(søknad(Søknadstype.FØDSEL, mødrekvote, samtidigFellesperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+
+        var up2 = perioder.get(1).uttakPeriode();
+        verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), INNVILGET, FELLESPERIODE);
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(10));
+    }
+
+    @Test
+    void samtidig_hvis_gradert_periode_skal_utbetalingsgrad_være_gradering_arbeidstidsprosent() {
+        var fødselsdato = LocalDate.of(2023, 1, 1);
+        var graderingArbeidstidsprosent = BigDecimal.valueOf(20);
+        var aktiviteter = Set.of(ARBEIDSFORHOLD_1);
+        var grunnlag = basicGrunnlag();
+        leggPåKvoter(grunnlag);
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertFellesperiode = OppgittPeriode.forGradering(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            graderingArbeidstidsprosent, SamtidigUttaksprosent.TEN, false, aktiviteter, null, null, MorsAktivitet.ARBEID, new MorsStillingsprosent(50), null);
+        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling())
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .søknad(søknad(Søknadstype.FØDSEL, mødrekvote, gradertFellesperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+
+        var up2 = perioder.get(1).uttakPeriode();
+        verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), INNVILGET, FELLESPERIODE);
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(BigDecimal.valueOf(100).subtract(graderingArbeidstidsprosent)));
+    }
+
+    @Test
+    void samtidig_skal_velge_samtidig_når_stillingsprosent_under_75() {
+        var fødselsdato = LocalDate.of(2023, 1, 1);
+        var grunnlag = basicGrunnlag();
+        leggPåKvoter(grunnlag);
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertFellesperiode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            SamtidigUttaksprosent.TEN, false, null, null, MorsAktivitet.ARBEID, new MorsStillingsprosent(50), null);
+        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling())
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .søknad(søknad(Søknadstype.FØDSEL, mødrekvote, gradertFellesperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+
+        var up2 = perioder.get(1).uttakPeriode();
+        verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), INNVILGET, FELLESPERIODE);
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(BigDecimal.TEN));
+    }
+
+    @Test
+    void mor_arbeid_hvis_mors_stillingsprosent_under_75_skal_utbetaling_være_mors_arbeidstidsprosent() {
+        var fødselsdato = LocalDate.of(2023, 1, 1);
+        var grunnlag = basicGrunnlag();
+        leggPåKvoter(grunnlag);
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
+        var gradertFellesperiode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            null, false, null, null, MorsAktivitet.ARBEID, new MorsStillingsprosent(50), null);
+        grunnlag.datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(beggeRett())
+            .behandling(morBehandling())
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .søknad(søknad(Søknadstype.FØDSEL, mødrekvote, gradertFellesperiode))
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)).arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_2)));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder).hasSize(2);
+
+        var up2 = perioder.get(1).uttakPeriode();
+        verifiserPeriode(up2, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), INNVILGET, FELLESPERIODE);
+        assertThat(up2.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(BigDecimal.valueOf(50)));
+    }
+
 
     private RegelGrunnlag.Builder leggPåKvoter(RegelGrunnlag.Builder builder) {
         var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER_FØR_FØDSEL, 15))
