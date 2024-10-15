@@ -518,6 +518,6 @@ class FellesperiodeDelregelTest {
             .datoer(new Datoer.Builder().fødsel(FØDSELSDATO))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 }

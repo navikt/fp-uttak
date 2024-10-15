@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAl
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmEtterNesteStønadsperiodeHarDisponibleDager;
@@ -19,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmF�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmHvisOverlapperSåSamtykkeMellomParter;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmKontoErOpprettet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmManglendeSøktPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMedlemskapssvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpphørsdatoTrefferPerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpptjeningsvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFedrekvote;
@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterNesteStønadsperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErFørGyldigDato;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPleiepenger;
@@ -238,8 +239,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmForeldreansvarsvilkåretErOppfylt() {
         return rs.hvisRegel(SjekkOmForeldreansvarsvilkåretErOppfylt.ID, "Er foreldreansvarsvilkåret oppfylt?")
-            .hvis(new SjekkOmForeldreansvarsvilkåretErOppfylt(), sjekkOmOpptjeningsvilkåretErOppfylt())
+            .hvis(new SjekkOmForeldreansvarsvilkåretErOppfylt(), sjekkOmMedlemskapsvilkåretErOppfylt())
             .ellers(IkkeOppfylt.opprett("UT1253", IkkeOppfyltÅrsak.FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT, false, false));
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmMedlemskapsvilkåretErOppfylt() {
+        return rs.hvisRegel(SjekkOmMedlemskapssvilkåretErOppfylt.ID, "Er medlemskapsvilkåret oppfylt?")
+            .hvis(new SjekkOmMedlemskapssvilkåretErOppfylt(), sjekkOmOpptjeningsvilkåretErOppfylt())
+            .ellers(IkkeOppfylt.opprett("UT1259", IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM, false, false));
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmOpptjeningsvilkåretErOppfylt() {

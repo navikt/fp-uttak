@@ -186,7 +186,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Inngangsvilkår.Builder oppfyltAlleVilkår() {
-        return new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true);
+        return new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true);
     }
 
     RettOgOmsorg.Builder aleneomsorg() {

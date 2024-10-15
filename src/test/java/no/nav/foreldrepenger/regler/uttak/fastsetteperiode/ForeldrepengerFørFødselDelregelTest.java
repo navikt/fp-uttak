@@ -142,7 +142,7 @@ class ForeldrepengerFørFødselDelregelTest {
         return create().datoer(new Datoer.Builder().fødsel(familiehendelseDato))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate familiehendelseDato) {

@@ -210,7 +210,7 @@ class MødrekvoteDelregelTest {
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
             .søknad(søknad(oppgittPeriode))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().fødselOppfylt(true).adopsjonOppfylt(true).foreldreansvarnOppfylt(true).opptjeningOppfylt(false))
+                new Inngangsvilkår.Builder().fødselOppfylt(true).adopsjonOppfylt(true).foreldreansvarnOppfylt(true).opptjeningOppfylt(false).medlemskapOppfylt(true))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -221,6 +221,27 @@ class MødrekvoteDelregelTest {
         assertThat(regelresultat.getManuellbehandlingårsak()).isNull();
         assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.OPPTJENINGSVILKÅRET_IKKE_OPPFYLT);
+    }
+
+    @Test
+    void UT1259_medlemskapsvilkår_ikke_oppfylt() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(11));
+        var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 100);
+        var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
+            .søknad(søknad(oppgittPeriode))
+            .inngangsvilkår(
+                new Inngangsvilkår.Builder().fødselOppfylt(true).adopsjonOppfylt(true).foreldreansvarnOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(false))
+            .build();
+
+        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
+
+        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.skalUtbetale()).isFalse();
+        assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
+        assertThat(regelresultat.getManuellbehandlingårsak()).isNull();
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
+        assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM);
     }
 
     @Test
@@ -441,7 +462,7 @@ class MødrekvoteDelregelTest {
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
             .behandling(new Behandling.Builder().søkerErMor(false))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private Søknad.Builder søknad(OppgittPeriode oppgittPeriode) {
@@ -461,6 +482,6 @@ class MødrekvoteDelregelTest {
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
             .behandling(new Behandling.Builder().søkerErMor(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 }
