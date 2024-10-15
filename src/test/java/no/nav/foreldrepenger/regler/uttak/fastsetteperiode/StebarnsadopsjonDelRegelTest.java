@@ -142,6 +142,6 @@ class StebarnsadopsjonDelRegelTest {
             .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).samtykke(true))
             .adopsjon(new Adopsjon.Builder().ankomstNorge(null).stebarnsadopsjon(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 }

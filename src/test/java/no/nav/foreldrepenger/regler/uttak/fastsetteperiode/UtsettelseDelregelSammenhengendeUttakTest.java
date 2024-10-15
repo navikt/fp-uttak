@@ -133,6 +133,6 @@ class UtsettelseDelregelSammenhengendeUttakTest {
     }
 
     private Inngangsvilkår.Builder oppfylt() {
-        return new Inngangsvilkår.Builder().fødselOppfylt(true).adopsjonOppfylt(true).foreldreansvarnOppfylt(true).opptjeningOppfylt(true);
+        return new Inngangsvilkår.Builder().fødselOppfylt(true).adopsjonOppfylt(true).foreldreansvarnOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true);
     }
 }

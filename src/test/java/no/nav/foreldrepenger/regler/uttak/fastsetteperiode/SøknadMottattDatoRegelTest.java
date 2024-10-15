@@ -113,7 +113,7 @@ class SøknadMottattDatoRegelTest {
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
             .behandling(new Behandling.Builder().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private OppgittPeriode gradertoppgittPeriode(LocalDate fom, LocalDate tom, LocalDate mottattDato) {

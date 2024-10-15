@@ -235,7 +235,7 @@ class OverføringDelregelTest {
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {

@@ -1,11 +1,14 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
+import java.util.Objects;
+
 public final class Inngangsvilkår {
 
     private boolean adopsjonOppfylt;
     private boolean foreldreansvarOppfylt;
     private boolean fødselOppfylt;
     private boolean opptjeningOppfylt;
+    private Boolean medlemskapOppfylt;
 
     private Inngangsvilkår() {
 
@@ -25,6 +28,11 @@ public final class Inngangsvilkår {
 
     public boolean erOpptjeningOppfylt() {
         return opptjeningOppfylt;
+    }
+
+    public boolean erMedlemskapOppfylt() {
+        // Kompatibilitet ved deserialisering av eldre grunnlag
+        return !Objects.equals(medlemskapOppfylt, Boolean.FALSE);
     }
 
     public static class Builder {
@@ -48,6 +56,11 @@ public final class Inngangsvilkår {
 
         public Builder opptjeningOppfylt(boolean oppfylt) {
             kladd.opptjeningOppfylt = oppfylt;
+            return this;
+        }
+
+        public Builder medlemskapOppfylt(boolean oppfylt) {
+            kladd.medlemskapOppfylt = oppfylt;
             return this;
         }
 

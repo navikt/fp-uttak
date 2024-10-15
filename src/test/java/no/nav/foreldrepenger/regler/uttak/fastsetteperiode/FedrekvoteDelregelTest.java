@@ -435,7 +435,7 @@ class FedrekvoteDelregelTest {
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {

@@ -789,7 +789,7 @@ class ForeldrepengerDelregelTest {
             .behandling(new Behandling.Builder().søkerErMor(søkerMor))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private Kontoer.Builder foreldrepengerKonto(int trekkdager) {

@@ -198,7 +198,7 @@ class SjekkGyldigGrunnForTidligOppstartDelRegelTest {
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
             .behandling(new Behandling.Builder().søkerErMor(false))
             .inngangsvilkår(
-                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true));
+                new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }
 
     private Kontoer.Builder enKonto(Stønadskontotype stønadskontotype, int trekkdager) {
