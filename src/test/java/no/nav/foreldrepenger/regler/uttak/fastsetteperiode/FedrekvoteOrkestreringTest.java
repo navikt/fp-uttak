@@ -278,9 +278,9 @@ class FedrekvoteOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         assertThat(resultater).hasSize(3);
 
-        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(1), fødselsdato.minusDays(1), MANUELL_BEHANDLING, FEDREKVOTE);
-        verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), INNVILGET, FEDREKVOTE);
-        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), MANUELL_BEHANDLING,
+        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.minusWeeks(1), fødselsdato.minusDays(1), INNVILGET, FEDREKVOTE);
+        verifiserPeriode(resultater.get(1).uttakPeriode(), fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNVILGET, FEDREKVOTE);
+        verifiserPeriode(resultater.get(2).uttakPeriode(), fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), MANUELL_BEHANDLING,
             FEDREKVOTE);
     }
 

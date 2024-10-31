@@ -735,7 +735,7 @@ class ForeldrepengerDelregelTest {
     void bfhr_rundt_fødsel_men_før_fødsel_blir_avslått() {
         var fødselsdato = LocalDate.of(2022, 10, 1);
 
-        var oppgittPeriode = oppgittPeriode(fødselsdato.minusDays(2), fødselsdato.minusDays(1));
+        var oppgittPeriode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(2).minusDays(1));
         var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
             .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
