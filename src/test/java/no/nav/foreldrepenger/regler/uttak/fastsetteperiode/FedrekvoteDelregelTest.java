@@ -367,7 +367,7 @@ class FedrekvoteDelregelTest {
     }
 
     @Test
-    void fedrekvote_rundt_fødsel_uten_termin_periode_før_fødsel_blir_avslått() {
+    void fedrekvote_rundt_fødsel_uten_termin_periode_før_fødsel_blir_innvilget() {
         var fødselsdato = LocalDate.of(2022, 10, 1);
 
         var oppgittPeriode = oppgittPeriode(fødselsdato.minusDays(2), fødselsdato.minusDays(1));
@@ -378,7 +378,7 @@ class FedrekvoteDelregelTest {
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
-        assertThat(regelresultat.oppfylt()).isFalse();
+        assertThat(regelresultat.oppfylt()).isTrue();
     }
 
     @Test

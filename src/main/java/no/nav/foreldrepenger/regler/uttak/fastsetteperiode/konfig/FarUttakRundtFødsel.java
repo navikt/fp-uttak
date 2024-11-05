@@ -47,20 +47,21 @@ public class FarUttakRundtFødsel {
         if (utenFarUttakRundtFødsel || !gjelderFødsel || familieHendelseDato == null) {
             return Optional.empty();
         }
-        var farFørTermin = Konfigurasjon.STANDARD.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, familieHendelseDato)
+        var farFørTerminFødsel = Konfigurasjon.STANDARD.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_FØR_FØDSEL_TERMIN_UKER, familieHendelseDato)
             .map(Period::ofWeeks)
             .orElse(Period.ZERO);
         var farEtterFødsel = Konfigurasjon.STANDARD.getParameterHvisAktivVed(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, familieHendelseDato)
             .map(Period::ofWeeks)
             .orElse(Period.ZERO);
-        if (farFørTermin.equals(Period.ZERO) && farEtterFødsel.equals(Period.ZERO)) {
+        if (farFørTerminFødsel.equals(Period.ZERO) && farEtterFødsel.equals(Period.ZERO)) {
             return Optional.empty();
         }
-        // Bruker min(Termin-2uker, Fødsel)
+        // Bruker min(Termin, Fødsel) - 2uker
         var farUttakFom = Optional.ofNullable(terminDato)
-            .filter(d -> d.minus(farFørTermin).isBefore(familieHendelseDato))
-            .map(d -> d.minus(farFørTermin))
-            .orElse(familieHendelseDato);
+            .filter(t -> t.isBefore(familieHendelseDato))
+            .orElse(familieHendelseDato)
+            .minus(farFørTerminFødsel);
+
         // Bruker fødsel + 6uker
         var farUttakTom = familieHendelseDato.plus(farEtterFødsel).minusDays(1);
         return Optional.of(new LukketPeriode(farUttakFom, farUttakTom));

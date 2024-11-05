@@ -24,7 +24,7 @@ public class Konfigurasjon {
             .leggTilParameter(Parametertype.TIDLIGST_UTTAK_FØR_TERMIN_UKER, d_2010_01_01, null, 12)
             .leggTilParameter(Parametertype.SENEST_UTTAK_FØR_TERMIN_UKER, d_2010_01_01, null, 3)
             .leggTilParameter(Parametertype.UTTAK_ETTER_BARN_DØDT_UKER, d_2017_01_01, null, 6)
-            .leggTilParameter(Parametertype.FAR_UTTAK_FØR_TERMIN_UKER, d_2017_01_01, null, 2) // TODO: endre til aug 2022 etter overgang
+            .leggTilParameter(Parametertype.FAR_UTTAK_FØR_FØDSEL_TERMIN_UKER, d_2017_01_01, null, 2) // TODO: endre til aug 2022 etter overgang
             .leggTilParameter(Parametertype.FAR_UTTAK_ETTER_FØDSEL_UKER, d_2017_01_01, null, 6) // TODO: endre til aug 2022 etter overgang
 
             // Grenser
