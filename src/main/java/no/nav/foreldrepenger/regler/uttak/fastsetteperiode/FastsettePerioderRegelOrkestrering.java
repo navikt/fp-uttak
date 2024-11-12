@@ -24,7 +24,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.FarUttakRundtFødsel;
@@ -33,8 +32,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningG
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoIdentifiserer;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.TomKontoKnekkpunkt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktePerioderForSammenhengendeUttakTjeneste;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktePerioderTjeneste;
 import no.nav.fpsak.nare.evaluation.summary.EvaluationSerializer;
@@ -96,7 +93,7 @@ public class FastsettePerioderRegelOrkestrering {
             var aktivitetMedTidligstStartdato = arbeid.getArbeidsforhold()
                 .stream()
                 .min(Comparator.comparing(Arbeidsforhold::startdato))
-                .map(a -> a.identifikator())
+                .map(Arbeidsforhold::identifikator)
                 .orElseThrow();
             aktiviteter.add(aktivitetMedTidligstStartdato);
         }
@@ -133,7 +130,7 @@ public class FastsettePerioderRegelOrkestrering {
         var inputJson = toJson(fastsettePeriodeGrunnlag);
         var regelJson = EvaluationSerializer.asJson(evaluering, UttakVersion.UTTAK_VERSION, NareVersion.NARE_VERSION);
         var regelresultat = new FastsettePerioderRegelresultat(evaluering);
-        var regelResultatBehandlerResultat = behandleRegelresultat(regelresultat, fastsettePeriodeGrunnlag);
+        var regelResultatBehandlerResultat = RegelResultatBehandler.behandleRegelresultat(regelresultat, fastsettePeriodeGrunnlag);
 
         return new FastsettePeriodeResultat(regelResultatBehandlerResultat.getPeriode(), regelJson, inputJson,
             regelResultatBehandlerResultat.getEtterKnekkPeriode());
@@ -174,46 +171,6 @@ public class FastsettePerioderRegelOrkestrering {
         var mspSammenhengende = ManglendeSøktePerioderForSammenhengendeUttakTjeneste.finnManglendeSøktePerioder(grunnlag);
         var mspFritt = ManglendeSøktePerioderTjeneste.finnManglendeSøktePerioder(grunnlag);
         return Stream.concat(mspSammenhengende.stream(), mspFritt.stream()).toList();
-    }
-
-    private RegelResultatBehandlerResultat behandleRegelresultat(FastsettePerioderRegelresultat regelresultat,
-                                                                 FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        var aktuellPeriode = fastsettePeriodeGrunnlag.getAktuellPeriode();
-        var utfallType = regelresultat.getUtfallType();
-
-        var knekkpunktOpt = finnKnekkpunkt(aktuellPeriode, fastsettePeriodeGrunnlag, regelresultat,
-            fastsettePeriodeGrunnlag.periodeFarRundtFødsel().orElse(null));
-
-        var behandler = new RegelResultatBehandler(fastsettePeriodeGrunnlag);
-
-        return switch (utfallType) {
-            case AVSLÅTT -> behandler.avslåAktuellPeriode(aktuellPeriode, regelresultat, knekkpunktOpt);
-            case INNVILGET -> behandler.innvilgAktuellPeriode(aktuellPeriode, knekkpunktOpt, regelresultat);
-            case MANUELL_BEHANDLING -> behandler.manuellBehandling(aktuellPeriode, regelresultat);
-        };
-    }
-
-    private Optional<TomKontoKnekkpunkt> finnKnekkpunkt(OppgittPeriode aktuellPeriode,
-                                                        FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag,
-                                                        FastsettePerioderRegelresultat regelresultat,
-                                                        LukketPeriode farRundtFødselIntervall) {
-        if (erFPFF(aktuellPeriode)) {
-            return Optional.empty();
-        }
-        var stønadskontotype = utledKonto(fastsettePeriodeGrunnlag);
-        var startdatoNesteStønadsperiode = fastsettePeriodeGrunnlag.erAktuellPeriodeEtterStartNesteStønadsperiode();
-        return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(aktuellPeriode.getAktiviteter()), fastsettePeriodeGrunnlag.getSaldoUtregning(),
-            stønadskontotype.orElse(null), farRundtFødselIntervall, startdatoNesteStønadsperiode, regelresultat.trekkDagerFraSaldo(),
-            regelresultat.getAvklaringÅrsak(), regelresultat.getUtfallType());
-    }
-
-    private Optional<Stønadskontotype> utledKonto(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        return Optional.ofNullable(fastsettePeriodeGrunnlag.getAktuellPeriode().getStønadskontotype())
-            .or(() -> ValgAvStønadskontoTjeneste.velgStønadskonto(fastsettePeriodeGrunnlag));
-    }
-
-    private boolean erFPFF(OppgittPeriode aktuellPeriode) {
-        return Stønadskontotype.FORELDREPENGER_FØR_FØDSEL.equals(aktuellPeriode.getStønadskontotype());
     }
 
     private String toJson(FastsettePeriodeGrunnlag grunnlag) {
