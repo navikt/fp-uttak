@@ -44,7 +44,7 @@ class RegelResultatBehandler {
                                                                         FastsettePerioderRegelresultat regelresultat,
                                                                         FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
 
-        // For tilfelle der denne behandlingen skal automatisk redusere utbetalingsgrad slik at sum samtidig uttak <= 100%.
+        // For tilfelle der dette uttaket er "tapende" og skal få redusert utbetalingsgrad automatisk slik at sum samtidig uttak <= 100%.
         var annenpartSamtidigUttaksprosent = SamtidigUttakUtil.kanRedusereUtbetalingsgradForTapende(fastsettePeriodeGrunnlag) ?
             SamtidigUttakUtil.uttaksprosentAnnenpart(fastsettePeriodeGrunnlag) : SamtidigUttaksprosent.ZERO;
 
@@ -54,7 +54,7 @@ class RegelResultatBehandler {
             .map(k -> oppgittPeriode.kopiMedNyPeriode(oppgittPeriode.getFom(), k.minusDays(1)))
             .orElse(oppgittPeriode);
 
-        // Max uttaksprosent for tilfelle som skal automatisk nedjusteres for å få sum samtidig uttak <= 100% - eller søkt samtidig uttak
+        // Max uttaksprosent gitt av gradering, samtidig uttak, eller tilfelle som skal automatisk nedjusteres for å få sum samtidig uttak <= 100%
         var samtidigUttaksprosent = regnSamtidigUttaksprosentMotGradering(innvilgPeriode, annenpartSamtidigUttaksprosent);
         var aktiviteter = lagAktiviteter(innvilgPeriode, regelresultat, fastsettePeriodeGrunnlag, false, samtidigUttaksprosent);
 
@@ -131,15 +131,17 @@ class RegelResultatBehandler {
 
     private static SamtidigUttaksprosent regnSamtidigUttaksprosentMotGradering(OppgittPeriode oppgittPeriode,
                                                                                SamtidigUttaksprosent annenpartSamtidigUttaksprosent) {
-        if (!oppgittPeriode.erSøktSamtidigUttak() && !annenpartSamtidigUttaksprosent.merEnn0()) {
-            return null;
-        }
         if (annenpartSamtidigUttaksprosent.merEnn0()) {
+            // Samtidig uttak, sum over 100%, returner max uttaksprosent for dette uttaket
             return SamtidigUttaksprosent.HUNDRED.subtract(annenpartSamtidigUttaksprosent);
         }
-        // TODO velge gradering dersom lavere enn samtidigUttakprosent ?!
-        return oppgittPeriode.erSøktGradering() ?
-            SamtidigUttaksprosent.HUNDRED.subtract(oppgittPeriode.getArbeidsprosent()) : oppgittPeriode.getSamtidigUttaksprosent();
+        if (oppgittPeriode.erSøktSamtidigUttak()) {
+            // TODO perioder med både samtidig uttak og gradering - 96% har matchende prosent, noen få eldre tilfelle stemmer ikke overens.
+            // Velger gradering over samtidig til avklart om man heller skal velge min(samtidigUttak, 100-arbeid) ?!
+            return oppgittPeriode.erSøktGradering() ?
+                SamtidigUttaksprosent.HUNDRED.subtract(oppgittPeriode.getArbeidsprosent()) : oppgittPeriode.getSamtidigUttaksprosent();
+        }
+        return null;
     }
 
     private static Optional<Stønadskontotype> konto(OppgittPeriode oppgittPeriode, FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
@@ -236,6 +238,7 @@ class RegelResultatBehandler {
                 .map(SamtidigUttaksprosent.HUNDRED::subtract)
                 .orElseThrow(() -> new IllegalArgumentException("arbeidstidsprosent kan ikke være null"));
         } else if (samtidigUttaksprosent != null) {
+            // TODO: se på presedens i relasjon til regnSamtidigUttaksprosentMotGradering - både gradering og samtidig
             lokalUttaksprosent = Optional.ofNullable(oppgittPeriode.getArbeidsprosent())
                 .map(SamtidigUttaksprosent.HUNDRED::subtract)
                 .orElse(samtidigUttaksprosent);
