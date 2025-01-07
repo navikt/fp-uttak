@@ -5,7 +5,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -29,7 +29,7 @@ class RegelResultatBehandlerTest {
 
     @Test
     void skal_knekke_på_riktig_datoer_ved_avslag() {
-        var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(1000).type(Stønadskontotype.FELLESPERIODE));
+        var kontoer = new Kontoer.Builder().konto(new Konto.Builder().trekkdager(3).type(Stønadskontotype.FELLESPERIODE));
         var arbeidsforhold = new Arbeidsforhold(AktivitetIdentifikator.annenAktivitet());
         var fom = LocalDate.of(2018, 10, 10);
         var tom = LocalDate.of(2018, 11, 11);
@@ -38,18 +38,18 @@ class RegelResultatBehandlerTest {
             .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
             .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(false))
             .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
+            .datoer(new Datoer.Builder().fødsel(fom.minusMonths(3)))
             .kontoer(kontoer)
             .build();
-        var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15));
+        var knekkpunkt = new TomKontoKnekkpunkt(LocalDate.of(2018, 10, 15)); // 4 virkedager etter fom. 1 dag mer enn saldo
         var saldoUtregningGrunnlag = SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), List.of(), grunnlag, oppgittPeriode.getFom());
         oppgittPeriode.setAktiviteter(Set.of(arbeidsforhold.identifikator()));
         var fastsettePeriodeGrunnlag = new FastsettePeriodeGrunnlagImpl(grunnlag, null,
             SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag), oppgittPeriode);
-        var behandler = new RegelResultatBehandler(fastsettePeriodeGrunnlag);
 
         var regelresultat = new FastsettePerioderRegelresultat(null,
             UttakOutcome.ikkeOppfylt(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN).medTrekkDagerFraSaldo(true));
-        var resultat = behandler.avslåAktuellPeriode(oppgittPeriode, regelresultat, Optional.of(knekkpunkt));
+        var resultat = RegelResultatBehandler.behandleRegelresultat(regelresultat, fastsettePeriodeGrunnlag);
 
         assertThat(resultat.getPeriode().getFom()).isEqualTo(fom);
         assertThat(resultat.getPeriode().getTom()).isEqualTo(knekkpunkt.dato().minusDays(1));
