@@ -232,7 +232,7 @@ class RegelResultatBehandler {
         var lokalUttaksprosent = maksUttaksprosent;
 
         // TODO: Se på mulighet for ytterligere forenkling gitt logikken bak samtidigUttaksprosent
-        if (graderingInnvilget && oppgittPeriode.erSøktGradering(aktivitet)) {
+        if (graderingInnvilget && oppgittPeriode.erSøktGradering(aktivitet) || erAvslåttGraderingAvFFF(oppgittPeriode, aktivitet, graderingInnvilget)) {
             // Samtidiguttaksprosent med mindre gradering på noen aktiviteter i perioden
             lokalUttaksprosent =  Optional.ofNullable(oppgittPeriode.getArbeidsprosent())
                 .map(SamtidigUttaksprosent.HUNDRED::subtract)
@@ -252,6 +252,13 @@ class RegelResultatBehandler {
         } else {
             return new Utbetalingsgrad(lokalUttaksprosent.decimalValue());
         }
+    }
+
+    private static boolean erAvslåttGraderingAvFFF(OppgittPeriode oppgittPeriode, AktivitetIdentifikator aktivitet, boolean graderingInnvilget) {
+        if (Stønadskontotype.FORELDREPENGER_FØR_FØDSEL.equals(oppgittPeriode.getStønadskontotype()) && oppgittPeriode.erSøktGradering(aktivitet) && !graderingInnvilget) {
+            return true;
+        }
+        return false;
     }
 
 
