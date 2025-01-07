@@ -59,6 +59,25 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
     }
 
     @Test
+    void gradering_av_foreldrepenger_før_fødsel_skal_innvilges_med_avslått_gradering_med_fulle_trekkdager_og_redusert_utbetalingsgrad_UT1072() {
+        var fødselsdato = LocalDate.of(2018, 1, 1);
+        var arbeidsprosent = BigDecimal.TEN;
+        var grunnlag = basicGrunnlag(fødselsdato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+            .oppgittPeriode(gradertoppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), arbeidsprosent))
+            .oppgittPeriode(gradertoppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), arbeidsprosent))
+            ).build();
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        var fastsattFFFPeriode = resultat.get(0).uttakPeriode();
+        assertThat(fastsattFFFPeriode.getStønadskontotype()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
+        assertThat(fastsattFFFPeriode.getArbeidsprosent()).isEqualTo(arbeidsprosent);
+        assertThat(fastsattFFFPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD_1)).isEqualTo(new Utbetalingsgrad(90)); // Redusert i henhold til arbeidsprosenten 100 - 10 = 90
+        assertThat(fastsattFFFPeriode.getTrekkdager(ARBEIDSFORHOLD_1)).isEqualTo(new Trekkdager(15)); // Fulle trekkdager
+    }
+
+    @Test
     void periode_med_gradering_og_10_prosent_arbeid_skal_få_riktig_antall_trekkdager() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var graderingFom = fødselsdato.plusWeeks(10);
