@@ -578,7 +578,8 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void fri_utsettelse_første_6_ukene_skal_gå_til_manuell_pre_wlb() {
         var fødselsdato = LocalDate.of(2022, 6, 28);
-        var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(defaultKontoer())
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .kontoer(defaultKontoer().farUttakRundtFødselDager(0))
             .søknad(søknad(FØDSEL, utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), FRI, null),
                 oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1), false, SamtidigUttaksprosent.HUNDRED)));
 
@@ -768,6 +769,52 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
         assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
         assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+    }
+
+    @Test
+    void utsettelse_bfhr_første_6_ukene_innvilges_selv_om_ikke_dokumentert() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
+            .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100).minsterettDager(40).farUttakRundtFødselDager(10))
+            .søknad(søknad(FØDSEL,
+                utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT_BARN, null),
+                utsettelsePeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1), SYKDOM_SKADE, null),
+                utsettelsePeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), INNLAGT_SØKER, null),
+                oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
+
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
+
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
+    }
+
+    @Test
+    void utsettelse_far_begge_rett_første_6_ukene_innvilges_selv_om_ikke_dokumentert() {
+        var fødselsdato = LocalDate.of(2022, 6, 28);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(beggeRett())
+            .kontoer(defaultKontoer().farUttakRundtFødselDager(10))
+            .søknad(søknad(FØDSEL,
+                utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT_BARN, null),
+                utsettelsePeriode(fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1), SYKDOM_SKADE, null),
+                utsettelsePeriode(fødselsdato.plusWeeks(2), fødselsdato.plusWeeks(3).minusDays(1), INNLAGT_SØKER, null),
+                oppgittPeriode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))));
+
+        var perioder = fastsettPerioder(grunnlag);
+
+        assertThat(perioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
+
+        assertThat(perioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
+
+        assertThat(perioder.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {

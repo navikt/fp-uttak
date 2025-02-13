@@ -71,8 +71,11 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
+        var erMor = rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
+            .hvis(new SjekkOmSøkerErMor(), sjekkOmSykdomSkade())
+            .ellers(sjekkOmFarHarDagerRundtFødsel());
         return rs.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
-            .hvis(new SjekkOmTidsperiodeForbeholdtMor(), sjekkOmSykdomSkade())
+            .hvis(new SjekkOmTidsperiodeForbeholdtMor(), erMor)
             .ellers(sjekkOmAleneomsorg());
     }
 
@@ -107,18 +110,12 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
             .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), varBarnetInnlagtSjekk)
-            .ellers(sjekkOmSøkerErMor());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErMor() {
-        return rs.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
-            .hvis(new SjekkOmSøkerErMor(), manuellUT1357())
-            .ellers(sjekkOmFarHarDagerRundtFødsel());
+            .ellers(sjekkOmFriUtsettelse());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFarHarDagerRundtFødsel() {
         return rs.hvisRegel(SjekkOmFarHarDagerRundtFødsel.ID, SjekkOmFarHarDagerRundtFødsel.BESKRIVELSE)
-            .hvis(new SjekkOmFarHarDagerRundtFødsel(), sjekkOmFriUtsettelse())
+            .hvis(new SjekkOmFarHarDagerRundtFødsel(), innvilgUT1351())
             .ellers(manuellUT1357());
     }
 
