@@ -121,7 +121,7 @@ class RegelResultatBehandler {
 
         return TomKontoIdentifiserer.identifiser(aktuellPeriode, new ArrayList<>(aktuellPeriode.getAktiviteter()), fastsettePeriodeGrunnlag.getSaldoUtregning(),
             stønadskontotype.orElse(null), farRundtFødselIntervall, startdatoNesteStønadsperiode, regelresultat.trekkDagerFraSaldo(),
-            regelresultat.getAvklaringÅrsak(), regelresultat.getUtfallType());
+            regelresultat.getAvklaringÅrsak(), regelresultat.getUtfallType(), regelresultat.getGraderingIkkeInnvilgetÅrsak() != null);
     }
 
     private static boolean overlapperMedInnvilgetAnnenpartsPeriode(OppgittPeriode aktuellPeriode, List<AnnenpartUttakPeriode> annenPartUttaksperioder) {
