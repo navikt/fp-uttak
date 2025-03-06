@@ -117,6 +117,25 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
         }
 
         @Test
+        void far_søker_30_prosent_uttak_mor_arbeider_30_prosent_tom_for_dager() {
+            var oppgittPeriode = OppgittPeriode.forGradering(FORELDREPENGER, FØDSELSDATO.plusWeeks(6),
+                FØDSELSDATO.plusWeeks(100).minusDays(1), BigDecimal.valueOf(70), null, false, Set.of(ARBEIDSFORHOLD), FØDSELSDATO,
+                FØDSELSDATO, ARBEID, new MorsStillingsprosent(30), DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT);
+
+            var fastsattePerioder = fastsettPerioder(lagGrunnlag(oppgittPeriode, FORELDREPENGER));
+
+            assertThat(fastsattePerioder).hasSize(2);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(30));
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(100));
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV);
+
+            assertThat(fastsattePerioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+            assertThat(fastsattePerioder.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+            assertThat(fastsattePerioder.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        }
+
+        @Test
         void far_søker_20_prosent_uttak_mor_arbeider_40_prosent() {
             var oppgittPeriode = lagGraderingsperiode(FORELDREPENGER, new MorsStillingsprosent(40), 80, ARBEIDSFORHOLD);
 
