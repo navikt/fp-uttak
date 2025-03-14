@@ -9,16 +9,22 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Støn
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravArbeidPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
@@ -27,6 +33,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
 class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -61,7 +68,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
     }
 
     @Test
-    void fellesperiode_far_etter_uke_6_blir_innvilget_pga_oppfyller_aktivitetskravet() {
+    void fellesperiode_far_etter_uke_6_blir_innvilget_pga_oppfyller_aktivitetskravet_dokumentert() {
         var kontoer = fellesperiodeKonto(4 * 5);
         var oppgittPeriode = oppgittPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15), MORS_AKTIVITET_GODKJENT);
         var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode);
@@ -73,8 +80,72 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         //Siste del av søknadsperioden blir avslått pga tom for dager
         assertThat(resultater).hasSize(2);
-        verifiserPeriode(resultater.get(0).uttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET,
+        verifiserPeriode(resultater.getFirst().uttakPeriode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), INNVILGET,
             FELLESPERIODE);
+    }
+
+    @Test
+    void fellesperiode_far_blir_innvilget_pga_oppfyller_aktivitetskravet_register() {
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1),
+            null, false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null, null);
+        var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode);
+        var annenPart = new AnnenPart.Builder().aktivitetskravGrunnlag(new AktivitetskravGrunnlag(List.of(
+            new AktivitetskravArbeidPeriode(oppgittPeriode.getFom().minusYears(1), oppgittPeriode.getFom().plusWeeks(1).minusDays(1),
+                new BigDecimal(100)))));
+        var grunnlag = basicGrunnlagFar().søknad(søknad)
+            .annenPart(annenPart);
+
+        var resultater = fastsettPerioder(grunnlag);
+        assertThat(resultater).hasSize(2);
+
+        var periode1 = resultater.getFirst().uttakPeriode();
+        assertThat(periode1.getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(periode1.getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_FELLESPERIODE_TIL_FAR);
+        assertThat(periode1.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+        assertThat(periode1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+
+        var periode2 = resultater.get(1).uttakPeriode();
+        assertThat(periode2.getPerioderesultattype()).isEqualTo(AVSLÅTT); //Ikke nok stillingsprosent på mor
+        assertThat(periode2.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT);
+        assertThat(periode2.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO); //Trekker ikke dager fritt uttak
+        assertThat(periode2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+    }
+
+    @Test
+    void fellesperiode_far_blir_avslått_hvis_oppfyller_aktivitetskravet_register_men_har_annen_dokvurdering() {
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), null,
+            false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null, DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT);
+        var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode);
+        var annenPart = new AnnenPart.Builder().aktivitetskravGrunnlag(new AktivitetskravGrunnlag(
+            List.of(new AktivitetskravArbeidPeriode(oppgittPeriode.getFom().minusYears(1), oppgittPeriode.getFom().plusYears(1).minusDays(1), 100))));
+        var grunnlag = basicGrunnlagFar().søknad(søknad).annenPart(annenPart);
+
+        var resultater = fastsettPerioder(grunnlag);
+        assertThat(resultater).hasSize(1);
+
+        var periode1 = resultater.getFirst().uttakPeriode();
+        assertThat(periode1.getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(periode1.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
+    }
+
+    @Test
+    void fellesperiode_far_blir_innvilget_pga_oppfyller_aktivitetskravet_register_mor_flere_arbeidsforhold() {
+        var oppgittPeriode = OppgittPeriode.forVanligPeriode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(8).minusDays(1), null,
+            false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null, null);
+        var søknad = søknad(Søknadstype.FØDSEL, oppgittPeriode);
+        var annenPart = new AnnenPart.Builder().aktivitetskravGrunnlag(new AktivitetskravGrunnlag(
+            List.of(new AktivitetskravArbeidPeriode(oppgittPeriode.getFom().minusYears(1), oppgittPeriode.getTom().plusYears(1), 40),
+                new AktivitetskravArbeidPeriode(oppgittPeriode.getFom().minusYears(1), oppgittPeriode.getTom().plusYears(1), 40))));
+        var grunnlag = basicGrunnlagFar().søknad(søknad).annenPart(annenPart);
+
+        var resultater = fastsettPerioder(grunnlag);
+        assertThat(resultater).hasSize(1);
+
+        var periode1 = resultater.getFirst().uttakPeriode();
+        assertThat(periode1.getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(periode1.getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_FELLESPERIODE_TIL_FAR);
+        assertThat(periode1.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(10));
+        assertThat(periode1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
     }
 
     @Test
@@ -174,9 +245,9 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         var resultater = fastsettPerioder(grunnlag);
 
-        assertThat(resultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
-        assertThat(resultater.get(0).uttakPeriode().getFom()).isEqualTo(termin.minusWeeks(15));
-        assertThat(resultater.get(0).uttakPeriode().getTom()).isEqualTo(termin.minusWeeks(12).minusDays(1));
+        assertThat(resultater.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultater.getFirst().uttakPeriode().getFom()).isEqualTo(termin.minusWeeks(15));
+        assertThat(resultater.getFirst().uttakPeriode().getTom()).isEqualTo(termin.minusWeeks(12).minusDays(1));
         assertThat(resultater.get(0).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
         assertThat(resultater.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
 
@@ -197,7 +268,7 @@ class FellesperiodeOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         var resultater = fastsettPerioder(grunnlag);
 
-        assertThat(resultater.get(0).uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
+        assertThat(resultater.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(AVSLÅTT);
     }
 
     private RegelGrunnlag.Builder basicGrunnlagMor() {

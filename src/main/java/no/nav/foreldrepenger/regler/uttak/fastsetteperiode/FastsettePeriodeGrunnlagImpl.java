@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
@@ -19,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkonto
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.Pleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregning;
 
@@ -56,7 +58,7 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     public List<PleiepengerPeriode> getPleiepengerInnleggelse() {
         return regelGrunnlag.getYtelser()
             .pleiepenger()
-            .map(pleiepengerMedInnleggelse -> pleiepengerMedInnleggelse.innleggelser())
+            .map(Pleiepenger::innleggelser)
             .orElse(List.of())
             .stream()
             .toList();
@@ -213,11 +215,16 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
 
     @Override
     public Collection<PleiepengerPeriode> perioderMedPleiepenger() {
-        return regelGrunnlag.getYtelser().pleiepenger().map(p -> p.perioder()).orElse(List.of());
+        return regelGrunnlag.getYtelser().pleiepenger().map(Pleiepenger::perioder).orElse(List.of());
     }
 
     @Override
     public LocalDate getSammenhengendeUttakTomDato() {
         return regelGrunnlag.getBehandling().getSammenhengendeUttakTomDato();
+    }
+
+    @Override
+    public Optional<AktivitetskravGrunnlag> getAktivitetskravGrunnlag() {
+        return Optional.ofNullable(regelGrunnlag.getAnnenPart()).flatMap(AnnenPart::getAktivitetskravGrunnlag);
     }
 }

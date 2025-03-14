@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenErEtterMaksgrenseForUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -87,7 +89,7 @@ class KnekkpunktIdentifiserer {
         knekkpunkter.addAll(knekkBasertPåYtelser(grunnlag));
 
         if (grunnlag.getAnnenPart() != null) {
-            knekkBasertPåAnnenPart(grunnlag, knekkpunkter);
+            knekkBasertPåAnnenPart(knekkpunkter, grunnlag.getAnnenPart());
         }
 
         return knekkpunkter.stream()
@@ -156,8 +158,9 @@ class KnekkpunktIdentifiserer {
         return grunnlag.getSøknad().getOppgittePerioder().stream().filter(p -> p.isUtsettelsePga(UtsettelseÅrsak.FERIE)).toList();
     }
 
-    private static void knekkBasertPåAnnenPart(RegelGrunnlag grunnlag, Set<LocalDate> knekkpunkter) {
-        leggTilKnekkpunkter(knekkpunkter, grunnlag.getAnnenPart().getUttaksperioder());
+    private static void knekkBasertPåAnnenPart(Set<LocalDate> knekkpunkter, AnnenPart annenPart) {
+        leggTilKnekkpunkter(knekkpunkter, annenPart.getUttaksperioder());
+        annenPart.getAktivitetskravGrunnlag().ifPresent(g -> leggTilKnekkpunkter(knekkpunkter, g.perioder()));
     }
 
     private static LocalDate finnMaksgrenseForLovligUttak(RegelGrunnlag grunnlag) {
@@ -193,7 +196,7 @@ class KnekkpunktIdentifiserer {
             .orElse(Set.of());
     }
 
-    private static void leggTilKnekkpunkter(Set<LocalDate> knekkpunkter, List<? extends Periode> perioder) {
+    private static void leggTilKnekkpunkter(Set<LocalDate> knekkpunkter, Collection<? extends Periode> perioder) {
         for (Periode periode : perioder) {
             knekkpunkter.add(periode.getFom());
             knekkpunkter.add(periode.getTom().plusDays(1));

@@ -12,6 +12,7 @@ public final class AnnenPart {
 
     private List<AnnenpartUttakPeriode> uttaksperioder = new ArrayList<>();
     private LocalDateTime sisteSøknadMottattTidspunkt;
+    private AktivitetskravGrunnlag aktivitetskravGrunnlag;
 
 
     private AnnenPart() {
@@ -39,6 +40,10 @@ public final class AnnenPart {
         return sisteSøknadMottattTidspunkt;
     }
 
+    public Optional<AktivitetskravGrunnlag> getAktivitetskravGrunnlag() {
+        return Optional.ofNullable(aktivitetskravGrunnlag);
+    }
+
     public static class Builder {
 
         private final AnnenPart kladd = new AnnenPart();
@@ -55,6 +60,11 @@ public final class AnnenPart {
 
         public Builder sisteSøknadMottattTidspunkt(LocalDateTime sisteSøknadMottattTidspunkt) {
             kladd.sisteSøknadMottattTidspunkt = sisteSøknadMottattTidspunkt;
+            return this;
+        }
+
+        public Builder aktivitetskravGrunnlag(AktivitetskravGrunnlag aktivitetskravGrunnlag) {
+            kladd.aktivitetskravGrunnlag = aktivitetskravGrunnlag;
             return this;
         }
 
