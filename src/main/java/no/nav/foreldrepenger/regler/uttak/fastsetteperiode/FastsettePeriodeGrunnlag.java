@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
@@ -198,4 +199,6 @@ public interface FastsettePeriodeGrunnlag {
     Collection<PleiepengerPeriode> perioderMedPleiepenger();
 
     LocalDate getSammenhengendeUttakTomDato();
+
+    Optional<AktivitetskravGrunnlag> getAktivitetskravGrunnlag();
 }
