@@ -65,11 +65,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static final String GJELDER_FPFF_PERIODE_FØDSEL = "Gjelder foreldrepenger før fødsel periode fødsel?";
     private static final String ER_PERIODEN_FPFF = "Er det søkt om uttak av foreldrepenger før fødsel?";
 
-    private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
+    private static final Ruleset<FastsettePeriodeGrunnlag> RS = new Ruleset<>();
+    private static final Specification<FastsettePeriodeGrunnlag> REGEL = lagRegelSpec();
 
-    private Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
-    private Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
-    private Specification<FastsettePeriodeGrunnlag> fomSamtykke;
+    private static Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
+    private static Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
+    private static Specification<FastsettePeriodeGrunnlag> fomSamtykke;
 
     public FastsettePeriodeRegel() {
         // For dokumentasjonsgenerering
@@ -82,20 +83,24 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
-        return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
+        return REGEL;
+    }
+
+    private static Specification<FastsettePeriodeGrunnlag> lagRegelSpec() {
+        return RS.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
             .hvis(new SjekkOmPeriodeErUtsettelse(), sjekkPeriodeInnenforMaksgrense())
             .ellers(sjekkOmPeriodenErFørGyldigDato());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenErFørGyldigDato() {
-        return rs.hvisRegel(SjekkOmPeriodenErFørGyldigDato.ID, "Er uttaksperiode før \"gyldig dato\"?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenErFørGyldigDato() {
+        return RS.hvisRegel(SjekkOmPeriodenErFørGyldigDato.ID, "Er uttaksperiode før \"gyldig dato\"?")
             .hvis(new SjekkOmPeriodenErFørGyldigDato(), sjekkOmManglendePeriode())
             .ellers(sjekkPeriodeInnenforMaksgrense());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtterSøkersDødsdato() {
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtterSøkersDødsdato() {
         if (fomUttaksperiodenEtterSøkersDødsdato == null) {
-            fomUttaksperiodenEtterSøkersDødsdato = rs.hvisRegel(SjekkOmUttaksperiodenEtterSøkersDødsdato.ID,
+            fomUttaksperiodenEtterSøkersDødsdato = RS.hvisRegel(SjekkOmUttaksperiodenEtterSøkersDødsdato.ID,
                     "Er uttaksperioden etter søkers dødsdato?")
                 .hvis(new SjekkOmUttaksperiodenEtterSøkersDødsdato(),
                     Manuellbehandling.opprett("UT1275", IkkeOppfyltÅrsak.SØKER_DØD, Manuellbehandlingårsak.DØDSFALL, false, false))
@@ -104,280 +109,280 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
         return fomUttaksperiodenEtterSøkersDødsdato;
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato() {
-        return rs.hvisRegel(SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato.ID, "Er uttaksperioden etter senere enn 6 uker etter barns dødsdato?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato() {
+        return RS.hvisRegel(SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato.ID, "Er uttaksperioden etter senere enn 6 uker etter barns dødsdato?")
             .hvis(new SjekkOmUttaksperiodenEtter6UkerEtterBarnsDødsdato(), sjekkOmAlleBarnErDøde())
             .ellers(sjekkOmOpphørsdatoTrefferPerioden());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAlleBarnErDøde() {
-        return rs.hvisRegel(SjekkOmAlleBarnErDøde.ID, "Er alle barn døde?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAlleBarnErDøde() {
+        return RS.hvisRegel(SjekkOmAlleBarnErDøde.ID, "Er alle barn døde?")
             .hvis(new SjekkOmAlleBarnErDøde(),
                 Manuellbehandling.opprett("UT1289", IkkeOppfyltÅrsak.BARN_DØD, Manuellbehandlingårsak.DØDSFALL, false, false))
             .ellers(sjekkOmOpphørsdatoTrefferPerioden());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmOpphørsdatoTrefferPerioden() {
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmOpphørsdatoTrefferPerioden() {
         if (fomOpphørsdatoTrefferPerioden == null) {
-            fomOpphørsdatoTrefferPerioden = rs.hvisRegel(SjekkOmOpphørsdatoTrefferPerioden.ID, "Inneholder perioden opphørsdato for medlemskap")
+            fomOpphørsdatoTrefferPerioden = RS.hvisRegel(SjekkOmOpphørsdatoTrefferPerioden.ID, "Inneholder perioden opphørsdato for medlemskap")
                 .hvis(new SjekkOmOpphørsdatoTrefferPerioden(), IkkeOppfylt.opprett("UT1250", IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM, false, false))
                 .ellers(sjekkOmFødselsvilkåretErOppfylt());
         }
         return fomOpphørsdatoTrefferPerioden;
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse() {
-        return rs.hvisRegel(SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse.ID,
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse() {
+        return RS.hvisRegel(SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse.ID,
                 "Sammenfaller uttaksperioden med en periode hos den andre parten som er en innvilget utsettelse?")
             .hvis(new SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse(), sjekkOmBehandlingKreverSammenhengendeUttak())
             .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBehandlingKreverSammenhengendeUttak() {
-        return rs.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmBehandlingKreverSammenhengendeUttak() {
+        return RS.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenKreverSammenhengendeUttak(), ikkeOppfyltUT1166())
             .ellers(sjekkOmFødselTermin());
     }
 
-    private FastsettePeriodeUtfall ikkeOppfyltUT1166() {
+    private static FastsettePeriodeUtfall ikkeOppfyltUT1166() {
         return IkkeOppfylt.opprett("UT1166", IkkeOppfyltÅrsak.OPPHOLD_UTSETTELSE, false, false);
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselTermin() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmFødselTermin() {
+        return RS.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
             .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmTidsperiodeForbeholdtMor())
             .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
-        return rs.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
+        return RS.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
             .hvis(new SjekkOmTidsperiodeForbeholdtMor().og(ikke(new SjekkOmFarHarDagerRundtFødsel())), ikkeOppfyltUT1166())
             .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad() {
-        return rs.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad() {
+        return RS.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
                 "Sammenfaller uttaksperioden med en periode hos den andre parten som har utbetaling > 0?")
             .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmSamtidigUttak())
             .ellers(sjekkOmPeriodeErUtsettelse());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptertSamtidigUttak() {
-        return rs.hvisRegel(SjekkOmAkseptertSamtidigUttak.ID, "Samtidig uttak er akseptert?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptertSamtidigUttak() {
+        return RS.hvisRegel(SjekkOmAkseptertSamtidigUttak.ID, "Samtidig uttak er akseptert?")
             .hvis(new SjekkOmAkseptertSamtidigUttak(), sjekkOmPeriodeErUtsettelse())
             .ellers(Manuellbehandling.opprett("UT1164", null, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK, true, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtidigUttak() {
-        return rs.hvisRegel(SjekkOmSamtidigUttak.ID, "Har en av foreldrene huket av for samtidig uttak?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmSamtidigUttak() {
+        return RS.hvisRegel(SjekkOmSamtidigUttak.ID, "Har en av foreldrene huket av for samtidig uttak?")
             .hvis(new SjekkOmSamtidigUttak(), sjekkOmAkseptertSamtidigUttak())
             .ellers(IkkeOppfylt.opprett("UT1162", IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
-        return rs.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
+        return RS.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
             .hvis(new SjekkOmManglendeSøktPeriode(), new ManglendeSøktPeriodeDelregel().getSpecification())
             .ellers(sjekkOmSøknadGjelderTerminFødsel());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderTerminFødsel() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøknadGjelderTerminFødsel() {
+        return RS.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, SjekkOmSøknadGjelderTerminEllerFødsel.BESKRIVELSE)
             .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), sjekkOmPeriodeErForTidlig())
             .ellers(sjekkOmAdopsjonPeriodeErForTidlig());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAdopsjonPeriodeErForTidlig() {
-        return rs.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAdopsjonPeriodeErForTidlig() {
+        return RS.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
             .ellers(sjekkOmTomPåKontoVedSøktPeriode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
-        return rs.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
+        return RS.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(),
                 IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
             .ellers(sjekkOmTomPåKontoVedSøktPeriode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode() {
-        return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode() {
+        return RS.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
             .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
             .ellers(IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense() {
-        return rs.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID, SjekkOmPeriodenErEtterMaksgrenseForUttak.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense() {
+        return RS.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID, SjekkOmPeriodenErEtterMaksgrenseForUttak.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenErEtterMaksgrenseForUttak(),
                 IkkeOppfylt.opprett("UT1085", IkkeOppfyltÅrsak.UTTAK_ETTER_3_ÅRSGRENSE, false, false))
             .ellers(sjekkOmPeriodeEtterNesteStønadsperiode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNesteStønadsperiode() {
-        return rs.hvisRegel(SjekkOmPeriodenErEtterNesteStønadsperiode.ID, SjekkOmPeriodenErEtterNesteStønadsperiode.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNesteStønadsperiode() {
+        return RS.hvisRegel(SjekkOmPeriodenErEtterNesteStønadsperiode.ID, SjekkOmPeriodenErEtterNesteStønadsperiode.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenErEtterNesteStønadsperiode(), sjekkOmGjenståendeDagerEtterNesteStønadsperiode())
             .ellers(sjekkOmUttaksperiodenEtterSøkersDødsdato());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmGjenståendeDagerEtterNesteStønadsperiode() {
-        return rs.hvisRegel(SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.ID, SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmGjenståendeDagerEtterNesteStønadsperiode() {
+        return RS.hvisRegel(SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.ID, SjekkOmEtterNesteStønadsperiodeHarDisponibleDager.BESKRIVELSE)
             .hvis(new SjekkOmEtterNesteStønadsperiodeHarDisponibleDager(), sjekkOmUttaksperiodenEtterSøkersDødsdato())
             .ellers(IkkeOppfylt.opprett("UT1086", IkkeOppfyltÅrsak.UTTAK_ETTER_NY_STØNADSPERIODE, false, false));
     }
 
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFødselsvilkåretErOppfylt() {
-        return rs.hvisRegel(SjekkOmFødselsvilkåretErOppfylt.ID, "Er fødselsvilkåret oppfylt?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmFødselsvilkåretErOppfylt() {
+        return RS.hvisRegel(SjekkOmFødselsvilkåretErOppfylt.ID, "Er fødselsvilkåret oppfylt?")
             .hvis(new SjekkOmFødselsvilkåretErOppfylt(), sjekkOmAdopsjonsvilkåretErOppfylt())
             .ellers(IkkeOppfylt.opprett("UT1251", IkkeOppfyltÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmAdopsjonsvilkåretErOppfylt() {
-        return rs.hvisRegel(SjekkOmAdopsjonsvilkåretErOppfylt.ID, "Er adopsjonsvilkåret oppfylt?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAdopsjonsvilkåretErOppfylt() {
+        return RS.hvisRegel(SjekkOmAdopsjonsvilkåretErOppfylt.ID, "Er adopsjonsvilkåret oppfylt?")
             .hvis(new SjekkOmAdopsjonsvilkåretErOppfylt(), sjekkOmForeldreansvarsvilkåretErOppfylt())
             .ellers(IkkeOppfylt.opprett("UT1252", IkkeOppfyltÅrsak.ADOPSJONSVILKÅRET_IKKE_OPPFYLT, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmForeldreansvarsvilkåretErOppfylt() {
-        return rs.hvisRegel(SjekkOmForeldreansvarsvilkåretErOppfylt.ID, "Er foreldreansvarsvilkåret oppfylt?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmForeldreansvarsvilkåretErOppfylt() {
+        return RS.hvisRegel(SjekkOmForeldreansvarsvilkåretErOppfylt.ID, "Er foreldreansvarsvilkåret oppfylt?")
             .hvis(new SjekkOmForeldreansvarsvilkåretErOppfylt(), sjekkOmMedlemskapsvilkåretErOppfylt())
             .ellers(IkkeOppfylt.opprett("UT1253", IkkeOppfyltÅrsak.FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmMedlemskapsvilkåretErOppfylt() {
-        return rs.hvisRegel(SjekkOmMedlemskapssvilkåretErOppfylt.ID, "Er medlemskapsvilkåret oppfylt?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmMedlemskapsvilkåretErOppfylt() {
+        return RS.hvisRegel(SjekkOmMedlemskapssvilkåretErOppfylt.ID, "Er medlemskapsvilkåret oppfylt?")
             .hvis(new SjekkOmMedlemskapssvilkåretErOppfylt(), sjekkOmOpptjeningsvilkåretErOppfylt())
             .ellers(IkkeOppfylt.opprett("UT1259", IkkeOppfyltÅrsak.SØKER_IKKE_MEDLEM, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmOpptjeningsvilkåretErOppfylt() {
-        return rs.hvisRegel(SjekkOmOpptjeningsvilkåretErOppfylt.ID, "Er opptjeningsvilkåret oppfylt?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmOpptjeningsvilkåretErOppfylt() {
+        return RS.hvisRegel(SjekkOmOpptjeningsvilkåretErOppfylt.ID, "Er opptjeningsvilkåret oppfylt?")
             .hvis(new SjekkOmOpptjeningsvilkåretErOppfylt(), sjekkOmPleiepenger())
             .ellers(IkkeOppfylt.opprett("UT1254", IkkeOppfyltÅrsak.OPPTJENINGSVILKÅRET_IKKE_OPPFYLT, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPleiepenger() {
-        return rs.hvisRegel(SjekkOmPleiepenger.ID, SjekkOmPleiepenger.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPleiepenger() {
+        return RS.hvisRegel(SjekkOmPleiepenger.ID, SjekkOmPleiepenger.BESKRIVELSE)
             .hvis(new SjekkOmPleiepenger(), sjekkOmBarnetsInnleggelse())
             .ellers(sjekkOmSamtykke());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetsInnleggelse() {
-        return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetsInnleggelse() {
+        return RS.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
             .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), sjekkOmSamtykke())
             .ellers(sjekkOmBarnInnlagt());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnInnlagt() {
-        return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmBarnInnlagt() {
+        return RS.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
             .hvis(new SjekkOmBarnInnlagt(),
                 Manuellbehandling.opprett("UT1320", null, Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE, false, false))
             .ellers(Manuellbehandling.opprett("UT1321", null, Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE, false, false));
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {
         if (fomSamtykke == null) {
-            fomSamtykke = rs.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
+            fomSamtykke = RS.hvisRegel(SjekkOmHvisOverlapperSåSamtykkeMellomParter.ID, "Er det samtykke og overlappende periode?")
                 .hvis(new SjekkOmHvisOverlapperSåSamtykkeMellomParter(), sjekkOmBerørtBehandling())
                 .ellers(IkkeOppfylt.opprett("UT1063", IkkeOppfyltÅrsak.IKKE_SAMTYKKE, false, false));
         }
         return fomSamtykke;
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBerørtBehandling() {
-        return rs.hvisRegel(SjekkOmBerørtBehandling.ID, SjekkOmBerørtBehandling.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmBerørtBehandling() {
+        return RS.hvisRegel(SjekkOmBerørtBehandling.ID, SjekkOmBerørtBehandling.BESKRIVELSE)
             .hvis(new SjekkOmBerørtBehandling(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
             .ellers(sjekkOmTapendePeriode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmTapendePeriode() {
-        return rs.hvisRegel(SjekkOmTapendePeriode.ID, SjekkOmTapendePeriode.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTapendePeriode() {
+        return RS.hvisRegel(SjekkOmTapendePeriode.ID, SjekkOmTapendePeriode.BESKRIVELSE)
             .hvis(new SjekkOmTapendePeriode(), sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse())
             .ellers(sjekkOmPeriodeErUtsettelse());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
-        return rs.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
+        return RS.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
             .hvis(new SjekkOmPeriodeErUtsettelse(), kreverBehandlingenSammenhengendeUttak())
             .ellers(sjekkOmManglendeSøktPeriode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> kreverBehandlingenSammenhengendeUttak() {
-        return rs.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> kreverBehandlingenSammenhengendeUttak() {
+        return RS.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID, SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenKreverSammenhengendeUttak(), new UtsettelseDelregelSammenhengendeUttak().getSpecification())
             .ellers(new UtsettelseDelregel().getSpecification());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriode() {
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmManglendeSøktPeriode() {
 
-        var sjekkOmSøktOverføringAvKvoteNode = rs.hvisRegel(SjekkOmSøktOmOverføringAvKvote.ID, "Er det søkt om overføring av kvote")
+        var sjekkOmSøktOverføringAvKvoteNode = RS.hvisRegel(SjekkOmSøktOmOverføringAvKvote.ID, "Er det søkt om overføring av kvote")
             .hvis(new SjekkOmSøktOmOverføringAvKvote(), sjekkOmSøktGradering())
             .ellers(IkkeOppfylt.opprett("UT1160", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false));
 
-        var sjekkOmTomForAlleSineKontoerNode = rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+        var sjekkOmTomForAlleSineKontoerNode = RS.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
             .hvis(new SjekkOmTomForAlleSineKontoer(), sjekkOmSøktOverføringAvKvoteNode)
             .ellers(sjekkOmSøktGradering());
 
-        var sjekkOmForeldrepengerFørFødselNode = rs.hvisRegel(SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
+        var sjekkOmForeldrepengerFørFødselNode = RS.hvisRegel(SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
             .hvis(new SjekkOmPeriodeErForeldrepengerFørFødsel(), sjekkOmSøktGradering())
             .ellers(sjekkOmTomForAlleSineKontoerNode);
 
-        var sjekkKontoErOpprettet = rs.hvisRegel(SjekkOmKontoErOpprettet.ID,
+        var sjekkKontoErOpprettet = RS.hvisRegel(SjekkOmKontoErOpprettet.ID,
                 "Er det opprettet stønadskonto som tilsvarer stønadskonto i uttaksperioden?")
             .hvis(new SjekkOmKontoErOpprettet(), sjekkOmForeldrepengerFørFødselNode)
             .ellers(Manuellbehandling.opprett("UT1290", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true,
                 false));
 
-        return rs.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
+        return RS.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
             .hvis(new SjekkOmManglendeSøktPeriode(), new ManglendeSøktPeriodeDelregel().getSpecification())
             .ellers(sjekkKontoErOpprettet);
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering() {
-        return rs.hvisRegel(SjekkOmSøktGradering.ID, "Er det søkt om gradering?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering() {
+        return RS.hvisRegel(SjekkOmSøktGradering.ID, "Er det søkt om gradering?")
             .hvis(new SjekkOmSøktGradering(), sjekkOmSøktGradering100ProsentEllerMer())
             .ellers(sjekkOmPeriodeErStebarnsadopsjon());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering100ProsentEllerMer() {
-        return rs.hvisRegel(SjekkOmSøktGraderingHundreProsentEllerMer.ID, "Er søkt arbeid 100 prosent eller mer i perioden?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering100ProsentEllerMer() {
+        return RS.hvisRegel(SjekkOmSøktGraderingHundreProsentEllerMer.ID, "Er søkt arbeid 100 prosent eller mer i perioden?")
             .hvis(new SjekkOmSøktGraderingHundreProsentEllerMer(),
                 Manuellbehandling.opprett("UT1180", IkkeOppfyltÅrsak.ARBEID_HUNDRE_PROSENT_ELLER_MER, Manuellbehandlingårsak.AVKLAR_ARBEID, true,
                     false))
             .ellers(sjekkOmPeriodeErStebarnsadopsjon());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErStebarnsadopsjon() {
-        return rs.hvisRegel(SjekkOmDetErAdopsjonAvStebarn.ID, "Er det adopsjon av stebarn?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErStebarnsadopsjon() {
+        return RS.hvisRegel(SjekkOmDetErAdopsjonAvStebarn.ID, "Er det adopsjon av stebarn?")
             .hvis(new SjekkOmDetErAdopsjonAvStebarn(), new StebarnsadopsjonDelRegel().getSpecification())
             .ellers(sjekkOmPeriodeErMødrekvote());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErMødrekvote() {
-        return rs.hvisRegel(SjekkOmPeriodeErMødrekvote.ID, "Er det søkt om uttak av mødrekvote?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErMødrekvote() {
+        return RS.hvisRegel(SjekkOmPeriodeErMødrekvote.ID, "Er det søkt om uttak av mødrekvote?")
             .hvis(new SjekkOmPeriodeErMødrekvote(), new MødrekvoteDelregel().getSpecification())
             .ellers(sjekkOmFedrekvote());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFedrekvote() {
-        return rs.hvisRegel(SjekkOmPeriodeErFedrekvote.ID, "Er det søkt om uttak av fedrekvote?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmFedrekvote() {
+        return RS.hvisRegel(SjekkOmPeriodeErFedrekvote.ID, "Er det søkt om uttak av fedrekvote?")
             .hvis(new SjekkOmPeriodeErFedrekvote(), new FedrekvoteDelregel().getSpecification())
             .ellers(sjekkOmFellesperiode());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFellesperiode() {
-        return rs.hvisRegel(SjekkOmPeriodeErFellesperiode.ID, "Er det søkt om uttak av fellesperiode?")
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmFellesperiode() {
+        return RS.hvisRegel(SjekkOmPeriodeErFellesperiode.ID, "Er det søkt om uttak av fellesperiode?")
             .hvis(new SjekkOmPeriodeErFellesperiode(), new FellesperiodeDelregel().getSpecification())
             .ellers(sjekkOmPeriodeErForeldrepengerFørFødsel());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForeldrepengerFørFødsel() {
-        return rs.hvisRegel(SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForeldrepengerFørFødsel() {
+        return RS.hvisRegel(SjekkOmPeriodeErForeldrepengerFørFødsel.ID, ER_PERIODEN_FPFF)
             .hvis(new SjekkOmPeriodeErForeldrepengerFørFødsel(), sjekkOmFPFFGjelderFødsel())
             .ellers(new ForeldrepengerDelregel().getSpecification());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFPFFGjelderFødsel() {
-        return rs.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, GJELDER_FPFF_PERIODE_FØDSEL)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmFPFFGjelderFødsel() {
+        return RS.hvisRegel(SjekkOmSøknadGjelderTerminEllerFødsel.ID, GJELDER_FPFF_PERIODE_FØDSEL)
             .hvis(new SjekkOmSøknadGjelderTerminEllerFødsel(), new ForeldrepengerFørFødselDelregel().getSpecification())
             .ellers(Manuellbehandling.opprett("UT1092", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, false, false));
     }
