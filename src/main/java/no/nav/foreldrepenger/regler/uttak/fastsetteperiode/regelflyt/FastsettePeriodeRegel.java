@@ -66,11 +66,19 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static final String ER_PERIODEN_FPFF = "Er det søkt om uttak av foreldrepenger før fødsel?";
 
     private static final Ruleset<FastsettePeriodeGrunnlag> RS = new Ruleset<>();
+    private static final Specification<FastsettePeriodeGrunnlag> MSP_DELREGEL = new ManglendeSøktPeriodeDelregel().getSpecification();
     private static final Specification<FastsettePeriodeGrunnlag> REGEL = lagRegelSpec();
 
     private static Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
     private static Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
     private static Specification<FastsettePeriodeGrunnlag> fomSamtykke;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErStebarnsadopsjon;
 
     public FastsettePeriodeRegel() {
         // For dokumentasjonsgenerering
@@ -132,10 +140,13 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse() {
-        return RS.hvisRegel(SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse.ID,
-                "Sammenfaller uttaksperioden med en periode hos den andre parten som er en innvilget utsettelse?")
-            .hvis(new SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse(), sjekkOmBehandlingKreverSammenhengendeUttak())
-            .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
+        if (sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse == null) {
+            sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse = RS.hvisRegel(SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse.ID,
+                    "Sammenfaller uttaksperioden med en periode hos den andre parten som er en innvilget utsettelse?")
+                .hvis(new SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse(), sjekkOmBehandlingKreverSammenhengendeUttak())
+                .ellers(sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad());
+        }
+        return sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmBehandlingKreverSammenhengendeUttak() {
@@ -161,10 +172,13 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad() {
-        return RS.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
-                "Sammenfaller uttaksperioden med en periode hos den andre parten som har utbetaling > 0?")
-            .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmSamtidigUttak())
-            .ellers(sjekkOmPeriodeErUtsettelse());
+        if (sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad == null) {
+            sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad = RS.hvisRegel(SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad.ID,
+                    "Sammenfaller uttaksperioden med en periode hos den andre parten som har utbetaling > 0?")
+                .hvis(new SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad(), sjekkOmSamtidigUttak())
+                .ellers(sjekkOmPeriodeErUtsettelse());
+        }
+        return sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAkseptertSamtidigUttak() {
@@ -181,7 +195,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmManglendePeriode() {
         return RS.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
-            .hvis(new SjekkOmManglendeSøktPeriode(), new ManglendeSøktPeriodeDelregel().getSpecification())
+            .hvis(new SjekkOmManglendeSøktPeriode(), MSP_DELREGEL)
             .ellers(sjekkOmSøknadGjelderTerminFødsel());
     }
 
@@ -205,16 +219,22 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode() {
-        return RS.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
-            .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
-            .ellers(IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false));
+        if (sjekkOmTomPåKontoVedSøktPeriode == null) {
+            sjekkOmTomPåKontoVedSøktPeriode = RS.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+                .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
+                .ellers(IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false));
+        }
+        return sjekkOmTomPåKontoVedSøktPeriode;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense() {
-        return RS.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID, SjekkOmPeriodenErEtterMaksgrenseForUttak.BESKRIVELSE)
-            .hvis(new SjekkOmPeriodenErEtterMaksgrenseForUttak(),
-                IkkeOppfylt.opprett("UT1085", IkkeOppfyltÅrsak.UTTAK_ETTER_3_ÅRSGRENSE, false, false))
-            .ellers(sjekkOmPeriodeEtterNesteStønadsperiode());
+        if (sjekkPeriodeInnenforMaksgrense == null) {
+            sjekkPeriodeInnenforMaksgrense = RS.hvisRegel(SjekkOmPeriodenErEtterMaksgrenseForUttak.ID, SjekkOmPeriodenErEtterMaksgrenseForUttak.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenErEtterMaksgrenseForUttak(),
+                    IkkeOppfylt.opprett("UT1085", IkkeOppfyltÅrsak.UTTAK_ETTER_3_ÅRSGRENSE, false, false))
+                .ellers(sjekkOmPeriodeEtterNesteStønadsperiode());
+        }
+        return sjekkPeriodeInnenforMaksgrense;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeEtterNesteStønadsperiode() {
@@ -301,9 +321,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse() {
-        return RS.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
-            .hvis(new SjekkOmPeriodeErUtsettelse(), kreverBehandlingenSammenhengendeUttak())
-            .ellers(sjekkOmManglendeSøktPeriode());
+        if (sjekkOmPeriodeErUtsettelse == null) {
+            sjekkOmPeriodeErUtsettelse = RS.hvisRegel(SjekkOmPeriodeErUtsettelse.ID, SjekkOmPeriodeErUtsettelse.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodeErUtsettelse(), kreverBehandlingenSammenhengendeUttak())
+                .ellers(sjekkOmManglendeSøktPeriode());
+        }
+        return sjekkOmPeriodeErUtsettelse;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> kreverBehandlingenSammenhengendeUttak() {
@@ -333,14 +356,17 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
                 false));
 
         return RS.hvisRegel(SjekkOmManglendeSøktPeriode.ID, "Er det \"Manglende søkt periode\"?")
-            .hvis(new SjekkOmManglendeSøktPeriode(), new ManglendeSøktPeriodeDelregel().getSpecification())
+            .hvis(new SjekkOmManglendeSøktPeriode(), MSP_DELREGEL)
             .ellers(sjekkKontoErOpprettet);
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering() {
-        return RS.hvisRegel(SjekkOmSøktGradering.ID, "Er det søkt om gradering?")
-            .hvis(new SjekkOmSøktGradering(), sjekkOmSøktGradering100ProsentEllerMer())
-            .ellers(sjekkOmPeriodeErStebarnsadopsjon());
+        if (sjekkOmSøktGradering == null) {
+            sjekkOmSøktGradering = RS.hvisRegel(SjekkOmSøktGradering.ID, "Er det søkt om gradering?")
+                .hvis(new SjekkOmSøktGradering(), sjekkOmSøktGradering100ProsentEllerMer())
+                .ellers(sjekkOmPeriodeErStebarnsadopsjon());
+        }
+        return sjekkOmSøktGradering;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering100ProsentEllerMer() {
@@ -352,9 +378,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErStebarnsadopsjon() {
-        return RS.hvisRegel(SjekkOmDetErAdopsjonAvStebarn.ID, "Er det adopsjon av stebarn?")
-            .hvis(new SjekkOmDetErAdopsjonAvStebarn(), new StebarnsadopsjonDelRegel().getSpecification())
-            .ellers(sjekkOmPeriodeErMødrekvote());
+        if (sjekkOmPeriodeErStebarnsadopsjon == null) {
+            sjekkOmPeriodeErStebarnsadopsjon = RS.hvisRegel(SjekkOmDetErAdopsjonAvStebarn.ID, "Er det adopsjon av stebarn?")
+                .hvis(new SjekkOmDetErAdopsjonAvStebarn(), new StebarnsadopsjonDelRegel().getSpecification())
+                .ellers(sjekkOmPeriodeErMødrekvote());
+        }
+        return sjekkOmPeriodeErStebarnsadopsjon;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErMødrekvote() {
