@@ -40,6 +40,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravArbeidPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
@@ -252,6 +255,37 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
             .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
+            .kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(AKTIVITET_UKJENT_UDOKUMENTERT);
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(
+            Manuellbehandlingårsak.AKTIVITEKTSKRAVET_MÅ_SJEKKES_MANUELT);
+        assertThat(fastsattePerioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(fastsattePerioder.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(fastsattePerioder.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+        assertThat(fastsattePerioder.get(3).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD).merEnn0()).isTrue();
+    }
+
+    @Test
+    void ukjent_mors_aktivitet_fri_utsettelse_foreldrepenger_skal_avslås_hvis_minsterett_ikke_dokumentert_og_mor_har_arbeid() {
+        var fødselsdato = LocalDate.of(2022, 9, 1);
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 75)).minsterettDager(1);
+        var oppgittPeriode = foreldrepenger(fødselsdato, null);
+        var utsettelse1 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16).minusDays(1), UtsettelseÅrsak.ARBEID,
+            fødselsdato, fødselsdato, null, null);
+        var utsettelse2 = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(16), fødselsdato.plusWeeks(17).minusDays(1), UtsettelseÅrsak.FRI,
+            fødselsdato, fødselsdato, null, null);
+
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode, utsettelse1, utsettelse2));
+
+        var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .inngangsvilkår(oppfyltAlleVilkår())
+            .annenPart(new AnnenPart.Builder().aktivitetskravGrunnlag(
+                new AktivitetskravGrunnlag(List.of(new AktivitetskravArbeidPeriode(fødselsdato.minusYears(1), fødselsdato.plusYears(10), 100)))))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
