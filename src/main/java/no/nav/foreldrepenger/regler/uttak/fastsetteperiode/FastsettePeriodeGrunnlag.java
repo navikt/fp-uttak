@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilkår;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.ytelser.PleiepengerPeriode;
@@ -60,6 +61,15 @@ public interface FastsettePeriodeGrunnlag {
     boolean isSøkerMor();
 
     /**
+     * Finn ut om søker er far/medmor til barn som det er søkt stønad for.
+     *
+     * @return true dersom søker er far/medmor, ellers false.
+     */
+    default boolean isSøkerFarMedmor() {
+        return !isSøkerMor();
+    }
+
+    /**
      * Finn ut om annen forelder er kjent med hvilke perioder det er søkt om.
      *
      * @return true dersom det er informert, ellers false.
@@ -76,33 +86,11 @@ public interface FastsettePeriodeGrunnlag {
     List<PleiepengerPeriode> getPleiepengerInnleggelse();
 
     /**
-     * Har far/medmor rett til foreldrepenger.
-     *
-     * @return true dersom rett.
-     */
-    boolean isFarRett();
-
-    /**
-     * Har mor rett til foreldrepenger.
-     *
-     * @return true dersom rett.
-     */
-
-    boolean isMorRett();
-
-    /**
      * Tilfelle av BareFarRett og oppgitt at MorMottarUføretrygd, 14-14 tredje ledd
      *
      * @return true dersom oppgitt.
      */
     boolean isMorOppgittUføretrygd();
-
-    /**
-     * Tilfelle av BareFarRett og MorMottarUføretrygd, 14-14 tredje ledd
-     *
-     * @return true dersom bare far rett og bekreftet uføretrygd.
-     */
-    boolean isBareFarHarRettMorUføretrygd();
 
     /**
      * Har saken perioder uten aktivitetskrav iht 14-14 tredje ledd
@@ -111,6 +99,8 @@ public interface FastsettePeriodeGrunnlag {
      * @return true dersom saken tilsier dager uten aktivitetskrav.
      */
     boolean isSakMedDagerUtenAktivitetskrav();
+
+    Rettighetstype rettighetsType();
 
     /**
      * Har saken en minsterett for uttak.
@@ -137,8 +127,6 @@ public interface FastsettePeriodeGrunnlag {
     List<AnnenpartUttakPeriode> getAnnenPartUttaksperioder();
 
     LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt();
-
-    boolean harAleneomsorg();
 
     /**
      * Om det finnes en opphørsdato der søker ikke lengre oppfyller medlemskapsvilkåret

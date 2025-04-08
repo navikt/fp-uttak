@@ -34,7 +34,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -132,7 +131,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
             .kontoer(kontoer)
             .behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(LocalDate.of(2019, 1, 23)))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(søknadsperiode1).oppgittPeriode(søknadsperiode2))
             .build();
 
@@ -308,7 +307,7 @@ class GraderingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBa
             .behandling(new Behandling.Builder().søkerErMor(true))
             .datoer(new Datoer.Builder().omsorgsovertakelse(søknadsperiode.getFom()))
             .adopsjon(new Adopsjon.Builder().ankomstNorge(søknadsperiode.getFom()))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON).oppgittPeriode(søknadsperiode))
             .build();
 

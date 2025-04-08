@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -37,7 +36,6 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .behandling(morBehandling())
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
             .søknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato)))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
@@ -65,7 +63,6 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .behandling(morBehandling())
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
             .søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(4))))
             .kontoer(kontoer)
@@ -183,7 +180,7 @@ class KnekkpunktOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var fødselsdato = LocalDate.of(2018, 2, 13);
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(200));
         var grunnlag = basicGrunnlag(fødselsdato).behandling(farBehandling())
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(Stønadskontotype.FORELDREPENGER, LocalDate.of(2019, 3, 20), LocalDate.of(2019, 12, 24))))
             .kontoer(kontoer);

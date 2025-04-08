@@ -175,7 +175,7 @@ class ArbeidsforholdPeriodeRegelOrkestreringTest extends FastsettePerioderRegelO
         var søknad = søknad(Søknadstype.FØDSEL, utsettelseArbeid, fpPeriode);
         var grunnlag = basicGrunnlag().arbeid(arbeid)
             .søknad(søknad)
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødsel));
 
