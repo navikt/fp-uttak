@@ -47,6 +47,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
@@ -122,7 +123,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
             søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1), null, null, null);
         var mødrekvote = forVanligPeriode(MØDREKVOTE, fødselsdato, sisteUttaksdag, null, false, søknadsfrist.plusWeeks(1), søknadsfrist.plusWeeks(1),
             null, null, null);
-        var grunnlag = basicGrunnlagMor(fødselsdato).rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+        var grunnlag = basicGrunnlagMor(fødselsdato)
             .søknad(søknad(Søknadstype.FØDSEL, fpff, mødrekvote));
 
         // Act
@@ -325,7 +326,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .datoer(datoer(fødselsdato))
             .behandling(farBehandling())
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+            .rettOgOmsorg(beggeRett())
             .søknad(søknad(Søknadstype.FØDSEL, fedrekvote))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -443,7 +444,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
             .kontoer(kontoer)
             .datoer(datoer(fødselsdato))
             .behandling(morBehandling())
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(false).aleneomsorg(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.ALENEOMSORG))
             .søknad(søknad(Søknadstype.FØDSEL,
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), false, null),
                 oppgittPeriode(Stønadskontotype.FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(100), false, null)))
@@ -490,7 +491,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var kontoer = new Kontoer.Builder().konto(konto(MØDREKVOTE, 75)).konto(konto(FORELDREPENGER_FØR_FØDSEL, 15));
         var grunnlag = new RegelGrunnlag.Builder().datoer(datoer(fødselsdato))
             .behandling(morBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+            .rettOgOmsorg(beggeRett())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
             .kontoer(kontoer)
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
@@ -748,7 +749,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var grunnlag = new RegelGrunnlag.Builder().arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold1).arbeidsforhold(arbeidsforhold2))
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .behandling(morBehandling())
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).aleneomsorg(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.ALENEOMSORG))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(6)))
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6).plusDays(1), fødselsdato.plusWeeks(15))))
@@ -779,7 +780,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     @Test
     void søknadsfrist_ikke_trekke_dager_etter_at_konto_er_tom_manglende_søkt_periode() {
         var fødselsdato = LocalDate.of(2018, 6, 14);
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER, fødselsdato.plusYears(1), fødselsdato.plusYears(1))))
@@ -980,7 +981,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .behandling(farBehandling())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(40 * 5))
                 .minsterettDager(15 * 5)
@@ -1007,7 +1008,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2022, 8, 2));
         var nesteStønadsperiode = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 4, 1));
         var grunnlag = basicGrunnlag().datoer(datoer(fødselsdato).startdatoNesteStønadsperiode(nesteStønadsperiode))
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .behandling(farBehandling())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(40 * 5))
                 .minsterettDager(15 * 5)
@@ -1049,7 +1050,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .datoer(datoer(fødselsdato).termin(termindato))
             .behandling(farBehandling())
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(5 * 40))
                 .minsterettDager(5 * 8)
                 .farUttakRundtFødselDager(10))
@@ -1090,7 +1091,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .datoer(datoer(fødselsdato).termin(fødselsdato).dødsdatoer(new Dødsdatoer.Builder().barnsDødsdato(dødsdato).alleBarnDøde(true)))
             .behandling(farBehandling())
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(5 * 40))
                 .minsterettDager(5 * 8)
                 .farUttakRundtFødselDager(10))
@@ -1131,7 +1132,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .datoer(datoer(fødselsdato).termin(fødselsdato).startdatoNesteStønadsperiode(nestesakStartDato))
             .behandling(farBehandling())
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(5 * 40))
                 .minsterettDager(5 * 15)
                 .etterNesteStønadsperiodeDager(8 * 5)

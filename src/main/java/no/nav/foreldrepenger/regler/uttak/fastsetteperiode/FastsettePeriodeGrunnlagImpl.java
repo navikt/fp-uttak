@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Inngangsvilk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -90,23 +91,13 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     }
 
     @Override
-    public boolean isFarRett() {
-        return regelGrunnlag.getRettOgOmsorg().getFarHarRett();
-    }
-
-    @Override
-    public boolean isMorRett() {
-        return regelGrunnlag.getRettOgOmsorg().getMorHarRett();
-    }
-
-    @Override
     public boolean isMorOppgittUføretrygd() {
         return regelGrunnlag.getRettOgOmsorg().getMorOppgittUføretrygd();
     }
 
     @Override
-    public boolean isBareFarHarRettMorUføretrygd() {
-        return isFarRett() && !isMorRett() && regelGrunnlag.getRettOgOmsorg().getMorUføretrygd();
+    public Rettighetstype rettighetsType() {
+        return regelGrunnlag.getRettOgOmsorg().rettighetsType();
     }
 
     @Override
@@ -140,11 +131,6 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     @Override
     public LocalDateTime getAnnenPartSisteSøknadMottattTidspunkt() {
         return Optional.ofNullable(regelGrunnlag.getAnnenPart()).map(AnnenPart::getSisteSøknadMottattTidspunkt).orElse(null);
-    }
-
-    @Override
-    public boolean harAleneomsorg() {
-        return regelGrunnlag.getRettOgOmsorg().getAleneomsorg();
     }
 
     @Override

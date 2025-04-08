@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -60,7 +61,7 @@ class MødrekvoteDelregelTest {
         var oppgittPeriode = oppgittMødrekvote(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(oppgittPeriode))
             .build();
 
@@ -75,7 +76,7 @@ class MødrekvoteDelregelTest {
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 10 * 5);
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(oppgittPeriode))
             .build();
 
@@ -90,7 +91,7 @@ class MødrekvoteDelregelTest {
         var oppgittPeriode = oppgittMødrekvote(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7));
         var kontoer = enKonto(Stønadskontotype.MØDREKVOTE, 1);
         var grunnlag = basicGrunnlagMor(fødselsdato).kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(oppgittPeriode))
             .build();
 
@@ -459,7 +460,7 @@ class MødrekvoteDelregelTest {
 
     private RegelGrunnlag.Builder basicGrunnlagFar(LocalDate fødselsdato) {
         return create().datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT))
             .behandling(new Behandling.Builder().søkerErMor(false))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
@@ -479,7 +480,7 @@ class MødrekvoteDelregelTest {
 
     private RegelGrunnlag.Builder basicGrunnlagMor(LocalDate fødselsdato) {
         return create().datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT))
             .behandling(new Behandling.Builder().søkerErMor(true))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));

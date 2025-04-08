@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -32,7 +33,7 @@ class SjekkOmTomForAlleSineKontoerTest {
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
             .build();
 
@@ -57,7 +58,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(uttakPeriode).mottattTidspunkt(periodeStart.atStartOfDay()))
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .build();
 
@@ -77,7 +78,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
             .build();
 
@@ -90,7 +91,7 @@ class SjekkOmTomForAlleSineKontoerTest {
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .behandling(new Behandling.Builder().søkerErMor(false))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
             .build();
 
@@ -106,7 +107,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(false))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
             .build();
 
@@ -119,7 +120,7 @@ class SjekkOmTomForAlleSineKontoerTest {
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .build();
 
@@ -135,7 +136,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .build();
 
@@ -148,7 +149,7 @@ class SjekkOmTomForAlleSineKontoerTest {
 
         var grunnlag = RegelGrunnlagTestBuilder.create()
             .behandling(new Behandling.Builder().søkerErMor(false))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .build();
 
@@ -164,7 +165,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(false))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .build();
 

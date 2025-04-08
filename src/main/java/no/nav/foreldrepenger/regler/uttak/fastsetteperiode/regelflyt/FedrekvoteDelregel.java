@@ -2,13 +2,13 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyldigGrunnForTidligOppstartHelePerioden;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarsUttakRundtFødselTilgjengeligeDager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGyldigOverføringPgaAleneomsorg;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGyldigOverføringPgaIkkeRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGyldigOverføringPgaInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGyldigOverføringPgaSykdomSkade;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOmsorgHelePerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOppholdKvoteAnnenForelder;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOverføringPgaAleneomsorg;
@@ -93,13 +93,13 @@ public class FedrekvoteDelregel implements RuleService<FastsettePeriodeGrunnlag>
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErFar() {
         return rs.hvisRegel(SjekkOmSøkerErMor.ID, ER_SØKER_FAR)
             .hvis(new SjekkOmSøkerErMor(), sjekkOmMorSøktOmOverføringAvFedrekvote())
-            .ellers(sjekkOmMorHarRett());
+            .ellers(sjekkOmBareFarHarRett());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorHarRett() {
-        return rs.hvisRegel(SjekkOmMorHarRett.ID, "Er det avklart at mor har rett?")
-            .hvis(new SjekkOmMorHarRett(), sjekkOmDetErFødsel())
-            .ellers(IkkeOppfylt.opprett("UT1292", IkkeOppfyltÅrsak.MOR_IKKE_RETT_FK, true, false));
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRett() { //TODO oppdater confluence
+        return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
+            .hvis(new SjekkOmBareFarHarRett(), IkkeOppfylt.opprett("UT1292", IkkeOppfyltÅrsak.MOR_IKKE_RETT_FK, true, false))
+            .ellers(sjekkOmDetErFødsel());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmOverføringPgaInnleggelse() {

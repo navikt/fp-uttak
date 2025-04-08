@@ -434,7 +434,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             fødselsdato.plusWeeks(100), MorsAktivitet.UTDANNING, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato).behandling(farBehandling())
             .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .søknad(søknad(FØDSEL, utsettelse));
 
         var perioder = fastsettPerioder(grunnlag);
@@ -479,7 +479,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var tom = fødselsdato.plusWeeks(9);
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
             .søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelse));
 
@@ -509,7 +509,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, FRI, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_GODKJENT);
         var grunnlag = basicGrunnlagFar(fødselsdato).datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
             .søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelse));
 
@@ -634,7 +634,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void fri_utsettelse_første_6_ukene_skal_innvilges_for_bfhr() {
         var fødselsdato = LocalDate.of(2022, 6, 28);
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100).minsterettDager(40).farUttakRundtFødselDager(10))
             .søknad(søknad(FØDSEL, utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), FRI, null),
                 oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(2).minusDays(1)),
@@ -699,7 +699,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void fri_utsettelse_før_termin_bfhr() {
         var fødselsdato = LocalDate.of(2022, 6, 28);
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100).minsterettDager(40).farUttakRundtFødselDager(10))
             .søknad(søknad(FØDSEL, utsettelsePeriode(fødselsdato.minusWeeks(1), fødselsdato.plusWeeks(1).minusDays(1), FRI, null),
                 oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1))));
@@ -774,7 +774,7 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
     @Test
     void utsettelse_bfhr_første_6_ukene_innvilges_selv_om_ikke_dokumentert() {
         var fødselsdato = LocalDate.of(2022, 6, 28);
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett())
             .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 100).minsterettDager(40).farUttakRundtFødselDager(10))
             .søknad(søknad(FØDSEL,
                 utsettelsePeriode(fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT_BARN, null),

@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -61,7 +62,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato.minusWeeks(5));
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).aleneomsorg(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.ALENEOMSORG))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -75,7 +76,6 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato.minusWeeks(5));
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).aleneomsorg(false))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -88,7 +88,7 @@ class ForeldrepengerDelregelTest {
         var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato, AktivitetIdentifikator.forFrilans(), null);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(gradertPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).morHarRett(false))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.ALENEOMSORG))
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -103,7 +103,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(familiehendelseDato, familiehendelseDato.plusWeeks(6).minusDays(1));
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(false).morHarRett(false).aleneomsorg(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.ALENEOMSORG))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -133,7 +133,7 @@ class ForeldrepengerDelregelTest {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var gradertPeriode = gradertPeriode(familiehendelseDato.minusWeeks(6), familiehendelseDato, AktivitetIdentifikator.forFrilans(), null);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(gradertPeriode))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(false).morHarRett(true))
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(foreldrepengerKonto(100))
             .build();
 
@@ -141,6 +141,10 @@ class ForeldrepengerDelregelTest {
 
         assertThat(regelresultat.sluttpunktId()).isEqualTo("UT1212");
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT);
+    }
+
+    private static RettOgOmsorg.Builder bareSøkerRett() {
+        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT);
     }
 
     @Test
@@ -151,12 +155,16 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(gradertPeriode))
             .kontoer(foreldrepengerKonto(100))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).morHarRett(false))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.GRADERING_ALENEOMSORG);
+    }
+
+    private static RettOgOmsorg.Builder aleneomsorg() {
+        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.ALENEOMSORG);
     }
 
     @Test
@@ -168,7 +176,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(gradertPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).morHarRett(true))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -182,7 +190,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8));
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).morHarRett(false))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -196,7 +204,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(familiehendelseDato.plusWeeks(7), familiehendelseDato.plusWeeks(8));
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).morHarRett(true))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -211,7 +219,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
                 .arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .kontoer(foreldrepengerKonto(10))
             .build();
 
@@ -234,7 +242,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode).type(Søknadstype.FØDSEL))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).harOmsorg(false))
+            .rettOgOmsorg(aleneomsorg().harOmsorg(false))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -246,19 +254,23 @@ class ForeldrepengerDelregelTest {
     }
 
     @Test
-    void mor_utenAleneomsorg_ikkeBareMorRett() {
+    void mor_begge_rett_og_søker_foreldrepenger() {
         var familiehendelseDato = LocalDate.of(2018, 1, 1);
         var fom = familiehendelseDato.plusWeeks(6);
         var tom = familiehendelseDato.plusWeeks(7);
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(false).farHarRett(true).harOmsorg(false))
+            .rettOgOmsorg(beggeRett().harOmsorg(false))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
+    }
+
+    private static RettOgOmsorg.Builder beggeRett() {
+        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT);
     }
 
     @Test
@@ -269,7 +281,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -285,7 +297,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -299,7 +311,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = gradertPeriode(familiehendelseDato.minusWeeks(3), familiehendelseDato.minusWeeks(2), ARBEIDSFORHOLD_1, null);
         var grunnlag = grunnlagMor(familiehendelseDato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -359,7 +371,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true).harOmsorg(false))
+            .rettOgOmsorg(aleneomsorg().harOmsorg(false))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -380,7 +392,7 @@ class ForeldrepengerDelregelTest {
             .kontoer(foreldrepengerKonto(10))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forFrilans()))
                 .arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende())))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var fastsattePerioder = List.of(new FastsattUttakPeriode.Builder().periodeResultatType(Perioderesultattype.INNVILGET)
@@ -406,7 +418,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(gradertPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -422,7 +434,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().aleneomsorg(true))
+            .rettOgOmsorg(aleneomsorg())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -438,7 +450,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fom, tom);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode).type(Søknadstype.FØDSEL))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).harOmsorg(false))
+            .rettOgOmsorg(bareSøkerRett().harOmsorg(false))
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -457,7 +469,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = OppgittPeriode.forVanligPeriode(Stønadskontotype.FORELDREPENGER, fom, tom, null, false, null, null, null, null, null);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -477,7 +489,7 @@ class ForeldrepengerDelregelTest {
         var søknad = søknad(oppgittPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).aleneomsorg(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -494,7 +506,7 @@ class ForeldrepengerDelregelTest {
         var søknad = søknad(oppgittPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -511,7 +523,7 @@ class ForeldrepengerDelregelTest {
         var søknad = søknad(gradertPeriode);
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
             .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -531,7 +543,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(aktivitetIdentifikator)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -550,7 +562,7 @@ class ForeldrepengerDelregelTest {
             .arbeidsforhold(new Arbeidsforhold(AktivitetIdentifikator.forSelvstendigNæringsdrivende()));
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad)
             .arbeid(arbeid)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(foreldrepengerKonto(10))
             .build();
 
@@ -568,22 +580,6 @@ class ForeldrepengerDelregelTest {
     }
 
     @Test
-    void far_etterFamiliehendelse_utenAleneomsorg_utenFarRett() {
-        var familiehendelseDato = LocalDate.of(2018, 1, 1);
-        var fom = familiehendelseDato.plusWeeks(8);
-        var tom = familiehendelseDato.plusWeeks(9);
-        var oppgittPeriode = oppgittPeriode(fom, tom);
-        var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
-            .kontoer(foreldrepengerKonto(100))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true))
-            .build();
-
-        var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
-
-        assertManuellBehandling(regelresultat, null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false);
-    }
-
-    @Test
     void far_etterFamiliehendelse_utenAleneomsorg_medFarRett_utenMorRett() {
         var familiehendelseDato = LocalDate.now().minusMonths(2);
         var fom = familiehendelseDato.plusWeeks(1);
@@ -593,7 +589,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -612,7 +608,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(gradertPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(gradertPeriode, grunnlag);
@@ -630,7 +626,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false))
+            .rettOgOmsorg(bareSøkerRett())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -650,12 +646,16 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).morUføretrygd(true))
+            .rettOgOmsorg(morUfør())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertInnvilget(regelresultat, InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV, "UT1317");
+    }
+
+    private static RettOgOmsorg.Builder morUfør() {
+        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR);
     }
 
     @Test
@@ -669,7 +669,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).morUføretrygd(true))
+            .rettOgOmsorg(morUfør())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -688,7 +688,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).morUføretrygd(true))
+            .rettOgOmsorg(morUfør())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -707,7 +707,7 @@ class ForeldrepengerDelregelTest {
         var grunnlag = grunnlagFar(familiehendelseDato).søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(false).morUføretrygd(true))
+            .rettOgOmsorg(morUfør())
             .build();
 
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
@@ -722,7 +722,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fødselsdato, fødselsdato.plusWeeks(1).plusDays(1));
         var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
             .build();
 
@@ -738,7 +738,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(fødselsdato.minusWeeks(3), fødselsdato.minusWeeks(2).minusDays(1));
         var grunnlag = grunnlagFar(fødselsdato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
+            .rettOgOmsorg(bareSøkerRett())
             .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
             .build();
 
@@ -754,7 +754,7 @@ class ForeldrepengerDelregelTest {
         var oppgittPeriode = oppgittPeriode(termindato.minusDays(3), termindato.plusWeeks(1).plusDays(1));
         var grunnlag = grunnlagFar(termindato).behandling(new Behandling.Builder().søkerErMor(false))
             .søknad(søknad(oppgittPeriode))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).aleneomsorg(false))
+            .rettOgOmsorg(bareSøkerRett())
             .datoer(new Datoer.Builder().termin(termindato))
             .kontoer(foreldrepengerKonto(40 * 5).farUttakRundtFødselDager(10).minsterettDager(10))
             .build();
@@ -787,7 +787,7 @@ class ForeldrepengerDelregelTest {
         return RegelGrunnlagTestBuilder.create()
             .datoer(new Datoer.Builder().fødsel(familiehendelseDato))
             .behandling(new Behandling.Builder().søkerErMor(søkerMor))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true))
+            .rettOgOmsorg(bareSøkerRett())
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }

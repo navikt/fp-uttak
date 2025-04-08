@@ -223,7 +223,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
         return new RegelGrunnlag.Builder().behandling(farBehandling())
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(FØDSELSDATO))
             .datoer(new Datoer.Builder().fødsel(FØDSELSDATO))
-            .rettOgOmsorg(stønadskontotype.equals(FORELDREPENGER) ? bareFarRett() : beggeRett())
+            .rettOgOmsorg(stønadskontotype.equals(FORELDREPENGER) ? bareSøkerRett() : beggeRett())
             .søknad(new Søknad.Builder().oppgittPeriode(oppgittPeriode))
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))

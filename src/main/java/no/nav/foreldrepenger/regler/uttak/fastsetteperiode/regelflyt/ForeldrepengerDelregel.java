@@ -102,7 +102,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkErDetBareMorSomHarRett() {
-        return rs.hvisRegel(SjekkOmBareMorHarRett.ID, "Er det bare mor som har rett?")
+        return rs.hvisRegel(SjekkOmBareMorHarRett.ID, SjekkOmBareMorHarRett.BESKRIVELSE)
             .hvis(new SjekkOmBareMorHarRett(), sjekkOmUttakStarterFørUttakForForeldrepengerFørFødsel())
             .ellers(Manuellbehandling.opprett("UT1209", null, Manuellbehandlingårsak.UGYLDIG_STØNADSKONTO, true, false));
     }
