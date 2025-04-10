@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Overføring�
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -295,7 +296,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
         var grunnlag = grunnlagAdopsjon.kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(false).morHarRett(true).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT).samtykke(true))
             .behandling(morBehandling())
             .søknad(søknad(Søknadstype.ADOPSJON,
                 oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato.minusWeeks(1), omsorgsovertakelseDato.minusDays(1))))
@@ -339,7 +340,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
         var grunnlag = grunnlagAdopsjon.kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .behandling(farBehandling())
             .søknad(søknad(Søknadstype.ADOPSJON,
                 oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato.minusWeeks(1), omsorgsovertakelseDato.minusDays(1))))
@@ -362,7 +363,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = grunnlagAdopsjon.arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(bareFarRett().harOmsorg(false))
+            .rettOgOmsorg(bareSøkerRett().harOmsorg(false))
             .behandling(farBehandling())
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
@@ -388,7 +389,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = grunnlagAdopsjon.arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(bareFarRett())
+            .rettOgOmsorg(bareSøkerRett())
             .behandling(farBehandling())
             .søknad(søknad)
             .adopsjon(new Adopsjon.Builder().ankomstNorge(null))
@@ -409,7 +410,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var testGrunnlag = grunnlagAdopsjon.arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().farHarRett(true).morHarRett(true).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT).samtykke(true))
             .behandling(morBehandling())
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                 //Mottatt mer enn 3 mnd etter start

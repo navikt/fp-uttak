@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 
 
 public class RegelGrunnlagTestBuilder {
@@ -35,7 +36,7 @@ public class RegelGrunnlagTestBuilder {
         return new RegelGrunnlag.Builder().kontoer(kontoer)
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(LocalDate.MIN))
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT).samtykke(true))
             .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));

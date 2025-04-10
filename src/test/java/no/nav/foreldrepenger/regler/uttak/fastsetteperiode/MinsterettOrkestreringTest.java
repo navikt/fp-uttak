@@ -37,6 +37,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -62,7 +64,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -94,7 +96,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -124,7 +126,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -151,7 +153,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
@@ -181,7 +183,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -212,7 +214,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -239,7 +241,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -266,7 +268,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -291,7 +293,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -311,7 +313,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(17).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -330,7 +332,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -350,7 +352,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             true, Set.of(ARBEIDSFORHOLD), fødselsdato, fødselsdato, null, null, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, gradertPeriode));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -419,7 +421,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering, foreldrepenger1, foreldrepenger2));
 
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1)).arbeidsforhold(new Arbeidsforhold(arbeidsforhold2));
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(4);
 
@@ -451,7 +453,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering));
 
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1)).arbeidsforhold(new Arbeidsforhold(arbeidsforhold2));
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(4);
 

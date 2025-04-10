@@ -104,7 +104,7 @@ final class ManglendeSøktPeriodeUtil {
     }
 
     static boolean bareFarRett(RegelGrunnlag grunnlag) {
-        return grunnlag.getRettOgOmsorg().bareFarHarRett();
+        return grunnlag.getBehandling().isSøkerFarMedMor() && grunnlag.getRettOgOmsorg().rettighetsType().bareSøkerRett();
     }
 
     static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
