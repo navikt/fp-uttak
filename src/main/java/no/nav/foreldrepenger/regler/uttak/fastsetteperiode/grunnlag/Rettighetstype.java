@@ -6,10 +6,11 @@ public enum Rettighetstype {
 
     ALENEOMSORG,
     BEGGE_RETT,
-    BARE_SØKER_RETT,
+    BARE_FAR_RETT,
+    BARE_MOR_RETT,
     BARE_FAR_RETT_MOR_UFØR;
 
-    public boolean bareSøkerRett() {
-        return Set.of(Rettighetstype.BARE_SØKER_RETT, Rettighetstype.BARE_FAR_RETT_MOR_UFØR).contains(this);
+    public boolean bareFarRett() {
+        return Set.of(BARE_FAR_RETT, BARE_FAR_RETT_MOR_UFØR).contains(this);
     }
 }

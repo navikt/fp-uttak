@@ -61,15 +61,6 @@ public interface FastsettePeriodeGrunnlag {
     boolean isSøkerMor();
 
     /**
-     * Finn ut om søker er far/medmor til barn som det er søkt stønad for.
-     *
-     * @return true dersom søker er far/medmor, ellers false.
-     */
-    default boolean isSøkerFarMedmor() {
-        return !isSøkerMor();
-    }
-
-    /**
      * Finn ut om annen forelder er kjent med hvilke perioder det er søkt om.
      *
      * @return true dersom det er informert, ellers false.

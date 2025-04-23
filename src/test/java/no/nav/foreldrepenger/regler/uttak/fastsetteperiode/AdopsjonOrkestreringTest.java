@@ -296,7 +296,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
         var grunnlag = grunnlagAdopsjon.kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_MOR_RETT).samtykke(true))
             .behandling(morBehandling())
             .søknad(søknad(Søknadstype.ADOPSJON,
                 oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato.minusWeeks(1), omsorgsovertakelseDato.minusDays(1))))
@@ -340,7 +340,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var kontoer = new Kontoer.Builder().konto(new Konto.Builder().type(FORELDREPENGER).trekkdager(130));
         var grunnlag = grunnlagAdopsjon.kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .behandling(farBehandling())
             .søknad(søknad(Søknadstype.ADOPSJON,
                 oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato.minusWeeks(1), omsorgsovertakelseDato.minusDays(1))))
@@ -363,7 +363,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = grunnlagAdopsjon.arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(bareSøkerRett().harOmsorg(false))
+            .rettOgOmsorg(bareFarRett().harOmsorg(false))
             .behandling(farBehandling())
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON)
                 .oppgittPeriode(oppgittPeriode(FORELDREPENGER, omsorgsovertakelseDato, omsorgsovertakelseDato.plusWeeks(2).minusDays(1))))
@@ -389,7 +389,7 @@ class AdopsjonOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = grunnlagAdopsjon.arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
             .datoer(new Datoer.Builder().omsorgsovertakelse(omsorgsovertakelseDato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .behandling(farBehandling())
             .søknad(søknad)
             .adopsjon(new Adopsjon.Builder().ankomstNorge(null))

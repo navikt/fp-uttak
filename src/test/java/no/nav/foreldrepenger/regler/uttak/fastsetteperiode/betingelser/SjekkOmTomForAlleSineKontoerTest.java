@@ -78,7 +78,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_MOR_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
             .build();
 
@@ -107,7 +107,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(false))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL))
             .build();
 
@@ -136,7 +136,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(true))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_MOR_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .build();
 
@@ -165,7 +165,7 @@ class SjekkOmTomForAlleSineKontoerTest {
             .kontoer(kontoer)
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .behandling(new Behandling.Builder().søkerErMor(false))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT))
             .søknad(new Søknad.Builder().type(Søknadstype.ADOPSJON))
             .build();
 

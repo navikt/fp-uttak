@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.bareFarRett;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernPerioderFørDato;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernPerioderFørEndringsdatoVedRevurdering;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
@@ -217,7 +216,10 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
     }
 
     private static boolean farSøkerFødselEllerTerminOgBareFarHarRett(RegelGrunnlag grunnlag) {
-        return erFødselEllerTermin(grunnlag) && bareFarRett(grunnlag);
+        if (!erFødselEllerTermin(grunnlag)) {
+            return false;
+        }
+        return grunnlag.getRettOgOmsorg().rettighetsType().bareFarRett();
     }
 
     private static Stream<OppgittPeriode> finnManglendeMellomliggendePerioder(RegelGrunnlag grunnlag, List<OppgittPeriode> ekskludertePerioder) {

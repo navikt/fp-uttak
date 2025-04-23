@@ -16,7 +16,7 @@ public class SjekkOmSkalTrekkeDagerFraKonto extends LeafSpecification<FastsetteP
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        var bareFarRett = fastsettePeriodeGrunnlag.isSøkerFarMedmor() && fastsettePeriodeGrunnlag.rettighetsType().bareSøkerRett();
+        var bareFarRett = fastsettePeriodeGrunnlag.rettighetsType().bareFarRett();
         return fastsettePeriodeGrunnlag.getAktuellPeriode().kreverSammenhengendeUttak(fastsettePeriodeGrunnlag.getSammenhengendeUttakTomDato())
             || bareFarRett ? ja() : nei();
     }

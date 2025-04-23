@@ -17,7 +17,7 @@ public class SjekkOmBareFarHarRett extends LeafSpecification<FastsettePeriodeGru
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.rettighetsType().bareSøkerRett() && grunnlag.isSøkerFarMedmor()) {
+        if (grunnlag.rettighetsType().bareFarRett()) {
             return ja();
         }
         return nei();

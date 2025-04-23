@@ -303,7 +303,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     private static RettOgOmsorg.Builder bareSøkerRett() {
-        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT);
+        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT);
     }
 
     @Test

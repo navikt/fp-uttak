@@ -168,11 +168,19 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RettOgOmsorg.Builder beggeRett() {
-        return new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT);
+        return rettogOmsorg(Rettighetstype.BEGGE_RETT);
     }
 
-    RettOgOmsorg.Builder bareSøkerRett() {
-        return new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BARE_SØKER_RETT);
+    RettOgOmsorg.Builder bareFarRett() {
+        return rettogOmsorg(Rettighetstype.BARE_FAR_RETT);
+    }
+
+    RettOgOmsorg.Builder bareMorRett() {
+        return rettogOmsorg(Rettighetstype.BARE_MOR_RETT);
+    }
+
+    private static RettOgOmsorg.Builder rettogOmsorg(Rettighetstype rettighetstype) {
+        return new RettOgOmsorg.Builder().samtykke(true).rettighetstype(rettighetstype);
     }
 
     OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, DokumentasjonVurdering dokumentasjonVurdering) {

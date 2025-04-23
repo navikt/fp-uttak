@@ -112,7 +112,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -171,7 +171,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -230,7 +230,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -254,7 +254,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -283,7 +283,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .annenPart(new AnnenPart.Builder().aktivitetskravGrunnlag(
@@ -311,7 +311,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -334,7 +334,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling().sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -357,7 +357,7 @@ class AvslagAktivitetskravOrkestreringTest extends FastsettePerioderRegelOrkestr
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .opptjening(new Opptjening.Builder().skjæringstidspunkt(fødselsdato))
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))

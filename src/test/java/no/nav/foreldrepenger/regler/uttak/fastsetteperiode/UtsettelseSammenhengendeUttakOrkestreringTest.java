@@ -746,7 +746,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var tom = fødselsdato.plusWeeks(9);
         //Skal gå tom for dager
         var utsettelse = OppgittPeriode.forUtsettelse(fom, tom, ARBEID, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, MORS_AKTIVITET_IKKE_GODKJENT);
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett())
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(10).type(FORELDREPENGER)))
             .søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelse));
 
@@ -783,7 +783,7 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
             fødselsdato, MorsAktivitet.INTROPROG, INNLEGGELSE_BARN_GODKJENT);
 
         var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 100)))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(søknad(FØDSEL, periode, sykdom, innleggelse, sykdomBarn));
 
         var perioder = fastsettPerioder(grunnlag);

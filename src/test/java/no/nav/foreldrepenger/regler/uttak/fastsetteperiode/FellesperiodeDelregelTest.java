@@ -432,7 +432,7 @@ class FellesperiodeDelregelTest {
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 10 * 5));
 
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1), null, false);
-        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT).samtykke(true))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT).samtykke(true))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)

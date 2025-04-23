@@ -293,7 +293,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -313,7 +313,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(17).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -332,7 +332,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var oppgittPeriode2 = oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1), true, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, oppgittPeriode2));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -352,7 +352,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             true, Set.of(ARBEIDSFORHOLD), fødselsdato, fødselsdato, null, null, null);
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(oppgittPeriode1, gradertPeriode));
 
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(2);
 
@@ -421,7 +421,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering, foreldrepenger1, foreldrepenger2));
 
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1)).arbeidsforhold(new Arbeidsforhold(arbeidsforhold2));
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(4);
 
@@ -453,7 +453,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering));
 
         var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1)).arbeidsforhold(new Arbeidsforhold(arbeidsforhold2));
-        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareSøkerRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
         var fastsattePerioder = fastsettPerioder(grunnlag);
         assertThat(fastsattePerioder).hasSize(4);
 

@@ -43,7 +43,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(
                 søknad(FØDSEL, oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(52))))
             .kontoer(kontoer(konto(FORELDREPENGER, 100)))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -88,7 +88,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad)
             .kontoer(kontoer)
             .arbeid(arbeid)
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .revurdering(new Revurdering.Builder().endringsdato(fødselsdato).gjeldendeVedtak(new Vedtak.Builder().leggTilPeriode(fastsattPeriode)))
             .build();
         var perioder = fastsettPerioder(grunnlag);
@@ -114,7 +114,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
             .inngangsvilkår(oppfyltAlleVilkår())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .behandling(farBehandling())
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .søknad(new Søknad.Builder().type(FØDSEL)
                 .oppgittPeriode(
                     oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1), MORS_AKTIVITET_GODKJENT)));
@@ -158,7 +158,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
                     oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(4), fødselsdato.plusWeeks(8).minusDays(1)),
                     oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15).minusDays(1))))
             .kontoer(kontoer(konto(FORELDREPENGER, 100)))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareMorRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -240,7 +240,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         var fødselsdato = LocalDate.of(2021, 10, 11);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL,
             OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(4), null, false, fødselsdato, fødselsdato,
-                MorsAktivitet.SYK, null, MORS_AKTIVITET_GODKJENT))).kontoer(kontoer(konto(FORELDREPENGER, 100))).rettOgOmsorg(bareSøkerRett()).build();
+                MorsAktivitet.SYK, null, MORS_AKTIVITET_GODKJENT))).kontoer(kontoer(konto(FORELDREPENGER, 100))).rettOgOmsorg(bareFarRett()).build();
         var perioder = fastsettPerioder(grunnlag);
 
         assertThat(perioder).hasSize(1);
@@ -256,7 +256,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
             fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 10)).minsterettDager(5))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -276,7 +276,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
             fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 5)).minsterettDager(5))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -296,7 +296,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
             false, fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 20)).minsterettDager(5))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 
@@ -316,7 +316,7 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
             false, fødselsdato, fødselsdato, null, null, null);
         var grunnlag = basicGrunnlagFar(fødselsdato).søknad(søknad(FØDSEL, fpFørMsp, fpEtterMsp))
             .kontoer(kontoer(konto(FORELDREPENGER, 30)).minsterettDager(20))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 

@@ -70,7 +70,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
         var søknad = søknad(Søknadstype.FØDSEL,
             //manglende søkt blir opprettet før foreldrepenger-perioder
             oppgittPeriode);
-        var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato).rettOgOmsorg(bareSøkerRett())
+        var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato).rettOgOmsorg(bareFarRett())
             .søknad(søknad)
             .kontoer(kontoer(konto(Stønadskontotype.FORELDREPENGER, 1000)))
             .build();
@@ -114,7 +114,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
     @Test
     void skal_avslå_og_ikke_trekke_dager_når_alle_kontoer_går_tom_midt_i_en_manglede_søkt_periode() {
         var fødselsdato = LocalDate.of(2019, 9, 3);
-        var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato).rettOgOmsorg(bareSøkerRett())
+        var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato).rettOgOmsorg(bareFarRett())
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().trekkdager(30).type(FORELDREPENGER)))
             .søknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10)),
                 //Bare far har rett, msp i mellom
@@ -231,7 +231,7 @@ class ManglendeSøktSammenhengendeUttakOrkestreringTest extends FastsettePeriode
         var grunnlag = basicGrunnlagFarSammenhengendeUttak(fødselsdato).søknad(
                 søknad(FØDSEL, oppgittPeriode(FORELDREPENGER, fødselsdato.plusWeeks(50), fødselsdato.plusWeeks(52))))
             .kontoer(kontoer(konto(FORELDREPENGER, 100)))
-            .rettOgOmsorg(bareSøkerRett())
+            .rettOgOmsorg(bareFarRett())
             .build();
         var perioder = fastsettPerioder(grunnlag);
 

@@ -76,7 +76,7 @@ class FedrekvoteDelregelTest {
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_SØKER_RETT).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT).samtykke(true))
             .søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
             .build();

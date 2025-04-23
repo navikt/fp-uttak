@@ -20,7 +20,7 @@ public class SjekkOmMorOppgittUføre extends LeafSpecification<FastsettePeriodeG
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        if (fastsettePeriodeGrunnlag.isSøkerMor() || !fastsettePeriodeGrunnlag.rettighetsType().bareSøkerRett()) {
+        if (!fastsettePeriodeGrunnlag.rettighetsType().bareFarRett()) {
             return nei();
         }
         if (fastsettePeriodeGrunnlag.isMorOppgittUføretrygd()) {

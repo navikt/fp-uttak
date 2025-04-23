@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.bareFarRett;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernPerioderFørEndringsdatoVedRevurdering;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.slåSammenUttakForBeggeParter;
@@ -35,7 +34,7 @@ public final class ManglendeSøktePerioderTjeneste {
             throw new IllegalArgumentException("Krever minst en oppgitt periode");
         }
         final List<OppgittPeriode> msPerioder;
-        if (bareFarRett(grunnlag)) {
+        if (grunnlag.getRettOgOmsorg().rettighetsType().bareFarRett()) {
             msPerioder = finnManglendeSøktPeriodeBareFarHarRett(grunnlag).stream().toList();
         } else if (grunnlag.getSøknad().gjelderAdopsjon()) {
             msPerioder = List.of();
