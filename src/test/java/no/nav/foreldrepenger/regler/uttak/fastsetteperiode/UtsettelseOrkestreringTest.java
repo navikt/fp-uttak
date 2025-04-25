@@ -817,6 +817,25 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(perioder.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(UTSETTELSE_GYLDIG);
     }
 
+    @Test
+    void fri_utsettelse_mor_første_6_ukene_skal_gå_til_manuell() {
+        var fødselsdato = LocalDate.of(2025, 4, 25);
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato).søknad(
+            fødselSøknad().oppgittPeriode(oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)))
+                .oppgittPeriode(oppgittPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(3).minusDays(1)))
+                .oppgittPeriode(
+                    utsettelsePeriode(fødselsdato.plusWeeks(3), fødselsdato.plusWeeks(6).minusDays(1), FRI, null)));
+
+        var resultat = fastsettPerioder(grunnlag);
+        assertThat(resultat).hasSize(3);
+
+        var uttakPeriode = resultat.get(2).uttakPeriode();
+        assertThat(uttakPeriode.getUtsettelseÅrsak()).isEqualTo(FRI);
+        assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
+        assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+    }
+
     private Datoer.Builder datoer(LocalDate fødselsdato) {
         return new Datoer.Builder().fødsel(fødselsdato);
     }

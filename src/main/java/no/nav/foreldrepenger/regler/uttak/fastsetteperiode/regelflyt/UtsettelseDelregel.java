@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTi
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaBarnetsInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSøkerInnleggelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmFriUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
@@ -110,18 +109,12 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
         return rs.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
             .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), varBarnetInnlagtSjekk)
-            .ellers(sjekkOmFriUtsettelse());
+            .ellers(manuellUT1357());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFarHarDagerRundtFødsel() {
         return rs.hvisRegel(SjekkOmFarHarDagerRundtFødsel.ID, SjekkOmFarHarDagerRundtFødsel.BESKRIVELSE)
             .hvis(new SjekkOmFarHarDagerRundtFødsel(), innvilgUT1351())
-            .ellers(manuellUT1357());
-    }
-
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmFriUtsettelse() {
-        return rs.hvisRegel(SjekkOmFriUtsettelse.ID, SjekkOmFriUtsettelse.BESKRIVELSE)
-            .hvis(new SjekkOmFriUtsettelse(), Oppfylt.opprett("UT1361", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false))
             .ellers(manuellUT1357());
     }
 
