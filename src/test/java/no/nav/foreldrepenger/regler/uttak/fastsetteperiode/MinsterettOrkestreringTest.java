@@ -37,6 +37,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Utbetalingsgrad;
@@ -62,7 +64,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -94,7 +96,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -124,7 +126,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -151,7 +153,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
             .kontoer(kontoer)
@@ -181,7 +183,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -212,7 +214,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -239,7 +241,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))
@@ -266,7 +268,7 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
 
         var grunnlag = new RegelGrunnlag.Builder().behandling(farBehandling())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(bareFarRett().morUføretrygd(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT_MOR_UFØR))
             .søknad(søknad)
             .inngangsvilkår(oppfyltAlleVilkår())
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD)))

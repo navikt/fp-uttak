@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.bareFarRett;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernPerioderFørDato;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.fjernPerioderFørEndringsdatoVedRevurdering;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util.ManglendeSøktPeriodeUtil.lagManglendeSøktPeriode;
@@ -23,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriod
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.Konfigurasjon;
@@ -102,7 +102,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         if (grunnlag.getBehandling().isSøkerMor() && grunnlag.getSøknad().getType().gjelderTerminFødsel()) {
             return utledManglendeForMorFraOppgittePerioder(grunnlag);
         }
-        if (farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag) && !grunnlag.getRettOgOmsorg().getAleneomsorg()) {
+        if (farSøkerFødselEllerTerminOgBareFarHarRett(grunnlag)) {
             var oppholdFar = utledManglendeSøktForFar(grunnlag.getDatoer().getFamiliehendelse(), grunnlag.getSøknad().getOppgittePerioder());
             if (oppholdFar.isPresent()) {
                 return List.of(oppholdFar.get());
@@ -167,10 +167,6 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
         return Optional.empty();
     }
 
-    private static boolean farSøkerFødselEllerTermin(RegelGrunnlag grunnlag) {
-        return grunnlag.getBehandling().isSøkerFarMedMor() && erFødselEllerTermin(grunnlag);
-    }
-
     private static boolean erFødselEllerTermin(RegelGrunnlag grunnlag) {
         return grunnlag.getSøknad().getType().gjelderTerminFødsel();
     }
@@ -204,7 +200,7 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
     }
 
     private static boolean isFarMedAleneomsorg(RegelGrunnlag grunnlag) {
-        return grunnlag.getBehandling().isSøkerFarMedMor() && grunnlag.getRettOgOmsorg().getAleneomsorg();
+        return grunnlag.getBehandling().isSøkerFarMedMor() && grunnlag.getRettOgOmsorg().rettighetsType().equals(Rettighetstype.ALENEOMSORG);
     }
 
     private static boolean mspFyllerHullMellomForeldrene(OppgittPeriode msp, RegelGrunnlag grunnlag) {
@@ -220,7 +216,10 @@ public final class ManglendeSøktePerioderForSammenhengendeUttakTjeneste {
     }
 
     private static boolean farSøkerFødselEllerTerminOgBareFarHarRett(RegelGrunnlag grunnlag) {
-        return farSøkerFødselEllerTermin(grunnlag) && bareFarRett(grunnlag);
+        if (!erFødselEllerTermin(grunnlag)) {
+            return false;
+        }
+        return grunnlag.getRettOgOmsorg().rettighetsType().bareFarRett();
     }
 
     private static Stream<OppgittPeriode> finnManglendeMellomliggendePerioder(RegelGrunnlag grunnlag, List<OppgittPeriode> ekskludertePerioder) {

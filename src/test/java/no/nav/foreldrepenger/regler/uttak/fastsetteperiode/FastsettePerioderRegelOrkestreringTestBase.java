@@ -27,12 +27,14 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
@@ -166,11 +168,19 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RettOgOmsorg.Builder beggeRett() {
-        return new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true);
+        return rettogOmsorg(Rettighetstype.BEGGE_RETT);
     }
 
     RettOgOmsorg.Builder bareFarRett() {
-        return new RettOgOmsorg.Builder().samtykke(true).morHarRett(false).farHarRett(true);
+        return rettogOmsorg(Rettighetstype.BARE_FAR_RETT);
+    }
+
+    RettOgOmsorg.Builder bareMorRett() {
+        return rettogOmsorg(Rettighetstype.BARE_MOR_RETT);
+    }
+
+    private static RettOgOmsorg.Builder rettogOmsorg(Rettighetstype rettighetstype) {
+        return new RettOgOmsorg.Builder().samtykke(true).rettighetstype(rettighetstype);
     }
 
     OppgittPeriode utsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak, DokumentasjonVurdering dokumentasjonVurdering) {
@@ -190,7 +200,7 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     RettOgOmsorg.Builder aleneomsorg() {
-        return beggeRett().aleneomsorg(true);
+        return new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.ALENEOMSORG);
     }
 
     List<FastsettePeriodeResultat> fastsettPerioder(RegelGrunnlag grunnlag) {
@@ -202,6 +212,6 @@ abstract class FastsettePerioderRegelOrkestreringTestBase {
     }
 
     Set<AktivitetIdentifikator> aktiviteterIPeriode(UttakPeriode uttakPeriode) {
-        return uttakPeriode.getAktiviteter().stream().map(a -> a.getIdentifikator()).collect(Collectors.toSet());
+        return uttakPeriode.getAktiviteter().stream().map(UttakPeriodeAktivitet::getIdentifikator).collect(Collectors.toSet());
     }
 }

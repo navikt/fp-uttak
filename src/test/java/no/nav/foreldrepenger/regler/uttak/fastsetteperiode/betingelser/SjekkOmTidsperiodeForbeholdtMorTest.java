@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlagImpl;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
@@ -91,7 +92,7 @@ class SjekkOmTidsperiodeForbeholdtMorTest {
 
     private FastsettePeriodeGrunnlagImpl grunnlag(LocalDate familiehendelse, LocalDate periodeFom, LocalDate periodeTom) {
         var datoer = new Datoer.Builder().fødsel(familiehendelse);
-        var regelGrunnlag = new RegelGrunnlag.Builder().datoer(datoer).søknad(new Søknad.Builder().type(FØDSEL)).build();
+        var regelGrunnlag = new RegelGrunnlag.Builder().datoer(datoer).behandling(new Behandling.Builder()).søknad(new Søknad.Builder().type(FØDSEL)).build();
         var aktuellPeriode = OppgittPeriode.forUtsettelse(periodeFom, periodeTom, INNLAGT_SØKER, periodeFom, periodeFom, INNLAGT,
             DokumentasjonVurdering.INNLEGGELSE_SØKER_GODKJENT);
         return new FastsettePeriodeGrunnlagImpl(regelGrunnlag, null, null, aktuellPeriode);

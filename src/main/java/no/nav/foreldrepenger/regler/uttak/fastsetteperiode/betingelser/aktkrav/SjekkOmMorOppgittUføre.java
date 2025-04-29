@@ -12,7 +12,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 public class SjekkOmMorOppgittUføre extends LeafSpecification<FastsettePeriodeGrunnlag> {
 
     public static final String ID = "AVSLAG_AKT_12";
-    public static final String BESKRIVELSE = "Har søker oppgitt at mor mottar uføretrygd ?";
+    public static final String BESKRIVELSE = "Har søker oppgitt at mor mottar uføretrygd?";
 
     public SjekkOmMorOppgittUføre() {
         super(ID);
@@ -20,7 +20,7 @@ public class SjekkOmMorOppgittUføre extends LeafSpecification<FastsettePeriodeG
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
-        if (fastsettePeriodeGrunnlag.isMorRett() || !fastsettePeriodeGrunnlag.isFarRett()) {
+        if (!fastsettePeriodeGrunnlag.rettighetsType().bareFarRett()) {
             return nei();
         }
         if (fastsettePeriodeGrunnlag.isMorOppgittUføretrygd()) {

@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
@@ -120,7 +121,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg() {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -136,7 +137,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_mor_ikke_har_omsorg_sammenhengede_uttak() {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .behandling(new Behandling.Builder().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -153,7 +154,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg() {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -169,7 +170,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_blir_avslått_etter_uke_7_når_far_ikke_har_omsorg_sammenhengede_uttak() {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(12), FØDSELSDATO.plusWeeks(14), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .behandling(new Behandling.Builder().søkerErMor(false).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
@@ -186,7 +187,7 @@ class FellesperiodeDelregelTest {
     void fellesperiode_før_fødsel_innvilges_uavhengig_av_om_søker_har_omsorg_da_det_ikke_er_mulig_å_ha_omsorg_fordi_barnet_ikke_er_født() {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.minusWeeks(12), FØDSELSDATO.minusWeeks(10), null, false);
         var kontoer = enFellesperiodeKonto(13 * 5);
-        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagMor().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -300,7 +301,7 @@ class FellesperiodeDelregelTest {
     void UT1054_far_førUke7_etterFamileHendelse_utenGyldigGrunn_flerbarnsdager_ikkeOmsorg() {
         var søknadsperiode = oppgittPeriode(FØDSELSDATO.plusWeeks(4), FØDSELSDATO.plusWeeks(5), null, true);
         var kontoer = fellesperiodeOgFlerbarnsdagerKonto(100, 85);
-        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -431,7 +432,7 @@ class FellesperiodeDelregelTest {
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 10 * 5));
 
         var søknadsperiode = oppgittPeriode(fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(9).minusDays(1), null, false);
-        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).samtykke(true))
+        var grunnlag = basicGrunnlagFar().rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT).samtykke(true))
             .søknad(søknad(søknadsperiode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(ARBEIDSFORHOLD_1)))
             .kontoer(kontoer)
@@ -516,7 +517,7 @@ class FellesperiodeDelregelTest {
     private RegelGrunnlag.Builder basicGrunnlag() {
         return RegelGrunnlagTestBuilder.create()
             .datoer(new Datoer.Builder().fødsel(FØDSELSDATO))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).farHarRett(true).morHarRett(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }

@@ -103,10 +103,6 @@ final class ManglendeSøktPeriodeUtil {
         return Optional.of(msp);
     }
 
-    static boolean bareFarRett(RegelGrunnlag grunnlag) {
-        return grunnlag.getRettOgOmsorg().bareFarHarRett();
-    }
-
     static List<LukketPeriode> slåSammenUttakForBeggeParter(RegelGrunnlag grunnlag) {
         List<LukketPeriode> allePerioder = new ArrayList<>();
         if (grunnlag.getAnnenPart() != null) {

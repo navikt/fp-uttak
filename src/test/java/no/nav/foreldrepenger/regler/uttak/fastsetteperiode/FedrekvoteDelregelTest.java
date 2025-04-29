@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OverføringÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RettOgOmsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -75,7 +76,7 @@ class FedrekvoteDelregelTest {
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 10 * 5));
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var grunnlag = basicGrunnlagFar(fødselsdato).kontoer(kontoer)
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(false).farHarRett(true).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT).samtykke(true))
             .søknad(søknad(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
             .build();
@@ -97,7 +98,7 @@ class FedrekvoteDelregelTest {
         var oppgittPeriode = oppgittPeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1));
         var kontoer = fedrekvoteKonto(10 * 5);
         var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(
-                new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(fødselssøknadMedEnPeriode(oppgittPeriode))
             .kontoer(kontoer)
             .build();
@@ -115,7 +116,7 @@ class FedrekvoteDelregelTest {
             null, null, null);
         var arbeidsforhold = new Arbeidsforhold(ARBEIDSFORHOLD_1);
         var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(
-                new RettOgOmsorg.Builder().samtykke(true).morHarRett(true).farHarRett(true).harOmsorg(false))
+                new RettOgOmsorg.Builder().samtykke(true).rettighetstype(Rettighetstype.BEGGE_RETT).harOmsorg(false))
             .søknad(fødselssøknadMedEnPeriode(oppgittPeriode))
             .arbeid(new Arbeid.Builder().arbeidsforhold(arbeidsforhold))
             .kontoer(fedrekvoteOgFlerbarnsdagerKonto(1000, 85))
@@ -433,7 +434,7 @@ class FedrekvoteDelregelTest {
         return RegelGrunnlagTestBuilder.create()
             .inngangsvilkår(new Inngangsvilkår.Builder())
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
-            .rettOgOmsorg(new RettOgOmsorg.Builder().morHarRett(true).farHarRett(true).samtykke(true))
+            .rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BEGGE_RETT).samtykke(true))
             .inngangsvilkår(
                 new Inngangsvilkår.Builder().adopsjonOppfylt(true).foreldreansvarnOppfylt(true).fødselOppfylt(true).opptjeningOppfylt(true).medlemskapOppfylt(true));
     }

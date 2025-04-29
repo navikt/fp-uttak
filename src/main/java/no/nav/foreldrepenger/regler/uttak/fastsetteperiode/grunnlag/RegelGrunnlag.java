@@ -166,6 +166,9 @@ public class RegelGrunnlag {
             if (kladd.ytelser == null) {
                 kladd.ytelser = new Ytelser(null);
             }
+            if (kladd.behandling.isSøkerMor() && kladd.rettOgOmsorg.rettighetsType().bareFarRett()) {
+                throw new IllegalStateException("Kan ikke ha mor som søker med rettighetstype " + kladd.rettOgOmsorg.rettighetsType());
+            }
             //Hindre gjenbruk
             var regelGrunnlag = this.kladd;
             kladd = null;

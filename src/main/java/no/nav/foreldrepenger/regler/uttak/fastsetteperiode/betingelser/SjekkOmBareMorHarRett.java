@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Rettighetstype;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -8,6 +9,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmBareMorHarRett.ID)
 public class SjekkOmBareMorHarRett extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "FP_VK 36.2.3";
+    public static final String BESKRIVELSE = "Er det bare mor som har rett?";
 
     public SjekkOmBareMorHarRett() {
         super(ID);
@@ -15,7 +17,7 @@ public class SjekkOmBareMorHarRett extends LeafSpecification<FastsettePeriodeGru
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
-        if (grunnlag.isMorRett() && !grunnlag.isFarRett()) {
+        if (grunnlag.rettighetsType().equals(Rettighetstype.BARE_MOR_RETT)) {
             return ja();
         }
         return nei();

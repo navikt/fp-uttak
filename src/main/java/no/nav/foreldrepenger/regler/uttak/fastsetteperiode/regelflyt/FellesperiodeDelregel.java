@@ -2,12 +2,12 @@ package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.regelflyt;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkGyldigGrunnForTidligOppstartHelePerioden;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenKreverSammenhengendeUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmGradertPeriode;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMorHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOmsorgHelePerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOppholdFellesperiodeAnnenForelder;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenGjelderFlerbarnsdager;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenKreverSammenhengendeUttak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenSlutterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
@@ -75,13 +75,13 @@ public class FellesperiodeDelregel implements RuleService<FastsettePeriodeGrunnl
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMor() {
         return rs.hvisRegel(SjekkOmSøkerErMor.ID, "Gjelder søknaden fellesperiode for mor")
             .hvis(new SjekkOmSøkerErMor(), sjekkOmMorGjelderFødsel())
-            .ellers(sjekkOmMorHarRett());
+            .ellers(sjekkOmBareFarHarRett());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorHarRett() {
-        return rs.hvisRegel(SjekkOmMorHarRett.ID, "Er det avklart at mor har rett?")
-            .hvis(new SjekkOmMorHarRett(), sjekkOmFarGjelderFødsel())
-            .ellers(IkkeOppfylt.opprett("UT1293", IkkeOppfyltÅrsak.MOR_IKKE_RETT_FP, true, false));
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRett() { //TODO oppdater confluence
+        return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
+            .hvis(new SjekkOmBareFarHarRett(), IkkeOppfylt.opprett("UT1293", IkkeOppfyltÅrsak.MOR_IKKE_RETT_FP, true, false))
+            .ellers(sjekkOmFarGjelderFødsel());
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmFarGjelderFødsel() {
