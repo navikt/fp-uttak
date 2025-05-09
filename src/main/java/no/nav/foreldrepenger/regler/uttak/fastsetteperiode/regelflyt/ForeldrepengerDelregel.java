@@ -312,7 +312,7 @@ public class ForeldrepengerDelregel implements RuleService<FastsettePeriodeGrunn
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent() {
         return rs.hvisRegel(SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent.ID, SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent.BESKRIVELSE)
-            .hvis(new SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent(), Oppfylt.opprettMedAvslåttGradering("UT1331", InnvilgetÅrsak.GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER, GraderingIkkeInnvilgetÅrsak.MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV, true))
+            .hvis(new SjekkOmSøktUttaksprosentErStørreEllerLikMorsStillingsprosent(), Oppfylt.opprettMedAvslåttGradering("UT1331", InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT, GraderingIkkeInnvilgetÅrsak.MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV, true))
             .ellers(Manuellbehandling.opprett("UT1329", InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT, Manuellbehandlingårsak.AKTIVITETSKRAV_DELVIS_ARBEID, true, true));
     }
 
