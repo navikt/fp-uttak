@@ -96,6 +96,7 @@ public class DelvisArbeidOrkestreringTest extends FastsettePerioderRegelOrkestre
 
             assertThat(fastsattePerioder).hasSize(1);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+            assertThat(fastsattePerioder.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(40));
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(30));
             assertThat(fastsattePerioder.getFirst().uttakPeriode().getGraderingIkkeInnvilgetÅrsak()).isEqualTo(MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV);
