@@ -26,21 +26,25 @@ public class SjekkOmMorErIAktivitet extends LeafSpecification<FastsettePeriodeGr
 
     @Override
     public Evaluation evaluate(FastsettePeriodeGrunnlag grunnlag) {
+        return erIAktivitet(grunnlag, 75) ? ja() : nei();
+    }
+
+    static boolean erIAktivitet(FastsettePeriodeGrunnlag grunnlag, int påkrevdStilling) {
         var aktuellPeriode = grunnlag.getAktuellPeriode();
         var dokumentasjonVurdering = aktuellPeriode.getDokumentasjonVurdering();
         if (dokumentasjonVurdering == null) {
             //Ser ikke på permisjonsprosent, ettersom alle perioder med permisjon er avklart av saksbehandler med tilsvarende dokumentasjonvurdering
             return MorsAktivitet.ARBEID.equals(aktuellPeriode.getMorsAktivitet()) && grunnlag.getAktivitetskravGrunnlag()
-                .map(ag -> merEllerLik75Stilling(ag, aktuellPeriode))
-                .orElse(false) ? ja() : nei();
+                .map(ag -> merEllerLikStilling(ag, aktuellPeriode, påkrevdStilling))
+                .orElse(false);
         }
-        return MORS_AKTIVITET_GODKJENT.equals(dokumentasjonVurdering) ? ja() : nei();
+        return MORS_AKTIVITET_GODKJENT.equals(dokumentasjonVurdering);
     }
 
-    private static boolean merEllerLik75Stilling(AktivitetskravGrunnlag ag, LukketPeriode periode) {
+    private static boolean merEllerLikStilling(AktivitetskravGrunnlag ag, LukketPeriode periode, int påkrevdStilling) {
         return ag.perioder().stream().filter(ap -> ap.overlapper(periode))
             .map(AktivitetskravArbeidPeriode::getStillingsprosent)
             .reduce(BigDecimal.ZERO, BigDecimal::add)
-            .compareTo(BigDecimal.valueOf(75)) >= 0;
+            .compareTo(BigDecimal.valueOf(påkrevdStilling)) >= 0;
     }
 }

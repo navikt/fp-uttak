@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravArbeidPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetskravGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktørId;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
@@ -41,6 +43,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUtta
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriodeAktivitet;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.MorsAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Opptjening;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
@@ -58,6 +62,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Manuellbehandlingårsak;
 
 class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
@@ -1174,6 +1179,57 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
         assertThat(resultat).hasSize(3);
         assertThat(resultat.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
+    }
+
+    @Test
+    void bfhr_mor_er_i_arbeid_fra_register() {
+        var fødselsdato = LocalDate.of(2025, 5, 22);
+        var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), UtsettelseÅrsak.FRI,
+            fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null);
+        var uttak = OppgittPeriode.forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(15).minusDays(1),
+            null, false, fødselsdato, fødselsdato, MorsAktivitet.ARBEID, null, null);
+        var søknad = søknad(Søknadstype.FØDSEL, utsettelse, uttak);
+        var arbeid50 = new AktivitetskravArbeidPeriode(utsettelse.getFom().minusYears(1), utsettelse.getFom().plusWeeks(1).minusDays(1),
+            new BigDecimal(50));
+        var arbeid100 = new AktivitetskravArbeidPeriode(utsettelse.getFom().plusWeeks(2), uttak.getFom().plusWeeks(2).minusDays(1),
+            new BigDecimal(100));
+        var annenPart = new AnnenPart.Builder().aktivitetskravGrunnlag(new AktivitetskravGrunnlag(List.of(arbeid50, arbeid100)));
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(new RettOgOmsorg.Builder().rettighetstype(Rettighetstype.BARE_FAR_RETT)).søknad(søknad)
+            .kontoer(new Kontoer.Builder().konto(konto(FORELDREPENGER, 1000)))
+            .annenPart(annenPart);
+
+        var resultater = fastsettPerioder(grunnlag);
+        assertThat(resultater).hasSize(5);
+
+        var periode1 = resultater.getFirst().uttakPeriode();
+        assertThat(periode1.getPerioderesultattype()).isEqualTo(INNVILGET); //Mor 50% stilling
+        assertThat(periode1.getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
+        assertThat(periode1.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(periode1.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+
+        var periode2 = resultater.get(1).uttakPeriode();
+        assertThat(periode2.getPerioderesultattype()).isEqualTo(AVSLÅTT); //Mor 0% stilling
+        assertThat(periode2.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT);
+        assertThat(periode2.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5)); //Trekker dager ved avslått fritt uttak for bfhr
+        assertThat(periode2.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+
+        var periode3 = resultater.get(2).uttakPeriode();
+        assertThat(periode3.getPerioderesultattype()).isEqualTo(INNVILGET); //Mor 100% stilling
+        assertThat(periode3.getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
+        assertThat(periode3.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(periode3.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
+
+        var periode4 = resultater.get(3).uttakPeriode();
+        assertThat(periode4.getPerioderesultattype()).isEqualTo(INNVILGET); //Mor 100% stilling
+        assertThat(periode4.getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT);
+        assertThat(periode4.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(10));
+        assertThat(periode4.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.HUNDRED);
+
+        var periode5 = resultater.get(4).uttakPeriode();
+        assertThat(periode5.getPerioderesultattype()).isEqualTo(AVSLÅTT); //mor 0% stilling
+        assertThat(periode5.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT);
+        assertThat(periode5.getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(15));
+        assertThat(periode5.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
 }

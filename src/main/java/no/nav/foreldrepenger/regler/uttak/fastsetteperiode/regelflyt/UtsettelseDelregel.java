@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmTi
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaBarnetsInnleggelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmUtsettelsePgaSøkerInnleggelse;
-import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.aktkrav.SjekkOmMorErIAktivitetBfhrUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.FastsettePeriodeUtfall;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.IkkeOppfyltÅrsak;
@@ -55,7 +55,7 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmBareFarHarRett() {
         return rs.hvisRegel(SjekkOmBareFarHarRett.ID, SjekkOmBareFarHarRett.BESKRIVELSE)
-            .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitet())
+            .hvis(new SjekkOmBareFarHarRett(), sjekkOmMorErIAktivitetBfhr())
             .ellers(innvilgUT1351());
     }
 
@@ -63,9 +63,9 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
         return Oppfylt.opprett("UT1351", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false);
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitet() {
-        return rs.hvisRegel(SjekkOmMorErIAktivitet.ID, SjekkOmMorErIAktivitet.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIAktivitet(), Oppfylt.opprett("UT1352", InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT, false, false))
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitetBfhr() {
+        return rs.hvisRegel(SjekkOmMorErIAktivitetBfhrUtsettelse.ID, SjekkOmMorErIAktivitetBfhrUtsettelse.BESKRIVELSE)
+            .hvis(new SjekkOmMorErIAktivitetBfhrUtsettelse(), Oppfylt.opprett("UT1352", InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT, false, false))
             .ellers(new AvslagAktivitetskravDelregel().getSpecification());
     }
 
