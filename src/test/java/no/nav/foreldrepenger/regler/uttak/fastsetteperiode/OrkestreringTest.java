@@ -37,6 +37,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dødsdatoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.EndringAvStilling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode;
@@ -1232,4 +1233,81 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         assertThat(periode5.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(Utbetalingsgrad.ZERO);
     }
 
+    @Test
+    void søknadsfrist_skal_ikke_trekke_dager_etter_uke_6() {
+        var fødselsdato = LocalDate.of(2024, 6, 11);
+        var mottattDato = fødselsdato.plusMonths(10);
+        var søknad = søknad(Søknadstype.FØDSEL,
+            forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), null, false, mottattDato, mottattDato,
+                null, null, null),
+            forVanligPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(16), null, false, mottattDato, mottattDato, null, null, null));
+        var grunnlag = basicGrunnlagMor(fødselsdato).søknad(søknad).kontoer(new Kontoer.Builder().konto(MØDREKVOTE, 1000).konto(FORELDREPENGER_FØR_FØDSEL, 15));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    void søknadsfrist_skal_trekke_dager_etter_uke_6_sammenhengende_uttak() {
+        var fødselsdato = LocalDate.of(2024, 6, 11);
+        var mottattDato = fødselsdato.plusMonths(10);
+        var søknad = søknad(Søknadstype.FØDSEL,
+            forVanligPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1), null, false, mottattDato, mottattDato,
+                null, null, null),
+            forVanligPeriode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(16), null, false, mottattDato, mottattDato, null, null, null));
+        var grunnlag = basicGrunnlagMor(fødselsdato).behandling(morBehandling().sammenhengendeUttakTomDato(fødselsdato.plusYears(10)))
+            .søknad(søknad)
+            .kontoer(new Kontoer.Builder().konto(MØDREKVOTE, 1000).konto(FORELDREPENGER_FØR_FØDSEL, 15));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
+    }
+
+
+    @Test
+    void søknadsfrist_skal_ikke_trekke_dager_hvis_far_begge_rett() {
+        var fødselsdato = LocalDate.of(2024, 6, 11);
+        var mottattDato = fødselsdato.plusMonths(10);
+        var søknad = søknad(Søknadstype.FØDSEL,
+            forVanligPeriode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(16), null, false, mottattDato, mottattDato, null, null,
+                DokumentasjonVurdering.TIDLIG_OPPSTART_FEDREKVOTE_GODKJENT));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .søknad(søknad)
+            .kontoer(new Kontoer.Builder().konto(FEDREKVOTE, 1000));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+    }
+
+    @Test
+    void søknadsfrist_skal_trekke_dager_hvis_bfhr_for_uttak_men_ikke_for_utsettelse() {
+        var fødselsdato = LocalDate.of(2024, 6, 11);
+        var mottattDato = fødselsdato.plusMonths(10);
+        var søknad = søknad(Søknadstype.FØDSEL,
+            utsettelsePeriode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), UtsettelseÅrsak.FRI, MorsAktivitet.ARBEID,
+                MORS_AKTIVITET_GODKJENT),
+            forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(16), null, false, mottattDato, mottattDato, null, null,
+                MORS_AKTIVITET_GODKJENT));
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .rettOgOmsorg(bareFarRett())
+            .søknad(søknad)
+            .kontoer(new Kontoer.Builder().konto(FORELDREPENGER, 1000));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
+    }
 }
