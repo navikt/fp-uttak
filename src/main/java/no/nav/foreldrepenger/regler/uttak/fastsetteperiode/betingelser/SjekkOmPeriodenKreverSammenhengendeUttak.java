@@ -8,7 +8,7 @@ import no.nav.fpsak.nare.specification.LeafSpecification;
 @RuleDocumentation(SjekkOmPeriodenKreverSammenhengendeUttak.ID)
 public class SjekkOmPeriodenKreverSammenhengendeUttak extends LeafSpecification<FastsettePeriodeGrunnlag> {
     public static final String ID = "SHU.1";
-    public static final String BESKRIVELSE = "Krever perioden krever sammenhengende uttak?";
+    public static final String BESKRIVELSE = "Krever perioden sammenhengende uttak?";
 
     public SjekkOmPeriodenKreverSammenhengendeUttak() {
         super(ID);
