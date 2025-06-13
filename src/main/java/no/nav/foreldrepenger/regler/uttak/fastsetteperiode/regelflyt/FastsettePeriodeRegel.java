@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAk
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAlleBarnErDøde;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBerørtBehandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmDetErAdopsjonAvStebarn;
@@ -34,6 +35,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPe
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSamtidigUttak;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøknadGjelderTerminEllerFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGradering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøktGraderingHundreProsentEllerMer;
@@ -68,13 +70,14 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static final Ruleset<FastsettePeriodeGrunnlag> RS = new Ruleset<>();
     private static final Specification<FastsettePeriodeGrunnlag> MSP_DELREGEL = new ManglendeSøktPeriodeDelregel().getSpecification();
     private static final Specification<FastsettePeriodeGrunnlag> REGEL = lagRegelSpec();
+    public static final String ELLER = " eller";
 
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeMorBruddSøknadsfrist;
     private static Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
     private static Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
     private static Specification<FastsettePeriodeGrunnlag> fomSamtykke;
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
-    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode;
     private static Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense;
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErUtsettelse;
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmSøktGradering;
@@ -208,23 +211,34 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAdopsjonPeriodeErForTidlig() {
         return RS.hvisRegel(SjekkOmPeriodenStarterFørFamiliehendelse.ID, SjekkOmPeriodenStarterFørFamiliehendelse.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenStarterFørFamiliehendelse(), IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
-            .ellers(sjekkOmTomPåKontoVedSøktPeriode());
+            .ellers(sjekkOmTidsperiodeMorBruddSøknadsfrist());
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodeErForTidlig() {
         return RS.hvisRegel(SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.ID, SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin.BESKRIVELSE)
             .hvis(new SjekkOmPeriodenStarterFørLovligUttakFørFødselTermin(),
                 IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false))
-            .ellers(sjekkOmTomPåKontoVedSøktPeriode());
+            .ellers(sjekkOmTidsperiodeMorBruddSøknadsfrist());
     }
 
-    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTomPåKontoVedSøktPeriode() {
-        if (sjekkOmTomPåKontoVedSøktPeriode == null) {
-            sjekkOmTomPåKontoVedSøktPeriode = RS.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeMorBruddSøknadsfrist() {
+        if (sjekkOmTidsperiodeMorBruddSøknadsfrist == null) {
+            var sjekkOmTomForAlleSineKontoer = RS.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
                 .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1081", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
                 .ellers(IkkeOppfylt.opprett("UT1082", IkkeOppfyltÅrsak.SØKNADSFRIST, true, false));
+            var avslagUtenTrekkdagerUT1080 = IkkeOppfylt.opprett("UT1080", IkkeOppfyltÅrsak.SØKNADSFRIST, false, false);
+            var sjekkOmKreverSammenhengendeUttak = RS.hvisRegel(SjekkOmPeriodenKreverSammenhengendeUttak.ID + ELLER + SjekkOmBareFarHarRett.ID,
+                    SjekkOmPeriodenKreverSammenhengendeUttak.BESKRIVELSE + ELLER + SjekkOmBareFarHarRett.BESKRIVELSE)
+                .hvis(new SjekkOmPeriodenKreverSammenhengendeUttak().eller(new SjekkOmBareFarHarRett()), sjekkOmTomForAlleSineKontoer)
+                .ellers(avslagUtenTrekkdagerUT1080);
+            var sjekkOmMor = RS.hvisRegel(SjekkOmSøkerErMor.ID, SjekkOmSøkerErMor.BESKRIVELSE)
+                .hvis(new SjekkOmSøkerErMor(), sjekkOmTomForAlleSineKontoer)
+                .ellers(avslagUtenTrekkdagerUT1080);
+            sjekkOmTidsperiodeMorBruddSøknadsfrist = RS.hvisRegel(SjekkOmTidsperiodeForbeholdtMor.ID, SjekkOmTidsperiodeForbeholdtMor.BESKRIVELSE)
+                .hvis(new SjekkOmTidsperiodeForbeholdtMor(), sjekkOmMor)
+                .ellers(sjekkOmKreverSammenhengendeUttak);
         }
-        return sjekkOmTomPåKontoVedSøktPeriode;
+        return sjekkOmTidsperiodeMorBruddSøknadsfrist;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense() {
