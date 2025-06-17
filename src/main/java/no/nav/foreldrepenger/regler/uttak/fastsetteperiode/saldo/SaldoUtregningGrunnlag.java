@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 public class SaldoUtregningGrunnlag {
     private final List<FastsattUttakPeriode> søkersFastsattePerioder;
     private final LocalDate utregningsdato;
-    private final boolean berørtBehandling;
+    private final boolean tapendeBehandling;
     private final List<AnnenpartUttakPeriode> annenpartsPerioder;
     private final List<LukketPeriode> søktePerioder;
     private final Map<Stønadskontotype, Trekkdager> stønadskonti = new EnumMap<>(Stønadskontotype.class);
@@ -35,7 +35,7 @@ public class SaldoUtregningGrunnlag {
 
     private SaldoUtregningGrunnlag(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                    LocalDate utregningsdato,
-                                   boolean berørtBehandling,
+                                   boolean tapendeBehandling,
                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
                                    List<LukketPeriode> søktePerioder,
                                    Kontoer kontoer,
@@ -45,7 +45,7 @@ public class SaldoUtregningGrunnlag {
                                    LocalDate sammenhengendeUttakTomDato) {
         this.søkersFastsattePerioder = søkersFastsattePerioder;
         this.utregningsdato = utregningsdato;
-        this.berørtBehandling = berørtBehandling;
+        this.tapendeBehandling = tapendeBehandling;
         this.annenpartsPerioder = annenpartsPerioder;
         this.søktePerioder = søktePerioder;
         this.aktiviteter = aktiviteter;
@@ -58,7 +58,7 @@ public class SaldoUtregningGrunnlag {
 
     // Brukes av fpsak til utregning av alt
     public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                   boolean berørtBehandling,
+                                                                   boolean tapendeBehandling,
                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                    Kontoer kontoer,
                                                                    LocalDateTime sisteSøknadMottattTidspunktSøker,
@@ -68,7 +68,7 @@ public class SaldoUtregningGrunnlag {
             .flatMap(p -> p.getAktiviteter().stream())
             .map(a -> a.getAktivitetIdentifikator())
             .collect(Collectors.toSet());
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, berørtBehandling, annenpartsPerioder, List.of(), kontoer,
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, tapendeBehandling, annenpartsPerioder, List.of(), kontoer,
             aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, sammenhengendeUttakTomDato);
     }
 
@@ -85,12 +85,12 @@ public class SaldoUtregningGrunnlag {
             grunnlag.getBehandling().getSammenhengendeUttakTomDato());
     }
 
-    // Brukes som input til fastsettingsregler for berørte behandlinger
-    public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakBerørtBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
-                                                                                    RegelGrunnlag grunnlag,
-                                                                                    LocalDate utregningsdato,
-                                                                                    List<LukketPeriode> søktePerioder) {
+    // Brukes som input til fastsettingsregler for berørte/eøs behandlinger
+    public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakTapendeBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
+                                                                                     List<AnnenpartUttakPeriode> annenpartsPerioder,
+                                                                                     RegelGrunnlag grunnlag,
+                                                                                     LocalDate utregningsdato,
+                                                                                     List<LukketPeriode> søktePerioder) {
         return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, true, annenpartsPerioder, søktePerioder, grunnlag.getKontoer(),
             grunnlag.getArbeid().getAktiviteter(), null, null, grunnlag.getBehandling().getSammenhengendeUttakTomDato());
     }
@@ -103,8 +103,8 @@ public class SaldoUtregningGrunnlag {
         return utregningsdato;
     }
 
-    boolean isBerørtBehandling() {
-        return berørtBehandling;
+    boolean isTapendeBehandling() {
+        return tapendeBehandling;
     }
 
     List<AnnenpartUttakPeriode> getAnnenpartsPerioder() {

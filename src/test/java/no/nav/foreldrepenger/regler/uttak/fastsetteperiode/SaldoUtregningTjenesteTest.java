@@ -186,7 +186,7 @@ class SaldoUtregningTjenesteTest {
 
     private SaldoUtregningGrunnlag lagGrunnlag(OppgittPeriode aktuellPeriode, RegelGrunnlag grunnlag) {
         if (grunnlag.getBehandling().isBerørtBehandling()) {
-            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(List.of(), grunnlag.getAnnenPart().getUttaksperioder(), grunnlag,
+            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(List.of(), grunnlag.getAnnenPart().getUttaksperioder(), grunnlag,
                 aktuellPeriode.getFom(), new ArrayList<>(grunnlag.getSøknad().getOppgittePerioder()));
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(List.of(), grunnlag.getAnnenPart().getUttaksperioder(), grunnlag,
