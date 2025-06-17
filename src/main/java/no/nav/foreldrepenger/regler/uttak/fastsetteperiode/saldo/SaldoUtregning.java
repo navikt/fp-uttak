@@ -12,7 +12,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -46,33 +45,19 @@ public class SaldoUtregning {
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final SaldoUtregningFlerbarnsdager saldoUtregningFlerbarnsdager;
 
-    SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer, // NOSONAR
-                   List<FastsattUttakPeriode> søkersPerioder, List<FastsattUttakPeriode> annenpartsPerioder, SaldoUtregningGrunnlag grunnlag) {
-        this.søkersPerioder = søkersPerioder;
-        this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
-        this.søkersAktiviteter = grunnlag.getAktiviteter();
-        this.sisteSøknadMottattTidspunktSøker = grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null);
-        this.sisteSøknadMottattTidspunktAnnenpart = grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null);
-        this.berørtBehandling = grunnlag.isBerørtBehandling();
-        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder, søkersAktiviteter,
-            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN), grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT));
-        this.stønadskonti.putAll(stønadskontoer);
-        Arrays.stream(Spesialkontotype.values()).forEach(k -> this.spesialkonti.put(k, grunnlag.getSpesialkontoTrekkdager(k)));
-    }
-
-
-    SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
-                   // NOSONAR
-                   List<FastsattUttakPeriode> søkersPerioder,
-                   List<FastsattUttakPeriode> annenpartsPerioder,
-                   boolean berørtBehandling,
-                   Set<AktivitetIdentifikator> søkersAktiviteter,
-                   LocalDateTime sisteSøknadMottattTidspunktSøker,
-                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                   Trekkdager minsterettDager,
-                   Trekkdager utenAktivitetskravDager,
-                   Trekkdager flerbarnsdager,
-                   Trekkdager farUttakRundtFødselDager) {
+    // NOSONAR
+    protected SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
+                             List<FastsattUttakPeriode> søkersPerioder,
+                             List<FastsattUttakPeriode> annenpartsPerioder,
+                             boolean berørtBehandling,
+                             Set<AktivitetIdentifikator> søkersAktiviteter,
+                             LocalDateTime sisteSøknadMottattTidspunktSøker,
+                             LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
+                             Trekkdager minsterettDager,
+                             Trekkdager utenAktivitetskravDager,
+                             Trekkdager flerbarnsdager,
+                             Trekkdager farUttakRundtFødselDager,
+                             Trekkdager tetteFødslerDager) {
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
@@ -84,19 +69,22 @@ public class SaldoUtregning {
         this.stønadskonti.putAll(stønadskontoer);
         this.spesialkonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
         this.spesialkonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
+        this.spesialkonti.put(Spesialkontotype.FLERBARN, flerbarnsdager);
         this.spesialkonti.put(Spesialkontotype.FAR_RUNDT_FØDSEL, farUttakRundtFødselDager);
-        this.spesialkonti.put(Spesialkontotype.TETTE_FØDSLER, Trekkdager.ZERO);
+        this.spesialkonti.put(Spesialkontotype.TETTE_FØDSLER, tetteFødslerDager);
     }
 
-    SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
-                   List<FastsattUttakPeriode> søkersPerioder,
-                   List<FastsattUttakPeriode> annenpartsPerioder,
-                   boolean berørtBehandling,
-                   Set<AktivitetIdentifikator> søkersAktiviteter,
-                   LocalDateTime sisteSøknadMottattTidspunktSøker,
-                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
-        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter, sisteSøknadMottattTidspunktSøker,
-            sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
+    protected SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
+                             List<FastsattUttakPeriode> søkersPerioder,
+                             List<FastsattUttakPeriode> annenpartsPerioder,
+                             SaldoUtregningGrunnlag grunnlag) {
+        this(stønadskontoer, søkersPerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(), grunnlag.getAktiviteter(),
+            grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null), grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT),
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.UTEN_AKTIVITETSKRAV),
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN),
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FAR_RUNDT_FØDSEL),
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.TETTE_FØDSLER));
     }
 
     /**
