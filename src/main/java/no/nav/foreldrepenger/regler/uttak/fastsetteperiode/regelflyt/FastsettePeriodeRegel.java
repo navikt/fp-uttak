@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmMedlemskapssvilkåretErOppfylt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpphørsdatoTrefferPerioden;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOpptjeningsvilkåretErOppfylt;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmOverlapperMedAnnenPartEøs;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFedrekvote;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFellesperiode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErForeldrepengerFørFødsel;
@@ -76,6 +77,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static Specification<FastsettePeriodeGrunnlag> fomUttaksperiodenEtterSøkersDødsdato;
     private static Specification<FastsettePeriodeGrunnlag> fomOpphørsdatoTrefferPerioden;
     private static Specification<FastsettePeriodeGrunnlag> fomSamtykke;
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmOverlapperMedAnnenPartEøs;
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeErInnvilgetUtsettelse;
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartsPeriodeHarUtbetalingsgrad;
     private static Specification<FastsettePeriodeGrunnlag> sjekkPeriodeInnenforMaksgrense;
@@ -297,12 +299,12 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmPleiepenger() {
         return RS.hvisRegel(SjekkOmPleiepenger.ID, SjekkOmPleiepenger.BESKRIVELSE)
             .hvis(new SjekkOmPleiepenger(), sjekkOmBarnetsInnleggelse())
-            .ellers(sjekkOmSamtykke());
+            .ellers(sjekkOmOverlappMedAnnenPartEøs());
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetsInnleggelse() {
         return RS.hvisRegel(SjekkOmUtsettelsePgaBarnetsInnleggelse.ID, SjekkOmUtsettelsePgaBarnetsInnleggelse.BESKRIVELSE)
-            .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), sjekkOmSamtykke())
+            .hvis(new SjekkOmUtsettelsePgaBarnetsInnleggelse(), sjekkOmOverlappMedAnnenPartEøs())
             .ellers(sjekkOmBarnInnlagt());
     }
 
@@ -311,6 +313,17 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
             .hvis(new SjekkOmBarnInnlagt(),
                 Manuellbehandling.opprett("UT1320", null, Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_MED_INNLEGGELSE, false, false))
             .ellers(Manuellbehandling.opprett("UT1321", null, Manuellbehandlingårsak.OVERLAPPENDE_PLEIEPENGER_UTEN_INNLEGGELSE, false, false));
+    }
+
+    private static Specification<FastsettePeriodeGrunnlag> sjekkOmOverlappMedAnnenPartEøs() {
+        if (sjekkOmOverlapperMedAnnenPartEøs == null) {
+            sjekkOmOverlapperMedAnnenPartEøs = RS.hvisRegel(SjekkOmOverlapperMedAnnenPartEøs.ID, SjekkOmOverlapperMedAnnenPartEøs.BESKRIVELSE)
+                .hvis(new SjekkOmOverlapperMedAnnenPartEøs(),
+                    Manuellbehandling.opprett("TODO", IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK,
+                        false, false))
+                .ellers(sjekkOmSamtykke());
+        }
+        return sjekkOmOverlapperMedAnnenPartEøs;
     }
 
     private static Specification<FastsettePeriodeGrunnlag> sjekkOmSamtykke() {

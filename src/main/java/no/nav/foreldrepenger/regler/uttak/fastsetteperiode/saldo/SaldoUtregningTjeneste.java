@@ -23,7 +23,7 @@ public final class SaldoUtregningTjeneste {
     }
 
     public static SaldoUtregning lagUtregning(SaldoUtregningGrunnlag grunnlag) {
-        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isBerørtBehandling(), grunnlag.getUtregningsdato(),
+        var annenpartsPerioder = finnRelevanteAnnenpartsPerioder(grunnlag.isTapendeBehandling(), grunnlag.getUtregningsdato(),
             grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
 
         var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder()).stream()

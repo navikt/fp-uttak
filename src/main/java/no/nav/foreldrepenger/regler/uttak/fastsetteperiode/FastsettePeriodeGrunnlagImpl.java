@@ -213,4 +213,9 @@ public class FastsettePeriodeGrunnlagImpl implements FastsettePeriodeGrunnlag {
     public Optional<AktivitetskravGrunnlag> getAktivitetskravGrunnlag() {
         return Optional.ofNullable(regelGrunnlag.getAnnenPart()).flatMap(AnnenPart::getAktivitetskravGrunnlag);
     }
+
+    @Override
+    public boolean annenPartEøs() {
+        return Optional.ofNullable(regelGrunnlag.getAnnenPart()).map(AnnenPart::isEøs).orElse(false);
+    }
 }
