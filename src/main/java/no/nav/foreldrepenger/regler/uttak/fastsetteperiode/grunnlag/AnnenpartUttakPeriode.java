@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
+
 public class AnnenpartUttakPeriode extends LukketPeriode {
 
     private final Set<AnnenpartUttakPeriodeAktivitet> aktiviteter = new HashSet<>();
@@ -115,6 +117,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
         public static Builder uttak(LocalDate fom, LocalDate tom) {
             return new Builder(fom, tom);
+        }
+
+        public static Builder eøs(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype, Trekkdager trekkdager) {
+            return new Builder(fom, tom).samtidigUttak(false) //EØS-perioder skal alltid "vinne" over søkers perioder
+                .innvilget(true)
+                .senestMottattDato(LocalDate.MAX)
+                .uttakPeriodeAktivitet(
+                    new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.annenAktivitet(), stønadskontotype, trekkdager, Utbetalingsgrad.FULL));
         }
 
         private Builder(LocalDate fom, LocalDate tom) {

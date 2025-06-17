@@ -180,4 +180,6 @@ public interface FastsettePeriodeGrunnlag {
     LocalDate getSammenhengendeUttakTomDato();
 
     Optional<AktivitetskravGrunnlag> getAktivitetskravGrunnlag();
+
+    boolean annenPartEøs();
 }
