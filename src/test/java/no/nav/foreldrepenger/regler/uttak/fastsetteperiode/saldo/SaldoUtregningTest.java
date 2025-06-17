@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.LukketPeriod
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppholdÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Orgnummer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 
 class SaldoUtregningTest {
@@ -1370,8 +1371,11 @@ class SaldoUtregningTest {
                                           Trekkdager farUttakRundtFødselDager) {
         var konti = new EnumMap<Stønadskontotype, Trekkdager>(Stønadskontotype.class);
         stønadskontoer.forEach((key, value) -> konti.put(key, new Trekkdager(value)));
-        return new SaldoUtregning(konti, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER), null, null, minsterettDager,
-            utenAktivitetskravDager, Trekkdager.ZERO, farUttakRundtFødselDager, Trekkdager.ZERO);
+        var spesialKonti = new EnumMap<Spesialkontotype, Trekkdager>(Spesialkontotype.class);
+        spesialKonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
+        spesialKonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
+        spesialKonti.put(Spesialkontotype.FAR_RUNDT_FØDSEL, farUttakRundtFødselDager);
+        return new SaldoUtregning(konti, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER), null, null, spesialKonti);
     }
 
     private static SaldoUtregning saldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
@@ -1382,6 +1386,6 @@ class SaldoUtregningTest {
                                                  LocalDateTime sisteSøknadMottattTidspunktSøker,
                                                  LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
         return new SaldoUtregning(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter, sisteSøknadMottattTidspunktSøker,
-            sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
+            sisteSøknadMottattTidspunktAnnenpart, new EnumMap<>(Spesialkontotype.class));
     }
 }
