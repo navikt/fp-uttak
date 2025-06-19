@@ -319,7 +319,7 @@ public class FastsettePeriodeRegel implements RuleService<FastsettePeriodeGrunnl
         if (sjekkOmOverlapperMedAnnenPartEøs == null) {
             sjekkOmOverlapperMedAnnenPartEøs = RS.hvisRegel(SjekkOmOverlapperMedAnnenPartEøs.ID, SjekkOmOverlapperMedAnnenPartEøs.BESKRIVELSE)
                 .hvis(new SjekkOmOverlapperMedAnnenPartEøs(),
-                    Manuellbehandling.opprett("TODO", IkkeOppfyltÅrsak.OPPHOLD_IKKE_SAMTIDIG_UTTAK, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK,
+                    Manuellbehandling.opprett("UT1332", IkkeOppfyltÅrsak.ANNEN_FORELDER_UTTAK_EØS, Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK,
                         false, false))
                 .ellers(sjekkOmSamtykke());
         }
