@@ -120,9 +120,9 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         }
 
         public static Builder eøs(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype, Trekkdager trekkdager) {
-            return new Builder(fom, tom).samtidigUttak(false) //EØS-perioder skal alltid "vinne" over søkers perioder
+            return new Builder(fom, tom)
+                .samtidigUttak(false)
                 .innvilget(true)
-                .senestMottattDato(LocalDate.MAX)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.annenAktivitet(), stønadskontotype, trekkdager, Utbetalingsgrad.FULL));
         }
