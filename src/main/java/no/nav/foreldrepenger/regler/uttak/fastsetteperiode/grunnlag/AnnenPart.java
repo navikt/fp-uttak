@@ -11,6 +11,7 @@ public final class AnnenPart {
     private List<AnnenpartUttakPeriode> uttaksperioder = new ArrayList<>();
     private LocalDateTime sisteSøknadMottattTidspunkt;
     private AktivitetskravGrunnlag aktivitetskravGrunnlag;
+    private boolean eøs;
 
 
     private AnnenPart() {
@@ -35,6 +36,10 @@ public final class AnnenPart {
         return Optional.ofNullable(aktivitetskravGrunnlag);
     }
 
+    public boolean isEøs() {
+        return eøs;
+    }
+
     public static class Builder {
 
         private final AnnenPart kladd = new AnnenPart();
@@ -56,6 +61,11 @@ public final class AnnenPart {
 
         public Builder aktivitetskravGrunnlag(AktivitetskravGrunnlag aktivitetskravGrunnlag) {
             kladd.aktivitetskravGrunnlag = aktivitetskravGrunnlag;
+            return this;
+        }
+
+        public Builder eøs(boolean eøs) {
+            kladd.eøs = eøs;
             return this;
         }
 

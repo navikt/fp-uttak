@@ -70,7 +70,7 @@ public class SaldoUtregning {
                              List<FastsattUttakPeriode> søkersPerioder,
                              List<FastsattUttakPeriode> annenpartsPerioder,
                              SaldoUtregningGrunnlag grunnlag) {
-        this(stønadskonti, søkersPerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(), grunnlag.getAktiviteter(),
+        this(stønadskonti, søkersPerioder, annenpartsPerioder, grunnlag.isTapendeBehandling(), grunnlag.getAktiviteter(),
             grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null), grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
             grunnlag.getSpesialkonti());
     }
