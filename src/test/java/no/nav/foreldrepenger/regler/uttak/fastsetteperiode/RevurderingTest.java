@@ -40,7 +40,7 @@ class RevurderingTest {
     private static final LocalDate FAMILIEHENDELSE_DATO = LocalDate.of(2018, 9, 9);
 
     @Test
-    void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilAvslagPgaSamtykke() {
+    void revurderingSøknadUtenSamtykkeOgOverlappendePerioderSkalFørTilManuellPgaSamtykke() {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(samtykke(false))
             .annenPart(annenPart(lagPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12),
@@ -50,7 +50,7 @@ class RevurderingTest {
         var regelresultat = kjørRegel(oppgittPeriode, grunnlag);
 
         assertThat(regelresultat.getAvklaringÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_SAMTYKKE);
-        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.AVSLÅTT);
+        assertThat(regelresultat.getUtfallType()).isEqualTo(UtfallType.MANUELL_BEHANDLING);
         assertThat(regelresultat.oppfylt()).isFalse();
         assertThat(regelresultat.skalUtbetale()).isFalse();
         assertThat(regelresultat.trekkDagerFraSaldo()).isFalse();
