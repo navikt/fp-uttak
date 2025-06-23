@@ -116,7 +116,7 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private boolean harTrekkdager(AnnenpartUttakPeriode ap) {
-        return ap.getAktiviteter().stream().anyMatch(a -> a.trekkdager().merEnn0());
+        return ap.getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
     }
 
     private List<FastsettePeriodeResultat> sortByFom(List<FastsettePeriodeResultat> resultatPerioder) {

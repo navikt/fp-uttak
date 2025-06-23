@@ -69,11 +69,11 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     }
 
     public boolean harTrekkdager() {
-        return getAktiviteter().stream().anyMatch(a -> a.trekkdager().merEnn0());
+        return getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
     }
 
     public boolean harUtbetaling() {
-        return getAktiviteter().stream().anyMatch(a -> a.utbetalingsgrad().harUtbetaling());
+        return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().harUtbetaling());
     }
 
     public Optional<LocalDate> getSenestMottattDato() {

@@ -123,8 +123,8 @@ public final class SaldoUtregningTjeneste {
     private static List<FastsattUttakPeriodeAktivitet> mapAktiviteter(AnnenpartUttakPeriode annenpartsPeriode) {
         return annenpartsPeriode.getAktiviteter()
             .stream()
-            .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.trekkdager(), aktivitet.stønadskontotype(),
-                aktivitet.aktivitetIdentifikator()))
+            .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), aktivitet.getStønadskontotype(),
+                aktivitet.getAktivitetIdentifikator()))
             .toList();
     }
 
@@ -137,15 +137,15 @@ public final class SaldoUtregningTjeneste {
         List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktivitetMedNyttTrekkDager = new ArrayList<>();
 
         for (var annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
-            var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.trekkdager();
+            var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
             if (virkedagerInnenfor > 0 && opprinneligeTrekkdager.merEnn0()) {
                 var vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
                     .multiply(BigDecimal.valueOf(virkedagerInnenfor))
                     .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
                 annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(
-                    new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.aktivitetIdentifikator(),
-                        annenpartUttakPeriodeAktivitet.stønadskontotype(), new Trekkdager(vektetTrekkdager),
-                        annenpartUttakPeriodeAktivitet.utbetalingsgrad()));
+                    new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
+                        annenpartUttakPeriodeAktivitet.getStønadskontotype(), new Trekkdager(vektetTrekkdager),
+                        annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
             }
         }
 

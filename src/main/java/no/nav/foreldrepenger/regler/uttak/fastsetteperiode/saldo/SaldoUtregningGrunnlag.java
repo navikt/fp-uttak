@@ -131,7 +131,7 @@ public class SaldoUtregningGrunnlag {
         return stønadskonti;
     }
 
-    public Map<Spesialkontotype, Trekkdager> getSpesialkonti() {
-        return spesialkonti;
+    public Trekkdager getSpesialkontoTrekkdager(Spesialkontotype delkontotype) {
+        return Optional.ofNullable(spesialkonti.get(delkontotype)).orElse(Trekkdager.ZERO);
     }
 }

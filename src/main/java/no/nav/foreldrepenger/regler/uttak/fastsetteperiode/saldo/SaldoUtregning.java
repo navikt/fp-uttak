@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -35,8 +36,8 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.FarUttakRundtF
 
 public class SaldoUtregning {
 
-    private final Map<Stønadskontotype, Trekkdager> stønadskonti;
-    private final Map<Spesialkontotype, Trekkdager> spesialkonti;
+    private final Map<Stønadskontotype, Trekkdager> stønadskonti = new EnumMap<>(Stønadskontotype.class);
+    private final Map<Spesialkontotype, Trekkdager> spesialkonti = new EnumMap<>(Spesialkontotype.class);
     private final List<FastsattUttakPeriode> søkersPerioder;
     private final Set<AktivitetIdentifikator> søkersAktiviteter;
     private final List<FastsattUttakPeriode> annenpartsPerioder;
@@ -45,15 +46,33 @@ public class SaldoUtregning {
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final SaldoUtregningFlerbarnsdager saldoUtregningFlerbarnsdager;
 
-    // NOSONAR
-    protected SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskonti,
-                             List<FastsattUttakPeriode> søkersPerioder,
-                             List<FastsattUttakPeriode> annenpartsPerioder,
-                             boolean berørtBehandling,
-                             Set<AktivitetIdentifikator> søkersAktiviteter,
-                             LocalDateTime sisteSøknadMottattTidspunktSøker,
-                             LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                             Map<Spesialkontotype, Trekkdager> spesialkonti) {
+    SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer, // NOSONAR
+                   List<FastsattUttakPeriode> søkersPerioder, List<FastsattUttakPeriode> annenpartsPerioder, SaldoUtregningGrunnlag grunnlag) {
+        this.søkersPerioder = søkersPerioder;
+        this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
+        this.søkersAktiviteter = grunnlag.getAktiviteter();
+        this.sisteSøknadMottattTidspunktSøker = grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null);
+        this.sisteSøknadMottattTidspunktAnnenpart = grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null);
+        this.berørtBehandling = grunnlag.isBerørtBehandling();
+        this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder, søkersAktiviteter,
+            grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.FLERBARN), grunnlag.getSpesialkontoTrekkdager(Spesialkontotype.BARE_FAR_MINSTERETT));
+        this.stønadskonti.putAll(stønadskontoer);
+        Arrays.stream(Spesialkontotype.values()).forEach(k -> this.spesialkonti.put(k, grunnlag.getSpesialkontoTrekkdager(k)));
+    }
+
+
+    SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
+                   // NOSONAR
+                   List<FastsattUttakPeriode> søkersPerioder,
+                   List<FastsattUttakPeriode> annenpartsPerioder,
+                   boolean berørtBehandling,
+                   Set<AktivitetIdentifikator> søkersAktiviteter,
+                   LocalDateTime sisteSøknadMottattTidspunktSøker,
+                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
+                   Trekkdager minsterettDager,
+                   Trekkdager utenAktivitetskravDager,
+                   Trekkdager flerbarnsdager,
+                   Trekkdager farUttakRundtFødselDager) {
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
@@ -61,18 +80,23 @@ public class SaldoUtregning {
         this.annenpartsPerioder = fjernOppholdsperioderEtterSisteUttaksdato(søkersPerioder, annenpartsPerioder);
         this.berørtBehandling = berørtBehandling;
         this.saldoUtregningFlerbarnsdager = new SaldoUtregningFlerbarnsdager(søkersPerioder, this.annenpartsPerioder, søkersAktiviteter,
-            spesialkonti.getOrDefault(Spesialkontotype.FLERBARN, Trekkdager.ZERO), spesialkonti.getOrDefault(Spesialkontotype.BARE_FAR_MINSTERETT, Trekkdager.ZERO));
-        this.stønadskonti = new EnumMap<>(stønadskonti);
-        this.spesialkonti = new EnumMap<>(spesialkonti);
+            flerbarnsdager, minsterettDager);
+        this.stønadskonti.putAll(stønadskontoer);
+        this.spesialkonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
+        this.spesialkonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
+        this.spesialkonti.put(Spesialkontotype.FAR_RUNDT_FØDSEL, farUttakRundtFødselDager);
+        this.spesialkonti.put(Spesialkontotype.TETTE_FØDSLER, Trekkdager.ZERO);
     }
 
-    protected SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskonti,
-                             List<FastsattUttakPeriode> søkersPerioder,
-                             List<FastsattUttakPeriode> annenpartsPerioder,
-                             SaldoUtregningGrunnlag grunnlag) {
-        this(stønadskonti, søkersPerioder, annenpartsPerioder, grunnlag.isBerørtBehandling(), grunnlag.getAktiviteter(),
-            grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null), grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
-            grunnlag.getSpesialkonti());
+    SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
+                   List<FastsattUttakPeriode> søkersPerioder,
+                   List<FastsattUttakPeriode> annenpartsPerioder,
+                   boolean berørtBehandling,
+                   Set<AktivitetIdentifikator> søkersAktiviteter,
+                   LocalDateTime sisteSøknadMottattTidspunktSøker,
+                   LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
+        this(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter, sisteSøknadMottattTidspunktSøker,
+            sisteSøknadMottattTidspunktAnnenpart, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO, Trekkdager.ZERO);
     }
 
     /**
@@ -168,7 +192,7 @@ public class SaldoUtregning {
     }
 
     public Trekkdager getFarUttakRundtFødselDager() {
-        return spesialkonti.getOrDefault(Spesialkontotype.FAR_RUNDT_FØDSEL, Trekkdager.ZERO);
+        return spesialkonti.get(Spesialkontotype.FAR_RUNDT_FØDSEL);
     }
 
     public Trekkdager restSaldoFarUttakRundtFødsel(LukketPeriode farUttakRundtFødselPeriode) {
@@ -301,15 +325,15 @@ public class SaldoUtregning {
     }
 
     public Trekkdager getMaxDagerUtenAktivitetskrav() {
-        return spesialkonti.getOrDefault(Spesialkontotype.UTEN_AKTIVITETSKRAV, Trekkdager.ZERO);
+        return spesialkonti.get(Spesialkontotype.UTEN_AKTIVITETSKRAV);
     }
 
     public Trekkdager getMaxDagerMinsterett() {
-        return spesialkonti.getOrDefault(Spesialkontotype.BARE_FAR_MINSTERETT, Trekkdager.ZERO);
+        return spesialkonti.get(Spesialkontotype.BARE_FAR_MINSTERETT);
     }
 
     public Trekkdager getMaxDagerEtterNesteStønadsperiode() {
-        return spesialkonti.getOrDefault(Spesialkontotype.TETTE_FØDSLER, Trekkdager.ZERO);
+        return spesialkonti.get(Spesialkontotype.TETTE_FØDSLER);
     }
 
     public Trekkdager getMaxDagerFlerbarnsdager() {
@@ -328,7 +352,7 @@ public class SaldoUtregning {
                 if (periode.isOpphold() && innvilgetMedTrekkdager(overlappendePeriode)) {
                     sum = sum.add(trekkdagerForOppholdsperiode(stønadskonto, periode));
                 } else if (!tapendePeriode(periode, overlappendePeriode) && innvilgetMedTrekkdager(periode)) {
-                    sum = sum.add(frigitteDagerVanligeStønadskonti(stønadskonto, periode, overlappendePeriode));
+                    sum = sum.add(frigitteDagerVanligeStønadskontoer(stønadskonto, periode, overlappendePeriode));
                 } else if (tapendePeriode(periode, overlappendePeriode) && overlappendePeriode.isOpphold()) {
                     var delFom = overlappendePeriode.getFom().isBefore(periode.getFom()) ? periode.getFom() : overlappendePeriode.getFom();
                     var delTom = overlappendePeriode.getTom().isBefore(periode.getTom()) ? overlappendePeriode.getTom() : periode.getTom();
@@ -354,9 +378,9 @@ public class SaldoUtregning {
         return periodeMottattDato.get().isBefore(overlappendePeriodeMottattDato.get());
     }
 
-    private Trekkdager frigitteDagerVanligeStønadskonti(Stønadskontotype stønadskonto,
-                                                        FastsattUttakPeriode periode,
-                                                        FastsattUttakPeriode overlappende) {
+    private Trekkdager frigitteDagerVanligeStønadskontoer(Stønadskontotype stønadskonto,
+                                                          FastsattUttakPeriode periode,
+                                                          FastsattUttakPeriode overlappende) {
         if (overlappende.isSamtidigUttak()) {
             return Trekkdager.ZERO;
         }

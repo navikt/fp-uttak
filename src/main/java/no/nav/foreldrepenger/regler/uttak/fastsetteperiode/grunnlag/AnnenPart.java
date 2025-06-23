@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class AnnenPart {
 
@@ -18,6 +20,13 @@ public final class AnnenPart {
 
     public List<AnnenpartUttakPeriode> getUttaksperioder() {
         return uttaksperioder;
+    }
+
+    public Set<AktivitetIdentifikator> getAktiviteter() {
+        return uttaksperioder.stream()
+            .flatMap(periode -> periode.getAktiviteter().stream())
+            .map(AnnenpartUttakPeriodeAktivitet::getAktivitetIdentifikator)
+            .collect(Collectors.toSet());
     }
 
     public Optional<LocalDate> sisteUttaksdag() {
