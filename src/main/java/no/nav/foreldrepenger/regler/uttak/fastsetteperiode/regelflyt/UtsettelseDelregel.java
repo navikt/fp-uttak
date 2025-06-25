@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselErFørUke33;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFørTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerInnlagt;
@@ -136,13 +137,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmPeriodenErFørTermin() {
         return rs.hvisRegel(SjekkOmPeriodeErFørTermin.ID, SjekkOmPeriodeErFørTermin.BESKRIVELSE)
-            .hvis(new SjekkOmPeriodeErFørTermin(), sjekkOmBarnetVarInnlagtPrematur())
+            .hvis(new SjekkOmPeriodeErFørTermin(), sjekkOmSøkerErInnvilgetPleiepenger())
             .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 
-    private Specification<FastsettePeriodeGrunnlag> sjekkOmBarnetVarInnlagtPrematur() {
-        return rs.hvisRegel(SjekkOmBarnInnlagt.ID, SjekkOmBarnInnlagt.BESKRIVELSE)
-            .hvis(new SjekkOmBarnInnlagt(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false))
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErInnvilgetPleiepenger() {
+        return rs.hvisRegel(SjekkOmPleiepenger.ID, SjekkOmPleiepenger.BESKRIVELSE)
+            .hvis(new SjekkOmPleiepenger(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false))
             .ellers(sjekkOmTidsperiodeForbeholdtMor());
     }
 }
