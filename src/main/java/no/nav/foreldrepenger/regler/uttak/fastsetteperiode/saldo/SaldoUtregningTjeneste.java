@@ -123,8 +123,8 @@ public final class SaldoUtregningTjeneste {
     private static List<FastsattUttakPeriodeAktivitet> mapAktiviteter(AnnenpartUttakPeriode annenpartsPeriode) {
         return annenpartsPeriode.getAktiviteter()
             .stream()
-            .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.getTrekkdager(), aktivitet.getStønadskontotype(),
-                aktivitet.getAktivitetIdentifikator()))
+            .map(aktivitet -> new FastsattUttakPeriodeAktivitet(aktivitet.trekkdager(), aktivitet.stønadskontotype(),
+                aktivitet.aktivitetIdentifikator()))
             .toList();
     }
 
@@ -137,7 +137,7 @@ public final class SaldoUtregningTjeneste {
         List<AnnenpartUttakPeriodeAktivitet> annenpartUttakPeriodeAktivitetMedNyttTrekkDager = new ArrayList<>();
 
         for (var annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
-            var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
+            var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.trekkdager();
             final BigDecimal vektetTrekkdager;
             if (virkedagerInnenfor > 0 && opprinneligeTrekkdager.merEnn0()) {
                 vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
@@ -148,9 +148,9 @@ public final class SaldoUtregningTjeneste {
                 vektetTrekkdager = BigDecimal.ZERO;
             }
             annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(
-                new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
-                    annenpartUttakPeriodeAktivitet.getStønadskontotype(), new Trekkdager(vektetTrekkdager),
-                    annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
+                new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.aktivitetIdentifikator(),
+                    annenpartUttakPeriodeAktivitet.stønadskontotype(), new Trekkdager(vektetTrekkdager),
+                    annenpartUttakPeriodeAktivitet.utbetalingsgrad()));
         }
 
         return annenpartUttakPeriodeAktivitetMedNyttTrekkDager;
