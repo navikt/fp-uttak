@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo;
 
 import static java.util.Comparator.comparing;
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.aktivitetIPeriode;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.aktiviteterIPerioder;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.innvilgetMedTrekkdager;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.saldo.SaldoUtregningUtil.overlappendePeriode;
@@ -401,21 +400,30 @@ public class SaldoUtregning {
     }
 
 
-    private Trekkdager minForbruktAvPerioder(Stønadskontotype stønadskonto, List<FastsattUttakPeriode> perioder) {
+    private Trekkdager minForbruktAvPerioder(Stønadskontotype stønadskonto, List<FastsattUttakPeriode> annenpartPerioder) {
         Map<AktivitetIdentifikator, Trekkdager> forbrukte = new HashMap<>();
-        for (var periode : perioder) {
-            for (var annenpartAktivitet : aktiviteterIPerioder(perioder)) {
-                final Trekkdager trekkdager;
-                if (periode.isOpphold()) {
-                    trekkdager = trekkdagerForOppholdsperiode(stønadskonto, periode);
+        var alleAktiviteter = aktiviteterIPerioder(annenpartPerioder);
+        for (var periode : annenpartPerioder) {
+            var aktiviteterIPeriode = periode.getAktiviteter().stream().map(FastsattUttakPeriodeAktivitet::getAktivitetIdentifikator).toList();
+            for (var annenpartAktivitet : aktiviteterIPeriode) {
+                forbrukte.put(annenpartAktivitet, forbrukte.getOrDefault(annenpartAktivitet, Trekkdager.ZERO)
+                    .add(trekkdagerForUttaksperiode(stønadskonto, annenpartAktivitet, periode)));
+            }
+            var aktiviteterIkkeIPeriode = alleAktiviteter.stream().filter(a -> !aktiviteterIPeriode.contains(a)).collect(Collectors.toSet());
+            for (var annenpartAktivitet : aktiviteterIkkeIPeriode) {
+                if (periode.isOpphold()) { //Oppholdsperioder har ingen aktiviteter
+                    forbrukte.put(annenpartAktivitet,
+                        forbrukte.getOrDefault(annenpartAktivitet, Trekkdager.ZERO).add(trekkdagerForOppholdsperiode(stønadskonto, periode)));
                 } else {
-                    if (!aktivitetIPeriode(periode, annenpartAktivitet)) {
-                        trekkdager = minForbrukteDager(periode, stønadskonto);
-                    } else {
-                        trekkdager = trekkdagerForUttaksperiode(stønadskonto, annenpartAktivitet, periode);
-                    }
+                    //Arver fra den aktiviteten som har minst forbrukte trekkdager. Forutsetter at aktiviteter bare kan komme til ila uttaket, ikke falle bort.
+                    var arv = forbrukte.entrySet()
+                        .stream()
+                        .filter(a -> aktiviteterIPeriode.contains(a.getKey()))
+                        .map(Map.Entry::getValue)
+                        .min(Trekkdager::compareTo)
+                        .orElseThrow();
+                    forbrukte.put(annenpartAktivitet, arv);
                 }
-                forbrukte.put(annenpartAktivitet, forbrukte.getOrDefault(annenpartAktivitet, Trekkdager.ZERO).add(trekkdager));
             }
         }
         return forbrukte.values().stream().min(Trekkdager::compareTo).orElse(Trekkdager.ZERO);

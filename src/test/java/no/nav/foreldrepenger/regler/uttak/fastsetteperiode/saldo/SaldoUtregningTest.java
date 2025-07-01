@@ -1370,6 +1370,37 @@ class SaldoUtregningTest {
         assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(3);
     }
 
+    @Test
+    void tilkommet_arbeidsforhold_på_annen_part_skal_arve_0_hvis_alle_eksisterende_aktiviteter_er_tom() {
+        var mødrekvote1 = new FastsattUttakPeriode.Builder().aktiviteter(
+                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(60), MØDREKVOTE, AKTIVITET1_ANNENPART),
+                    new FastsattUttakPeriodeAktivitet(new Trekkdager(75), MØDREKVOTE, AKTIVITET2_ANNENPART)))
+            .periodeResultatType(Perioderesultattype.INNVILGET)
+            .tidsperiode(LocalDate.of(2023, 2, 7), LocalDate.of(2023, 3, 20))
+            .build();
+        var mødrekvote2 = new FastsattUttakPeriode.Builder().aktiviteter(
+                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(15), MØDREKVOTE, AKTIVITET1_ANNENPART),
+                    new FastsattUttakPeriodeAktivitet(new Trekkdager(0), MØDREKVOTE, AKTIVITET2_ANNENPART)))
+            .periodeResultatType(Perioderesultattype.INNVILGET)
+            .tidsperiode(LocalDate.of(2023, 3, 21), LocalDate.of(2023, 3, 30))
+            .build();
+        var tilkommetArbeidsforhold = AktivitetIdentifikator.forFrilans();
+        var fellesperiode = new FastsattUttakPeriode.Builder().aktiviteter(
+                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_ANNENPART),
+                    new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET2_ANNENPART),
+                    new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, tilkommetArbeidsforhold)))
+            .periodeResultatType(Perioderesultattype.INNVILGET)
+            .tidsperiode(LocalDate.of(2023, 7, 3), LocalDate.of(2023, 7, 3))
+            .build();
+
+        var perioderAnnenpart = List.of(mødrekvote1, mødrekvote2, fellesperiode);
+        var saldoUtregning = new SaldoUtregning(Map.ofEntries(stønadskonto(MØDREKVOTE, 75), stønadskonto(FELLESPERIODE, 80)), List.of(),
+            perioderAnnenpart, false, Set.of(AKTIVITET1_SØKER), null, null);
+
+        assertThat(saldoUtregning.saldo(MØDREKVOTE)).isZero();
+        assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(79);
+    }
+
     private SaldoUtregning lagForenkletSaldoUtregning(Map<Stønadskontotype, Integer> stønadskontoer,
                                                       // NOSONAR
                                                       List<FastsattUttakPeriode> søkersPerioder,
