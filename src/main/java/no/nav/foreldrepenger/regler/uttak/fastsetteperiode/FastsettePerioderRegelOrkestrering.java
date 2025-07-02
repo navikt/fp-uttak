@@ -116,7 +116,7 @@ public class FastsettePerioderRegelOrkestrering {
     }
 
     private boolean harTrekkdager(AnnenpartUttakPeriode ap) {
-        return ap.getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
+        return ap.getAktiviteter().stream().anyMatch(a -> a.trekkdager().merEnn0());
     }
 
     private List<FastsettePeriodeResultat> sortByFom(List<FastsettePeriodeResultat> resultatPerioder) {
@@ -192,9 +192,9 @@ public class FastsettePerioderRegelOrkestrering {
         var vedtaksperioder = vedtaksperioder(grunnlag);
         var søkersFastsattePerioder = map(resultatPerioder, vedtaksperioder);
         var utregningsdato = aktuellPeriode.getFom();
-        if (grunnlag.getBehandling().isBerørtBehandling()) {
+        if (grunnlag.getBehandling().isBerørtBehandling() || Optional.ofNullable(grunnlag.getAnnenPart()).map(AnnenPart::isEøs).orElse(false)) {
             var søktePerioder = new ArrayList<LukketPeriode>(allePerioderSomSkalFastsettes);
-            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakBerørtBehandling(søkersFastsattePerioder, annenpartPerioder, grunnlag,
+            return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttakTapendeBehandling(søkersFastsattePerioder, annenpartPerioder, grunnlag,
                 utregningsdato, søktePerioder);
         }
         return SaldoUtregningGrunnlag.forUtregningAvDelerAvUttak(søkersFastsattePerioder, annenpartPerioder, grunnlag, utregningsdato);

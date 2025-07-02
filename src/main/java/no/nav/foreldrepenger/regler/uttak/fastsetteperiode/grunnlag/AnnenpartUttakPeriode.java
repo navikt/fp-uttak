@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
+
 public class AnnenpartUttakPeriode extends LukketPeriode {
 
     private final Set<AnnenpartUttakPeriodeAktivitet> aktiviteter = new HashSet<>();
@@ -69,11 +71,11 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     }
 
     public boolean harTrekkdager() {
-        return getAktiviteter().stream().anyMatch(a -> a.getTrekkdager().merEnn0());
+        return getAktiviteter().stream().anyMatch(a -> a.trekkdager().merEnn0());
     }
 
     public boolean harUtbetaling() {
-        return getAktiviteter().stream().anyMatch(a -> a.getUtbetalingsgrad().harUtbetaling());
+        return getAktiviteter().stream().anyMatch(a -> a.utbetalingsgrad().harUtbetaling());
     }
 
     public Optional<LocalDate> getSenestMottattDato() {
@@ -115,6 +117,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
         public static Builder uttak(LocalDate fom, LocalDate tom) {
             return new Builder(fom, tom);
+        }
+
+        public static Builder eøs(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype, Trekkdager trekkdager) {
+            return new Builder(fom, tom)
+                .samtidigUttak(false)
+                .innvilget(true)
+                .uttakPeriodeAktivitet(
+                    new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.annenAktivitet(), stønadskontotype, trekkdager, Utbetalingsgrad.FULL));
         }
 
         private Builder(LocalDate fom, LocalDate tom) {

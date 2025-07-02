@@ -137,7 +137,7 @@ public final class SamtidigUttakUtil {
         return finnOverlappendeAnnenpartPeriode(grunnlag, app -> true).map(AnnenpartUttakPeriode::getAktiviteter)
             .orElse(Set.of())
             .stream()
-            .map(AnnenpartUttakPeriodeAktivitet::getStønadskontotype)
+            .map(AnnenpartUttakPeriodeAktivitet::stønadskontotype)
             .filter(Objects::nonNull)
             .filter(KONTI_FOR150::contains)
             .collect(Collectors.toSet());
@@ -166,14 +166,14 @@ public final class SamtidigUttakUtil {
         }
         return ap.getAktiviteter()
             .stream()
-            .filter(a -> a.getUtbetalingsgrad().harUtbetaling())
-            .min(Comparator.comparing(AnnenpartUttakPeriodeAktivitet::getUtbetalingsgrad))
-            .map(a -> new SamtidigUttaksprosent(a.getUtbetalingsgrad().decimalValue()))
+            .filter(a -> a.utbetalingsgrad().harUtbetaling())
+            .min(Comparator.comparing(AnnenpartUttakPeriodeAktivitet::utbetalingsgrad))
+            .map(a -> new SamtidigUttaksprosent(a.utbetalingsgrad().decimalValue()))
             .orElse(SamtidigUttaksprosent.ZERO);
     }
 
     private static boolean periodeHarUtbetaling(AnnenpartUttakPeriode periode) {
-        return periode.getAktiviteter().stream().map(AnnenpartUttakPeriodeAktivitet::getUtbetalingsgrad).anyMatch(Utbetalingsgrad::harUtbetaling);
+        return periode.getAktiviteter().stream().map(AnnenpartUttakPeriodeAktivitet::utbetalingsgrad).anyMatch(Utbetalingsgrad::harUtbetaling);
     }
 
 }
