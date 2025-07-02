@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.RegelGrunnlagTestBuilder;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.Trekkdager;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Adopsjon;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
@@ -450,6 +451,47 @@ class ManglendeSøktePerioderTjenesteTest {
 
         var msp = finnManglendeSøktePerioder(grunnlag);
         assertThat(msp).isEmpty();
+    }
+
+    @Test
+    void skal_ikke_lage_msp_første_6_ukene_i_fars_behandling_hvis_annen_part_er_eøs() {
+        var familiehendelse = LocalDate.of(2025, 7, 2);
+
+        var grunnlag = grunnlagMedKontoer().søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(8))))
+            .behandling(farBehandling())
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder().fødsel(familiehendelse))
+            .annenPart(new AnnenPart.Builder().eøs(true)
+                .uttaksperiode(
+                    AnnenpartUttakPeriode.Builder.eøs(familiehendelse, familiehendelse.plusWeeks(4).minusDays(1), MØDREKVOTE, new Trekkdager(20))
+                        .build()))
+            .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).isEmpty();
+    }
+
+    @Test
+    void skal_lage_msp_første_6_ukene_i_fars_behandling_hvis_annen_part_ikke_er_eøs() {
+        var familiehendelse = LocalDate.of(2025, 7, 2);
+
+        var grunnlag = grunnlagMedKontoer().søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
+                .oppgittPeriode(oppgittPeriode(FEDREKVOTE, familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(8))))
+            .behandling(farBehandling())
+            .rettOgOmsorg(beggeRett())
+            .datoer(new Datoer.Builder().fødsel(familiehendelse))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(4).minusDays(1)).build()))
+            .build();
+
+        var msp = finnManglendeSøktePerioder(grunnlag);
+
+        assertThat(msp).hasSize(1);
+        assertThat(msp.getFirst().getFom()).isEqualTo(familiehendelse.plusWeeks(4));
+        assertThat(msp.getFirst().getTom()).isEqualTo(familiehendelse.plusWeeks(6).minusDays(1));
+        assertThat(msp.getFirst().getStønadskontotype()).isEqualTo(MØDREKVOTE);
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {
