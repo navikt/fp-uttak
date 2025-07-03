@@ -138,15 +138,19 @@ public final class SaldoUtregningTjeneste {
 
         for (var annenpartUttakPeriodeAktivitet : periode.getAktiviteter()) {
             var opprinneligeTrekkdager = annenpartUttakPeriodeAktivitet.getTrekkdager();
+            final BigDecimal vektetTrekkdager;
             if (virkedagerInnenfor > 0 && opprinneligeTrekkdager.merEnn0()) {
-                var vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
+                vektetTrekkdager = opprinneligeTrekkdager.decimalValue()
                     .multiply(BigDecimal.valueOf(virkedagerInnenfor))
                     .divide(BigDecimal.valueOf(virkedagerHele), 0, RoundingMode.DOWN);
-                annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(
-                    new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
-                        annenpartUttakPeriodeAktivitet.getStønadskontotype(), new Trekkdager(vektetTrekkdager),
-                        annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
+
+            } else {
+                vektetTrekkdager = BigDecimal.ZERO;
             }
+            annenpartUttakPeriodeAktivitetMedNyttTrekkDager.add(
+                new AnnenpartUttakPeriodeAktivitet(annenpartUttakPeriodeAktivitet.getAktivitetIdentifikator(),
+                    annenpartUttakPeriodeAktivitet.getStønadskontotype(), new Trekkdager(vektetTrekkdager),
+                    annenpartUttakPeriodeAktivitet.getUtbetalingsgrad()));
         }
 
         return annenpartUttakPeriodeAktivitetMedNyttTrekkDager;
