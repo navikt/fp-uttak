@@ -751,6 +751,31 @@ class SaldoUtregningTjenesteTest {
         assertThat(resultat.saldo(FELLESPERIODE)).isEqualTo(96);
     }
 
+    @Test
+    void skal_trekke_riktig_når_start_av_fars_uttak_overlapper_med_mor_og_mors_periode_starter_på_lørdag() {
+        var fellesperiode = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2025, 7, 1), LocalDate.of(2025, 7, 4))
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(4), Utbetalingsgrad.FULL))
+            .build();
+        var helg = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2025, 7, 5), LocalDate.of(2025, 7, 13)) //Starter lørdag
+            .innvilget(true)
+            .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(14), Utbetalingsgrad.FULL))
+            .build();
+        var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
+        var aktuellPeriode = oppgittPeriode(FELLESPERIODE, LocalDate.of(2025, 7, 7), LocalDate.of(2025, 7, 13)); //fom mandag
+        var grunnlag = new RegelGrunnlag.Builder().annenPart(new AnnenPart.Builder().uttaksperiode(fellesperiode).uttaksperiode(helg))
+            .kontoer(kontoer)
+            .arbeid(new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(annenAktivitet())))
+            .behandling(new Behandling.Builder())
+            .søknad(new Søknad.Builder().oppgittPeriode(aktuellPeriode))
+            .build();
+
+        var saldoUtregningGrunnlag = lagGrunnlag(aktuellPeriode, grunnlag);
+        var resultat = SaldoUtregningTjeneste.lagUtregning(saldoUtregningGrunnlag);
+
+        assertThat(resultat.saldo(FELLESPERIODE)).isEqualTo(96);
+    }
+
     private Konto.Builder konto(Stønadskontotype type, int dager) {
         return new Konto.Builder().trekkdager(dager).type(type);
     }
