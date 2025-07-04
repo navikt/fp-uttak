@@ -54,6 +54,10 @@ public class Trekkdager implements Comparable<Trekkdager> {
         return decimalValue().remainder(uttaksprosent).setScale(0, RoundingMode.UP).compareTo(BigDecimal.ZERO) == 0;
     }
 
+    public boolean merEnn(Trekkdager trekkdager) {
+        return this.compareTo(trekkdager) > 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

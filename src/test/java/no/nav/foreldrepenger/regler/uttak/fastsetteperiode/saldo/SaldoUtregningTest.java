@@ -1406,7 +1406,30 @@ class SaldoUtregningTest {
         spesialKonti.put(Spesialkontotype.BARE_FAR_MINSTERETT, minsterettDager);
         spesialKonti.put(Spesialkontotype.UTEN_AKTIVITETSKRAV, utenAktivitetskravDager);
         spesialKonti.put(Spesialkontotype.FAR_RUNDT_FØDSEL, farUttakRundtFødselDager);
-        return new SaldoUtregning(konti, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER), null, null, spesialKonti);
+        return new SaldoUtregning(konti, søkersPerioder, List.of(), false, Set.of(AKTIVITET1_SØKER), null, null, spesialKonti, false);
+    }
+
+    @Test
+    void annenpart_eøs_skal_ikke_gi_minus_dager_hvis_brukt_flere_enn_maks() {
+        var periode = new FastsattUttakPeriode.Builder().aktiviteter(
+                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, AKTIVITET1_SØKER)))
+            .periodeResultatType(Perioderesultattype.INNVILGET)
+            .tidsperiode(LocalDate.of(2020, 5, 17), LocalDate.of(2020, 5, 17))
+            .build();
+        var periodeAnnenpart = new FastsattUttakPeriode.Builder().aktiviteter(
+                List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(100), FELLESPERIODE, AKTIVITET1_ANNENPART)))
+            .periodeResultatType(Perioderesultattype.INNVILGET)
+            .tidsperiode(LocalDate.of(2020, 5, 18), LocalDate.of(2020, 5, 20))
+            .build();
+        var søkersPerioder = List.of(periode);
+        var stønadskontoer = Map.ofEntries(stønadskonto(FELLESPERIODE, 80));
+        var annenpartsPerioder = List.of(periodeAnnenpart);
+        var søkersAktiviteter = Set.of(AKTIVITET1_SØKER);
+        var saldoUtregning = new SaldoUtregning(stønadskontoer, søkersPerioder, annenpartsPerioder, false, søkersAktiviteter,
+            LocalDate.of(2020, 5, 17).atStartOfDay(), null, new EnumMap<>(Spesialkontotype.class), true);
+
+        assertThat(saldoUtregning.saldo(FELLESPERIODE)).isEqualTo(-1);
+        assertThat(saldoUtregning.nokDagerÅFrigiPåAnnenpart(FELLESPERIODE)).isFalse();
     }
 
     private static SaldoUtregning saldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskontoer,
@@ -1417,6 +1440,6 @@ class SaldoUtregningTest {
                                                  LocalDateTime sisteSøknadMottattTidspunktSøker,
                                                  LocalDateTime sisteSøknadMottattTidspunktAnnenpart) {
         return new SaldoUtregning(stønadskontoer, søkersPerioder, annenpartsPerioder, berørtBehandling, søkersAktiviteter, sisteSøknadMottattTidspunktSøker,
-            sisteSøknadMottattTidspunktAnnenpart, new EnumMap<>(Spesialkontotype.class));
+            sisteSøknadMottattTidspunktAnnenpart, new EnumMap<>(Spesialkontotype.class), false);
     }
 }

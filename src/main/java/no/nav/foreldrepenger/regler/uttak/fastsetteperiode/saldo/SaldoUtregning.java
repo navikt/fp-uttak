@@ -43,6 +43,7 @@ public class SaldoUtregning {
     private final LocalDateTime sisteSøknadMottattTidspunktSøker;
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final SaldoUtregningFlerbarnsdager saldoUtregningFlerbarnsdager;
+    private final boolean annenpartEøs;
 
     // NOSONAR
     protected SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskonti,
@@ -52,7 +53,8 @@ public class SaldoUtregning {
                              Set<AktivitetIdentifikator> søkersAktiviteter,
                              LocalDateTime sisteSøknadMottattTidspunktSøker,
                              LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                             Map<Spesialkontotype, Trekkdager> spesialkonti) {
+                             Map<Spesialkontotype, Trekkdager> spesialkonti,
+                             boolean annenpartEøs) {
         this.søkersPerioder = søkersPerioder;
         this.søkersAktiviteter = søkersAktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
@@ -63,6 +65,7 @@ public class SaldoUtregning {
             spesialkonti.getOrDefault(Spesialkontotype.FLERBARN, Trekkdager.ZERO), spesialkonti.getOrDefault(Spesialkontotype.BARE_FAR_MINSTERETT, Trekkdager.ZERO));
         this.stønadskonti = new EnumMap<>(stønadskonti);
         this.spesialkonti = new EnumMap<>(spesialkonti);
+        this.annenpartEøs = annenpartEøs;
     }
 
     protected SaldoUtregning(Map<Stønadskontotype, Trekkdager> stønadskonti,
@@ -71,7 +74,7 @@ public class SaldoUtregning {
                              SaldoUtregningGrunnlag grunnlag) {
         this(stønadskonti, søkersPerioder, annenpartsPerioder, grunnlag.isTapendeBehandling(), grunnlag.getAktiviteter(),
             grunnlag.getSisteSøknadMottattTidspunktSøker().orElse(null), grunnlag.getSisteSøknadMottattTidspunktAnnenpart().orElse(null),
-            grunnlag.getSpesialkonti());
+            grunnlag.getSpesialkonti(), grunnlag.isAnnenpartEøs());
     }
 
     /**
@@ -97,11 +100,15 @@ public class SaldoUtregning {
      * @return antall gjenstående dager for angitt stønadskonto og aktivitet.
      */
     public Trekkdager saldoITrekkdager(Stønadskontotype stønadskonto, AktivitetIdentifikator aktivitet) {
-        var forbruktSøker = forbruktSøker(stønadskonto, aktivitet, søkersPerioder);
+        var maxDager = getMaxDagerITrekkdager(stønadskonto);
         var forbruktAnnenpart = minForbruktAvPerioder(stønadskonto, annenpartsPerioder);
+        var forbruktSøker = forbruktSøker(stønadskonto, aktivitet, søkersPerioder);
+        if (annenpartEøs && forbruktAnnenpart.merEnn(maxDager)) {
+            return Trekkdager.ZERO.subtract(forbruktSøker);
+        }
         //frigitte dager er dager fra annenpart som blir ledig når søker tar uttak i samme periode
         var frigitteDager = frigitteDager(stønadskonto);
-        return getMaxDagerITrekkdager(stønadskonto).subtract(forbruktSøker).subtract(forbruktAnnenpart).add(frigitteDager);
+        return maxDager.subtract(forbruktSøker).subtract(forbruktAnnenpart).add(frigitteDager);
     }
 
     /*
@@ -265,7 +272,7 @@ public class SaldoUtregning {
         if (saldo >= 0) {
             return true;
         }
-        if (annenpartsPerioder.isEmpty()) {
+        if (annenpartsPerioder.isEmpty() || annenpartEøs) {
             return false;
         }
 
@@ -339,7 +346,7 @@ public class SaldoUtregning {
     }
 
     private boolean tapendePeriode(FastsattUttakPeriode periode, FastsattUttakPeriode overlappendePeriode) {
-        if (berørtBehandling) {
+        if (berørtBehandling || annenpartEøs) {
             return true;
         }
         var periodeMottattDato = periode.getMottattDato();
