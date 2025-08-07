@@ -75,7 +75,9 @@ public final class ManglendeSøktePerioderTjeneste {
     private static List<OppgittPeriode> finnManglendeSøktePerioderITidsprommetForbeholdtMor(RegelGrunnlag grunnlag) {
         // Må sjekke om annenpart. Gjelder der far først har søkt om aleneomsorg.
         var behandling = grunnlag.getBehandling();
-        if (behandling.isSøkerFarMedMor() && (grunnlag.getAnnenPart() == null || grunnlag.getAnnenPart().getUttaksperioder().isEmpty())) {
+        if (behandling.isSøkerFarMedMor() && (grunnlag.getAnnenPart() == null || grunnlag.getAnnenPart().isEøs() || grunnlag.getAnnenPart()
+            .getUttaksperioder()
+            .isEmpty())) {
             return List.of();
         }
         var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();

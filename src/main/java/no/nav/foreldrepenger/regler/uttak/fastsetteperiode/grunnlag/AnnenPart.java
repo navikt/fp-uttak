@@ -5,14 +5,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public final class AnnenPart {
 
     private List<AnnenpartUttakPeriode> uttaksperioder = new ArrayList<>();
     private LocalDateTime sisteSøknadMottattTidspunkt;
     private AktivitetskravGrunnlag aktivitetskravGrunnlag;
+    private boolean eøs;
 
 
     private AnnenPart() {
@@ -20,13 +19,6 @@ public final class AnnenPart {
 
     public List<AnnenpartUttakPeriode> getUttaksperioder() {
         return uttaksperioder;
-    }
-
-    public Set<AktivitetIdentifikator> getAktiviteter() {
-        return uttaksperioder.stream()
-            .flatMap(periode -> periode.getAktiviteter().stream())
-            .map(AnnenpartUttakPeriodeAktivitet::getAktivitetIdentifikator)
-            .collect(Collectors.toSet());
     }
 
     public Optional<LocalDate> sisteUttaksdag() {
@@ -42,6 +34,10 @@ public final class AnnenPart {
 
     public Optional<AktivitetskravGrunnlag> getAktivitetskravGrunnlag() {
         return Optional.ofNullable(aktivitetskravGrunnlag);
+    }
+
+    public boolean isEøs() {
+        return eøs;
     }
 
     public static class Builder {
@@ -65,6 +61,11 @@ public final class AnnenPart {
 
         public Builder aktivitetskravGrunnlag(AktivitetskravGrunnlag aktivitetskravGrunnlag) {
             kladd.aktivitetskravGrunnlag = aktivitetskravGrunnlag;
+            return this;
+        }
+
+        public Builder eøs(boolean eøs) {
+            kladd.eøs = eøs;
             return this;
         }
 

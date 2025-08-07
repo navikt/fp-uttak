@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskont
 public class SaldoUtregningGrunnlag {
     private final List<FastsattUttakPeriode> søkersFastsattePerioder;
     private final LocalDate utregningsdato;
-    private final boolean berørtBehandling;
+    private final boolean tapendeBehandling;
     private final List<AnnenpartUttakPeriode> annenpartsPerioder;
     private final List<LukketPeriode> søktePerioder;
     private final Map<Stønadskontotype, Trekkdager> stønadskonti = new EnumMap<>(Stønadskontotype.class);
@@ -32,44 +32,48 @@ public class SaldoUtregningGrunnlag {
     private final LocalDateTime sisteSøknadMottattTidspunktSøker;
     private final LocalDateTime sisteSøknadMottattTidspunktAnnenpart;
     private final LocalDate sammenhengendeUttakTomDato;
+    private final boolean annenpartEøs;
 
     private SaldoUtregningGrunnlag(List<FastsattUttakPeriode> søkersFastsattePerioder,
                                    LocalDate utregningsdato,
-                                   boolean berørtBehandling,
+                                   boolean tapendeBehandling,
                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
                                    List<LukketPeriode> søktePerioder,
                                    Kontoer kontoer,
                                    Set<AktivitetIdentifikator> aktiviteter,
                                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                                   LocalDate sammenhengendeUttakTomDato) {
+                                   LocalDate sammenhengendeUttakTomDato,
+                                   boolean annenpartEøs) {
         this.søkersFastsattePerioder = søkersFastsattePerioder;
         this.utregningsdato = utregningsdato;
-        this.berørtBehandling = berørtBehandling;
+        this.tapendeBehandling = tapendeBehandling;
         this.annenpartsPerioder = annenpartsPerioder;
         this.søktePerioder = søktePerioder;
         this.aktiviteter = aktiviteter;
         this.sisteSøknadMottattTidspunktSøker = sisteSøknadMottattTidspunktSøker;
         this.sisteSøknadMottattTidspunktAnnenpart = sisteSøknadMottattTidspunktAnnenpart;
         this.sammenhengendeUttakTomDato = sammenhengendeUttakTomDato;
+        this.annenpartEøs = annenpartEøs;
         kontoer.getStønadskontotyper().forEach(k -> this.stønadskonti.put(k, new Trekkdager(kontoer.getStønadskontoTrekkdager(k))));
         kontoer.getSpesialkontotyper().forEach(k -> this.spesialkonti.put(k, new Trekkdager(kontoer.getSpesialkontoTrekkdager(k))));
     }
 
     // Brukes av fpsak til utregning av alt
     public static SaldoUtregningGrunnlag forUtregningAvHeleUttaket(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                   boolean berørtBehandling,
+                                                                   boolean tapendeBehandling,
                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
                                                                    Kontoer kontoer,
                                                                    LocalDateTime sisteSøknadMottattTidspunktSøker,
                                                                    LocalDateTime sisteSøknadMottattTidspunktAnnenpart,
-                                                                   LocalDate sammenhengendeUttakTomDato) {
+                                                                   LocalDate sammenhengendeUttakTomDato,
+                                                                   boolean annenpartEøs) {
         var aktiviteter = søkersFastsattePerioder.stream()
             .flatMap(p -> p.getAktiviteter().stream())
             .map(a -> a.getAktivitetIdentifikator())
             .collect(Collectors.toSet());
-        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, berørtBehandling, annenpartsPerioder, List.of(), kontoer,
-            aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, sammenhengendeUttakTomDato);
+        return new SaldoUtregningGrunnlag(søkersFastsattePerioder, LocalDate.MAX, tapendeBehandling, annenpartsPerioder, List.of(), kontoer,
+            aktiviteter, sisteSøknadMottattTidspunktSøker, sisteSøknadMottattTidspunktAnnenpart, sammenhengendeUttakTomDato, annenpartEøs);
     }
 
     // Brukes som input til fastsettingsregler - inneholder tidligere vedtatte før endringsdato + perioder opp til aktuell periode
@@ -80,19 +84,21 @@ public class SaldoUtregningGrunnlag {
         var sisteSøknadMottattTidspunktAnnenpart = Optional.ofNullable(grunnlag.getAnnenPart())
             .map(AnnenPart::getSisteSøknadMottattTidspunkt)
             .orElse(null);
+        var annenpartEøs = Optional.ofNullable(grunnlag.getAnnenPart()).stream().anyMatch(AnnenPart::isEøs);
         return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, false, annenpartsPerioder, List.of(), grunnlag.getKontoer(),
             grunnlag.getArbeid().getAktiviteter(), grunnlag.getSøknad().getMottattTidspunkt(), sisteSøknadMottattTidspunktAnnenpart,
-            grunnlag.getBehandling().getSammenhengendeUttakTomDato());
+            grunnlag.getBehandling().getSammenhengendeUttakTomDato(), annenpartEøs);
     }
 
-    // Brukes som input til fastsettingsregler for berørte behandlinger
-    public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakBerørtBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
-                                                                                    List<AnnenpartUttakPeriode> annenpartsPerioder,
-                                                                                    RegelGrunnlag grunnlag,
-                                                                                    LocalDate utregningsdato,
-                                                                                    List<LukketPeriode> søktePerioder) {
+    // Brukes som input til fastsettingsregler for berørte/eøs behandlinger
+    public static SaldoUtregningGrunnlag forUtregningAvDelerAvUttakTapendeBehandling(List<FastsattUttakPeriode> søkersFastsattePerioder,
+                                                                                     List<AnnenpartUttakPeriode> annenpartsPerioder,
+                                                                                     RegelGrunnlag grunnlag,
+                                                                                     LocalDate utregningsdato,
+                                                                                     List<LukketPeriode> søktePerioder) {
+        var annenpartEøs = Optional.ofNullable(grunnlag.getAnnenPart()).stream().anyMatch(AnnenPart::isEøs);
         return new SaldoUtregningGrunnlag(søkersFastsattePerioder, utregningsdato, true, annenpartsPerioder, søktePerioder, grunnlag.getKontoer(),
-            grunnlag.getArbeid().getAktiviteter(), null, null, grunnlag.getBehandling().getSammenhengendeUttakTomDato());
+            grunnlag.getArbeid().getAktiviteter(), null, null, grunnlag.getBehandling().getSammenhengendeUttakTomDato(), annenpartEøs);
     }
 
     List<FastsattUttakPeriode> getSøkersFastsattePerioder() {
@@ -103,8 +109,8 @@ public class SaldoUtregningGrunnlag {
         return utregningsdato;
     }
 
-    boolean isBerørtBehandling() {
-        return berørtBehandling;
+    boolean isTapendeBehandling() {
+        return tapendeBehandling;
     }
 
     List<AnnenpartUttakPeriode> getAnnenpartsPerioder() {
@@ -131,7 +137,11 @@ public class SaldoUtregningGrunnlag {
         return stønadskonti;
     }
 
-    public Trekkdager getSpesialkontoTrekkdager(Spesialkontotype delkontotype) {
-        return Optional.ofNullable(spesialkonti.get(delkontotype)).orElse(Trekkdager.ZERO);
+    public Map<Spesialkontotype, Trekkdager> getSpesialkonti() {
+        return spesialkonti;
+    }
+
+    public boolean isAnnenpartEøs() {
+        return annenpartEøs;
     }
 }
