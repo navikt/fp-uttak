@@ -9,6 +9,7 @@ import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Dokum
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.MORS_AKTIVITET_IKKE_GODKJENT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.DokumentasjonVurdering.SYKDOM_SØKER_GODKJENT;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.INNVILGET;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype.MANUELL_BEHANDLING;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
@@ -849,6 +850,31 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(uttakPeriode.getFom()).isEqualTo(fødselsdato.plusWeeks(3));
         assertThat(uttakPeriode.getTom()).isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
         assertThat(uttakPeriode.getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+    }
+
+    @Test
+    void skal_trekke_dager_hvis_søker_er_innvilget_utsettelse_i_perioden_som_overlapper_med_annen_part() {
+        var fødselsdato = of(2025, 8, 13);
+        var utsettelse = OppgittPeriode.forUtsettelse(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1), SYKDOM_SKADE, null, null,
+            null, SYKDOM_SØKER_GODKJENT);
+        var mødrekvote = oppgittPeriode(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(16).minusDays(1));
+        var grunnlag = basicUtsettelseGrunnlag(fødselsdato)
+            .behandling(morBehandling())
+            .kontoer(new Kontoer.Builder().konto(MØDREKVOTE, 75).konto(FELLESPERIODE, 80))
+            .søknad(søknad(Søknadstype.FØDSEL, mødrekvote, utsettelse))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
+                    .innvilget(true)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.HUNDRED))
+                    .build()));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        assertThat(resultat.get(0).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5 * 9));
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(MANUELL_BEHANDLING);
+        assertThat(resultat.get(2).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
     }
 
     private Datoer.Builder datoer(LocalDate fødselsdato) {

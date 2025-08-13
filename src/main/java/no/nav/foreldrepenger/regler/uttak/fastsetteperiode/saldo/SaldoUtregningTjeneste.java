@@ -27,7 +27,7 @@ public final class SaldoUtregningTjeneste {
             grunnlag.getAnnenpartsPerioder(), grunnlag.getSøktePerioder());
 
         var søkersFastsattePerioder = knekkSøkersOppholdsperioder(annenpartsPerioder, grunnlag.getSøkersFastsattePerioder()).stream()
-            .filter(p -> !p.isInnvilgetGyldigUtsettelse())
+            .filter(p -> !(p.isUtsettelse() && p.getPerioderesultattype().equals(Perioderesultattype.INNVILGET)))
             .toList();
         return new SaldoUtregning(grunnlag.getStønadskonti(), søkersFastsattePerioder, annenpartsPerioder, grunnlag);
     }
