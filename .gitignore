@@ -24,3 +24,4 @@ dep.txt
 /docs/asciidoc/index.html
 .mvn/maven.config
 .flattened
+.java-version
