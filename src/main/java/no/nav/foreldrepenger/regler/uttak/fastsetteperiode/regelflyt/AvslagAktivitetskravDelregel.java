@@ -55,7 +55,6 @@ public class AvslagAktivitetskravDelregel implements RuleService<FastsettePeriod
     @Override
     public Specification<FastsettePeriodeGrunnlag> getSpecification() {
         return rs.hvisRegel(SjekkOmTomForAlleSineKontoer.ID, SjekkOmTomForAlleSineKontoer.BESKRIVELSE)
-            //Går til manuell for at saksbehandler skal velge riktig hjemmel
             .hvis(new SjekkOmTomForAlleSineKontoer(), IkkeOppfylt.opprett("UT1319", IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN, false, false))
             .ellers(sjekkOmKjentAktivitet());
     }
