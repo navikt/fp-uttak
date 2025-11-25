@@ -4,6 +4,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunn
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBareFarHarRett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmBarnInnlagt;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAleneomsorg;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmErAlleDisponibleDagerIgjenMinsterett;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFarHarDagerRundtFødsel;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselErFørUke33;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFørTermin;
@@ -65,9 +66,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmMorErIAktivitetBfhr() {
-        return rs.hvisRegel(SjekkOmMorErIAktivitetBfhrUtsettelse.ID, SjekkOmMorErIAktivitetBfhrUtsettelse.BESKRIVELSE)
-            .hvis(new SjekkOmMorErIAktivitetBfhrUtsettelse(), Oppfylt.opprett("UT1352", InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT, false, false))
+        var sjekkOmBareMinsterett = rs.hvisRegel(SjekkOmErAlleDisponibleDagerIgjenMinsterett.ID, SjekkOmErAlleDisponibleDagerIgjenMinsterett.BESKRIVELSE)
+            .hvis(new SjekkOmErAlleDisponibleDagerIgjenMinsterett(), Oppfylt.opprett("UT1361", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false))
             .ellers(new AvslagAktivitetskravDelregel().getSpecification());
+        return rs.hvisRegel(SjekkOmMorErIAktivitetBfhrUtsettelse.ID, SjekkOmMorErIAktivitetBfhrUtsettelse.BESKRIVELSE)
+            .hvis(new SjekkOmMorErIAktivitetBfhrUtsettelse(),
+                Oppfylt.opprett("UT1352", InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT, false, false))
+            .ellers(sjekkOmBareMinsterett);
     }
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmTidsperiodeForbeholdtMor() {
