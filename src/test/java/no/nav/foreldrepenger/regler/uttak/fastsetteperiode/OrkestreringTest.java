@@ -1168,7 +1168,7 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
     }
 
     @Test
-    void oppholdsperioder_med_fritt_uttak_skal_fjernes() {
+    void oppholdsperioder_med_fritt_uttak_skal_innvilges_som_fri_utsettelse() {
         var fødselsdato = LocalDate.of(2022, 11, 4);
         var grunnlag = basicGrunnlagMor(fødselsdato).søknad(
             søknad(Søknadstype.FØDSEL, oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -1178,8 +1178,10 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
         var resultat = fastsettPerioder(grunnlag);
 
-        assertThat(resultat).hasSize(3);
-        assertThat(resultat.get(2).uttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
+        assertThat(resultat).hasSize(4);
+        assertThat(resultat.get(2).uttakPeriode().getUtsettelseÅrsak()).isEqualTo(UtsettelseÅrsak.FRI);
+        assertThat(resultat.get(2).uttakPeriode().getPerioderesultattype()).isEqualTo(INNVILGET);
+        assertThat(resultat.get(3).uttakPeriode().getStønadskontotype()).isEqualTo(FELLESPERIODE);
     }
 
     @Test

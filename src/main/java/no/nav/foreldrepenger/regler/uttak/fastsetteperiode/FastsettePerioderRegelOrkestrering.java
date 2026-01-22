@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPerio
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Periode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Vedtak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.konfig.FarUttakRundtFødsel;
@@ -49,7 +50,12 @@ public class FastsettePerioderRegelOrkestrering {
         var allePerioderSomSkalFastsettes = samletUttaksperioder(grunnlag, orkestreringTillegg).stream()
             .filter(periode -> !erHelg(periode))
             .filter(periode -> !oppholdSomFyllesAvAnnenpart(periode, grunnlag.getAnnenpartUttaksperioder()))
-            .filter(periode -> periode.kreverSammenhengendeUttak(grunnlag.getBehandling().getSammenhengendeUttakTomDato()) || !periode.isOpphold())
+            .map(periode -> {
+                if (periode.kreverSammenhengendeUttak(grunnlag.getBehandling().getSammenhengendeUttakTomDato())) {
+                    return periode;
+                };
+                return periode.isOpphold() ? konverterTilFriUtsettelse(periode) : periode;
+            })
             .map(periode -> oppdaterMedAktiviteter(periode, grunnlag.getArbeid()))
             .toList();
         validerOverlapp(map(allePerioderSomSkalFastsettes));
@@ -74,6 +80,11 @@ public class FastsettePerioderRegelOrkestrering {
 
         //Bare for å sikre rekkefølge
         return sortByFom(resultatPerioder);
+    }
+
+    private OppgittPeriode konverterTilFriUtsettelse(OppgittPeriode periode) {
+        return OppgittPeriode.forUtsettelse(periode.getFom(), periode.getTom(), UtsettelseÅrsak.FRI, periode.getSenestMottattDato().orElse(null),
+            periode.getTidligstMottattDato().orElse(null), periode.getMorsAktivitet(), periode.getDokumentasjonVurdering());
     }
 
     private OppgittPeriode oppdaterMedAktiviteter(OppgittPeriode periode, Arbeid arbeid) {
