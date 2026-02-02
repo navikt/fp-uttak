@@ -9,15 +9,13 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
+import no.nav.fpsak.nare.json.JsonOutput;
 
 class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
 
     @Test
-    void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() throws JsonProcessingException {
+    void fastsette_perioder_regel_skal_produsere_sporing_i_json_format() {
         var fødselsdato = LocalDate.of(2018, 1, 1);
         var grunnlag = basicGrunnlagMor(fødselsdato)
             .søknad(søknad(Søknadstype.FØDSEL, oppgittPeriode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -28,8 +26,8 @@ class SporingOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase
 
         assertThat(resultatListe).hasSize(3);
         for (var resultat : resultatListe) {
-            assertThat(new ObjectMapper().readValue(resultat.innsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
-            assertThat(new ObjectMapper().readValue(resultat.evalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
+            assertThat(JsonOutput.fromJson(resultat.innsendtGrunnlag(), HashMap.class)).isNotNull().isNotEmpty();
+            assertThat(JsonOutput.fromJson(resultat.evalueringResultat(), HashMap.class)).isNotNull().isNotEmpty();
         }
     }
 }
