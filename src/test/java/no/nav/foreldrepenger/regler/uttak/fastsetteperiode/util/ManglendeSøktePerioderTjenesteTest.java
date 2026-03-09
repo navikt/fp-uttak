@@ -39,7 +39,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅ
 class ManglendeSøktePerioderTjenesteTest {
 
     @Test
-    void farMedAleneomsorgMedInnvilgetAnnetPartPerioder() {
+    void farMedAleneomsorgMedInnvilgetAnnetPartPerioder_skal_ikke_lage_msp() {
         // Gjelder der far først har søkt om aleneomsorg.
         var morTom = LocalDate.of(2020, 12, 3);
         var farFom = morTom.plusDays(10);
@@ -51,7 +51,7 @@ class ManglendeSøktePerioderTjenesteTest {
             .søknad(new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode(FORELDREPENGER, farFom, farFom.plusDays(10))))
             .build();
         var msp = finnManglendeSøktePerioder(grunnlag);
-        assertThat(msp).hasSize(1);
+        assertThat(msp).isEmpty();
     }
 
     @Test
@@ -474,7 +474,7 @@ class ManglendeSøktePerioderTjenesteTest {
     }
 
     @Test
-    void skal_lage_msp_første_6_ukene_i_fars_behandling_hvis_annen_part_ikke_er_eøs() {
+    void skal_ikke_lage_msp_første_6_ukene_i_fars_behandling() {
         var familiehendelse = LocalDate.of(2025, 7, 2);
 
         var grunnlag = grunnlagMedKontoer().søknad(new Søknad.Builder().type(Søknadstype.FØDSEL)
@@ -488,10 +488,7 @@ class ManglendeSøktePerioderTjenesteTest {
 
         var msp = finnManglendeSøktePerioder(grunnlag);
 
-        assertThat(msp).hasSize(1);
-        assertThat(msp.getFirst().getFom()).isEqualTo(familiehendelse.plusWeeks(4));
-        assertThat(msp.getFirst().getTom()).isEqualTo(familiehendelse.plusWeeks(6).minusDays(1));
-        assertThat(msp.getFirst().getStønadskontotype()).isEqualTo(MØDREKVOTE);
+        assertThat(msp).isEmpty();
     }
 
     private List<OppgittPeriode> finnManglendeSøktePerioder(RegelGrunnlag grunnlag) {

@@ -38,8 +38,10 @@ public final class ManglendeSøktePerioderTjeneste {
             msPerioder = finnManglendeSøktPeriodeBareFarHarRett(grunnlag).stream().toList();
         } else if (grunnlag.getSøknad().gjelderAdopsjon()) {
             msPerioder = List.of();
-        } else {
+        } else if (grunnlag.getBehandling().isSøkerMor()) {
             msPerioder = finnManglendeSøktePerioderITidsprommetForbeholdtMor(grunnlag);
+        } else {
+            msPerioder = List.of();
         }
         return fellesFilter(grunnlag, msPerioder);
     }
@@ -69,17 +71,7 @@ public final class ManglendeSøktePerioderTjeneste {
         return Optional.empty();
     }
 
-    /**
-     * Gjelder ikke bare far har rett, se egen metode
-     */
     private static List<OppgittPeriode> finnManglendeSøktePerioderITidsprommetForbeholdtMor(RegelGrunnlag grunnlag) {
-        // Må sjekke om annenpart. Gjelder der far først har søkt om aleneomsorg.
-        var behandling = grunnlag.getBehandling();
-        if (behandling.isSøkerFarMedMor() && (grunnlag.getAnnenPart() == null || grunnlag.getAnnenPart().isEøs() || grunnlag.getAnnenPart()
-            .getUttaksperioder()
-            .isEmpty())) {
-            return List.of();
-        }
         var familiehendelse = grunnlag.getDatoer().getFamiliehendelse();
 
         var fellesUttakBeggeParter = slåSammenUttakForBeggeParter(grunnlag).stream()
@@ -89,15 +81,13 @@ public final class ManglendeSøktePerioderTjeneste {
         var sisteFellesUttaksdato = fellesUttakBeggeParter.get(fellesUttakBeggeParter.size() - 1).getTom();
 
         var tomTidsperiodeForbeholdtMor = tomTidsperiodeForbeholdtMor(familiehendelse);
-        if (behandling.isSøkerMor()) {
-            if (førsteFellesUttaksdato.isAfter(familiehendelse)) {
-                //Feks mor søker ikke om uke 1-3, men fra uke 4 og utover. Legger til periode for at det skal opprettes msp
-                fellesUttakBeggeParter.add(new LukketPeriode(familiehendelse.minusDays(1), familiehendelse.minusDays(1)));
-            }
-            if (sisteFellesUttaksdato.isBefore(tomTidsperiodeForbeholdtMor)) {
-                //Feks mor søker bare om de første 4 ukene, må ha msp på resten av ukene forbeholdt mor. Legger til periode for at det skal opprettes msp
-                fellesUttakBeggeParter.add(new LukketPeriode(tomTidsperiodeForbeholdtMor.plusDays(1), tomTidsperiodeForbeholdtMor.plusDays(1)));
-            }
+        if (førsteFellesUttaksdato.isAfter(familiehendelse)) {
+            //Feks mor søker ikke om uke 1-3, men fra uke 4 og utover. Legger til periode for at det skal opprettes msp
+            fellesUttakBeggeParter.add(new LukketPeriode(familiehendelse.minusDays(1), familiehendelse.minusDays(1)));
+        }
+        if (sisteFellesUttaksdato.isBefore(tomTidsperiodeForbeholdtMor)) {
+            //Feks mor søker bare om de første 4 ukene, må ha msp på resten av ukene forbeholdt mor. Legger til periode for at det skal opprettes msp
+            fellesUttakBeggeParter.add(new LukketPeriode(tomTidsperiodeForbeholdtMor.plusDays(1), tomTidsperiodeForbeholdtMor.plusDays(1)));
         }
         var harForeldrepengerKonto = grunnlag.getKontoer().harStønadskonto(Stønadskontotype.FORELDREPENGER);
 

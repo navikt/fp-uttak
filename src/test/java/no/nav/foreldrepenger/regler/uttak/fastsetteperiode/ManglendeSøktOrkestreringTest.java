@@ -415,5 +415,4 @@ class ManglendeSøktOrkestreringTest extends FastsettePerioderRegelOrkestreringT
         assertThat(perioder.get(4).uttakPeriode().getTrekkdager(aktivitet)).isEqualTo(new Trekkdager(5));
         assertThat(perioder.get(4).uttakPeriode().getUtbetalingsgrad(aktivitet)).isEqualTo(Utbetalingsgrad.ZERO);
     }
-
 }
