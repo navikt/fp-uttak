@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIdentifikator;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.OppgittPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.UtsettelseÅrsak;
@@ -41,7 +42,7 @@ final class ValgAvStønadskontoTjeneste {
 
     private static Optional<Stønadskontotype> velg(FastsettePeriodeGrunnlag fastsettePeriodeGrunnlag) {
         for (var stønadskontotype : hentSøkerSineKontoer(fastsettePeriodeGrunnlag)) {
-            if (!erTomForKonto(fastsettePeriodeGrunnlag.getAktuellPeriode(), stønadskontotype, fastsettePeriodeGrunnlag.getSaldoUtregning())) {
+            if (harDagerPåKonto(fastsettePeriodeGrunnlag.getAktuellPeriode(), stønadskontotype, fastsettePeriodeGrunnlag.getSaldoUtregning())) {
                 return Optional.of(stønadskontotype);
             }
         }
@@ -83,10 +84,15 @@ final class ValgAvStønadskontoTjeneste {
         return søkerSineKonto;
     }
 
-    private static boolean erTomForKonto(OppgittPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
-        return !periode.getAktiviteter().isEmpty() && periode.getAktiviteter().stream().allMatch(arbeidsforhold -> {
-            var saldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskontotype, arbeidsforhold, periode.kanTrekkeAvMinsterett());
-            return !saldo.merEnn0();
-        });
+    private static boolean harDagerPåKonto(OppgittPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
+        return periode.getAktiviteter().stream().anyMatch(a -> harAktivitetDagerPåKonto(periode, stønadskontotype, saldoUtregning, a));
+      }
+
+    private static boolean harAktivitetDagerPåKonto(OppgittPeriode periode,
+                                                    Stønadskontotype stønadskontotype,
+                                                    SaldoUtregning saldoUtregning,
+                                                    AktivitetIdentifikator arbeidsforhold) {
+        var saldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskontotype, arbeidsforhold, periode.kanTrekkeAvMinsterett());
+        return saldo.merEnn0();
     }
 }
