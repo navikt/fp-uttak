@@ -84,17 +84,9 @@ final class ValgAvStønadskontoTjeneste {
     }
 
     private static boolean erTomForKonto(OppgittPeriode periode, Stønadskontotype stønadskontotype, SaldoUtregning saldoUtregning) {
-        var tomForKonto = true;
-        for (var arbeidsforhold : periode.getAktiviteter()) {
+        return !periode.getAktiviteter().isEmpty() && periode.getAktiviteter().stream().allMatch(arbeidsforhold -> {
             var saldo = saldoUtregning.nettoSaldoJustertForMinsterett(stønadskontotype, arbeidsforhold, periode.kanTrekkeAvMinsterett());
-            if (saldo.merEnn0()) {
-                tomForKonto = false;
-            } else {
-                tomForKonto = true;
-                break;
-            }
-        }
-        return tomForKonto;
+            return !saldo.merEnn0();
+        });
     }
-
 }

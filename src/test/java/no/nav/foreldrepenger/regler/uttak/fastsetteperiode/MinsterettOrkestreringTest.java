@@ -525,6 +525,59 @@ class MinsterettOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         assertThat(fastsattePerioder.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
     }
 
+    @Test
+    void bfhr_gradering_to_arbeidsforhold_fri_utsettelse_skal_sette_riktig_dager_i_begge_arbeidsforhold() {
+        var fødselsdato = Virkedager.justerHelgTilMandag(LocalDate.of(2023, 3, 15));
+        var kontoer = new Kontoer.Builder().konto(konto(FORELDREPENGER, 200)).minsterettDager(40);
+        var arbeidsforhold1 = AktivitetIdentifikator.forArbeid(new Orgnummer("1"), null);
+        var arbeidsforhold2 = AktivitetIdentifikator.forArbeid(new Orgnummer("2"), null);
+
+        var gradering = OppgittPeriode.forGradering(FORELDREPENGER, LocalDate.of(2023, 3, 29), LocalDate.of(2023, 6, 9), BigDecimal.valueOf(50), null,
+            false, Set.of(arbeidsforhold1), fødselsdato, fødselsdato, SYK, null, MORS_AKTIVITET_GODKJENT);
+
+        var utsettelse = OppgittPeriode.forUtsettelse(LocalDate.of(2023, 6, 12), LocalDate.of(2025, 9, 9), FRI, fødselsdato, fødselsdato, null, null);
+
+        var søknad = new Søknad.Builder().type(Søknadstype.FØDSEL).oppgittePerioder(List.of(gradering, utsettelse));
+
+        var arbeid = new Arbeid.Builder().arbeidsforhold(new Arbeidsforhold(arbeidsforhold1)).arbeidsforhold(new Arbeidsforhold(arbeidsforhold2));
+        var grunnlag = basicGrunnlagFar(fødselsdato).rettOgOmsorg(bareFarRett()).søknad(søknad).arbeid(arbeid).kontoer(kontoer);
+        var fastsattePerioder = fastsettPerioder(grunnlag);
+
+
+        assertThat(fastsattePerioder).hasSize(5);
+        var resultatperiode1 = fastsattePerioder.getFirst().uttakPeriode();
+        var resultatperiode2 = fastsattePerioder.get(1).uttakPeriode();
+        var resultatperiode3 = fastsattePerioder.get(2).uttakPeriode();
+        var resultatperiode4 = fastsattePerioder.get(3).uttakPeriode();
+        var resultatperiode5 = fastsattePerioder.get(4).uttakPeriode();
+
+        assertThat(resultatperiode1.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultatperiode1.getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultatperiode1.getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.FULL);
+
+        assertThat(resultatperiode2.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultatperiode2.getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultatperiode2.getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.FULL);
+
+        assertThat(resultatperiode3.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultatperiode3.getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultatperiode3.getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultatperiode3.getTrekkdager(arbeidsforhold1)).isEqualTo(new Trekkdager(107));
+        assertThat(resultatperiode3.getTrekkdager(arbeidsforhold2)).isEqualTo(new Trekkdager(107));
+
+        assertThat(resultatperiode4.getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+        assertThat(resultatperiode4.getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultatperiode4.getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultatperiode4.getTrekkdager(arbeidsforhold1)).isEqualTo(new Trekkdager(27)); //Har igjen dager pga gradering
+        assertThat(resultatperiode4.getTrekkdager(arbeidsforhold2)).isEqualTo(Trekkdager.ZERO); //Brukt opp dager, bare minsterett igjen for dette arbeidsforholdet
+
+        assertThat(resultatperiode5.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET); //Bare minsterett gjenværende, kan ikke trekke noe derfor innvilges utsettelse
+        assertThat(resultatperiode5.getUtbetalingsgrad(arbeidsforhold1)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultatperiode5.getUtbetalingsgrad(arbeidsforhold2)).isEqualTo(Utbetalingsgrad.ZERO);
+        assertThat(resultatperiode5.getTrekkdager(arbeidsforhold1)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultatperiode5.getTrekkdager(arbeidsforhold2)).isEqualTo(Trekkdager.ZERO);
+    }
+
     private static OppgittPeriode friUtsettelse(LocalDate fom, LocalDate tom) {
         return OppgittPeriode.forUtsettelse(fom, tom, FRI, fom, fom, null, null);
     }
