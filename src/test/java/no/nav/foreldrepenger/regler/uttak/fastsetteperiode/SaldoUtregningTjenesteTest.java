@@ -54,7 +54,6 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpart = LocalDate.of(2019, 12, 2);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.FULL))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
@@ -81,10 +80,8 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
-            .innvilget(true)
             .build();
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
@@ -108,10 +105,8 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
-            .innvilget(true)
             .build();
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
@@ -135,10 +130,8 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
-            .innvilget(true)
             .build();
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
@@ -162,10 +155,8 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpartOpphold = LocalDate.of(2019, 12, 2);
         var tomAnnenpartOpphold = fomAnnenpartOpphold.plusWeeks(10).minusDays(1);
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.opphold(fomAnnenpartOpphold, tomAnnenpartOpphold, FEDREKVOTE_ANNEN_FORELDER)
-            .innvilget(true)
             .build();
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpartOpphold.minusWeeks(1), fomAnnenpartOpphold.minusWeeks(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FEDREKVOTE, 100));
@@ -198,7 +189,6 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpart = LocalDate.of(2019, 12, 3);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(50), Utbetalingsgrad.HUNDRED))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
@@ -220,7 +210,6 @@ class SaldoUtregningTjenesteTest {
         var fomAnnenpart = LocalDate.of(2019, 12, 3);
         var tomAnnenpart = fomAnnenpart.plusWeeks(10).minusDays(1);
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(fomAnnenpart, tomAnnenpart)
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(70), Utbetalingsgrad.HUNDRED))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
@@ -273,7 +262,6 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(50), FELLESPERIODE, identifikator)))
             .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 11), LocalDate.of(2019, 12, 17))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), MØDREKVOTE, new Trekkdager(100), Utbetalingsgrad.HUNDRED))
             .build();
@@ -306,7 +294,6 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
             .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusDays(5))
-            .innvilget(true)
             .flerbarnsdager(false)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(forSelvstendigNæringsdrivende(), MØDREKVOTE, new Trekkdager(5), Utbetalingsgrad.HUNDRED))
@@ -343,7 +330,6 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
             .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
-            .innvilget(true)
             .flerbarnsdager(true)
             .samtidigUttak(true)
             .uttakPeriodeAktiviteter(List.of(
@@ -378,7 +364,6 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(5), FELLESPERIODE, identifikator)))
             .build();
         var annenpartsPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(10).plusDays(5))
-            .innvilget(true)
             .flerbarnsdager(true)
             .samtidigUttak(true)
             .uttakPeriodeAktiviteter(List.of(
@@ -582,13 +567,11 @@ class SaldoUtregningTjenesteTest {
         var annenpartsArbeidsforhold2 = forSelvstendigNæringsdrivende();
         var annenpartPeriode1 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 17), LocalDate.of(2019, 12, 17))
             .flerbarnsdager(true)
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.HUNDRED))
             .build();
         var annenpartPeriode2 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 12, 19), LocalDate.of(2019, 12, 19))
             .flerbarnsdager(false)
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(annenpartsArbeidsforhold1, FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.HUNDRED))
             .uttakPeriodeAktivitet(
@@ -614,16 +597,13 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
             .build();
         var annenpartUttaksperiode1 = AnnenpartUttakPeriode.Builder.uttak(opphold.getFom(), opphold.getFom().plusWeeks(1).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
             .build();
         var annenpartUttaksperiode2 = AnnenpartUttakPeriode.Builder.uttak(annenpartUttaksperiode1.getTom().plusDays(1),
                 opphold.getTom().minusWeeks(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
             .build();
         var annenpartUttaksperiode3 = AnnenpartUttakPeriode.Builder.uttak(annenpartUttaksperiode2.getTom().plusDays(1), opphold.getTom())
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(25), Utbetalingsgrad.FULL))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
@@ -649,7 +629,6 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
             .build();
         var annenpartUttaksperiode = AnnenpartUttakPeriode.Builder.uttak(opphold.getFom(), LocalDate.of(2022, 2, 2))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(3), Utbetalingsgrad.FULL))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
@@ -674,11 +653,9 @@ class SaldoUtregningTjenesteTest {
             .aktiviteter(List.of(new FastsattUttakPeriodeAktivitet(new Trekkdager(1), FELLESPERIODE, forFrilans())))
             .build();
         var annenpartUttaksperiode1 = AnnenpartUttakPeriode.Builder.uttak(opphold.getFom(), LocalDate.of(2022, 2, 1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(2), Utbetalingsgrad.FULL))
             .build();
         var annenpartUttaksperiode2 = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 2, 4), LocalDate.of(2022, 2, 4))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));
@@ -705,12 +682,10 @@ class SaldoUtregningTjenesteTest {
             .build();
 
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 11, 8), LocalDate.of(2022, 11, 8))
-            .innvilget(true)
             .oppholdsårsak(FELLESPERIODE_ANNEN_FORELDER)
             .build();
 
         var annenpartUttak = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 11, 9), LocalDate.of(2022, 11, 9))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
             .build();
 
@@ -735,12 +710,10 @@ class SaldoUtregningTjenesteTest {
             .build();
 
         var annenpartOpphold = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 11, 8), LocalDate.of(2022, 11, 8))
-            .innvilget(true)
             .oppholdsårsak(FELLESPERIODE_ANNEN_FORELDER)
             .build();
 
         var annenpartUttak = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2022, 11, 9), LocalDate.of(2022, 11, 9))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(1), Utbetalingsgrad.FULL))
             .build();
 
@@ -756,11 +729,9 @@ class SaldoUtregningTjenesteTest {
     @Test
     void skal_trekke_riktig_når_start_av_fars_uttak_overlapper_med_mor_og_mors_periode_starter_på_lørdag() {
         var fellesperiode = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2025, 7, 1), LocalDate.of(2025, 7, 4))
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(4), Utbetalingsgrad.FULL))
             .build();
         var helg = AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2025, 7, 5), LocalDate.of(2025, 7, 13)) //Starter lørdag
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(14), Utbetalingsgrad.FULL))
             .build();
         var kontoer = new Kontoer.Builder().konto(konto(FELLESPERIODE, 100));

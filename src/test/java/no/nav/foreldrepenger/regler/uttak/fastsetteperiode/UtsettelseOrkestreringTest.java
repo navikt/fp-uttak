@@ -41,6 +41,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAvslagsårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
@@ -608,11 +609,11 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             // Annen part (mor) har allerede fått fratrekk pleiepenger i hele prematurperioden (avslått med trekkdager)
             .annenPart(new AnnenPart.Builder()
                 .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
-                    .innvilget(false)
+                    .avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.FRATREKK_PLEIEPENGER)
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.ZERO))
                     .build())
                 .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(6), termindato.minusDays(1))
-                    .innvilget(false)
+                    .avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.FRATREKK_PLEIEPENGER)
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, MØDREKVOTE, new Trekkdager(20), Utbetalingsgrad.ZERO))
                     .build()))
             .søknad(søknad(FØDSEL,
@@ -810,12 +811,10 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
         var grunnlag = basicUtsettelseGrunnlag(fødselsdato).behandling(farBehandling())
             .søknad(søknad(Søknadstype.FØDSEL, utsettelsePeriode, fellesperiode))
             .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
-                    .innvilget(true)
                     .senestMottattDato(fødselsdato)
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.HUNDRED))
                     .build())
                 .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(utsettelsePeriode.getFom(), utsettelsePeriode.getTom())
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, FELLESPERIODE, new Trekkdager(130), Utbetalingsgrad.HUNDRED))
                     .senestMottattDato(fødselsdato)
@@ -906,7 +905,6 @@ class UtsettelseOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
             .kontoer(new Kontoer.Builder().konto(MØDREKVOTE, 75).konto(FELLESPERIODE, 80))
             .søknad(søknad(Søknadstype.FØDSEL, mødrekvote, utsettelse))
             .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(ARBEIDSFORHOLD_3, MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.HUNDRED))
                     .build()));
 

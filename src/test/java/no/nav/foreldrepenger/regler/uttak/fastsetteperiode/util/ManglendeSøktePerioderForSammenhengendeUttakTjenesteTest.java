@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAvslagsårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
@@ -271,12 +272,11 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), Utbetalingsgrad.TEN))
             .build();
         var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(6), familiehendelse.plusWeeks(7))
-            .innvilget(false)
+            .avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
             .build();
@@ -416,18 +416,16 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), Utbetalingsgrad.TEN))
             .build();
         var annenpartInnvilgetUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(familiehendelse.plusWeeks(6),
                 familiehendelse.plusWeeks(7).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
             .build();
         var annenpartAvslåttMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse.plusWeeks(7), familiehendelse.plusWeeks(7).plusDays(2))
-            .innvilget(false)
+            .avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
             .build();
@@ -452,13 +450,11 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), Utbetalingsgrad.TEN))
             .build();
         var annenpartInnvilgetUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(familiehendelse.plusWeeks(6),
                 familiehendelse.plusWeeks(7).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
             .build();
@@ -481,7 +477,6 @@ class ManglendeSøktePerioderForSammenhengendeUttakTjenesteTest {
         var familiehendelse = LocalDate.of(2018, 12, 4);
 
         var annenpartInnvilgetMødrekvote = AnnenpartUttakPeriode.Builder.uttak(familiehendelse, familiehendelse.plusWeeks(6).minusDays(1))
-            .innvilget(true)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, new Trekkdager(10), Utbetalingsgrad.TEN))
             .build();

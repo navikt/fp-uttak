@@ -17,8 +17,8 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     private boolean flerbarnsdager;
     private boolean utsettelse;
     private OppholdÅrsak oppholdÅrsak;
-    private boolean innvilget;
     private LocalDate senestMottattDato;
+    private AnnenpartUttakPeriodeAvslagsårsak avslagsårsak;
 
     private AnnenpartUttakPeriode(LocalDate fom, LocalDate tom) {
         super(fom, tom);
@@ -37,7 +37,7 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
     }
 
     public boolean isInnvilget() {
-        return innvilget;
+        return avslagsårsak == null;
     }
 
     public boolean isUtsettelse() {
@@ -62,9 +62,9 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return Builder.uttak(fom, tom)
             .samtidigUttak(this.samtidigUttak)
             .flerbarnsdager(this.flerbarnsdager)
-            .utsettelse(this.innvilget)
-            .innvilget(this.innvilget)
+            .utsettelse(this.utsettelse)
             .oppholdsårsak(this.oppholdÅrsak)
+            .avslagsårsak(this.avslagsårsak)
             .uttakPeriodeAktiviteter(annenpartUttakPeriodeAktiviteter)
             .senestMottattDato(this.senestMottattDato)
             .build();
@@ -82,6 +82,10 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return Optional.ofNullable(senestMottattDato);
     }
 
+    public Optional<AnnenpartUttakPeriodeAvslagsårsak> getAvslagsårsak() {
+        return Optional.ofNullable(avslagsårsak);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,13 +99,14 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         }
         var that = (AnnenpartUttakPeriode) o;
         return samtidigUttak == that.samtidigUttak && flerbarnsdager == that.flerbarnsdager && utsettelse == that.utsettelse
-            && innvilget == that.innvilget && Objects.equals(aktiviteter, that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak && Objects.equals(
-            senestMottattDato, that.senestMottattDato);
+            && Objects.equals(aktiviteter, that.aktiviteter) && oppholdÅrsak == that.oppholdÅrsak
+            && avslagsårsak == that.avslagsårsak && Objects.equals(senestMottattDato, that.senestMottattDato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdÅrsak, innvilget, senestMottattDato);
+        return Objects.hash(super.hashCode(), aktiviteter, samtidigUttak, flerbarnsdager, utsettelse, oppholdÅrsak, senestMottattDato,
+            avslagsårsak);
     }
 
     public static class Builder {
@@ -122,14 +127,12 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         public static Builder eøs(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype, Trekkdager trekkdager) {
             return new Builder(fom, tom)
                 .samtidigUttak(false)
-                .innvilget(true)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.annenAktivitet(), stønadskontotype, trekkdager, Utbetalingsgrad.FULL));
         }
 
         private Builder(LocalDate fom, LocalDate tom) {
             kladd = new AnnenpartUttakPeriode(fom, tom);
-            kladd.innvilget = true;
         }
 
         public Builder uttakPeriodeAktivitet(AnnenpartUttakPeriodeAktivitet annenpartUttakPeriodeAktivitet) {
@@ -152,11 +155,6 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
             return this;
         }
 
-        public Builder innvilget(boolean innvilget) {
-            kladd.innvilget = innvilget;
-            return this;
-        }
-
         public Builder oppholdsårsak(OppholdÅrsak oppholdÅrsak) {
             kladd.oppholdÅrsak = oppholdÅrsak;
             return this;
@@ -169,6 +167,11 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
 
         public Builder senestMottattDato(LocalDate senestMottattDato) {
             kladd.senestMottattDato = senestMottattDato;
+            return this;
+        }
+
+        public Builder avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak avslagsårsak) {
+            kladd.avslagsårsak = avslagsårsak;
             return this;
         }
 

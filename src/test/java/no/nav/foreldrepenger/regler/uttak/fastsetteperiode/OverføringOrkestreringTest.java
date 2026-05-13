@@ -92,6 +92,6 @@ class OverføringOrkestreringTest extends FastsettePerioderRegelOrkestreringTest
     private AnnenpartUttakPeriode innvilget(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype) {
         var aktivitet = new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), stønadskontotype,
             new Trekkdager(Virkedager.beregnAntallVirkedager(new Periode(fom, tom))), Utbetalingsgrad.FULL);
-        return AnnenpartUttakPeriode.Builder.uttak(fom, tom).innvilget(true).uttakPeriodeAktivitet(aktivitet).build();
+        return AnnenpartUttakPeriode.Builder.uttak(fom, tom).uttakPeriodeAktivitet(aktivitet).build();
     }
 }

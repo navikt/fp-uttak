@@ -61,7 +61,6 @@ class RevurderingTest {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(beggeRett())
             .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12))
-                .innvilget(true)
                 .build()))
             .behandling(berørtBehandling().søkerErMor(true))
             .build();
@@ -80,7 +79,6 @@ class RevurderingTest {
         var oppgittPeriode = uttakPeriode(Stønadskontotype.FELLESPERIODE, FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12));
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(beggeRett())
             .annenPart(annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO.plusWeeks(10), FAMILIEHENDELSE_DATO.plusWeeks(12))
-                .innvilget(true)
                 .build()))
             .behandling(berørtBehandling().søkerErMor(true).sammenhengendeUttakTomDato(LocalDate.of(9999, 1, 1)))
             .build();
@@ -96,7 +94,7 @@ class RevurderingTest {
             SamtidigUttaksprosent.HUNDRED, false, null, null, null, null, null);
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(beggeRett())
             .annenPart(
-                annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
+                annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).build()))
             .behandling(berørtBehandling().søkerErMor(false))
             .build();
 
@@ -111,7 +109,7 @@ class RevurderingTest {
             SamtidigUttaksprosent.HUNDRED, false, null, null, null, null, null);
         var grunnlag = basicBuilder(oppgittPeriode).rettOgOmsorg(beggeRett())
             .annenPart(
-                annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).innvilget(true).build()))
+                annenPart(AnnenpartUttakPeriode.Builder.utsettelse(FAMILIEHENDELSE_DATO, FAMILIEHENDELSE_DATO.plusWeeks(3)).build()))
             .behandling(berørtBehandling().søkerErMor(false))
             .kontoer(new Kontoer.Builder().konto(new Konto.Builder().type(Stønadskontotype.FEDREKVOTE).trekkdager(50)).farUttakRundtFødselDager(10))
             .build();

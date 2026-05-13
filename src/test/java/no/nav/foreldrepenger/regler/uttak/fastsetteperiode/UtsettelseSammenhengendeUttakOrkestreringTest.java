@@ -599,7 +599,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var fødselsdato = LocalDate.of(2019, 10, 10);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(6).minusDays(1))
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                     .build()))
@@ -628,7 +627,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
             AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
-                .innvilget(true)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                 .build())).søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE, null)));
@@ -648,7 +646,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
             AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
-                .innvilget(true)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                 .build())).søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE, HV_OVELSE_GODKJENT)));
@@ -668,7 +665,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var hvTom = fødselsdato.plusWeeks(7).minusDays(1);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
             AnnenpartUttakPeriode.Builder.uttak(fødselsdato, hvFom.minusDays(1))
-                .innvilget(true)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                 .build())).søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelsePeriode(hvFom, hvTom, HV_OVELSE, null)));
@@ -686,7 +682,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
             AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
-                .innvilget(true)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                 .build())).søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, NAV_TILTAK, null)));
@@ -706,7 +701,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                     .build()))
@@ -727,7 +721,6 @@ class UtsettelseSammenhengendeUttakOrkestreringTest extends FastsettePerioderReg
         var tiltakTom = fødselsdato.plusWeeks(7).minusDays(1);
         var grunnlag = basicGrunnlagFar(fødselsdato).annenPart(new AnnenPart.Builder().uttaksperiode(
             AnnenpartUttakPeriode.Builder.uttak(fødselsdato, tiltakFom.minusDays(1))
-                .innvilget(true)
                 .uttakPeriodeAktivitet(
                     new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), MØDREKVOTE, Trekkdager.ZERO, Utbetalingsgrad.ZERO))
                 .build())).søknad(new Søknad.Builder().type(FØDSEL).oppgittPeriode(utsettelsePeriode(tiltakFom, tiltakTom, NAV_TILTAK, null)));

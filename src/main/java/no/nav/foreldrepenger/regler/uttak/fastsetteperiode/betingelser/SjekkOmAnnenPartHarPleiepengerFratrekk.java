@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser;
 
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.FastsettePeriodeGrunnlag;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAvslagsårsak;
 import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.evaluation.Evaluation;
 import no.nav.fpsak.nare.specification.LeafSpecification;
@@ -20,7 +22,10 @@ public class SjekkOmAnnenPartHarPleiepengerFratrekk extends LeafSpecification<Fa
         var periode = grunnlag.getAktuellPeriode();
         var annenPartHarFratrekk = grunnlag.getAnnenPartUttaksperioder().stream()
             .filter(app -> app.overlapper(periode))
-            .anyMatch(app -> !app.isInnvilget() && app.harTrekkdager());
+            .filter(AnnenpartUttakPeriode::harTrekkdager)
+            .anyMatch(app -> app.getAvslagsårsak()
+                .filter(årsak -> årsak == AnnenpartUttakPeriodeAvslagsårsak.FRATREKK_PLEIEPENGER)
+                .isPresent());
         return annenPartHarFratrekk ? ja() : nei();
     }
 }
