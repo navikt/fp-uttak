@@ -685,19 +685,16 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
             .revurdering(new Revurdering.Builder().endringsdato(LocalDate.of(2019, 3, 4)))
             //far har fått overført mange dager av mor. Det er noen dager igjen til mor. Skal avslå alle mors perioder og ikke trekk dager
             .annenPart(new AnnenPart.Builder().uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 3, 4), LocalDate.of(2019, 3, 6))
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(3),
                             Utbetalingsgrad.FULL))
                     .build())
                 .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 3, 7), LocalDate.of(2019, 3, 31))
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(17),
                             Utbetalingsgrad.FULL))
                     .build())
                 .uttaksperiode(AnnenpartUttakPeriode.Builder.uttak(LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 3))
-                    .innvilget(true)
                     .uttakPeriodeAktivitet(
                         new AnnenpartUttakPeriodeAktivitet(AktivitetIdentifikator.forFrilans(), Stønadskontotype.MØDREKVOTE, new Trekkdager(25),
                             Utbetalingsgrad.FULL))

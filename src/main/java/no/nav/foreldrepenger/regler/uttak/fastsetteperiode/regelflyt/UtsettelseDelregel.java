@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmFødselErFørUke33;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodeErFørTermin;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPeriodenStarterFørFamiliehendelse;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmAnnenPartHarPleiepengerFratrekk;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmPleiepenger;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSykdomSkade;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.betingelser.SjekkOmSøkerErMor;
@@ -148,7 +149,13 @@ public class UtsettelseDelregel implements RuleService<FastsettePeriodeGrunnlag>
 
     private Specification<FastsettePeriodeGrunnlag> sjekkOmSøkerErInnvilgetPleiepenger() {
         return rs.hvisRegel(SjekkOmPleiepenger.ID, SjekkOmPleiepenger.BESKRIVELSE)
-            .hvis(new SjekkOmPleiepenger(), IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false))
+            .hvis(new SjekkOmPleiepenger(), sjekkOmAnnenPartAlleredeHarFratrekkPleiepenger())
             .ellers(sjekkOmTidsperiodeForbeholdtMor());
+    }
+
+    private Specification<FastsettePeriodeGrunnlag> sjekkOmAnnenPartAlleredeHarFratrekkPleiepenger() {
+        return rs.hvisRegel(SjekkOmAnnenPartHarPleiepengerFratrekk.ID, SjekkOmAnnenPartHarPleiepengerFratrekk.BESKRIVELSE)
+            .hvis(new SjekkOmAnnenPartHarPleiepengerFratrekk(), Oppfylt.opprett("UT1362", InnvilgetÅrsak.UTSETTELSE_GYLDIG, false, false))
+            .ellers(IkkeOppfylt.opprett("UT1360", IkkeOppfyltÅrsak.FRATREKK_PLEIEPENGER, true, false));
     }
 }

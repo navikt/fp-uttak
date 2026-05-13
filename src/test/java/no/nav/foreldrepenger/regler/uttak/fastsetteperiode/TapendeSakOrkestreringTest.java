@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAvslagsårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Datoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
@@ -322,13 +323,15 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                                                    AktivitetIdentifikator aktivitet,
                                                    boolean innvilget,
                                                    LocalDate senestMottattDato) {
-        return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+        var builder = AnnenpartUttakPeriode.Builder.uttak(fom, tom)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)),
                     Utbetalingsgrad.TEN))
-            .innvilget(innvilget)
-            .senestMottattDato(senestMottattDato)
-            .build();
+            .senestMottattDato(senestMottattDato);
+        if (!innvilget) {
+            builder.avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET);
+        }
+        return builder.build();
     }
 
     static AnnenpartUttakPeriode annenpartsSamtidigPeriode(Stønadskontotype stønadskontotype,
@@ -337,14 +340,16 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                                                            AktivitetIdentifikator aktivitet,
                                                            boolean innvilget,
                                                            LocalDate senestMottattDato) {
-        return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+        var builder = AnnenpartUttakPeriode.Builder.uttak(fom, tom)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)),
                     Utbetalingsgrad.TEN))
-            .innvilget(innvilget)
             .samtidigUttak(true)
-            .senestMottattDato(senestMottattDato)
-            .build();
+            .senestMottattDato(senestMottattDato);
+        if (!innvilget) {
+            builder.avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET);
+        }
+        return builder.build();
     }
 
     static AnnenpartUttakPeriode annenpartsPeriodeSamtidig(Stønadskontotype stønadskontotype,
@@ -353,14 +358,16 @@ class TapendeSakOrkestreringTest extends FastsettePerioderRegelOrkestreringTestB
                                                            AktivitetIdentifikator aktivitet,
                                                            boolean innvilget,
                                                            LocalDate senestMottattDato) {
-        return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+        var builder = AnnenpartUttakPeriode.Builder.uttak(fom, tom)
             .uttakPeriodeAktivitet(
                 new AnnenpartUttakPeriodeAktivitet(aktivitet, stønadskontotype, new Trekkdager(Virkedager.beregnAntallVirkedager(fom, tom)),
                     Utbetalingsgrad.TEN))
-            .innvilget(innvilget)
             .senestMottattDato(senestMottattDato)
-            .samtidigUttak(true)
-            .build();
+            .samtidigUttak(true);
+        if (!innvilget) {
+            builder.avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET);
+        }
+        return builder.build();
     }
 
 }

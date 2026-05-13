@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AktivitetIde
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAvslagsårsak;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeid;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Arbeidsforhold;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Behandling;
@@ -435,7 +436,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
             .datoer(new Datoer.Builder().fødsel(fødselsdato))
             .annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1))
-                    .innvilget(false)
+                    .avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET)
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(80), Utbetalingsgrad.ZERO))
                     .build()))
             .behandling(new Behandling.Builder().søkerErMor(true).berørtBehandling(true))
@@ -515,7 +516,7 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     void oppholdsperioder_som_overlapper_med_annenpart_uten_trekkdager_skal_ikke_fjernes() {
         var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, Trekkdager.ZERO, Utbetalingsgrad.ZERO);
         var annenpartPeriodeUtenTrekkdager = AnnenpartUttakPeriode.Builder.uttak(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))
-            .innvilget(false)
+            .avslagsårsak(AnnenpartUttakPeriodeAvslagsårsak.ANNET)
             .uttakPeriodeAktivitet(annenpartAktivitet)
             .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
@@ -542,7 +543,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     void oppholdsperioder_som_overlapper_med_annenpart_innvilget_utsettelse_skal_fjernes() {
         var annenpartAktivitet = new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, Trekkdager.ZERO, Utbetalingsgrad.ZERO);
         var annenpartPeriodeUtsettelse = AnnenpartUttakPeriode.Builder.utsettelse(fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(16))
-            .innvilget(true)
             .uttakPeriodeAktivitet(annenpartAktivitet)
             .build();
         var grunnlag = RegelGrunnlagTestBuilder.create()
@@ -590,7 +590,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(40)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -610,7 +609,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(30)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -630,7 +628,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(85)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -651,7 +648,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(60)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -673,7 +669,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(5), new Utbetalingsgrad(50)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -693,7 +688,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(100)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -713,7 +707,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(30)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -733,7 +726,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(5), new Utbetalingsgrad(60)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -752,7 +744,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(60)))
-                    .innvilget(true)
                     .samtidigUttak(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
@@ -770,23 +761,19 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var fh = LocalDate.of(2022, 4, 1);
         var annenpartUttakPeriode1 = AnnenpartUttakPeriode.Builder.uttak(fh, fh.plusWeeks(7).minusDays(1))
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.HUNDRED))
-            .innvilget(true)
             .build();
         var annenpartUttakPeriode2 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(9), fh.plusWeeks(10).minusDays(1))
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5), Utbetalingsgrad.HUNDRED))
-            .innvilget(true)
             .flerbarnsdager(true)
             .samtidigUttak(true)
             .build();
         var annenpartUttakPeriode3 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(10), fh.plusWeeks(11).minusDays(1))
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5), Utbetalingsgrad.HUNDRED))
-            .innvilget(true)
             .flerbarnsdager(true)
             .samtidigUttak(false)
             .build();
         var annenpartUttakPeriode4 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(11), fh.plusWeeks(12).minusDays(1))
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5), Utbetalingsgrad.HUNDRED))
-            .innvilget(true)
             .flerbarnsdager(false)
             .samtidigUttak(false)
             .build();
@@ -817,11 +804,9 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var fh = LocalDate.of(2022, 4, 1);
         var annenpartUttakPeriode1 = AnnenpartUttakPeriode.Builder.uttak(fh, fh.plusWeeks(7).minusDays(1))
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(30), Utbetalingsgrad.HUNDRED))
-            .innvilget(true)
             .build();
         var annenpartUttakPeriode2 = AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(9), fh.plusWeeks(10).minusDays(1))
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5), Utbetalingsgrad.HUNDRED))
-            .innvilget(true)
             .flerbarnsdager(true)
             .samtidigUttak(false)
             .build();
@@ -850,7 +835,6 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
                 AnnenpartUttakPeriode.Builder.uttak(fh.plusWeeks(6), fh.plusWeeks(7).minusDays(1))
                     .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FEDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(30)))
-                    .innvilget(true)
                     .build()))
             .behandling(morBehandling().berørtBehandling(true))
             .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1)))
@@ -864,12 +848,11 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
     }
 
     private AnnenpartUttakPeriode annenpartPeriodeOpphold(LocalDate fom, LocalDate tom, OppholdÅrsak oppholdÅrsak) {
-        return AnnenpartUttakPeriode.Builder.opphold(fom, tom, oppholdÅrsak).innvilget(true).build();
+        return AnnenpartUttakPeriode.Builder.opphold(fom, tom, oppholdÅrsak).build();
     }
 
     private AnnenpartUttakPeriode annenpartPeriodeInnvilget(LocalDate fom, LocalDate tom, Stønadskontotype stønadskontotype, Trekkdager trekkdager) {
         return AnnenpartUttakPeriode.Builder.uttak(fom, tom)
-            .innvilget(true)
             .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), stønadskontotype, trekkdager, Utbetalingsgrad.HUNDRED))
             .build();
     }

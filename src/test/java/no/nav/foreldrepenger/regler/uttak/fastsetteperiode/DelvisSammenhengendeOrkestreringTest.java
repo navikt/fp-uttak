@@ -20,7 +20,7 @@ class DelvisSammenhengendeOrkestreringTest extends FastsettePerioderRegelOrkestr
 
         var fødselsdato = LocalDate.of(2021, 6, 1);
         var sammenhengendeUttakTomDato = fødselsdato.plusWeeks(20).minusDays(1);
-        var annenpartUttakPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)).innvilget(true).build();
+        var annenpartUttakPeriode = AnnenpartUttakPeriode.Builder.uttak(fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)).build();
         var utsettelsePåTversAvRegelendring = utsettelsePeriode(annenpartUttakPeriode.getTom().plusWeeks(1), sammenhengendeUttakTomDato.plusWeeks(2),
             UtsettelseÅrsak.SYKDOM_SKADE, null);
         var fedrekvote = oppgittPeriode(Stønadskontotype.FEDREKVOTE, utsettelsePåTversAvRegelendring.getTom().plusWeeks(2),
