@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag;
 
-import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.IKKE_OPPFYLT_SØKNADSFRIST;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.FastsattUttakPeriode.ResultatÅrsak.INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
 
@@ -77,7 +76,6 @@ public class FastsattUttakPeriode {
                                             FastsattUttakPeriode.ResultatÅrsak resultatÅrsak,
                                             boolean utsettelse) {
         return (Perioderesultattype.INNVILGET.equals(perioderesultattype) && !erPeriodeMedGodkjentAktivitet(resultatÅrsak)) || (
-            Perioderesultattype.AVSLÅTT.equals(perioderesultattype) && IKKE_OPPFYLT_SØKNADSFRIST.equals(resultatÅrsak)) || (
             Perioderesultattype.MANUELL_BEHANDLING.equals(perioderesultattype) && !utsettelse);
     }
 
@@ -106,7 +104,6 @@ public class FastsattUttakPeriode {
     }
 
     public enum ResultatÅrsak {
-        IKKE_OPPFYLT_SØKNADSFRIST,
         INNVILGET_FORELDREPENGER_KUN_FAR_HAR_RETT,
         INNVILGET_GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT,
         ANNET,
