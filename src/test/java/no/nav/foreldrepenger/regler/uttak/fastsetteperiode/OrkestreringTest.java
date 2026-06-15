@@ -1281,4 +1281,32 @@ class OrkestreringTest extends FastsettePerioderRegelOrkestreringTestBase {
         assertThat(resultat.getFirst().uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
         assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isNotEqualTo(Trekkdager.ZERO);
     }
+
+    @Test
+    void bfhr_avslag_søknadsfrist_skal_ikke_trekke_minsterett() {
+        var fødselsdato = LocalDate.of(2026, 6, 10);
+        var mottattDato = fødselsdato.plusWeeks(40);
+
+        var periode1 = forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(16).minusDays(1),
+            null, false, mottattDato, mottattDato, null, null, null);
+        var periode2 = forVanligPeriode(FORELDREPENGER, fødselsdato.plusWeeks(40), fødselsdato.plusWeeks(41).minusDays(1),
+            null, false, mottattDato, mottattDato, null, null, null);
+
+        var grunnlag = basicGrunnlagFar(fødselsdato)
+            .rettOgOmsorg(bareFarRett())
+            .datoer(new Datoer.Builder().fødsel(fødselsdato))
+            .søknad(søknad(Søknadstype.FØDSEL, periode1, periode2))
+            .kontoer(new Kontoer.Builder().minsterettDager(10 * 5).konto(FORELDREPENGER, 40 * 5));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(4);
+        assertThat(resultat.getFirst().uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.SØKNADSFRIST);
+        assertThat(resultat.get(1).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(resultat.get(1).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(100)); //100 dager gjenværende som kan trekkes. Trekker ikke minsteretten
+        assertThat(resultat.get(2).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(resultat.get(2).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(Trekkdager.ZERO);
+        assertThat(resultat.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_UTEN_AKTIVITETSKRAV);
+        assertThat(resultat.get(3).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(5));
+    }
 }
