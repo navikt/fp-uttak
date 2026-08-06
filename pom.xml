@@ -18,7 +18,7 @@
     <url>https://github.com/navikt/fp-uttak</url>
 
     <properties>
-        <fpsak.nare.version>2.6.4</fpsak.nare.version>
+        <fpsak.nare.version>2.6.5</fpsak.nare.version>
         <!-- Sonar felles -->
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.projectKey>navikt_fp-uttak</sonar.projectKey>
