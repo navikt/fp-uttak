@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.InnvilgetÅrsa
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.utfall.Oppfylt;
 import no.nav.fpsak.nare.RuleService;
 import no.nav.fpsak.nare.Ruleset;
+import no.nav.fpsak.nare.doc.RuleDocumentation;
 import no.nav.fpsak.nare.specification.Specification;
 
 /**
@@ -21,7 +22,10 @@ import no.nav.fpsak.nare.specification.Specification;
  * <p>
  */
 
+@RuleDocumentation(OverføringDelregel.ID)
 public class OverføringDelregel implements RuleService<FastsettePeriodeGrunnlag> {
+
+    static final String ID = "FP_VK 9";
 
     private final Ruleset<FastsettePeriodeGrunnlag> rs = new Ruleset<>();
 
