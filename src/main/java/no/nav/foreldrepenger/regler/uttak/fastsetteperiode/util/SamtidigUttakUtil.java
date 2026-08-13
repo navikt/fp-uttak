@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.regler.uttak.fastsetteperiode.util;
 
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FEDREKVOTE;
 import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.FELLESPERIODE;
+import static no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype.MØDREKVOTE;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -44,7 +46,16 @@ public final class SamtidigUttakUtil {
     }
 
     public static boolean akseptert200ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
-        return gjelderFlerbarnsdager(grunnlag) || gjelderFarRundtFødsel(grunnlag);
+        return (gjelderFlerbarnsdager(grunnlag) || gjelderFarRundtFødsel(grunnlag))
+            && !overlapperMedOverføring(grunnlag);
+    }
+
+    public static boolean overlapperMedOverføring(FastsettePeriodeGrunnlag grunnlag) {
+        return finnOverlappendeAnnenpartPeriode(grunnlag, AnnenpartUttakPeriode::harUtbetaling).filter(ap -> {
+            var farOverførtMødrekvote = grunnlag.isSøkerMor() && ap.harTrekkdager(MØDREKVOTE);
+            var morOverførtFedrekvote = !grunnlag.isSøkerMor() && ap.harTrekkdager(FEDREKVOTE);
+            return farOverførtMødrekvote || morOverførtFedrekvote;
+        }).isPresent();
     }
 
     public static boolean merEnn100ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
@@ -54,6 +65,9 @@ public final class SamtidigUttakUtil {
     }
 
     public static boolean akseptert150ProsentSamtidigUttak(FastsettePeriodeGrunnlag grunnlag) {
+        if (overlapperMedOverføring(grunnlag)) {
+            return false;
+        }
         // Ser etter kombo MK/FK (<= 100%) + Fellesperiode (<= 50%)
         boolean er150ProsentKonfigurasjon = er150ProsentKonfigurasjon(grunnlag);
         if (er150ProsentKonfigurasjon && FELLESPERIODE.equals(grunnlag.getAktuellPeriode().getStønadskontotype())) {
@@ -66,6 +80,9 @@ public final class SamtidigUttakUtil {
     }
 
     public static boolean kanReduseresTil100ProsentForRegel(FastsettePeriodeGrunnlag grunnlag) {
+        if (overlapperMedOverføring(grunnlag)) {
+            return false;
+        }
         // Sjekker om annenparts utbetalingsgrad <=80 slik at gjenværende utbetaling etter reduksjon er >= 20% (i første omgang)
         // Dessuten avventer vi tilfelle av gradering og flere aktiviteter - reduser dersom 1 aktivitet eller ikke gradering
         return !er150ProsentKonfigurasjon(grunnlag)
@@ -94,7 +111,8 @@ public final class SamtidigUttakUtil {
             !annenpartHarSamtidigPeriodeMedUtbetaling(periodeGrunnlag) ||
             !merEnn100ProsentSamtidigUttak(periodeGrunnlag) ||
             akseptert200ProsentSamtidigUttak(periodeGrunnlag) ||
-            akseptert150ProsentSamtidigUttak(periodeGrunnlag)) {
+            akseptert150ProsentSamtidigUttak(periodeGrunnlag) ||
+            overlapperMedOverføring(periodeGrunnlag)) {
             return false;
         }
         // Sjekker om annenparts utbetalingsgrad <=80 slik at gjenværende utbetaling etter reduksjon er >= 20% (i første omgang)

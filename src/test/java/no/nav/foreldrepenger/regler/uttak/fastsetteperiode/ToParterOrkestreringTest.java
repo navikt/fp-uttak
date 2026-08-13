@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesul
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.RegelGrunnlag;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Revurdering;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Spesialkontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Stønadskontotype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknad;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -827,6 +828,48 @@ class ToParterOrkestreringTest extends FastsettePerioderRegelOrkestreringTestBas
         assertThat(resultat.get(3).uttakPeriode().getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         assertThat(resultat.get(3).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
         assertThat(resultat.get(3).uttakPeriode().getTrekkdager(ARBEIDSFORHOLD)).isEqualTo(new Trekkdager(1));
+    }
+
+    @Test
+    void samtidig_uttak_100_prosent_i_første_seks_uker_overlapper_med_fars_overført_mødrekvote_pga_sykdom_i_berørt_behandling() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder
+                    .uttak(fh.plusWeeks(4), fh.plusWeeks(6).minusDays(1))
+                    .samtidigUttak(false)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(10), Utbetalingsgrad.HUNDRED))
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .kontoer(defaultKontoer().spesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL, 10))
+            .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(
+                oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1), false, SamtidigUttaksprosent.HUNDRED)));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
+    }
+
+    @Test
+    void mors_mødrekvote_overlapper_med_fars_innvilget_overføring_av_gradert_mødrekvote_første_6_ukene() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var grunnlag = basicGrunnlagMor(fh).annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder
+                    .uttak(fh.plusWeeks(4), fh.plusWeeks(6).minusDays(1))
+                    .samtidigUttak(false)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), MØDREKVOTE, new Trekkdager(5), new Utbetalingsgrad(50)))
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .kontoer(defaultKontoer().spesialkonto(Spesialkontotype.FAR_RUNDT_FØDSEL, 10))
+            .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(
+                oppgittPeriode(MØDREKVOTE, fh, fh.plusWeeks(6).minusDays(1), false, new SamtidigUttaksprosent(50))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(resultat.get(1).uttakPeriode().getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.VURDER_SAMTIDIG_UTTAK);
     }
 
     @Test
