@@ -86,6 +86,10 @@ public class AnnenpartUttakPeriode extends LukketPeriode {
         return Optional.ofNullable(avslagsårsak);
     }
 
+    public boolean harTrekkdager(Stønadskontotype stønadskontotype) {
+        return aktiviteter.stream().anyMatch(a -> stønadskontotype.equals(a.stønadskontotype()));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -23,7 +23,7 @@ public class SjekkOmAkseptertSamtidigUttak extends LeafSpecification<FastsettePe
             return ja();
         }
         // Inntil 100% samtidig uttak er alltid OK
-        if (!SamtidigUttakUtil.merEnn100ProsentSamtidigUttak(grunnlag)) {
+        if (!SamtidigUttakUtil.overlapperMedOverføring(grunnlag) && !SamtidigUttakUtil.merEnn100ProsentSamtidigUttak(grunnlag)) {
             return ja();
         }
         // Inntil 100% kvote samtidig med inntil 50% fellesperiode er OK
