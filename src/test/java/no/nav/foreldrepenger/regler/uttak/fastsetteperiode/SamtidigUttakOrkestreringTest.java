@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenPart;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriode;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.AnnenpartUttakPeriodeAktivitet;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Konto;
+import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Kontoer;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Perioderesultattype;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.SamtidigUttaksprosent;
 import no.nav.foreldrepenger.regler.uttak.fastsetteperiode.grunnlag.Søknadstype;
@@ -211,5 +213,114 @@ class SamtidigUttakOrkestreringTest extends FastsettePerioderRegelOrkestreringTe
 
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.AVSLÅTT);
+    }
+
+    @Test
+    void skal_ikke_stykke_opp_periode_når_berørt_behandling_reduserer_utbetaling_og_kontoen_går_tom() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var fom = fh.plusWeeks(28);
+        var tom = fom.plusWeeks(2).minusDays(1);
+        var grunnlag = basicGrunnlagMor(fh)
+            .kontoer(new Kontoer.Builder()
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(10)))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(5), new Utbetalingsgrad(50)))
+                    .samtidigUttak(true)
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode(FELLESPERIODE, fom, tom)));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(resultat.get(1).uttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getTrekkdager()).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    void kontroll_stykker_ikke_opp_når_mor_selv_har_søkt_samtidig_uttak_50_prosent() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var fom = fh.plusWeeks(28);
+        var tom = fom.plusWeeks(2).minusDays(1);
+        var grunnlag = basicGrunnlagMor(fh)
+            .kontoer(new Kontoer.Builder()
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(10)))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(5), new Utbetalingsgrad(50)))
+                    .samtidigUttak(true)
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode(FELLESPERIODE, fom, tom, false, new SamtidigUttaksprosent(50))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getTrekkdager()).isEqualTo(new Trekkdager(5));
+    }
+
+    @Test
+    void skal_knekke_på_riktig_dato_når_berørt_behandling_reduserer_utbetaling_og_kontoen_går_tom_midt_i_perioden() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var fom = fh.plusWeeks(28);
+        var tom = fom.plusWeeks(2).minusDays(1);
+        var grunnlag = basicGrunnlagMor(fh)
+            .kontoer(new Kontoer.Builder()
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(8)))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(5), new Utbetalingsgrad(50)))
+                    .samtidigUttak(true)
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode(FELLESPERIODE, fom, tom)));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(3);
+        var innvilgetPeriode = resultat.get(1).uttakPeriode();
+        assertThat(innvilgetPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(innvilgetPeriode.getFom()).isEqualTo(fom);
+        assertThat(innvilgetPeriode.getTom()).isEqualTo(Virkedager.plusVirkedager(fom, 6).minusDays(1));
+        assertThat(innvilgetPeriode.getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(50));
+        assertThat(innvilgetPeriode.getAktiviteter().stream().findFirst().orElseThrow().getTrekkdager()).isEqualTo(new Trekkdager(3));
+
+        var etterKnekkPeriode = resultat.get(2).uttakPeriode();
+        assertThat(etterKnekkPeriode.getFom()).isEqualTo(Virkedager.plusVirkedager(fom, 6));
+        assertThat(etterKnekkPeriode.getTom()).isEqualTo(tom);
+        assertThat(etterKnekkPeriode.getPerioderesultattype()).isEqualTo(Perioderesultattype.MANUELL_BEHANDLING);
+        assertThat(etterKnekkPeriode.getManuellbehandlingårsak()).isEqualTo(Manuellbehandlingårsak.STØNADSKONTO_TOM);
+    }
+
+    @Test
+    void skal_bruke_redusert_prosent_for_knekkpunkt_når_mor_selv_søkte_høyere_samtidig_uttaksprosent() {
+        var fh = LocalDate.of(2022, 4, 1);
+        var fom = fh.plusWeeks(28);
+        var tom = fom.plusWeeks(2).minusDays(1);
+        var grunnlag = basicGrunnlagMor(fh)
+            .kontoer(new Kontoer.Builder()
+                .konto(new Konto.Builder().type(MØDREKVOTE).trekkdager(75))
+                .konto(new Konto.Builder().type(FELLESPERIODE).trekkdager(9)))
+            .annenPart(new AnnenPart.Builder().uttaksperiode(
+                AnnenpartUttakPeriode.Builder.uttak(fom, tom)
+                    .uttakPeriodeAktivitet(new AnnenpartUttakPeriodeAktivitet(forFrilans(), FELLESPERIODE, new Trekkdager(5), new Utbetalingsgrad(60)))
+                    .samtidigUttak(true)
+                    .build()))
+            .behandling(morBehandling().berørtBehandling(true))
+            .søknad(søknad(Søknadstype.FØDSEL).oppgittPeriode(oppgittPeriode(FELLESPERIODE, fom, tom, false, new SamtidigUttaksprosent(70))));
+
+        var resultat = fastsettPerioder(grunnlag);
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).uttakPeriode().getPerioderesultattype()).isEqualTo(Perioderesultattype.INNVILGET);
+        assertThat(resultat.get(1).uttakPeriode().getSamtidigUttaksprosent()).isEqualTo(new SamtidigUttaksprosent(40));
+        assertThat(resultat.get(1).uttakPeriode().getUtbetalingsgrad(ARBEIDSFORHOLD)).isEqualTo(new Utbetalingsgrad(40));
+        assertThat(resultat.get(1).uttakPeriode().getAktiviteter().stream().findFirst().orElseThrow().getTrekkdager()).isEqualTo(new Trekkdager(4));
     }
 }
